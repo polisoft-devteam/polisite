@@ -1,1 +1,122 @@
+# Polisite
+
 @AGENTS.md
+
+Private web app for a small Swedish community association (~10 members, may grow).
+
+It complements Discord rather than replacing it. Discord stays the conversation layer.
+This app is the structured layer: members, profiles, events, attendance, history and wishlists.
+
+## Priorities
+
+When a decision is unclear, resolve it in this order:
+
+1. **Maintainable by one person with AI assistance.** The repo must be readable end to end.
+2. **Boring and conventional over clever.** Predictable structure beats elegant abstraction.
+3. **Working over complete.** Ship the small thing; the group is 10 people.
+
+## Stack
+
+| Concern      | Choice                                                           |
+| ------------ | ---------------------------------------------------------------- |
+| Language     | TypeScript (strict)                                              |
+| Framework    | Next.js, App Router, React Server Components                     |
+| Database     | PostgreSQL, hosted on Supabase                                   |
+| DB access    | Drizzle ORM                                                      |
+| Auth         | Supabase Auth, Google OAuth only                                 |
+| File storage | Supabase Storage                                                 |
+| Styling      | Tailwind CSS + shadcn/ui                                         |
+| Forms        | React Hook Form + Zod                                            |
+| Calendar     | FullCalendar (presentation only — the DB is the source of truth) |
+| Tests        | Vitest                                                           |
+| Hosting      | Vercel                                                           |
+
+Supabase does exactly three jobs: **managed Postgres, Google login, file storage.**
+It is not the schema tool and not the permission system.
+
+## Structure
+
+```
+src/
+  app/                      Routes (App Router)
+    (public)/               Guest-visible pages
+    (member)/               Requires active membership
+    api/
+  components/
+    ui/                     shadcn primitives — do not hand-edit
+  db/
+    schema.ts               Drizzle schema — the single schema definition
+    migrations/             Generated SQL, committed
+    index.ts                DB client
+  lib/
+    auth.ts                 Session + current member helpers
+    permissions.ts          ALL access rules live here
+  features/
+    events/                 queries.ts, actions.ts, schemas.ts
+    members/
+    wishlist/
+```
+
+**The rule that keeps this readable:** only `features/*/queries.ts` may import from `src/db`.
+Pages and components call feature functions, never the database.
+
+## Core domain rules
+
+These are the rules that actually matter. Break them and the app leaks private data.
+
+**Membership is not authentication.**
+Signing in with Google makes someone a _user_. Membership requires a row in `members`
+with `status = 'active'`. A signed-in non-member sees only public content.
+
+**Roles:** `member`, `moderator`, `board`, `treasurer`, `admin`. Stored as rows, not enum
+columns on the member — a member can hold several.
+
+**Event visibility:** `public` (guests included), `members` (active members), `private`
+(invited only). Visibility is filtered in the query, never by hiding UI.
+
+**Wishlist claiming:** the owner may see _that_ an item is claimed. The owner must never
+see _who_ claimed it. The claimer's identity is omitted at the query level when the
+viewer is the owner — not filtered in the component.
+
+**Secret gift ideas (later phase):** the target member must never receive the data.
+Excluded in the query, not in rendering.
+
+## Conventions
+
+- **Permissions live in `src/lib/permissions.ts`** as plain functions (`canEditEvent(viewer, event)`).
+  One place, one language. If you can't answer "who can see this?" by reading that file, it's wrong.
+- **Schema changes go through Drizzle migrations**, committed to git, applied by command.
+- **Server Components by default.** Add `"use client"` only for genuine interactivity.
+- **Validate input with Zod at the server boundary**, including Server Actions. Client
+  validation is a convenience, never a control.
+- **Timestamps are `timestamptz`, stored UTC, displayed in `Europe/Stockholm`.**
+  At least one member is in Denmark — never store naive local time.
+- **Test the rules, not the UI.** Cover permissions, visibility filtering and wishlist
+  claiming. Skip snapshot tests.
+- Prefer self-explanatory code. Comment _why_, not _what_.
+
+## Commands
+
+```bash
+pnpm dev              # local dev server
+pnpm build            # production build (run before pushing)
+pnpm db:generate      # generate a migration after editing schema.ts
+pnpm db:migrate       # apply migrations
+pnpm db:studio        # inspect local data
+pnpm test             # Vitest
+pnpm lint             # ESLint + tsc
+pnpm format           # Prettier
+```
+
+`.npmrc` sets `resolution-mode=highest`. Without it, pnpm 8.6 installs the *lowest*
+version matching each range — which silently pins ancient TypeScript. Don't remove it.
+
+## Never
+
+- **Never define or alter schema in the Supabase dashboard.** Migrations only. Anything
+  defined by clicking is invisible to the repo and to whoever maintains this next.
+- **Never use Row Level Security.** Permissions belong in `permissions.ts`. Splitting them
+  across SQL policies and TypeScript means neither can be read on its own.
+- **Never import `src/db` outside `features/*/queries.ts`.**
+- **Never expose `SUPABASE_SERVICE_ROLE_KEY` to the client.** Server-side only.
+- **Never trust membership status sent from the client.** Always re-read it server-side.
