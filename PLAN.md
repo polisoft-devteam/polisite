@@ -13,14 +13,17 @@ Goal: an empty but _deployed_ app with a database and a working pipeline. Do thi
 writing any feature. A broken deploy discovered in month three is expensive; discovered on
 day one it's nothing.
 
-**0.1 Create the project**
+**0.1 Create the project** — ✅ done
 `create-next-app` with TypeScript, Tailwind, App Router, ESLint. Add Prettier.
 _Done when:_ `pnpm dev` serves a page locally.
+Result: Next 16.3, React 19.2, Tailwind 4.3, TypeScript 5.9.
 
-**0.2 Git + GitHub**
+**0.2 Git + GitHub** — ⏳ local only
 Init repo, push to a private GitHub repo.
+Local repo is committed on `main`. GitHub push deferred by choice — needs `gh`
+(`brew install gh`) or an empty repo created in the browser, then `git remote add origin`.
 
-**0.3 Deploy to Vercel**
+**0.3 Deploy to Vercel** — ⬜ blocked on 0.2
 Import the GitHub repo. Accept defaults.
 _Done when:_ the placeholder page is live on a `*.vercel.app` URL and a push to `main`
 redeploys it automatically.
