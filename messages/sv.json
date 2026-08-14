@@ -1,0 +1,45 @@
+{
+  "Site": {
+    "name": "Polisite",
+    "tagline": "Föreningens digitala hem"
+  },
+  "Nav": {
+    "home": "Hem",
+    "events": "Evenemang",
+    "calendar": "Kalender",
+    "about": "Om oss"
+  },
+  "Home": {
+    "title": "Välkommen",
+    "intro": "Här samlar vi föreningens evenemang, medlemmar och historia. Samtalet fortsätter på Discord — det här är platsen för det som ska hålla över tid.",
+    "upcomingTitle": "Kommande evenemang",
+    "upcomingEmpty": "Inga evenemang inlagda ännu."
+  },
+  "About": {
+    "title": "Om oss",
+    "intro": "Platshållartext. Skriv om vad föreningen är, varför den finns och vad vi gör tillsammans.",
+    "membershipTitle": "Medlemskap",
+    "membershipBody": "Platshållartext. Beskriv hur man blir medlem och vad det innebär."
+  },
+  "Events": {
+    "title": "Evenemang",
+    "empty": "Inga evenemang inlagda ännu.",
+    "comingSoon": "Evenemang byggs i fas 3."
+  },
+  "Calendar": {
+    "title": "Kalender",
+    "empty": "Kalendern byggs i fas 4."
+  },
+  "Theme": {
+    "label": "Byt tema",
+    "light": "Ljust",
+    "dark": "Mörkt",
+    "system": "System"
+  },
+  "Language": {
+    "label": "Byt språk"
+  },
+  "Footer": {
+    "note": "Privat sida för föreningens medlemmar."
+  }
+}

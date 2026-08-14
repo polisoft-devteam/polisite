@@ -37,13 +37,20 @@ It is not the schema tool and not the permission system.
 ## Structure
 
 ```
+messages/                   Interface copy: sv.json, en.json
 src/
-  app/                      Routes (App Router)
-    (public)/               Guest-visible pages
-    (member)/               Requires active membership
+  app/
+    [locale]/               Every route lives under /sv or /en
+      (public)/             Guest-visible pages
+      (member)/             Requires active membership
     api/
-  components/
-    ui/                     shadcn primitives — do not hand-edit
+  components/               Our components — PascalCase files
+    ui/                     shadcn primitives — kebab-case, do not hand-edit
+  i18n/
+    routing.ts              Supported languages and the default
+    navigation.ts           Language-aware Link / useRouter / usePathname
+    request.ts              Loads the right message file per request
+  proxy.ts                  Language prefix routing (was "middleware" pre-Next 16)
   db/
     schema.ts               Drizzle schema — the single schema definition
     migrations/             Generated SQL, committed
@@ -95,6 +102,29 @@ Excluded in the query, not in rendering.
   claiming. Skip snapshot tests.
 - Prefer self-explanatory code. Comment _why_, not _what_.
 
+### Naming
+
+- **Names are descriptive, even when that makes them long.** `mainNavigationLinks`, not
+  `nav`. `translateTheme`, not `t`. `isSwitchingLanguage`, not `pending`. If you have to
+  read the surrounding lines to work out what a name refers to, it's too short.
+- **Our component files are `PascalCase.tsx`** and match the component inside
+  (`SiteHeader.tsx` exports `SiteHeader`). Non-component modules stay lowercase
+  (`navigation-links.ts`, `permissions.ts`).
+- `src/components/ui/` is the exception — the shadcn CLI writes kebab-case there and
+  regenerates those files. Leave them alone.
+
+### Languages
+
+- Two languages, Swedish default: `/sv` and `/en`. Adding one means an entry in
+  `i18n/routing.ts` plus a file in `messages/`.
+- **All interface copy lives in `messages/*.json`.** Never hardcode a user-visible string
+  in a component, including the About page prose.
+- **Import `Link`, `useRouter` and `usePathname` from `@/i18n/navigation`**, not from
+  `next/link` or `next/navigation` — otherwise links lose the language prefix.
+- **User-created content is never translated.** Event titles, descriptions and bios are
+  stored and shown exactly as written. Dates and numbers still format per the reader's
+  locale automatically. No translation service, no duplicate columns.
+
 ## Commands
 
 ```bash
@@ -108,7 +138,7 @@ pnpm lint             # ESLint + tsc
 pnpm format           # Prettier
 ```
 
-`.npmrc` sets `resolution-mode=highest`. Without it, pnpm 8.6 installs the *lowest*
+`.npmrc` sets `resolution-mode=highest`. Without it, pnpm 8.6 installs the _lowest_
 version matching each range — which silently pins ancient TypeScript. Don't remove it.
 
 ## Never
@@ -118,5 +148,8 @@ version matching each range — which silently pins ancient TypeScript. Don't re
 - **Never use Row Level Security.** Permissions belong in `permissions.ts`. Splitting them
   across SQL policies and TypeScript means neither can be read on its own.
 - **Never import `src/db` outside `features/*/queries.ts`.**
+- **Never put authorization in `proxy.ts`.** It handles the language prefix and nothing
+  else. Next's own docs say proxy is not a session or authorization solution — membership
+  is checked server-side in layouts and queries.
 - **Never expose `SUPABASE_SERVICE_ROLE_KEY` to the client.** Server-side only.
 - **Never trust membership status sent from the client.** Always re-read it server-side.

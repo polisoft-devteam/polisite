@@ -182,7 +182,12 @@ Explicitly not now: native mobile app, forum/chat, financial integrations, gamif
 
 Resolve these when they start to matter, not before:
 
-1. **UI language** — Swedish or English? Affects copy everywhere; cheap now, expensive later.
+1. ~~**UI language**~~ — ✅ decided: both. next-intl with `/sv` and `/en` prefixes,
+   Swedish as the default. Interface copy lives in `messages/*.json`.
+   **User-created content (event titles, descriptions, bios) is not translated** — members
+   write in whichever language they choose and everyone reads it as written. Dates and
+   numbers still render per the reader's locale automatically. Anyone who genuinely needs a
+   translation has Chrome's built-in one. No translation service, no duplicate columns.
 2. **Domain name** — needed at step 5.3.
 3. **Supabase free vs Pro ($25/mo)** — free projects pause after a week of inactivity, and
    have no automatic backups. Decide before handing the link to members. Either accept a

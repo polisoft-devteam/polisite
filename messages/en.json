@@ -1,0 +1,45 @@
+{
+  "Site": {
+    "name": "Polisite",
+    "tagline": "The association's digital home"
+  },
+  "Nav": {
+    "home": "Home",
+    "events": "Events",
+    "calendar": "Calendar",
+    "about": "About"
+  },
+  "Home": {
+    "title": "Welcome",
+    "intro": "This is where we keep the association's events, members and history. The conversation stays on Discord — this is the place for the things meant to last.",
+    "upcomingTitle": "Upcoming events",
+    "upcomingEmpty": "No events yet."
+  },
+  "About": {
+    "title": "About us",
+    "intro": "Placeholder text. Write about what the association is, why it exists and what we do together.",
+    "membershipTitle": "Membership",
+    "membershipBody": "Placeholder text. Describe how to become a member and what it involves."
+  },
+  "Events": {
+    "title": "Events",
+    "empty": "No events yet.",
+    "comingSoon": "Events are built in phase 3."
+  },
+  "Calendar": {
+    "title": "Calendar",
+    "empty": "The calendar is built in phase 4."
+  },
+  "Theme": {
+    "label": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "Language": {
+    "label": "Change language"
+  },
+  "Footer": {
+    "note": "Private site for association members."
+  }
+}
