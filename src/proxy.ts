@@ -1,3 +1,5 @@
+// Runs on every incoming request, before any page renders.
+//
 // Redirects "/" to "/sv" (or "/en") and keeps the language prefix on every URL.
 // Called "proxy" since Next.js 16 — this was "middleware" in older versions.
 //
