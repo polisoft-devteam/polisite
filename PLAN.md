@@ -38,9 +38,11 @@ Install Drizzle + `drizzle-kit`. Create `src/db/schema.ts` with one throwaway ta
 `src/db/index.ts` with the client. Add the `db:generate` / `db:migrate` scripts.
 _Done when:_ a migration file exists in git and applies cleanly to both databases.
 
-**0.6 Add shadcn/ui and a layout**
+**0.6 Add shadcn/ui and a layout** — ✅ done
 Init shadcn. Build the app shell: header, nav, footer, dark mode.
 _Done when:_ the deployed site looks intentional, even though it's empty.
+Also delivered: Swedish/English switching (next-intl), since retrofitting it after
+20 pages would have been far more expensive than doing it at 4.
 
 **0.7 Add Vitest**
 One trivial passing test, running in CI on push.
