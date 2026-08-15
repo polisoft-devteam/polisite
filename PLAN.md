@@ -44,8 +44,10 @@ _Done when:_ the deployed site looks intentional, even though it's empty.
 Also delivered: Swedish/English switching (next-intl), since retrofitting it after
 20 pages would have been far more expensive than doing it at 4.
 
-**0.7 Add Vitest**
+**0.7 Add Vitest** — ✅ done (CI part waits for 0.2)
 One trivial passing test, running in CI on push.
+First test guards the two translation files against drifting apart. Wiring it to run
+on push needs GitHub, so that half is deferred with 0.2.
 
 ---
 
