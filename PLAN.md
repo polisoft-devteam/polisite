@@ -177,6 +177,18 @@ Members, login, profiles, events, calendar, RSVP, wishlist, deployed on a real d
 Ordered by likely value, not by effort:
 
 - **Discord webhook** — new event posts to Discord. An afternoon's work.
+
+  **The rule: duplicate notifications, never duplicate state.** A posted message is
+  fire-and-forget and can't diverge. A Discord _Scheduled Event_ can, because it carries
+  its own interested-list — creating one gives "who's coming?" two answers, and this app
+  exists to be the one that counts.
+
+  Sequence if it grows: (1) post a message on create; (2) store `discord_message_id` on
+  the event so edits update that message instead of posting corrections; (3) only then
+  consider Discord scheduled events, and only on the explicit understanding that they
+  advertise the event while RSVP stays here. Two-way sync is out — it needs a bot,
+  conflict rules and reconciliation, for ten people.
+
 - **Email reminders** (Resend + scheduled job) — needs per-member preferences.
 - **Event photos** — start with a Google Photos album URL per event, not an importer.
 - **Admin panel** — until then, use Supabase Studio to _view and nudge_ data (never to change schema).
