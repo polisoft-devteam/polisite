@@ -41,5 +41,10 @@
   },
   "Footer": {
     "note": "Private site for association members."
+  },
+  "Auth": {
+    "signIn": "Sign in with Google",
+    "signOut": "Sign out",
+    "pending": "Awaiting approval"
   }
 }

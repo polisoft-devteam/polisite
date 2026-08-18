@@ -41,5 +41,10 @@
   },
   "Footer": {
     "note": "Privat sida för föreningens medlemmar."
+  },
+  "Auth": {
+    "signIn": "Logga in med Google",
+    "signOut": "Logga ut",
+    "pending": "Väntar på godkännande"
   }
 }

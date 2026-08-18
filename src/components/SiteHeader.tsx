@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl"
 
+import { AuthMenu } from "@/components/AuthMenu"
 import { LanguageToggle } from "@/components/LanguageToggle"
 import { MainNav } from "@/components/MainNav"
 import { ThemeToggle } from "@/components/ThemeToggle"
@@ -22,6 +23,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-1">
           <LanguageToggle />
           <ThemeToggle />
+          <AuthMenu />
         </div>
       </div>
     </header>
