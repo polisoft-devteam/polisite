@@ -33,10 +33,19 @@ redeploys it automatically.
 Put connection strings in `.env.local` (dev) and Vercel env vars (prod).
 _Done when:_ `.env.example` is committed listing every variable, with no secrets.
 
-**0.5 Wire up Drizzle**
+**0.5 Wire up Drizzle** — ✅ done (dev database only)
 Install Drizzle + `drizzle-kit`. Create `src/db/schema.ts` with one throwaway table,
 `src/db/index.ts` with the client. Add the `db:generate` / `db:migrate` scripts.
 _Done when:_ a migration file exists in git and applies cleanly to both databases.
+
+Skipped the throwaway table — a table created then deleted would leave permanent noise
+in the migration history. Migration `0000` creates `members`, `events` and
+`event_attendees` for real, which brings part of 1.2 and 3.1 forward.
+
+**Connections:** Supabase's direct host (`db.<ref>.supabase.co`) is IPv6-only, which an
+IPv4 network cannot reach. Both `DATABASE_URL` and `DIRECT_URL` therefore use the
+pooler — transaction mode (6543) for the app, session mode (5432) for migrations.
+The client sets `prepare: false`, which the transaction pooler requires.
 
 **0.6 Add shadcn/ui and a layout** — ✅ done
 Init shadcn. Build the app shell: header, nav, footer, dark mode.
