@@ -45,6 +45,6 @@
   "Auth": {
     "signIn": "Logga in med Google",
     "signOut": "Logga ut",
-    "pending": "Väntar på godkännande"
+    "guest": "Gäst"
   }
 }

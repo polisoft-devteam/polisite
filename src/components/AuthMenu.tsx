@@ -34,7 +34,7 @@ export async function AuthMenu() {
 
       {!isActiveMember(viewer) && (
         <span className="text-muted-foreground hidden text-xs sm:inline">
-          {translateAuth("pending")}
+          {translateAuth("guest")}
         </span>
       )}
 

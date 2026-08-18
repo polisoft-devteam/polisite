@@ -71,9 +71,12 @@ Pages and components call feature functions, never the database.
 
 These are the rules that actually matter. Break them and the app leaks private data.
 
-**Membership is not authentication.**
-Signing in with Google makes someone a _user_. Membership requires a row in `members`
-with `status = 'active'`. A signed-in non-member sees only public content.
+**Membership is not authentication. Google authenticates; we authorize.**
+Anyone with a Google account may sign in — there is no invitation step. First sign-in
+creates a `members` row with `status = 'guest'`, which sees exactly what a signed-out
+visitor sees. Access is granted afterwards by an admin promoting them to `active`
+(`pnpm member <email> --status active`). Never gate on "is signed in"; gate on
+`status = 'active'`.
 
 **Roles:** `member`, `moderator`, `board`, `treasurer`, `admin`. Stored as rows, not enum
 columns on the member — a member can hold several.
@@ -133,6 +136,7 @@ pnpm build            # production build (run before pushing)
 pnpm db:generate      # generate a migration after editing schema.ts
 pnpm db:migrate       # apply migrations
 pnpm db:studio        # inspect local data
+pnpm member <email> --status active --role admin   # promote a guest
 pnpm test             # Vitest
 pnpm lint             # ESLint + tsc
 pnpm format           # Prettier

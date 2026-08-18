@@ -45,6 +45,6 @@
   "Auth": {
     "signIn": "Sign in with Google",
     "signOut": "Sign out",
-    "pending": "Awaiting approval"
+    "guest": "Guest"
   }
 }

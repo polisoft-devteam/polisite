@@ -5,6 +5,7 @@
 
 import { NextResponse } from "next/server"
 
+import { ensureMemberForSignIn } from "@/features/members/queries"
 import { routing } from "@/i18n/routing"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 
@@ -23,9 +24,18 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createSupabaseServerClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
-    if (!error) {
+    if (!error && data.user?.email) {
+      // Creates a guest row on first sign-in. Google's name and picture arrive in
+      // user_metadata and are only used to fill blanks.
+      await ensureMemberForSignIn({
+        authUserId: data.user.id,
+        email: data.user.email,
+        fullName: data.user.user_metadata.full_name ?? null,
+        avatarUrl: data.user.user_metadata.avatar_url ?? null,
+      })
+
       return NextResponse.redirect(`${origin}${safeReturnTo}`)
     }
   }

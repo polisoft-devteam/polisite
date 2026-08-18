@@ -8,6 +8,20 @@
       "when": 1787050838350,
       "tag": "0000_mean_stone_men",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787062958831,
+      "tag": "0001_cute_bloodscream",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787064376995,
+      "tag": "0002_late_storm",
+      "breakpoints": true
     }
   ]
 }

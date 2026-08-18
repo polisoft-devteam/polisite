@@ -15,11 +15,12 @@ import {
 
 // --- Members -------------------------------------------------------------------
 
-// "pending"  = signed in with Google but not yet approved. Sees only public content.
+// "guest"    = signed in with Google, but not a member. Sees exactly what a signed-out
+//              visitor sees. This is where everyone starts.
 // "active"   = a real member.
 // "inactive" = left or was removed. Kept as a row so their history stays intact.
 export const memberStatusEnum = pgEnum("member_status", [
-  "pending",
+  "guest",
   "active",
   "inactive",
 ])
@@ -47,7 +48,7 @@ export const members = pgTable("members", {
   // shift across timezones and show the wrong day.
   birthday: date("birthday"),
 
-  status: memberStatusEnum("status").notNull().default("pending"),
+  status: memberStatusEnum("status").notNull().default("guest"),
 
   // When they joined the association — not when the row was created.
   memberSince: timestamp("member_since", { withTimezone: true }),
@@ -59,6 +60,32 @@ export const members = pgTable("members", {
     .notNull()
     .defaultNow(),
 })
+
+// --- Roles ---------------------------------------------------------------------
+
+// A member can hold several roles, so these are rows rather than a column on the member.
+// These grant permissions — unlike officialTitle and funTitle, which are just labels.
+export const roleEnum = pgEnum("role", [
+  "member",
+  "moderator",
+  "board",
+  "treasurer",
+  "admin",
+])
+
+export const memberRoles = pgTable(
+  "member_roles",
+  {
+    memberId: uuid("member_id")
+      .notNull()
+      .references(() => members.id, { onDelete: "cascade" }),
+    role: roleEnum("role").notNull(),
+    grantedAt: timestamp("granted_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.memberId, table.role] })],
+)
 
 // --- Events --------------------------------------------------------------------
 
@@ -129,6 +156,7 @@ export const eventAttendees = pgTable(
 
 export type Member = typeof members.$inferSelect
 export type NewMember = typeof members.$inferInsert
+export type Role = (typeof roleEnum.enumValues)[number]
 export type Event = typeof events.$inferSelect
 export type NewEvent = typeof events.$inferInsert
 export type EventAttendee = typeof eventAttendees.$inferSelect
