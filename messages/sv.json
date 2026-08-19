@@ -46,5 +46,22 @@
     "signIn": "Logga in med Google",
     "signOut": "Logga ut",
     "guest": "Gäst"
+  },
+  "Profile": {
+    "title": "Min profil",
+    "editTitle": "Redigera profil",
+    "fullName": "Namn",
+    "nickname": "Smeknamn",
+    "officialTitle": "Titel",
+    "officialTitlePlaceholder": "Sekreterare, ordförande …",
+    "funTitle": "Rolig titel",
+    "funTitlePlaceholder": "Grillmästare …",
+    "bio": "Om mig",
+    "save": "Spara",
+    "avatarFromGoogle": "Profilbilden hämtas från ditt Google-konto. Egen uppladdning kommer senare.",
+    "upcomingTitle": "Evenemang jag ska på",
+    "upcomingEmpty": "Du har inte anmält dig till något ännu.",
+    "attendedTitle": "Evenemang jag varit på",
+    "attendedEmpty": "Inga tidigare evenemang ännu."
   }
 }

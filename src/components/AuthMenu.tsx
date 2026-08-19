@@ -10,6 +10,7 @@ import { signOut } from "@/app/auth/actions"
 import { SignInButton } from "@/components/SignInButton"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Link } from "@/i18n/navigation"
 import { getViewer, isActiveMember } from "@/lib/auth"
 
 export async function AuthMenu() {
@@ -20,22 +21,38 @@ export async function AuthMenu() {
     return <SignInButton />
   }
 
-  const displayName = viewer.member?.fullName ?? viewer.email
+  const displayName =
+    viewer.member?.nickname ?? viewer.member?.fullName ?? viewer.email
   const initials = displayName.slice(0, 2).toUpperCase()
 
-  return (
-    <div className="flex items-center gap-2">
+  const identity = (
+    <>
       <Avatar className="size-7">
         {viewer.member?.avatarUrl ? (
           <AvatarImage src={viewer.member.avatarUrl} alt="" />
         ) : null}
         <AvatarFallback className="text-xs">{initials}</AvatarFallback>
       </Avatar>
+      <span className="hidden text-sm sm:inline">{displayName}</span>
+    </>
+  )
 
-      {!isActiveMember(viewer) && (
-        <span className="text-muted-foreground hidden text-xs sm:inline">
-          {translateAuth("guest")}
-        </span>
+  return (
+    <div className="flex items-center gap-2">
+      {isActiveMember(viewer) ? (
+        <Link
+          href="/profile"
+          className="hover:text-foreground text-muted-foreground flex items-center gap-2 rounded-md transition-colors"
+        >
+          {identity}
+        </Link>
+      ) : (
+        <div className="text-muted-foreground flex items-center gap-2">
+          {identity}
+          <span className="hidden text-xs sm:inline">
+            {translateAuth("guest")}
+          </span>
+        </div>
       )}
 
       <form action={signOut}>

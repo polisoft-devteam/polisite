@@ -18,6 +18,25 @@ export async function findMemberByAuthUserId(
   return member ?? null
 }
 
+export type EditableProfileFields = {
+  fullName: string
+  nickname: string | null
+  officialTitle: string | null
+  funTitle: string | null
+  bio: string | null
+}
+
+/** Only the fields a member is allowed to change about themselves. */
+export async function updateMemberProfile(
+  memberId: string,
+  fields: EditableProfileFields,
+): Promise<void> {
+  await db
+    .update(members)
+    .set({ ...fields, updatedAt: new Date() })
+    .where(eq(members.id, memberId))
+}
+
 export async function findRolesForMember(memberId: string): Promise<Role[]> {
   const rows = await db
     .select({ role: memberRoles.role })

@@ -46,5 +46,22 @@
     "signIn": "Sign in with Google",
     "signOut": "Sign out",
     "guest": "Guest"
+  },
+  "Profile": {
+    "title": "My profile",
+    "editTitle": "Edit profile",
+    "fullName": "Name",
+    "nickname": "Nickname",
+    "officialTitle": "Title",
+    "officialTitlePlaceholder": "Secretary, chairperson …",
+    "funTitle": "Fun title",
+    "funTitlePlaceholder": "Grill master …",
+    "bio": "About me",
+    "save": "Save",
+    "avatarFromGoogle": "Your picture comes from your Google account. Uploading your own comes later.",
+    "upcomingTitle": "Events I am attending",
+    "upcomingEmpty": "You have not signed up for anything yet.",
+    "attendedTitle": "Events I have attended",
+    "attendedEmpty": "No past events yet."
   }
 }

@@ -38,6 +38,9 @@ export const members = pgTable("members", {
   fullName: text("full_name").notNull(),
   avatarUrl: text("avatar_url"),
 
+  // What people actually call them. Shown instead of the full name where space is tight.
+  nickname: text("nickname"),
+
   // Display labels only. These grant nothing — permissions live in roles, see CLAUDE.md.
   officialTitle: text("official_title"), // "Sekreterare", "Ordförande"
   funTitle: text("fun_title"), // whatever the group decides someone is
@@ -65,13 +68,10 @@ export const members = pgTable("members", {
 
 // A member can hold several roles, so these are rows rather than a column on the member.
 // These grant permissions — unlike officialTitle and funTitle, which are just labels.
-export const roleEnum = pgEnum("role", [
-  "member",
-  "moderator",
-  "board",
-  "treasurer",
-  "admin",
-])
+//
+// Deliberately only two: everyone in the association is on the board, so "board" said
+// nothing, and there is nobody to moderate. Add roles when a real rule needs one.
+export const roleEnum = pgEnum("role", ["member", "admin"])
 
 export const memberRoles = pgTable(
   "member_roles",
