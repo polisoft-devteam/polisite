@@ -40,7 +40,8 @@
     "label": "Byt språk"
   },
   "Footer": {
-    "note": "Privat sida för föreningens medlemmar."
+    "note": "Privat sida för föreningens medlemmar.",
+    "privacy": "Integritetspolicy"
   },
   "Auth": {
     "signIn": "Logga in med Google",
@@ -63,5 +64,38 @@
     "upcomingEmpty": "Du har inte anmält dig till något ännu.",
     "attendedTitle": "Evenemang jag varit på",
     "attendedEmpty": "Inga tidigare evenemang ännu."
+  },
+  "Privacy": {
+    "title": "Integritetspolicy",
+    "lastUpdated": "Senast uppdaterad 19 augusti 2026",
+    "controllerTitle": "Vem ansvarar för uppgifterna",
+    "controllerBody": "[FÖRENINGENS NAMN] är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, hör av dig till [E-POSTADRESS].",
+    "dataTitle": "Vad vi sparar",
+    "dataItems": [
+      "Namn, e-postadress och profilbild från ditt Google-konto när du loggar in.",
+      "Smeknamn, titel, rolig titel, presentation och födelsedag — om du fyller i dem.",
+      "Vilka evenemang du anmält dig till och varit på."
+    ],
+    "dataNote": "Loggar du in med Google utan att vara medlem sparar vi ingenting om dig i vår databas.",
+    "whyTitle": "Varför vi sparar det",
+    "whyBody": "För att driva föreningen: visa vilka som är medlemmar, planera evenemang och hålla reda på vilka som kommer. Den rättsliga grunden är medlemskapet och föreningens berättigade intresse av att kunna organisera sin verksamhet.",
+    "whoTitle": "Vem kan se det",
+    "whoBody": "Bara inloggade medlemmar. Uppgifterna är inte offentliga, delas inte utanför föreningen, säljs inte och används inte för marknadsföring.",
+    "whereTitle": "Var det lagras",
+    "whereBody": "I en databas hos Supabase med servrar i Stockholm, inom EU. Webbplatsen driftas av Vercel.",
+    "retentionTitle": "Hur länge",
+    "retentionBody": "Så länge du är medlem. Lämnar du föreningen kan vi behålla namn och evenemangshistorik som en del av föreningens historia — men du kan alltid begära att allt raderas.",
+    "rightsTitle": "Dina rättigheter",
+    "rightsItems": [
+      "Få veta vilka uppgifter vi har om dig.",
+      "Få felaktiga uppgifter rättade.",
+      "Få dina uppgifter raderade.",
+      "Invända mot att vi behandlar dem.",
+      "Klaga till Integritetsskyddsmyndigheten (IMY) om du tycker att vi gör fel."
+    ],
+    "cookiesTitle": "Kakor",
+    "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser.",
+    "contactTitle": "Kontakt",
+    "contactBody": "Skriv till [E-POSTADRESS] så hjälper vi dig."
   }
 }

@@ -8,12 +8,18 @@ import englishMessages from "../../messages/en.json"
 import swedishMessages from "../../messages/sv.json"
 import { mainNavigationLinks } from "@/lib/navigation-links"
 
-type MessageTree = { [key: string]: string | MessageTree }
+type MessageTree = { [key: string]: string | string[] | MessageTree }
 
 function collectKeyPaths(messages: MessageTree, prefix = ""): string[] {
   return Object.entries(messages).flatMap(([key, value]) => {
     const path = prefix ? `${prefix}.${key}` : key
-    return typeof value === "string" ? [path] : collectKeyPaths(value, path)
+
+    if (typeof value === "string") return [path]
+
+    // Lists carry their length, so a bullet missing in one language fails too.
+    if (Array.isArray(value)) return [`${path}[${value.length}]`]
+
+    return collectKeyPaths(value, path)
   })
 }
 

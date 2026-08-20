@@ -1,8 +1,5 @@
 // Supabase client for server components, server actions and route handlers.
-//
-// Used for AUTHENTICATION AND FILE STORAGE ONLY. Never query our own tables through it —
-// members, events and wishlists go through Drizzle so there is one data path and one
-// place permissions live. See CLAUDE.md.
+// Authentication and file storage only — our own tables go through Drizzle. See CLAUDE.md.
 
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
@@ -24,8 +21,7 @@ export async function createSupabaseServerClient() {
               cookieStore.set(name, value, options)
             }
           } catch {
-            // Server Components can't set cookies. Safe to ignore: proxy.ts refreshes
-            // the session on every request, so the cookie is already up to date.
+            // Server Components can't set cookies; proxy.ts already refreshed them.
           }
         },
       },

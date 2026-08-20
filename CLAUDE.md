@@ -105,11 +105,17 @@ Excluded in the query, not in rendering.
   claiming. Skip snapshot tests.
 - Prefer self-explanatory code. Comment _why_, not _what_.
 
-### Naming
+### Naming and comments
 
 - **Names are descriptive, even when that makes them long.** `mainNavigationLinks`, not
   `nav`. `translateTheme`, not `t`. `isSwitchingLanguage`, not `pending`. If you have to
   read the surrounding lines to work out what a name refers to, it's too short.
+- **Reach for a better name before reaching for a comment.** A name is read everywhere the
+  thing is used; a comment is read once, next to the definition, and then goes stale.
+- **Comments are one line and to the point.** If something needs a paragraph to explain,
+  the code or the name is wrong — fix that instead. The exceptions are a non-obvious
+  constraint ("the pooler drops prepared statements"), a rule that would otherwise look
+  arbitrary, and a note about why the obvious approach was _not_ taken.
 - **Our component files are `PascalCase.tsx`** and match the component inside
   (`SiteHeader.tsx` exports `SiteHeader`). Non-component modules stay lowercase
   (`navigation-links.ts`, `permissions.ts`).

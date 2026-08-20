@@ -40,7 +40,8 @@
     "label": "Change language"
   },
   "Footer": {
-    "note": "Private site for association members."
+    "note": "Private site for association members.",
+    "privacy": "Privacy"
   },
   "Auth": {
     "signIn": "Sign in with Google",
@@ -63,5 +64,38 @@
     "upcomingEmpty": "You have not signed up for anything yet.",
     "attendedTitle": "Events I have attended",
     "attendedEmpty": "No past events yet."
+  },
+  "Privacy": {
+    "title": "Privacy policy",
+    "lastUpdated": "Last updated 19 August 2026",
+    "controllerTitle": "Who is responsible",
+    "controllerBody": "[ASSOCIATION NAME] is the data controller for the information on this site. If you have questions, contact us at [EMAIL ADDRESS].",
+    "dataTitle": "What we store",
+    "dataItems": [
+      "Name, email address and profile picture from your Google account when you sign in.",
+      "Nickname, title, fun title, bio and birthday — if you fill them in.",
+      "Which events you have signed up for and attended."
+    ],
+    "dataNote": "If you sign in with Google without being a member, we store nothing about you in our database.",
+    "whyTitle": "Why we store it",
+    "whyBody": "To run the association: show who the members are, plan events and keep track of who is coming. The legal basis is the membership itself and the association's legitimate interest in organising its activities.",
+    "whoTitle": "Who can see it",
+    "whoBody": "Only signed-in members. The information is not public, is not shared outside the association, is never sold, and is not used for marketing.",
+    "whereTitle": "Where it is stored",
+    "whereBody": "In a database hosted by Supabase on servers in Stockholm, within the EU. The site itself runs on Vercel.",
+    "retentionTitle": "How long",
+    "retentionBody": "For as long as you are a member. If you leave, we may keep your name and event history as part of the association's record — but you can always ask for everything to be deleted.",
+    "rightsTitle": "Your rights",
+    "rightsItems": [
+      "Find out what information we hold about you.",
+      "Have incorrect information corrected.",
+      "Have your information deleted.",
+      "Object to us processing it.",
+      "Complain to the Swedish Authority for Privacy Protection (IMY) if you think we are getting it wrong."
+    ],
+    "cookiesTitle": "Cookies",
+    "cookiesBody": "We use exactly one necessary cookie, to keep you signed in. No analytics, no tracking, no advertising.",
+    "contactTitle": "Contact",
+    "contactBody": "Write to [EMAIL ADDRESS] and we will help you."
   }
 }

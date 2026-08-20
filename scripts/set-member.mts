@@ -1,17 +1,15 @@
 /**
- * Promotes a guest to a member, or changes their status and roles.
+ * Adds someone to the association, or changes their status and roles.
  *
- * Everyone who signs in with Google gets a "guest" row automatically. This is how you
- * grant them access afterwards.
- *
- *   pnpm member anna@example.com --status active
- *   pnpm member victor@example.com --status active --role admin --role board
+ *   pnpm member anna@example.com
+ *   pnpm member victor@example.com --role admin
  *   pnpm member someone@example.com --status inactive
  *
- * They must have signed in at least once — there's nothing to promote otherwise.
+ * They must have signed in with Google at least once, so there is an account to link to.
+ * Signing in stores nothing in our database — this script is what creates the member row.
  */
 
-import { eq } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 
 import { db } from "../src/db/index"
 import {
@@ -24,24 +22,26 @@ import {
 type RoleName = (typeof roleEnum.enumValues)[number]
 type StatusName = (typeof memberStatusEnum.enumValues)[number]
 
-const args = process.argv.slice(2)
-const email = args[0]
+const commandLineArguments = process.argv.slice(2)
+const email = commandLineArguments[0]
 
 if (!email || email.startsWith("--") || !email.includes("@")) {
   console.error(
-    "Usage: pnpm member <email> [--status guest|active|inactive] [--role admin]",
+    "Usage: pnpm member <email> [--status active|inactive] [--role admin]",
   )
   process.exit(1)
 }
 
 function readOption(flag: string): string | undefined {
-  const index = args.indexOf(flag)
-  return index === -1 ? undefined : args[index + 1]
+  const index = commandLineArguments.indexOf(flag)
+  return index === -1 ? undefined : commandLineArguments[index + 1]
 }
 
 function readRepeatedOption(flag: string): string[] {
-  return args
-    .map((value, index) => (value === flag ? args[index + 1] : undefined))
+  return commandLineArguments
+    .map((value, index) =>
+      value === flag ? commandLineArguments[index + 1] : undefined,
+    )
     .filter((value): value is string => Boolean(value))
 }
 
@@ -64,47 +64,86 @@ for (const role of requestedRoles) {
   }
 }
 
-const [existing] = await db
+type SupabaseAuthUser = {
+  id: string
+  full_name: string | null
+  avatar_url: string | null
+}
+
+// auth.users belongs to Supabase, so it is read with raw SQL rather than through Drizzle.
+async function findSupabaseAuthUserByEmail(
+  emailToFind: string,
+): Promise<SupabaseAuthUser | null> {
+  const rows = await db.execute<SupabaseAuthUser>(sql`
+    select id,
+           raw_user_meta_data->>'full_name'  as full_name,
+           raw_user_meta_data->>'avatar_url' as avatar_url
+    from auth.users
+    where email = ${emailToFind}
+    limit 1`)
+
+  return rows[0] ?? null
+}
+
+const [existingMember] = await db
   .select()
   .from(members)
   .where(eq(members.email, email))
   .limit(1)
 
-if (!existing) {
-  console.error(`No member with email "${email}".`)
-  console.error(
-    "They need to sign in with Google once before you can promote them.",
-  )
-  process.exit(1)
+let memberId: string
+
+if (existingMember) {
+  const [updated] = await db
+    .update(members)
+    .set({
+      status,
+      joinedAssociationAt:
+        existingMember.joinedAssociationAt ??
+        (status === "active" ? new Date() : null),
+      updatedAt: new Date(),
+    })
+    .where(eq(members.id, existingMember.id))
+    .returning()
+
+  memberId = updated.id
+  console.log(`Updated ${email}`)
+} else {
+  const authUser = await findSupabaseAuthUserByEmail(email)
+
+  if (!authUser) {
+    console.error(`Nobody has signed in with "${email}".`)
+    console.error("Ask them to sign in with Google once, then run this again.")
+    process.exit(1)
+  }
+
+  const [created] = await db
+    .insert(members)
+    .values({
+      authUserId: authUser.id,
+      email,
+      fullName: authUser.full_name ?? email,
+      avatarUrl: authUser.avatar_url,
+      status,
+      joinedAssociationAt: status === "active" ? new Date() : null,
+    })
+    .returning()
+
+  memberId = created.id
+  console.log(`Added ${email}`)
 }
 
-const [member] = await db
-  .update(members)
-  .set({
-    status,
-    // Only set on the way in, so it survives someone being made inactive and back again.
-    memberSince:
-      existing.memberSince ?? (status === "active" ? new Date() : null),
-    updatedAt: new Date(),
-  })
-  .where(eq(members.id, existing.id))
-  .returning()
-
-// Everyone active is a member; extra roles are added on top.
+// Everyone active is a member; any extra roles are added on top.
 const rolesToGrant: RoleName[] =
   status === "active"
     ? [...new Set<RoleName>(["member", ...requestedRoles])]
     : requestedRoles
 
 for (const role of rolesToGrant) {
-  await db
-    .insert(memberRoles)
-    .values({ memberId: member.id, role })
-    .onConflictDoNothing()
+  await db.insert(memberRoles).values({ memberId, role }).onConflictDoNothing()
 }
 
-console.log(`Updated ${member.email}`)
-console.log(`  status: ${member.status}`)
+console.log(`  status: ${status}`)
 console.log(`  roles:  ${rolesToGrant.join(", ") || "none granted"}`)
 
 process.exit(0)

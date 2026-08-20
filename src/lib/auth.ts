@@ -1,8 +1,4 @@
 // Who is looking at the page? Every permission decision starts here.
-//
-// The key distinction, from CLAUDE.md: signing in with Google makes someone a *user*.
-// Being a *member* requires a row in `members` with status "active". A signed-in
-// non-member sees only public content.
 
 import { findMemberByAuthUserId } from "@/features/members/queries"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
@@ -11,7 +7,7 @@ import type { Member } from "@/db/schema"
 export type Viewer = {
   authUserId: string
   email: string
-  /** Null when someone has signed in with Google but has no member row yet. */
+  /** Null for a signed-in guest — someone with a Google account but no membership. */
   member: Member | null
 }
 
@@ -19,8 +15,7 @@ export type Viewer = {
 export async function getViewer(): Promise<Viewer | null> {
   const supabase = await createSupabaseServerClient()
 
-  // getUser() revalidates the token with Supabase. Never trust getSession() for this —
-  // it reads the cookie without verifying it.
+  // getUser() revalidates the token; getSession() only reads the cookie and is not safe here.
   const {
     data: { user },
   } = await supabase.auth.getUser()
