@@ -105,6 +105,14 @@ describe("event visibility", () => {
     expect(visibleEventVisibilitiesFor(signedInGuest)).toEqual(["public"])
   })
 
+  it("hides bring-a-friend events from guests, since only attendance is widened", () => {
+    const friendsEvent = buildEvent({ visibility: "members_and_friends" })
+
+    expect(canViewEvent(signedOutVisitor, friendsEvent)).toBe(false)
+    expect(canViewEvent(signedInGuest, friendsEvent)).toBe(false)
+    expect(canViewEvent(activeMember, friendsEvent)).toBe(true)
+  })
+
   it("never exposes members-only events to a non-member", () => {
     const membersOnlyEvent = buildEvent({ visibility: "members" })
 
@@ -114,12 +122,12 @@ describe("event visibility", () => {
     expect(canViewEvent(activeMember, membersOnlyEvent)).toBe(true)
   })
 
-  it("never exposes private events, even to members", () => {
-    // Private events have no invite list yet, so nobody may see them.
-    const privateEvent = buildEvent({ visibility: "private" })
+  it("shows public events to everyone", () => {
+    const publicEvent = buildEvent({ visibility: "public" })
 
-    expect(canViewEvent(activeMember, privateEvent)).toBe(false)
-    expect(canViewEvent(adminMember, privateEvent)).toBe(false)
+    expect(canViewEvent(signedOutVisitor, publicEvent)).toBe(true)
+    expect(canViewEvent(signedInGuest, publicEvent)).toBe(true)
+    expect(canViewEvent(activeMember, publicEvent)).toBe(true)
   })
 })
 

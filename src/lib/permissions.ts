@@ -31,7 +31,11 @@ export function isAdmin(viewer: Viewer | null): boolean {
 export function visibleEventVisibilitiesFor(
   viewer: Viewer | null,
 ): EventVisibility[] {
-  return isActiveMember(viewer) ? ["public", "members"] : ["public"]
+  // "members_and_friends" is about who may come along, not who may read the page — a
+  // guest still doesn't see it.
+  return isActiveMember(viewer)
+    ? ["public", "members", "members_and_friends"]
+    : ["public"]
 }
 
 export function canViewEvent(viewer: Viewer | null, event: Event): boolean {

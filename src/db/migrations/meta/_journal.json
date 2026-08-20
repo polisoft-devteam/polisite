@@ -43,6 +43,13 @@
       "when": 1787236672497,
       "tag": "0005_wet_metal_master",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1787250851828,
+      "tag": "0006_fast_northstar",
+      "breakpoints": true
     }
   ]
 }

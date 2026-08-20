@@ -3,7 +3,11 @@
 
 import { z } from "zod"
 
-import { eventCategoryEnum, reminderOffsetEnum } from "@/db/schema"
+import {
+  eventCategoryEnum,
+  eventVisibilityEnum,
+  reminderOffsetEnum,
+} from "@/db/schema"
 import { COMMON_EVENT_TIME_ZONES, MAX_REMINDERS_PER_EVENT } from "@/lib/time"
 
 export const EVENT_CURRENCIES = ["SEK", "DKK", "NOK", "EUR", "GBP"] as const
@@ -72,9 +76,7 @@ export const eventFormSchema = z
     eventUrl: optionalUrl,
     extraLinkUrl: optionalUrl,
 
-    // "private" is deliberately absent: there is no invite list yet, so offering it
-    // would create events nobody can see.
-    visibility: z.enum(["public", "members"]),
+    visibility: z.enum(eventVisibilityEnum.enumValues),
 
     reminderOffsets: z
       .array(z.enum(reminderOffsetEnum.enumValues))

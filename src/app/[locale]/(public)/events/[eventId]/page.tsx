@@ -10,7 +10,7 @@ import {
 import { EventRsvp } from "@/components/EventRsvp"
 import { PageContainer } from "@/components/PageContainer"
 import { Button } from "@/components/ui/button"
-import type { EventCategory } from "@/db/schema"
+import type { EventCategory, EventVisibility } from "@/db/schema"
 import { findAttendeesForEvent, findEventById } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
@@ -19,6 +19,12 @@ import {
   canRespondToEvent,
   visibleEventVisibilitiesFor,
 } from "@/lib/permissions"
+
+const VISIBILITY_TRANSLATION_KEY: Record<EventVisibility, string> = {
+  public: "visibilityPublic",
+  members: "visibilityMembers",
+  members_and_friends: "visibilityMembersAndFriends",
+}
 
 const CATEGORY_TRANSLATION_KEY: Record<EventCategory, string> = {
   music: "categoryMusic",
@@ -155,8 +161,23 @@ export default async function EventPage({
         )}
 
         {event.location && (
-          <Fact label={translateEvents("fieldLocation")}>{event.location}</Fact>
+          <Fact label={translateEvents("fieldLocation")}>
+            {event.location}
+            {/* A plain Maps search link needs no API key and no billing account. */}
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-muted-foreground ml-2 underline underline-offset-4"
+            >
+              {translateEvents("showOnMap")}
+            </a>
+          </Fact>
         )}
+
+        <Fact label={translateEvents("fieldVisibility")}>
+          {translateEvents(VISIBILITY_TRANSLATION_KEY[event.visibility])}
+        </Fact>
 
         <Fact label={translateEvents("fieldPrice")}>
           {event.priceMinorUnits === null

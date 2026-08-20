@@ -77,11 +77,15 @@ export const memberRoles = pgTable(
 
 // --- Events --------------------------------------------------------------------
 
-// Always filtered in the query, never by hiding UI.
+// Who may attend, and who may see it. Always filtered in the query, never by hiding UI.
+//
+// "public"             = open event, usually hosted by someone else. Guests see it.
+// "members"            = closed, us for us. Members only.
+// "members_and_friends" = members may bring friends and family. Members only see it.
 export const eventVisibilityEnum = pgEnum("event_visibility", [
   "public",
   "members",
-  "private",
+  "members_and_friends",
 ])
 
 export const eventCategoryEnum = pgEnum("event_category", [
