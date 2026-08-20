@@ -6,7 +6,8 @@ import { z } from "zod"
 
 import { updateMemberProfile } from "@/features/members/queries"
 import { redirect } from "@/i18n/navigation"
-import { getViewer, isActiveMember } from "@/lib/auth"
+import { getViewer } from "@/lib/auth"
+import { isActiveMember } from "@/lib/permissions"
 
 // Validated on the server because this is the boundary. Anything the browser sends is
 // untrusted — client-side validation is a convenience, never a control. See CLAUDE.md.

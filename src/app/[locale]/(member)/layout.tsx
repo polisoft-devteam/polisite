@@ -7,7 +7,8 @@
 import { getLocale } from "next-intl/server"
 
 import { redirect } from "@/i18n/navigation"
-import { getViewer, isActiveMember } from "@/lib/auth"
+import { getViewer } from "@/lib/auth"
+import { isActiveMember } from "@/lib/permissions"
 
 export default async function MemberLayout({
   children,

@@ -11,7 +11,8 @@ import { SignInButton } from "@/components/SignInButton"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
-import { getViewer, isActiveMember } from "@/lib/auth"
+import { getViewer } from "@/lib/auth"
+import { isActiveMember } from "@/lib/permissions"
 
 export async function AuthMenu() {
   const translateAuth = await getTranslations("Auth")

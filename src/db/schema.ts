@@ -141,6 +141,9 @@ export const eventAttendees = pgTable(
 export type Member = typeof members.$inferSelect
 export type NewMember = typeof members.$inferInsert
 export type Role = (typeof roleEnum.enumValues)[number]
+export type EventVisibility = (typeof eventVisibilityEnum.enumValues)[number]
+export type AttendanceResponse =
+  (typeof attendanceResponseEnum.enumValues)[number]
 export type Event = typeof events.$inferSelect
 export type NewEvent = typeof events.$inferInsert
 export type EventAttendee = typeof eventAttendees.$inferSelect
