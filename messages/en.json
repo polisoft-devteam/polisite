@@ -95,7 +95,9 @@
     "visibilityMembersAndFriends": "Poli & friends",
     "visibilityMembersAndFriendsExplanation": "Events where we bring friends and family — ski trips, birthdays and the like. Still only members see it in the app.",
     "fieldRemindersAtLimit": "Two selected — untick one to change.",
-    "showOnMap": "Show on map"
+    "showOnMap": "Show on map",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month"
   },
   "Calendar": {
     "title": "Calendar",

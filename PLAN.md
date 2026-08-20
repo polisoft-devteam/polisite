@@ -112,22 +112,22 @@ _Phase done when:_ every member has filled in their own profile.
 
 The core of the app.
 
-**3.1 Events schema**
+**3.1 Events schema** — ✅ done
 `events` (title, description, starts/ends, location, category, visibility, creator) and
 `event_attendees`. All timestamps `timestamptz`.
 
-**3.2 Event CRUD**
+**3.2 Event CRUD** — ✅ done
 Create, edit, delete. Zod validation at the server boundary. Any member may create.
 Only the creator, a moderator or an admin may edit.
 
-**3.3 Visibility filtering**
+**3.3 Visibility filtering** — ✅ done
 `public` / `members` / `private`, filtered in the query.
 _Done when:_ a signed-out visitor sees public events only, and a test proves it.
 
-**3.4 Event pages**
+**3.4 Event pages** — ✅ done
 Detail page with description, location, attendees, and an optional Discord thread link.
 
-**3.5 RSVP**
+**3.5 RSVP** — ✅ done
 Interested / Going / Not going. Counts plus attendee names.
 _Done when:_ members have RSVP'd to a real event.
 
@@ -138,11 +138,12 @@ Enter the real events from the spec so the site isn't empty when members arrive.
 
 ## Phase 4 — Calendar
 
-**4.1 FullCalendar month view** reading from the events API.
-**4.2 List/agenda view** for mobile.
-**4.3 Category and visibility filters.**
-
-The database stays the source of truth; FullCalendar only renders.
+**4.1 Month view** — ✅ done. Hand-built grid rather than FullCalendar: a seven-column
+grid of links keeps the page a Server Component, so visibility filtering stays in SQL
+instead of shipping events to the browser. Swap in a library only if week/day views or
+drag-and-drop turn out to be wanted.
+**4.2 List/agenda view** — the `/events` page already serves this, including on mobile.
+**4.3 Category and visibility filters** — not built yet.
 
 ---
 

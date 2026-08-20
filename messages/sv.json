@@ -95,7 +95,9 @@
     "visibilityMembersAndFriends": "Poli & vänner",
     "visibilityMembersAndFriendsExplanation": "Event där vi tar med vänner och familj — skidresor, födelsedagar och liknande. Bara medlemmar ser det i appen.",
     "fieldRemindersAtLimit": "Två valda — avmarkera en för att byta.",
-    "showOnMap": "Visa på karta"
+    "showOnMap": "Visa på karta",
+    "previousMonth": "Föregående månad",
+    "nextMonth": "Nästa månad"
   },
   "Calendar": {
     "title": "Kalender",

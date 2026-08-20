@@ -54,6 +54,27 @@ export async function findPastEvents(
     .orderBy(desc(events.startsAt))
 }
 
+/** Events overlapping a date range, for the calendar grid. */
+export async function findEventsInRange(
+  allowedVisibilities: EventVisibility[],
+  from: Date,
+  to: Date,
+): Promise<Event[]> {
+  if (allowedVisibilities.length === 0) return []
+
+  return db
+    .select()
+    .from(events)
+    .where(
+      and(
+        inArray(events.visibility, allowedVisibilities),
+        gte(events.startsAt, from),
+        lt(events.startsAt, to),
+      ),
+    )
+    .orderBy(asc(events.startsAt))
+}
+
 /** Null when the event doesn't exist *or* this viewer may not see it — same answer. */
 export async function findEventById(
   eventId: string,

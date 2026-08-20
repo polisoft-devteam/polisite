@@ -1,7 +1,11 @@
 import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
-import { PageContainer } from "@/components/PageContainer"
+import { EventCalendar } from "@/components/EventCalendar"
+import { findEventsInRange } from "@/features/events/queries"
+import { getViewer } from "@/lib/auth"
+import { addMonthsUtc, parseMonthParam } from "@/lib/calendar"
+import { visibleEventVisibilitiesFor } from "@/lib/permissions"
 
 export async function generateMetadata({
   params,
@@ -17,20 +21,30 @@ export async function generateMetadata({
 
 export default async function CalendarPage({
   params,
+  searchParams,
 }: PageProps<"/[locale]/calendar">) {
   const { locale } = await params
   setRequestLocale(locale)
 
-  const translateCalendar = await getTranslations("Calendar")
+  const { month: monthParam } = await searchParams
+  const month = parseMonthParam(
+    typeof monthParam === "string" ? monthParam : undefined,
+  )
+
+  const viewer = await getViewer()
+
+  // The grid shows some days either side of the month, so the query covers a month
+  // on both sides rather than trying to match the visible range exactly.
+  const events = await findEventsInRange(
+    visibleEventVisibilitiesFor(viewer),
+    addMonthsUtc(month, -1),
+    addMonthsUtc(month, 2),
+  )
 
   return (
-    <PageContainer>
-      <h1 className="text-3xl font-semibold tracking-tight">
-        {translateCalendar("title")}
-      </h1>
-      <p className="text-muted-foreground mt-4 rounded-lg border border-dashed p-6 text-sm">
-        {translateCalendar("empty")}
-      </p>
-    </PageContainer>
+    // Wider than the standard page: a seven-column grid needs the room.
+    <div className="mx-auto w-full max-w-7xl px-4 py-10">
+      <EventCalendar month={month} events={events} locale={locale} />
+    </div>
   )
 }

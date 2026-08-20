@@ -17,19 +17,19 @@ When a decision is unclear, resolve it in this order:
 
 ## Stack
 
-| Concern      | Choice                                                           |
-| ------------ | ---------------------------------------------------------------- |
-| Language     | TypeScript (strict)                                              |
-| Framework    | Next.js, App Router, React Server Components                     |
-| Database     | PostgreSQL, hosted on Supabase                                   |
-| DB access    | Drizzle ORM                                                      |
-| Auth         | Supabase Auth, Google OAuth only                                 |
-| File storage | Supabase Storage                                                 |
-| Styling      | Tailwind CSS + shadcn/ui                                         |
-| Forms        | React Hook Form + Zod                                            |
-| Calendar     | FullCalendar (presentation only — the DB is the source of truth) |
-| Tests        | Vitest                                                           |
-| Hosting      | Vercel                                                           |
+| Concern      | Choice                                         |
+| ------------ | ---------------------------------------------- |
+| Language     | TypeScript (strict)                            |
+| Framework    | Next.js, App Router, React Server Components   |
+| Database     | PostgreSQL, hosted on Supabase                 |
+| DB access    | Drizzle ORM                                    |
+| Auth         | Supabase Auth, Google OAuth only               |
+| File storage | Supabase Storage                               |
+| Styling      | Tailwind CSS + shadcn/ui                       |
+| Forms        | React Hook Form + Zod                          |
+| Calendar     | Hand-built month grid — no library. See below. |
+| Tests        | Vitest                                         |
+| Hosting      | Vercel                                         |
 
 Supabase does exactly three jobs: **managed Postgres, Google login, file storage.**
 It is not the schema tool and not the permission system.
@@ -99,8 +99,16 @@ Excluded in the query, not in rendering.
 - **Server Components by default.** Add `"use client"` only for genuine interactivity.
 - **Validate input with Zod at the server boundary**, including Server Actions. Client
   validation is a convenience, never a control.
-- **Timestamps are `timestamptz`, stored UTC, displayed in `Europe/Stockholm`.**
-  At least one member is in Denmark — never store naive local time.
+- **Timestamps are `timestamptz`, stored UTC.** An event also stores the timezone where it
+  happens, so a London concert shows 19:00 to everyone. Elsewhere, display in
+  `Europe/Stockholm`. At least one member is in Denmark — never store naive local time.
+- **Do date arithmetic in UTC, not with date-fns' local-time helpers.** `subMonths`,
+  `startOfMonth` and friends count in the machine's timezone, so they give different
+  answers on a Copenhagen laptop than on a UTC server. This has already caused two bugs
+  (reminder times, calendar grid off by one day). See `lib/calendar.ts` and `lib/time.ts`.
+- **The calendar is a hand-built month grid**, not FullCalendar. It's a seven-column grid
+  of links, which keeps the page a Server Component so visibility filtering stays in SQL.
+  Reach for a library only if week/day views or drag-and-drop are actually wanted.
 - **Test the rules, not the UI.** Cover permissions, visibility filtering and wishlist
   claiming. Skip snapshot tests.
 - Prefer self-explanatory code. Comment _why_, not _what_.
