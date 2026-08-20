@@ -1,0 +1,127 @@
+// Posts event announcements and reminders to Discord.
+//
+// Server-only. The webhook URL is a bearer secret: anyone holding it can post to that
+// channel. Never import this from a client component.
+//
+// Discord carries the notification; this app keeps the state. We never create Discord
+// Scheduled Events, because those hold their own attendee list and "who's coming?" would
+// then have two answers.
+
+import type { Event } from "@/db/schema"
+import { toDiscordTimestamp } from "@/lib/time"
+
+const CATEGORY_EMOJI: Record<Event["category"], string> = {
+  music: "🎵",
+  party: "🎉",
+  trip: "✈️",
+  hike: "🥾",
+  sport: "🏅",
+  food: "🍽️",
+  board_meeting: "📋",
+  birthday: "🎂",
+  other: "📌",
+}
+
+export function isDiscordConfigured(): boolean {
+  return Boolean(process.env.DISCORD_WEBHOOK_URL)
+}
+
+function buildEventUrl(event: Event, locale: string): string {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
+    "http://localhost:3210"
+
+  return `${siteUrl}/${locale}/events/${event.id}`
+}
+
+function buildEmbed(event: Event, locale: string) {
+  const fields: { name: string; value: string; inline?: boolean }[] = [
+    // Discord renders these in each reader's own timezone, so the Dane and the Swede
+    // both see their own local time without us converting anything.
+    {
+      name: "När",
+      value: `${toDiscordTimestamp(event.startsAt)}\n${toDiscordTimestamp(event.startsAt, "R")}`,
+    },
+  ]
+
+  if (event.location) {
+    fields.push({ name: "Var", value: event.location, inline: true })
+  }
+
+  if (event.priceMinorUnits !== null) {
+    fields.push({
+      name: "Pris",
+      value: `${(event.priceMinorUnits / 100).toFixed(2)} ${event.priceCurrency}`,
+      inline: true,
+    })
+  }
+
+  if (event.maxAttendees !== null) {
+    fields.push({
+      name: "Platser",
+      value: String(event.maxAttendees),
+      inline: true,
+    })
+  }
+
+  return {
+    title: `${CATEGORY_EMOJI[event.category]} ${event.title}`,
+    url: buildEventUrl(event, locale),
+    description: event.description?.slice(0, 500) ?? undefined,
+    fields,
+    image: event.imageUrl ? { url: event.imageUrl } : undefined,
+  }
+}
+
+type PostOptions = {
+  event: Event
+  locale: string
+  leadText: string
+}
+
+/**
+ * Returns the Discord message id so a later edit can update that message instead of
+ * posting a correction. Null if Discord isn't configured or the post failed — a failed
+ * notification must never block saving the event.
+ */
+export async function postEventToDiscord({
+  event,
+  locale,
+  leadText,
+}: PostOptions): Promise<string | null> {
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL
+  if (!webhookUrl) return null
+
+  const roleId = process.env.DISCORD_MEMBER_ROLE_ID
+  const mention = roleId ? `<@&${roleId}> ` : ""
+
+  try {
+    // wait=true makes Discord return the created message rather than an empty 204.
+    const response = await fetch(`${webhookUrl}?wait=true`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: `${mention}${leadText}`,
+        // Without naming the role here Discord renders the mention as text and pings
+        // nobody. parse: [] blocks @everyone even if it appears in the text.
+        allowed_mentions: { parse: [], roles: roleId ? [roleId] : [] },
+        embeds: [buildEmbed(event, locale)],
+      }),
+    })
+
+    if (!response.ok) {
+      console.error(
+        "Discord post failed",
+        response.status,
+        await response.text(),
+      )
+      return null
+    }
+
+    const message = (await response.json()) as { id?: string }
+    return message.id ?? null
+  } catch (error) {
+    console.error("Discord post threw", error)
+    return null
+  }
+}

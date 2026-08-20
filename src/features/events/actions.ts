@@ -1,0 +1,175 @@
+"use server"
+
+import { revalidatePath } from "next/cache"
+import { getLocale } from "next-intl/server"
+
+import { postEventToDiscord } from "@/features/events/discord"
+import {
+  createEvent,
+  deleteEvent,
+  findEventById,
+  setAttendance,
+  updateEvent,
+} from "@/features/events/queries"
+import {
+  eventFormSchema,
+  readEventForm,
+  toMinorUnits,
+} from "@/features/events/schemas"
+import { redirect } from "@/i18n/navigation"
+import { getViewer } from "@/lib/auth"
+import {
+  canCreateEvent,
+  canEditEvent,
+  canRespondToEvent,
+  visibleEventVisibilitiesFor,
+} from "@/lib/permissions"
+import { wallTimeToInstant } from "@/lib/time"
+import { attendanceResponseEnum } from "@/db/schema"
+
+export async function createEventAction(formData: FormData) {
+  const viewer = await getViewer()
+
+  if (!canCreateEvent(viewer)) throw new Error("Not allowed to create events")
+
+  const parsed = eventFormSchema.safeParse(readEventForm(formData))
+  if (!parsed.success) return
+
+  const form = parsed.data
+
+  const event = await createEvent(
+    {
+      title: form.title,
+      description: form.description,
+      startsAt: wallTimeToInstant(form.startsAtWallTime, form.timeZone),
+      endsAt: form.endsAtWallTime
+        ? wallTimeToInstant(form.endsAtWallTime, form.timeZone)
+        : null,
+      timeZone: form.timeZone,
+      location: form.location,
+      category: form.category,
+      priceMinorUnits: toMinorUnits(form.price),
+      priceCurrency: form.currency,
+      maxAttendees: form.maxAttendees,
+      imageUrl: form.imageUrl,
+      eventUrl: form.eventUrl,
+      extraLinkUrl: form.extraLinkUrl,
+      visibility: form.visibility,
+      createdByMemberId: viewer!.member!.id,
+    },
+    form.reminderOffsets,
+  )
+
+  const locale = await getLocale()
+
+  if (form.announceOnDiscord) {
+    // A failed announcement must not lose the event, so this never throws.
+    const messageId = await postEventToDiscord({
+      event,
+      locale,
+      leadText: "Nytt evenemang!",
+    })
+
+    if (messageId !== null) {
+      await updateEvent(
+        event.id,
+        { discordAnnouncedAt: new Date(), discordMessageId: messageId },
+        form.reminderOffsets,
+      )
+    }
+  }
+
+  revalidatePath("/", "layout")
+  redirect({ href: `/events/${event.id}`, locale })
+}
+
+export async function updateEventAction(formData: FormData) {
+  const viewer = await getViewer()
+  const eventId = String(formData.get("eventId") ?? "")
+
+  const existing = await findEventById(
+    eventId,
+    visibleEventVisibilitiesFor(viewer),
+  )
+
+  if (!existing || !canEditEvent(viewer, existing)) {
+    throw new Error("Not allowed to edit this event")
+  }
+
+  const parsed = eventFormSchema.safeParse(readEventForm(formData))
+  if (!parsed.success) return
+
+  const form = parsed.data
+
+  await updateEvent(
+    eventId,
+    {
+      title: form.title,
+      description: form.description,
+      startsAt: wallTimeToInstant(form.startsAtWallTime, form.timeZone),
+      endsAt: form.endsAtWallTime
+        ? wallTimeToInstant(form.endsAtWallTime, form.timeZone)
+        : null,
+      timeZone: form.timeZone,
+      location: form.location,
+      category: form.category,
+      priceMinorUnits: toMinorUnits(form.price),
+      priceCurrency: form.currency,
+      maxAttendees: form.maxAttendees,
+      imageUrl: form.imageUrl,
+      eventUrl: form.eventUrl,
+      extraLinkUrl: form.extraLinkUrl,
+      visibility: form.visibility,
+    },
+    form.reminderOffsets,
+  )
+
+  revalidatePath("/", "layout")
+  redirect({ href: `/events/${eventId}`, locale: await getLocale() })
+}
+
+export async function deleteEventAction(formData: FormData) {
+  const viewer = await getViewer()
+  const eventId = String(formData.get("eventId") ?? "")
+
+  const existing = await findEventById(
+    eventId,
+    visibleEventVisibilitiesFor(viewer),
+  )
+
+  if (!existing || !canEditEvent(viewer, existing)) {
+    throw new Error("Not allowed to delete this event")
+  }
+
+  await deleteEvent(eventId)
+
+  revalidatePath("/", "layout")
+  redirect({ href: "/events", locale: await getLocale() })
+}
+
+export async function setAttendanceAction(formData: FormData) {
+  const viewer = await getViewer()
+  const eventId = String(formData.get("eventId") ?? "")
+  const response = String(formData.get("response") ?? "")
+
+  if (!attendanceResponseEnum.enumValues.includes(response as never)) {
+    throw new Error("Unknown response")
+  }
+
+  const event = await findEventById(
+    eventId,
+    visibleEventVisibilitiesFor(viewer),
+  )
+
+  if (!event || !canRespondToEvent(viewer, event)) {
+    throw new Error("Not allowed to respond to this event")
+  }
+
+  await setAttendance(
+    eventId,
+    viewer!.member!.id,
+    response as (typeof attendanceResponseEnum.enumValues)[number],
+  )
+
+  revalidatePath("/", "layout")
+}
