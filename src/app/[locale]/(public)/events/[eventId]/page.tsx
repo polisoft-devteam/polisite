@@ -88,6 +88,7 @@ export default async function EventPage({
   return (
     <PageContainer>
       <Button
+        nativeButton={false}
         render={<Link href="/events" transitionTypes={["nav-back"]} />}
         variant="ghost"
         size="sm"
@@ -109,6 +110,7 @@ export default async function EventPage({
 
         {canEditEvent(viewer, event) && (
           <Button
+            nativeButton={false}
             render={
               <Link
                 href={`/events/${event.id}/edit`}

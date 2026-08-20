@@ -49,6 +49,7 @@ export default async function EditEventPage({
   return (
     <PageContainer>
       <Button
+        nativeButton={false}
         render={
           <Link href={`/events/${event.id}`} transitionTypes={["nav-back"]} />
         }

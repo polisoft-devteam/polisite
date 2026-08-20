@@ -13,7 +13,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "member": "tsx --env-file=.env.local scripts/set-member.mts"
+    "member": "tsx --env-file=.env.local scripts/set-member.mts",
+    "discord:test": "tsx --env-file=.env.local scripts/test-discord.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

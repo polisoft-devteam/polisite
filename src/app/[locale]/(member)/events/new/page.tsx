@@ -31,6 +31,7 @@ export default async function NewEventPage({
   return (
     <PageContainer>
       <Button
+        nativeButton={false}
         render={<Link href="/events" transitionTypes={["nav-back"]} />}
         variant="ghost"
         size="sm"

@@ -121,6 +121,9 @@ Excluded in the query, not in rendering.
   (`navigation-links.ts`, `permissions.ts`).
 - `src/components/ui/` is the exception — the shadcn CLI writes kebab-case there and
   regenerates those files. Leave them alone.
+- **A `Button` rendering a `Link` needs `nativeButton={false}`.** Base UI assumes a real
+  `<button>`; without the prop it warns and the element loses button semantics for screen
+  readers. Only applies when `render` produces an `<a>` — dropdown triggers are fine.
 
 ### Languages
 

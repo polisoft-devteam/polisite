@@ -136,6 +136,52 @@ export async function findReminderOffsetsForEvent(
   return rows.map((row) => row.offset)
 }
 
+// --- Reminders due to be sent ---------------------------------------------------
+
+export type PendingReminder = {
+  event: Event
+  offset: ReminderOffset
+}
+
+/**
+ * Unsent reminders for events that haven't happened yet.
+ *
+ * Whether each one is actually due is decided in TypeScript by reminderDueAt, so the
+ * offset arithmetic lives in one tested place rather than being duplicated in SQL.
+ */
+export async function findUnsentRemindersForUpcomingEvents(): Promise<
+  PendingReminder[]
+> {
+  const rows = await db
+    .select({ event: events, offset: eventReminders.offset })
+    .from(eventReminders)
+    .innerJoin(events, eq(events.id, eventReminders.eventId))
+    .where(
+      and(
+        sql`${eventReminders.sentAt} is null`,
+        gte(events.startsAt, new Date()),
+      ),
+    )
+    .orderBy(asc(events.startsAt))
+
+  return rows
+}
+
+export async function markReminderSent(
+  eventId: string,
+  offset: ReminderOffset,
+): Promise<void> {
+  await db
+    .update(eventReminders)
+    .set({ sentAt: new Date() })
+    .where(
+      and(
+        eq(eventReminders.eventId, eventId),
+        eq(eventReminders.offset, offset),
+      ),
+    )
+}
+
 // --- Attendance ----------------------------------------------------------------
 
 export type Attendee = {

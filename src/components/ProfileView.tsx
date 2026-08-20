@@ -60,6 +60,7 @@ export async function ProfileView({
 
         {isOwnProfile && (
           <Button
+            nativeButton={false}
             render={<Link href="/settings" transitionTypes={["nav-forward"]} />}
             variant="ghost"
             size="sm"

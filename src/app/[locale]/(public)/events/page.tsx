@@ -49,6 +49,7 @@ export default async function EventsPage({
 
         {canCreateEvent(viewer) && (
           <Button
+            nativeButton={false}
             render={
               <Link href="/events/new" transitionTypes={["nav-forward"]} />
             }
