@@ -50,7 +50,6 @@
   },
   "Profile": {
     "title": "Min profil",
-    "editTitle": "Redigera profil",
     "fullName": "Namn",
     "nickname": "Smeknamn",
     "officialTitle": "Titel",
@@ -63,7 +62,11 @@
     "upcomingTitle": "Evenemang jag ska på",
     "upcomingEmpty": "Du har inte anmält dig till något ännu.",
     "attendedTitle": "Evenemang jag varit på",
-    "attendedEmpty": "Inga tidigare evenemang ännu."
+    "attendedEmpty": "Inga tidigare evenemang ännu.",
+    "settings": "Inställningar",
+    "noBio": "Ingen presentation ännu.",
+    "joinedAssociationAt": "Medlem sedan",
+    "birthday": "Födelsedag"
   },
   "Privacy": {
     "title": "Integritetspolicy",
@@ -97,5 +100,9 @@
     "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser.",
     "contactTitle": "Kontakt",
     "contactBody": "Skriv till [E-POSTADRESS] så hjälper vi dig."
+  },
+  "Settings": {
+    "title": "Inställningar",
+    "backToProfile": "Tillbaka till profilen"
   }
 }

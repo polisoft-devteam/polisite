@@ -1,9 +1,11 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { getLocale } from "next-intl/server"
 import { z } from "zod"
 
 import { updateMemberProfile } from "@/features/members/queries"
+import { redirect } from "@/i18n/navigation"
 import { getViewer, isActiveMember } from "@/lib/auth"
 
 // Validated on the server because this is the boundary. Anything the browser sends is
@@ -48,4 +50,6 @@ export async function updateMyProfile(formData: FormData) {
   })
 
   revalidatePath("/", "layout")
+
+  redirect({ href: "/profile", locale: await getLocale() })
 }

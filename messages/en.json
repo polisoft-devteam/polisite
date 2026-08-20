@@ -50,7 +50,6 @@
   },
   "Profile": {
     "title": "My profile",
-    "editTitle": "Edit profile",
     "fullName": "Name",
     "nickname": "Nickname",
     "officialTitle": "Title",
@@ -63,7 +62,11 @@
     "upcomingTitle": "Events I am attending",
     "upcomingEmpty": "You have not signed up for anything yet.",
     "attendedTitle": "Events I have attended",
-    "attendedEmpty": "No past events yet."
+    "attendedEmpty": "No past events yet.",
+    "settings": "Settings",
+    "noBio": "No bio yet.",
+    "joinedAssociationAt": "Member since",
+    "birthday": "Birthday"
   },
   "Privacy": {
     "title": "Privacy policy",
@@ -97,5 +100,9 @@
     "cookiesBody": "We use exactly one necessary cookie, to keep you signed in. No analytics, no tracking, no advertising.",
     "contactTitle": "Contact",
     "contactBody": "Write to [EMAIL ADDRESS] and we will help you."
+  },
+  "Settings": {
+    "title": "Settings",
+    "backToProfile": "Back to profile"
   }
 }
