@@ -42,6 +42,7 @@ export async function AuthMenu() {
       {isActiveMember(viewer) ? (
         <Link
           href="/profile"
+          transitionTypes={["nav-forward"]}
           className="hover:text-foreground text-muted-foreground flex items-center gap-2 rounded-md transition-colors"
         >
           {identity}

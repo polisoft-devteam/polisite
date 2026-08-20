@@ -60,7 +60,7 @@ export async function ProfileView({
 
         {isOwnProfile && (
           <Button
-            render={<Link href="/settings" />}
+            render={<Link href="/settings" transitionTypes={["nav-forward"]} />}
             variant="ghost"
             size="sm"
             aria-label={translateProfile("settings")}

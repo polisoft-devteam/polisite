@@ -41,7 +41,7 @@ export default async function SettingsPage({
   return (
     <PageContainer>
       <Button
-        render={<Link href="/profile" />}
+        render={<Link href="/profile" transitionTypes={["nav-back"]} />}
         variant="ghost"
         size="sm"
         className="-ml-3"

@@ -24,6 +24,7 @@ export function MainNav() {
           <Link
             key={navigationLink.href}
             href={navigationLink.href}
+            transitionTypes={["nav-forward"]}
             aria-current={isCurrentPage ? "page" : undefined}
             className={cn(
               "rounded-md px-2 py-2 text-sm transition-colors sm:px-3",

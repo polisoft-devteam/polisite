@@ -12,9 +12,17 @@ export function SiteHeader() {
   const translateSite = useTranslations("Site")
 
   return (
-    <header className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur">
+    <header
+      // Named so the CSS can hold it still while the page content slides beneath it.
+      style={{ viewTransitionName: "site-header" }}
+      className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur"
+    >
       <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-2 px-4">
-        <Link href="/" className="mr-2 font-semibold tracking-tight">
+        <Link
+          href="/"
+          transitionTypes={["nav-back"]}
+          className="mr-2 font-semibold tracking-tight"
+        >
           {translateSite("name")}
         </Link>
 

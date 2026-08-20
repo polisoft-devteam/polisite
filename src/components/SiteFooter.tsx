@@ -15,6 +15,7 @@ export function SiteFooter() {
         <span>{translateFooter("note")}</span>
         <Link
           href="/privacy"
+          transitionTypes={["nav-forward"]}
           className="hover:text-foreground transition-colors"
         >
           {translateFooter("privacy")}
