@@ -189,7 +189,8 @@ Ordered by likely value, not by effort:
   advertise the event while RSVP stays here. Two-way sync is out — it needs a bot,
   conflict rules and reconciliation, for ten people.
 
-- **Email reminders** (Resend + scheduled job) — needs per-member preferences.
+- **Email reminders** — **deprioritised in favour of Discord.** The group is more active on
+  Discord, so notifications go there first. Revisit email only if someone actually asks.
 - **Event photos** — start with a Google Photos album URL per event, not an importer.
 - **Admin panel** — until then, use Supabase Studio to _view and nudge_ data (never to change schema).
 - **Badges and titles** — data-driven, so new badges need no schema change.
