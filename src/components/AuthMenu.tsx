@@ -8,7 +8,7 @@ import { getTranslations } from "next-intl/server"
 
 import { signOut } from "@/app/auth/actions"
 import { SignInButton } from "@/components/SignInButton"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { MemberAvatar } from "@/components/MemberAvatar"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
@@ -24,16 +24,14 @@ export async function AuthMenu() {
 
   const displayName =
     viewer.member?.nickname ?? viewer.member?.fullName ?? viewer.email
-  const initials = displayName.slice(0, 2).toUpperCase()
 
   const identity = (
     <>
-      <Avatar className="size-7">
-        {viewer.member?.avatarUrl ? (
-          <AvatarImage src={viewer.member.avatarUrl} alt="" />
-        ) : null}
-        <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-      </Avatar>
+      <MemberAvatar
+        fullName={viewer.member?.fullName ?? viewer.email}
+        avatarUrl={viewer.member?.avatarUrl ?? null}
+        className="size-7 text-xs"
+      />
       <span className="hidden text-sm sm:inline">{displayName}</span>
     </>
   )

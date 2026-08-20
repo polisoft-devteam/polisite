@@ -4,7 +4,7 @@
 import { SettingsIcon } from "lucide-react"
 import { getFormatter, getTranslations } from "next-intl/server"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { MemberAvatar } from "@/components/MemberAvatar"
 import { Button } from "@/components/ui/button"
 import type { Event, Member } from "@/db/schema"
 import { Link } from "@/i18n/navigation"
@@ -30,14 +30,11 @@ export async function ProfileView({
   return (
     <>
       <div className="flex items-start gap-4">
-        <Avatar className="size-16">
-          {member.avatarUrl ? (
-            <AvatarImage src={member.avatarUrl} alt="" />
-          ) : null}
-          <AvatarFallback>
-            {member.fullName.slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <MemberAvatar
+          fullName={member.fullName}
+          avatarUrl={member.avatarUrl}
+          className="size-16 text-base"
+        />
 
         <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-semibold tracking-tight">

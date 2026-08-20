@@ -3,7 +3,7 @@ import { ArrowLeftIcon } from "lucide-react"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { PageContainer } from "@/components/PageContainer"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { MemberAvatar } from "@/components/MemberAvatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -56,14 +56,11 @@ export default async function SettingsPage({
       </h1>
 
       <div className="mt-8 flex items-center gap-4">
-        <Avatar className="size-14">
-          {member.avatarUrl ? (
-            <AvatarImage src={member.avatarUrl} alt="" />
-          ) : null}
-          <AvatarFallback>
-            {member.fullName.slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <MemberAvatar
+          fullName={member.fullName}
+          avatarUrl={member.avatarUrl}
+          className="size-14"
+        />
         <p className="text-muted-foreground max-w-sm text-xs">
           {translateProfile("avatarFromGoogle")}
         </p>
