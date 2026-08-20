@@ -133,6 +133,10 @@ Excluded in the query, not in rendering.
 - **User-created content is never translated.** Event titles, descriptions and bios are
   stored and shown exactly as written. Dates and numbers still format per the reader's
   locale automatically. No translation service, no duplicate columns.
+- **Every string in `messages/*.json` is shipped to the browser**, because
+  `NextIntlClientProvider` serialises them for client components. They are UI copy, so
+  that's fine — but never put anything secret in a message file, and don't be surprised
+  to find a label in the page source that isn't rendered anywhere.
 
 ## Commands
 
