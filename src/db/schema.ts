@@ -4,6 +4,7 @@
 
 import {
   date,
+  integer,
   pgEnum,
   pgTable,
   primaryKey,
@@ -83,24 +84,56 @@ export const eventVisibilityEnum = pgEnum("event_visibility", [
   "private",
 ])
 
+export const eventCategoryEnum = pgEnum("event_category", [
+  "music",
+  "party",
+  "trip",
+  "hike",
+  "sport",
+  "food",
+  "board_meeting",
+  "birthday",
+  "other",
+])
+
 export const events = pgTable("events", {
   id: uuid("id").primaryKey().defaultRandom(),
 
   title: text("title").notNull(),
   description: text("description"),
 
-  // Stored UTC, displayed in Europe/Stockholm.
+  // The instant is UTC; timeZone is where the event physically happens, so a London
+  // concert reads 19:00 to everyone rather than 20:00 to the Swedes.
   startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
   endsAt: timestamp("ends_at", { withTimezone: true }),
+  timeZone: text("time_zone").notNull().default("Europe/Stockholm"),
 
   location: text("location"),
-  category: text("category"),
+  category: eventCategoryEnum("category").notNull().default("other"),
+
+  // Null means free. Minor units (öre, pence) so there is no rounding to argue about.
+  priceMinorUnits: integer("price_minor_units"),
+  priceCurrency: text("price_currency").notNull().default("SEK"),
+
+  // Null means unlimited.
+  maxAttendees: integer("max_attendees"),
+
+  imageUrl: text("image_url"),
+  // Where to buy tickets or read the official page.
+  eventUrl: text("event_url"),
+  // Anything supporting: a trailer, a route map, a playlist.
+  extraLinkUrl: text("extra_link_url"),
 
   visibility: eventVisibilityEnum("visibility").notNull().default("members"),
 
   createdByMemberId: uuid("created_by_member_id")
     .notNull()
     .references(() => members.id),
+
+  // Set once the announcement is posted, so it can't be sent twice.
+  discordAnnouncedAt: timestamp("discord_announced_at", { withTimezone: true }),
+  // Lets a later edit update that message instead of posting a correction.
+  discordMessageId: text("discord_message_id"),
 
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
@@ -109,6 +142,31 @@ export const events = pgTable("events", {
     .notNull()
     .defaultNow(),
 })
+
+// --- Discord reminders ---------------------------------------------------------
+
+export const reminderOffsetEnum = pgEnum("reminder_offset", [
+  "day_before",
+  "week_before",
+  "four_weeks_before",
+  "four_months_before",
+])
+
+// One row per ping the creator asked for. The composite key makes double-sending
+// impossible rather than something the scheduled job has to remember.
+export const eventReminders = pgTable(
+  "event_reminders",
+  {
+    eventId: uuid("event_id")
+      .notNull()
+      .references(() => events.id, { onDelete: "cascade" }),
+    offset: reminderOffsetEnum("offset").notNull(),
+
+    // Null until the job posts it.
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+  },
+  (table) => [primaryKey({ columns: [table.eventId, table.offset] })],
+)
 
 export const attendanceResponseEnum = pgEnum("attendance_response", [
   "going",
@@ -142,6 +200,9 @@ export type Member = typeof members.$inferSelect
 export type NewMember = typeof members.$inferInsert
 export type Role = (typeof roleEnum.enumValues)[number]
 export type EventVisibility = (typeof eventVisibilityEnum.enumValues)[number]
+export type EventCategory = (typeof eventCategoryEnum.enumValues)[number]
+export type ReminderOffset = (typeof reminderOffsetEnum.enumValues)[number]
+export type EventReminder = typeof eventReminders.$inferSelect
 export type AttendanceResponse =
   (typeof attendanceResponseEnum.enumValues)[number]
 export type Event = typeof events.$inferSelect
