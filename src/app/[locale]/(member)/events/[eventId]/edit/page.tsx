@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventForm } from "@/components/EventForm"
 import { BackLink } from "@/components/BackLink"
+import { Modal, ModalClose } from "@/components/Modal"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
@@ -61,12 +62,32 @@ export default async function EditEventPage({
         reminderOffsets={reminderOffsets}
       />
 
-      <form action={deleteEventAction} className="mt-12 border-t pt-6">
-        <input type="hidden" name="eventId" value={event.id} />
-        <Button type="submit" variant="outline" size="sm">
-          {translateEvents("delete")}
-        </Button>
-      </form>
+      <div className="mt-12 border-t pt-6">
+        <Modal
+          trigger={
+            <Button variant="destructive" size="sm">
+              {translateEvents("delete")}
+            </Button>
+          }
+          title={translateEvents("delete")}
+          description={translateEvents("deleteConfirm")}
+          closeLabel={translateEvents("close")}
+          footer={
+            <>
+              <ModalClose render={<Button variant="outline" size="sm" />}>
+                {translateEvents("cancel")}
+              </ModalClose>
+
+              <form action={deleteEventAction}>
+                <input type="hidden" name="eventId" value={event.id} />
+                <Button type="submit" variant="destructive" size="sm">
+                  {translateEvents("delete")}
+                </Button>
+              </form>
+            </>
+          }
+        />
+      </div>
     </PageContainer>
   )
 }

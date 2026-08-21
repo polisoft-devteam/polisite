@@ -11,6 +11,7 @@ export {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Check as CheckIcon,
+  X as CloseIcon,
   Gear as SettingsIcon,
   Pencil as EditIcon,
   PlusLg as PlusIcon,

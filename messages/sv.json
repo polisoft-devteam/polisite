@@ -96,7 +96,9 @@
     "previousMonth": "Föregående månad",
     "nextMonth": "Nästa månad",
     "fieldImage": "Bild",
-    "fieldImageHint": "Frivilligt. Skalas ner automatiskt."
+    "fieldImageHint": "Frivilligt. Skalas ner automatiskt.",
+    "cancel": "Avbryt",
+    "close": "Stäng"
   },
   "Calendar": {
     "title": "Kalender",

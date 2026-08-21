@@ -149,6 +149,8 @@ twice, it becomes a component — that is the whole reason these exist:
 | `FormSelect`                                   | `<select>` with a copied class string         |
 | `MemberAvatar`                                 | `Avatar` + `AvatarImage` + `AvatarFallback`   |
 | `Badge` from `ui/`                             | a hand-rolled rounded span                    |
+| `Modal` / `ModalClose`                         | a hand-rolled overlay + box                   |
+| `SiteImage`                                    | a bare `<img>` or `next/image`                |
 | `PageSection` (heading + spacing)              | `<section className="mt-12">`                 |
 | `BackLink`                                     | a ghost Button with `-ml-3` and an arrow      |
 | `ExternalLink`                                 | an `<a target="_blank">` without `rel`        |

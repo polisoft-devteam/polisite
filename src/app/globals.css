@@ -200,3 +200,11 @@
     animation: none !important;
   }
 }
+
+/* --- Modal backdrop ---------------------------------------------------------
+   shadcn's dialog ships a very light backdrop. Styled through its data-slot so
+   src/components/ui/dialog.tsx stays untouched and regenerable. */
+
+[data-slot="dialog-overlay"] {
+  background-color: --alpha(var(--foreground) / 45%);
+}

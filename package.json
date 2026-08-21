@@ -15,7 +15,8 @@
     "db:studio": "drizzle-kit studio",
     "member": "tsx --env-file=.env.local scripts/set-member.mts",
     "discord:test": "tsx --env-file=.env.local scripts/test-discord.mts",
-    "storage:setup": "tsx --env-file=.env.local scripts/setup-storage.mts"
+    "storage:setup": "tsx --env-file=.env.local scripts/setup-storage.mts",
+    "images:optimize": "tsx scripts/optimize-images.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

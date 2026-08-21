@@ -96,7 +96,9 @@
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
     "fieldImage": "Image",
-    "fieldImageHint": "Optional. Resized automatically."
+    "fieldImageHint": "Optional. Resized automatically.",
+    "cancel": "Cancel",
+    "close": "Close"
   },
   "Calendar": {
     "title": "Calendar",
