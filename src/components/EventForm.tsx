@@ -48,11 +48,7 @@ export async function EventForm({
   const timeZone = event?.timeZone ?? DEFAULT_EVENT_TIME_ZONE
 
   return (
-    <form
-      action={action}
-      encType="multipart/form-data"
-      className="mt-8 max-w-lg space-y-6"
-    >
+    <form action={action} className="mt-8 max-w-lg space-y-6">
       {event && <input type="hidden" name="eventId" value={event.id} />}
 
       <FormField label={translateEvents("fieldTitle")} htmlFor="title">

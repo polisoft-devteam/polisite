@@ -46,11 +46,7 @@ export default async function SettingsPage({
         <PageHeading title={translateSettings("title")} />
       </div>
 
-      <form
-        action={updateMyProfile}
-        encType="multipart/form-data"
-        className="mt-8 max-w-lg space-y-6"
-      >
+      <form action={updateMyProfile} className="mt-8 max-w-lg space-y-6">
         <div className="flex items-center gap-4">
           <MemberAvatar
             fullName={member.fullName}
