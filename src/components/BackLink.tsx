@@ -1,7 +1,7 @@
 // The "← back" link at the top of a detail or form page.
 // The negative margin pulls it flush with the page edge, which is why it isn't hand-rolled.
 
-import { ArrowLeftIcon } from "lucide-react"
+import { ArrowLeftIcon } from "@/lib/icons"
 
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"

@@ -26,6 +26,7 @@ When a decision is unclear, resolve it in this order:
 | Auth         | Supabase Auth, Google OAuth only               |
 | File storage | Supabase Storage                               |
 | Styling      | Tailwind CSS + shadcn/ui                       |
+| Icons        | Bootstrap Icons via `react-bootstrap-icons`    |
 | Forms        | React Hook Form + Zod                          |
 | Calendar     | Hand-built month grid — no library. See below. |
 | Tests        | Vitest                                         |
@@ -160,6 +161,10 @@ twice, it becomes a component — that is the whole reason these exist:
   `bg-card`, `border-border`. No `bg-slate-800`, no hex. Every token is defined once in
   `globals.css` for light and dark, so re-theming the whole site is one file.
 - Headings use `font-heading`; body inherits `font-sans`.
+- **Import icons from `lib/icons.ts`, never from the icon package.** They're re-exported
+  there named for meaning (`EditIcon`, not `Pencil`), so changing icon pack is one file.
+  `components/ui/dropdown-menu.tsx` still imports lucide directly — it's shadcn-generated
+  and gets regenerated, so leave it.
 - **Enum labels and icons live in `features/events/labels.ts`**, not inline in components.
   They were duplicated across four files, which is how one category ends up with two
   different icons. Discord keeps its own emoji map — a Discord message is plain text, so

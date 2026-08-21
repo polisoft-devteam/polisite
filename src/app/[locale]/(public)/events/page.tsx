@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { PlusIcon } from "lucide-react"
+
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventList } from "@/components/EventList"
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { findPastEvents, findUpcomingEvents } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
+import { PlusIcon } from "@/lib/icons"
 import { canCreateEvent, visibleEventVisibilitiesFor } from "@/lib/permissions"
 
 export async function generateMetadata({

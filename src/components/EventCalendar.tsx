@@ -6,12 +6,13 @@
 // The date arithmetic lives in lib/calendar.ts, in UTC, and is tested there.
 
 import { formatInTimeZone } from "date-fns-tz"
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+
 import { getTranslations } from "next-intl/server"
 
 import { Button } from "@/components/ui/button"
 import type { Event } from "@/db/schema"
 import { Link } from "@/i18n/navigation"
+import { ChevronLeftIcon, ChevronRightIcon } from "@/lib/icons"
 import {
   addMonthsUtc,
   buildMonthGridDays,
@@ -82,7 +83,7 @@ export async function EventCalendar({
             size="icon-sm"
             aria-label={translateEvents("previousMonth")}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon className="size-4" />
           </Button>
           <Button
             nativeButton={false}
@@ -95,7 +96,7 @@ export async function EventCalendar({
             size="icon-sm"
             aria-label={translateEvents("nextMonth")}
           >
-            <ChevronRightIcon />
+            <ChevronRightIcon className="size-4" />
           </Button>
         </div>
       </div>

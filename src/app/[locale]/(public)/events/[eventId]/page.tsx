@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { PencilIcon } from "lucide-react"
+
 import { notFound } from "next/navigation"
 import {
   getFormatter,
@@ -25,6 +25,7 @@ import {
 import { findAttendeesForEvent, findEventById } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
+import { EditIcon } from "@/lib/icons"
 import {
   canEditEvent,
   canRespondToEvent,
@@ -104,7 +105,7 @@ export default async function EventPage({
                 }
                 variant="outline"
               >
-                <PencilIcon className="size-4" />
+                <EditIcon className="size-4" />
                 {translateEvents("edit")}
               </Button>
             )

@@ -2,7 +2,6 @@
 
 "use client"
 
-import { CheckIcon, LanguagesIcon } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useTransition } from "react"
 
@@ -13,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { CheckIcon, LanguageIcon } from "@/lib/icons"
 import { usePathname, useRouter } from "@/i18n/navigation"
 import { localeNames, routing, type Locale } from "@/i18n/routing"
 
@@ -42,7 +42,7 @@ export function LanguageToggle() {
           />
         }
       >
-        <LanguagesIcon className="size-4" />
+        <LanguageIcon className="size-4" />
         <span className="text-xs font-medium">
           {currentLocale.toUpperCase()}
         </span>

@@ -4,36 +4,35 @@
 // different depending on which page you're on.
 // Translation keys point into the "Events" namespace in messages/*.json.
 
-import {
-  CakeIcon,
-  CalendarDaysIcon,
-  ClipboardListIcon,
-  FootprintsIcon,
-  MusicIcon,
-  PartyPopperIcon,
-  PlaneIcon,
-  TrophyIcon,
-  UtensilsCrossedIcon,
-  type LucideIcon,
-} from "lucide-react"
-
 import type {
   AttendanceResponse,
   EventCategory,
   EventVisibility,
   ReminderOffset,
 } from "@/db/schema"
+import {
+  BirthdayIcon,
+  BoardMeetingIcon,
+  FoodIcon,
+  HikeIcon,
+  MusicIcon,
+  OtherEventIcon,
+  PartyIcon,
+  SportIcon,
+  TripIcon,
+  type IconComponent,
+} from "@/lib/icons"
 
-export const EVENT_CATEGORY_ICON: Record<EventCategory, LucideIcon> = {
+export const EVENT_CATEGORY_ICON: Record<EventCategory, IconComponent> = {
   music: MusicIcon,
-  party: PartyPopperIcon,
-  trip: PlaneIcon,
-  hike: FootprintsIcon,
-  sport: TrophyIcon,
-  food: UtensilsCrossedIcon,
-  board_meeting: ClipboardListIcon,
-  birthday: CakeIcon,
-  other: CalendarDaysIcon,
+  party: PartyIcon,
+  trip: TripIcon,
+  hike: HikeIcon,
+  sport: SportIcon,
+  food: FoodIcon,
+  board_meeting: BoardMeetingIcon,
+  birthday: BirthdayIcon,
+  other: OtherEventIcon,
 }
 
 export const EVENT_CATEGORY_LABEL_KEY: Record<EventCategory, string> = {

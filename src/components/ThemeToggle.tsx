@@ -2,11 +2,11 @@
 
 "use client"
 
-import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
+import { DarkThemeIcon, LightThemeIcon, SystemThemeIcon } from "@/lib/icons"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,20 +30,20 @@ export function ThemeToggle() {
         }
       >
         {/* Swapped with CSS rather than state, so there's nothing to mismatch on hydration. */}
-        <SunIcon className="size-4 dark:hidden" />
-        <MoonIcon className="hidden size-4 dark:block" />
+        <LightThemeIcon className="size-4 dark:hidden" />
+        <DarkThemeIcon className="hidden size-4 dark:block" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          <SunIcon />
+          <LightThemeIcon />
           {translateTheme("light")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          <MoonIcon />
+          <DarkThemeIcon />
           {translateTheme("dark")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          <MonitorIcon />
+          <SystemThemeIcon />
           {translateTheme("system")}
         </DropdownMenuItem>
       </DropdownMenuContent>

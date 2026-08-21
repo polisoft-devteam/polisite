@@ -5,7 +5,6 @@
 // title is a composite specific to profiles, and folding it in would turn PageHeading
 // into a kitchen sink. The h1 scale matches PageHeading so the two still agree.
 
-import { SettingsIcon } from "lucide-react"
 import { getFormatter, getTranslations } from "next-intl/server"
 
 import { EventList } from "@/components/EventList"
@@ -15,6 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import type { Event, Member } from "@/db/schema"
 import { Link } from "@/i18n/navigation"
+import { SettingsIcon } from "@/lib/icons"
 
 type ProfileViewProps = {
   member: Member
