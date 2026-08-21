@@ -1,6 +1,5 @@
 {
   "Site": {
-    "name": "Polisite",
     "tagline": "Föreningens digitala hem"
   },
   "Nav": {
@@ -17,9 +16,9 @@
   },
   "About": {
     "title": "Om oss",
-    "intro": "Platshållartext. Skriv om vad föreningen är, varför den finns och vad vi gör tillsammans.",
+    "intro": "Platshållartext. Skriv om vad {associationName} är, varför föreningen finns och vad vi gör tillsammans.",
     "membershipTitle": "Medlemskap",
-    "membershipBody": "Platshållartext. Beskriv hur man blir medlem och vad det innebär."
+    "membershipBody": "Platshållartext. Beskriv hur man blir medlem i {associationName} och vad det innebär."
   },
   "Events": {
     "title": "Evenemang",
@@ -145,7 +144,7 @@
     "title": "Integritetspolicy",
     "lastUpdated": "Senast uppdaterad 19 augusti 2026",
     "controllerTitle": "Vem ansvarar för uppgifterna",
-    "controllerBody": "[FÖRENINGENS NAMN] är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, hör av dig till [E-POSTADRESS].",
+    "controllerBody": "{associationName} är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, hör av dig till {contactEmail}.",
     "dataTitle": "Vad vi sparar",
     "dataItems": [
       "Namn, e-postadress och profilbild från ditt Google-konto när du loggar in.",
@@ -172,7 +171,7 @@
     "cookiesTitle": "Kakor",
     "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser.",
     "contactTitle": "Kontakt",
-    "contactBody": "Skriv till [E-POSTADRESS] så hjälper vi dig."
+    "contactBody": "Skriv till {contactEmail} så hjälper vi dig."
   },
   "Settings": {
     "title": "Inställningar",

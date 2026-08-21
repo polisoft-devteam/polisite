@@ -1,16 +1,13 @@
 // Top bar shown on every page: association name, navigation, theme and language switches.
 
-import { useTranslations } from "next-intl"
-
 import { AuthMenu } from "@/components/AuthMenu"
 import { LanguageToggle } from "@/components/LanguageToggle"
 import { MainNav } from "@/components/MainNav"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { Link } from "@/i18n/navigation"
+import { ASSOCIATION_NAME } from "@/lib/association"
 
 export function SiteHeader() {
-  const translateSite = useTranslations("Site")
-
   return (
     <header
       // Named so the CSS can hold it still while the page content slides beneath it.
@@ -23,7 +20,7 @@ export function SiteHeader() {
           transitionTypes={["nav-back"]}
           className="mr-2 font-semibold tracking-tight"
         >
-          {translateSite("name")}
+          {ASSOCIATION_NAME}
         </Link>
 
         <MainNav />

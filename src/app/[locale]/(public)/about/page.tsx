@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
+import { ASSOCIATION_NAME } from "@/lib/association"
 
 export async function generateMetadata({
   params,
@@ -26,12 +27,14 @@ export default async function AboutPage({
     <PageContainer>
       <PageHeading title={translateAbout("title")} />
       <p className="text-muted-foreground mt-4 max-w-2xl">
-        {translateAbout("intro")}
+        {translateAbout("intro", { associationName: ASSOCIATION_NAME })}
       </p>
 
       <PageSection heading={translateAbout("membershipTitle")}>
         <p className="text-muted-foreground max-w-2xl">
-          {translateAbout("membershipBody")}
+          {translateAbout("membershipBody", {
+            associationName: ASSOCIATION_NAME,
+          })}
         </p>
       </PageSection>
     </PageContainer>

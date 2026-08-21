@@ -1,6 +1,5 @@
 {
   "Site": {
-    "name": "Polisite",
     "tagline": "The association's digital home"
   },
   "Nav": {
@@ -17,9 +16,9 @@
   },
   "About": {
     "title": "About us",
-    "intro": "Placeholder text. Write about what the association is, why it exists and what we do together.",
+    "intro": "Placeholder text. Write about what {associationName} is, why it exists and what we do together.",
     "membershipTitle": "Membership",
-    "membershipBody": "Placeholder text. Describe how to become a member and what it involves."
+    "membershipBody": "Placeholder text. Describe how to join {associationName} and what it involves."
   },
   "Events": {
     "title": "Events",
@@ -145,7 +144,7 @@
     "title": "Privacy policy",
     "lastUpdated": "Last updated 19 August 2026",
     "controllerTitle": "Who is responsible",
-    "controllerBody": "[ASSOCIATION NAME] is the data controller for the information on this site. If you have questions, contact us at [EMAIL ADDRESS].",
+    "controllerBody": "{associationName} is the data controller for the information on this site. If you have questions, contact us at {contactEmail}.",
     "dataTitle": "What we store",
     "dataItems": [
       "Name, email address and profile picture from your Google account when you sign in.",
@@ -172,7 +171,7 @@
     "cookiesTitle": "Cookies",
     "cookiesBody": "We use exactly one necessary cookie, to keep you signed in. No analytics, no tracking, no advertising.",
     "contactTitle": "Contact",
-    "contactBody": "Write to [EMAIL ADDRESS] and we will help you."
+    "contactBody": "Write to {contactEmail} and we will help you."
   },
   "Settings": {
     "title": "Settings",

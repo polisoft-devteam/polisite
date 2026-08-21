@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/SiteFooter"
 import { SiteHeader } from "@/components/SiteHeader"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { routing } from "@/i18n/routing"
+import { ASSOCIATION_NAME } from "@/lib/association"
 
 import "../globals.css"
 
@@ -34,8 +35,8 @@ export async function generateMetadata({
 
   return {
     title: {
-      default: translateSite("name"),
-      template: `%s · ${translateSite("name")}`,
+      default: ASSOCIATION_NAME,
+      template: `%s · ${ASSOCIATION_NAME}`,
     },
     description: translateSite("tagline"),
   }
