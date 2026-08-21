@@ -16,6 +16,7 @@ import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
+import { SiteImage } from "@/components/SiteImage"
 import { Button } from "@/components/ui/button"
 import {
   EVENT_CATEGORY_LABEL_KEY,
@@ -174,6 +175,18 @@ export default async function EventPage({
           </Fact>
         </FactList>
       </div>
+
+      {event.imageUrl && (
+        <div className="mt-6">
+          <SiteImage
+            src={event.imageUrl}
+            alt=""
+            className="aspect-video w-full max-w-2xl"
+            sizes="(min-width: 768px) 42rem, 100vw"
+            priority
+          />
+        </div>
+      )}
 
       {event.description && (
         <p className="mt-6 max-w-2xl text-sm whitespace-pre-line">

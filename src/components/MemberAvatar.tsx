@@ -1,6 +1,8 @@
 // A member's picture, with a pulsing skeleton underneath while it loads.
-// Plain elements rather than ui/avatar: Base UI renders nothing until hydration, so the
-// photo popped in from an empty circle.
+// Not ui/avatar: Base UI renders nothing until hydration, so the photo popped in from an
+// empty circle.
+
+import Image from "next/image"
 
 import { cn } from "@/lib/utils"
 
@@ -36,13 +38,12 @@ export function MemberAvatar({
             aria-hidden="true"
             className="bg-muted-foreground/20 absolute inset-0 animate-pulse"
           />
-          {/* eslint-disable-next-line @next/next/no-img-element -- next/image needs
-              remotePatterns per host; wire that up with the upload in step 2.2. */}
-          <img
+          <Image
             src={avatarUrl}
             alt=""
-            decoding="async"
-            className="absolute inset-0 size-full object-cover"
+            fill
+            sizes="64px"
+            className="object-cover"
           />
         </>
       ) : (
