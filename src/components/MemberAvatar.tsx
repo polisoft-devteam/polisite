@@ -1,10 +1,7 @@
-// A member's picture.
-//
-// The grey disc is on the root rather than only in the fallback because Base UI decides
-// between image and fallback on the client, after hydration — so without it the circle is
-// blank on first paint and the photo pops in.
+// A member's picture, with a pulsing skeleton underneath while it loads.
+// Plain elements rather than ui/avatar: Base UI renders nothing until hydration, so the
+// photo popped in from an empty circle.
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 
 /** "Victor Persson" → "VP". Falls back to the first two letters of a single name. */
@@ -27,9 +24,32 @@ export function MemberAvatar({
   className?: string
 }) {
   return (
-    <Avatar className={cn("bg-muted", className)}>
-      {avatarUrl && <AvatarImage src={avatarUrl} alt="" />}
-      <AvatarFallback>{toInitials(fullName)}</AvatarFallback>
-    </Avatar>
+    <span
+      className={cn(
+        "bg-muted relative inline-flex size-8 shrink-0 overflow-hidden rounded-full",
+        className,
+      )}
+    >
+      {avatarUrl ? (
+        <>
+          <span
+            aria-hidden="true"
+            className="bg-muted-foreground/20 absolute inset-0 animate-pulse"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element -- next/image needs
+              remotePatterns per host; wire that up with the upload in step 2.2. */}
+          <img
+            src={avatarUrl}
+            alt=""
+            decoding="async"
+            className="absolute inset-0 size-full object-cover"
+          />
+        </>
+      ) : (
+        <span className="text-muted-foreground flex size-full items-center justify-center font-medium">
+          {toInitials(fullName)}
+        </span>
+      )}
+    </span>
   )
 }
