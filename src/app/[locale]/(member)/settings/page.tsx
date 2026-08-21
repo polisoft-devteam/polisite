@@ -46,18 +46,31 @@ export default async function SettingsPage({
         <PageHeading title={translateSettings("title")} />
       </div>
 
-      <div className="mt-8 flex items-center gap-4">
-        <MemberAvatar
-          fullName={member.fullName}
-          avatarUrl={member.avatarUrl}
-          className="size-14"
-        />
-        <p className="text-muted-foreground max-w-sm text-xs">
-          {translateProfile("avatarFromGoogle")}
-        </p>
-      </div>
-
-      <form action={updateMyProfile} className="mt-8 max-w-lg space-y-5">
+      <form
+        action={updateMyProfile}
+        encType="multipart/form-data"
+        className="mt-8 max-w-lg space-y-6"
+      >
+        <div className="flex items-center gap-4">
+          <MemberAvatar
+            fullName={member.fullName}
+            avatarUrl={member.avatarUrl}
+            className="size-14"
+          />
+          <FormField
+            label={translateProfile("avatar")}
+            htmlFor="avatar"
+            hint={translateProfile("avatarHint")}
+          >
+            <Input
+              id="avatar"
+              name="avatar"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/avif"
+              className="cursor-pointer"
+            />
+          </FormField>
+        </div>
         <FormField label={translateProfile("fullName")} htmlFor="fullName">
           <Input
             id="fullName"

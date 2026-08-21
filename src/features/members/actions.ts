@@ -8,6 +8,7 @@ import { updateMemberProfile } from "@/features/members/queries"
 import { redirect } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
+import { deleteImageIfOurs, uploadImage } from "@/lib/storage"
 
 // Validated on the server because this is the boundary. Anything the browser sends is
 // untrusted — client-side validation is a convenience, never a control. See CLAUDE.md.
@@ -42,13 +43,23 @@ export async function updateMyProfile(formData: FormData) {
 
   if (!parsed.success) return
 
+  const uploadedAvatarUrl = await uploadImage(
+    "avatars",
+    formData.get("avatar") as File | null,
+  )
+
   await updateMemberProfile(viewer.member.id, {
     fullName: parsed.data.fullName,
     nickname: emptyToNull(parsed.data.nickname),
     officialTitle: emptyToNull(parsed.data.officialTitle),
     funTitle: emptyToNull(parsed.data.funTitle),
     bio: emptyToNull(parsed.data.bio),
+    ...(uploadedAvatarUrl ? { avatarUrl: uploadedAvatarUrl } : {}),
   })
+
+  if (uploadedAvatarUrl) {
+    await deleteImageIfOurs("avatars", viewer.member.avatarUrl)
+  }
 
   revalidatePath("/", "layout")
 

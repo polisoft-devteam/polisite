@@ -24,6 +24,8 @@ export type EditableProfileFields = {
   officialTitle: string | null
   funTitle: string | null
   bio: string | null
+  /** Omitted when no new photo was uploaded, so the existing one is kept. */
+  avatarUrl?: string
 }
 
 /** Only the fields a member is allowed to change about themselves. */

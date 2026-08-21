@@ -24,6 +24,7 @@ import {
   canRespondToEvent,
   visibleEventVisibilitiesFor,
 } from "@/lib/permissions"
+import { deleteImageIfOurs, uploadImage } from "@/lib/storage"
 import { wallTimeToInstant } from "@/lib/time"
 import { attendanceResponseEnum } from "@/db/schema"
 
@@ -36,6 +37,11 @@ export async function createEventAction(formData: FormData) {
   if (!parsed.success) return
 
   const form = parsed.data
+
+  const uploadedImageUrl = await uploadImage(
+    "event-images",
+    formData.get("image") as File | null,
+  )
 
   const event = await createEvent(
     {
@@ -51,7 +57,7 @@ export async function createEventAction(formData: FormData) {
       priceMinorUnits: toMinorUnits(form.price),
       priceCurrency: form.currency,
       maxAttendees: form.maxAttendees,
-      imageUrl: form.imageUrl,
+      imageUrl: uploadedImageUrl,
       eventUrl: form.eventUrl,
       extraLinkUrl: form.extraLinkUrl,
       visibility: form.visibility,
@@ -101,6 +107,11 @@ export async function updateEventAction(formData: FormData) {
 
   const form = parsed.data
 
+  const uploadedImageUrl = await uploadImage(
+    "event-images",
+    formData.get("image") as File | null,
+  )
+
   await updateEvent(
     eventId,
     {
@@ -116,13 +127,17 @@ export async function updateEventAction(formData: FormData) {
       priceMinorUnits: toMinorUnits(form.price),
       priceCurrency: form.currency,
       maxAttendees: form.maxAttendees,
-      imageUrl: form.imageUrl,
+      ...(uploadedImageUrl ? { imageUrl: uploadedImageUrl } : {}),
       eventUrl: form.eventUrl,
       extraLinkUrl: form.extraLinkUrl,
       visibility: form.visibility,
     },
     form.reminderOffsets,
   )
+
+  if (uploadedImageUrl) {
+    await deleteImageIfOurs("event-images", existing.imageUrl)
+  }
 
   revalidatePath("/", "layout")
   redirect({ href: `/events/${eventId}`, locale: await getLocale() })
@@ -142,6 +157,7 @@ export async function deleteEventAction(formData: FormData) {
   }
 
   await deleteEvent(eventId)
+  await deleteImageIfOurs("event-images", existing.imageUrl)
 
   revalidatePath("/", "layout")
   redirect({ href: "/events", locale: await getLocale() })

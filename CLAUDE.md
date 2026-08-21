@@ -24,7 +24,7 @@ When a decision is unclear, resolve it in this order:
 | Database     | PostgreSQL, hosted on Supabase                 |
 | DB access    | Drizzle ORM                                    |
 | Auth         | Supabase Auth, Google OAuth only               |
-| File storage | Supabase Storage                               |
+| File storage | Supabase Storage, resized with sharp on upload |
 | Styling      | Tailwind CSS + shadcn/ui                       |
 | Icons        | Bootstrap Icons via `react-bootstrap-icons`    |
 | Forms        | React Hook Form + Zod                          |
@@ -161,6 +161,9 @@ twice, it becomes a component — that is the whole reason these exist:
   `bg-card`, `border-border`. No `bg-slate-800`, no hex. Every token is defined once in
   `globals.css` for light and dark, so re-theming the whole site is one file.
 - Headings use `font-heading`; body inherits `font-sans`.
+- **Images go through `SiteImage`**, and uploads through `lib/storage.ts`, which resizes
+  to WebP and strips metadata. Never store an original: Supabase Free is 1 GB, and phone
+  photos carry GPS coordinates in their EXIF.
 - **Import icons from `lib/icons.ts`, never from the icon package.** They're re-exported
   there named for meaning (`EditIcon`, not `Pencil`), so changing icon pack is one file.
   `components/ui/dropdown-menu.tsx` still imports lucide directly — it's shadcn-generated

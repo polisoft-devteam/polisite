@@ -72,7 +72,6 @@ export const eventFormSchema = z
         "Maximum attendees must be a whole number of at least 1",
       ),
 
-    imageUrl: optionalUrl,
     eventUrl: optionalUrl,
     extraLinkUrl: optionalUrl,
 
@@ -112,7 +111,6 @@ export function readEventForm(formData: FormData) {
     price: readText("price"),
     currency: readText("currency"),
     maxAttendees: readText("maxAttendees"),
-    imageUrl: readText("imageUrl"),
     eventUrl: readText("eventUrl"),
     extraLinkUrl: readText("extraLinkUrl"),
     visibility: readText("visibility"),

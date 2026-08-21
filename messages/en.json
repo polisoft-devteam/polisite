@@ -50,8 +50,6 @@
     "fieldCurrency": "Currency",
     "fieldMaxAttendees": "Maximum attendees",
     "fieldMaxAttendeesHint": "Leave blank for unlimited.",
-    "fieldImageUrl": "Image URL",
-    "fieldImageUrlHint": "Uploading your own comes later.",
     "fieldEventUrl": "Link with info about the event",
     "fieldExtraLinkUrl": "Extra link",
     "fieldExtraLinkUrlHint": "Trailer, route map, playlist …",
@@ -96,7 +94,9 @@
     "fieldRemindersAtLimit": "Two selected — untick one to change.",
     "showOnMap": "Show on map",
     "previousMonth": "Previous month",
-    "nextMonth": "Next month"
+    "nextMonth": "Next month",
+    "fieldImage": "Image",
+    "fieldImageHint": "Optional. Resized automatically."
   },
   "Calendar": {
     "title": "Calendar",
@@ -130,7 +130,6 @@
     "funTitlePlaceholder": "Grill master …",
     "bio": "About me",
     "save": "Save",
-    "avatarFromGoogle": "Your picture comes from your Google account. Uploading your own comes later.",
     "upcomingTitle": "Events I am attending",
     "upcomingEmpty": "You have not signed up for anything yet.",
     "attendedTitle": "Events I have attended",
@@ -138,7 +137,9 @@
     "settings": "Settings",
     "noBio": "No bio yet.",
     "joinedAssociationAt": "Member since",
-    "birthday": "Birthday"
+    "birthday": "Birthday",
+    "avatar": "Profile picture",
+    "avatarHint": "Optional. Resized automatically."
   },
   "Privacy": {
     "title": "Privacy policy",

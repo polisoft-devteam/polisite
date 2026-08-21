@@ -56,6 +56,9 @@ dependencies:
   shadcn:
     specifier: ^4.18.0
     version: 4.18.0(typescript@5.9.3)
+  sharp:
+    specifier: ^0.35.3
+    version: 0.35.3(@types/node@20.19.43)
   tailwind-merge:
     specifier: ^3.6.0
     version: 3.6.0
@@ -1363,7 +1366,6 @@ packages:
     engines: {node: '>=18'}
     requiresBuild: true
     dev: false
-    optional: true
 
   /@img/sharp-darwin-arm64@0.35.3:
     resolution: {integrity: sha512-RMnFX7YQsMoh7lWfcM4NEHHymBX/rLuKNPVM84XE9ONPcaSCDgE7CHIHpSgPcO2xcRthgBy1HfNO319mwhIAkg==}
@@ -6530,7 +6532,6 @@ packages:
       '@img/sharp-win32-ia32': 0.35.3
       '@img/sharp-win32-x64': 0.35.3
     dev: false
-    optional: true
 
   /shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}

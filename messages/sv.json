@@ -50,8 +50,6 @@
     "fieldCurrency": "Valuta",
     "fieldMaxAttendees": "Max antal besökare",
     "fieldMaxAttendeesHint": "Lämna tomt för obegränsat.",
-    "fieldImageUrl": "Bild-URL",
-    "fieldImageUrlHint": "Egen uppladdning kommer senare.",
     "fieldEventUrl": "Länk med info om eventet",
     "fieldExtraLinkUrl": "Extra länk",
     "fieldExtraLinkUrlHint": "Trailer, karta, spellista …",
@@ -96,7 +94,9 @@
     "fieldRemindersAtLimit": "Två valda — avmarkera en för att byta.",
     "showOnMap": "Visa på karta",
     "previousMonth": "Föregående månad",
-    "nextMonth": "Nästa månad"
+    "nextMonth": "Nästa månad",
+    "fieldImage": "Bild",
+    "fieldImageHint": "Frivilligt. Skalas ner automatiskt."
   },
   "Calendar": {
     "title": "Kalender",
@@ -130,7 +130,6 @@
     "funTitlePlaceholder": "Grillmästare …",
     "bio": "Om mig",
     "save": "Spara",
-    "avatarFromGoogle": "Profilbilden hämtas från ditt Google-konto. Egen uppladdning kommer senare.",
     "upcomingTitle": "Evenemang jag ska på",
     "upcomingEmpty": "Du har inte anmält dig till något ännu.",
     "attendedTitle": "Evenemang jag varit på",
@@ -138,7 +137,9 @@
     "settings": "Inställningar",
     "noBio": "Ingen presentation ännu.",
     "joinedAssociationAt": "Medlem sedan",
-    "birthday": "Födelsedag"
+    "birthday": "Födelsedag",
+    "avatar": "Profilbild",
+    "avatarHint": "Frivilligt. Skalas ner automatiskt."
   },
   "Privacy": {
     "title": "Integritetspolicy",
