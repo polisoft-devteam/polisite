@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils"
 
 export function Modal({
   trigger,
+  defaultOpen = false,
   title,
   description,
   footer,
@@ -27,7 +28,10 @@ export function Modal({
   className,
   children,
 }: {
-  trigger: React.ReactNode
+  /** Omit for a modal that opens on its own. */
+  trigger?: React.ReactNode
+  /** Opens as soon as it renders — for a welcome or announcement. */
+  defaultOpen?: boolean
   title: string
   /** Read out with the title by screen readers; keep it to a sentence. */
   description?: string
@@ -39,8 +43,8 @@ export function Modal({
   children?: React.ReactNode
 }) {
   return (
-    <Dialog>
-      <DialogTrigger render={trigger as React.ReactElement} />
+    <Dialog defaultOpen={defaultOpen}>
+      {trigger && <DialogTrigger render={trigger as React.ReactElement} />}
 
       <DialogContent
         showCloseButton={false}

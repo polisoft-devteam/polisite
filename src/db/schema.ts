@@ -55,6 +55,25 @@ export const members = pgTable("members", {
     .defaultNow(),
 })
 
+// --- Membership prompt ---------------------------------------------------------
+
+export const membershipPromptResponseEnum = pgEnum(
+  "membership_prompt_response",
+  ["requested", "dismissed"],
+)
+
+// One row per signed-in non-member who has answered the welcome prompt, so it never
+// appears twice. Keyed on the auth user, which also makes a duplicate request impossible.
+export const membershipPrompts = pgTable("membership_prompts", {
+  authUserId: uuid("auth_user_id").primaryKey(),
+  email: text("email").notNull(),
+  fullName: text("full_name"),
+  response: membershipPromptResponseEnum("response").notNull(),
+  respondedAt: timestamp("responded_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+})
+
 // --- Roles ---------------------------------------------------------------------
 
 // Rows rather than a column, because one member can hold several.
@@ -207,6 +226,7 @@ export type EventVisibility = (typeof eventVisibilityEnum.enumValues)[number]
 export type EventCategory = (typeof eventCategoryEnum.enumValues)[number]
 export type ReminderOffset = (typeof reminderOffsetEnum.enumValues)[number]
 export type EventReminder = typeof eventReminders.$inferSelect
+export type MembershipPrompt = typeof membershipPrompts.$inferSelect
 export type AttendanceResponse =
   (typeof attendanceResponseEnum.enumValues)[number]
 export type Event = typeof events.$inferSelect

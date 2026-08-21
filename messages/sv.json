@@ -179,5 +179,13 @@
   "Settings": {
     "title": "Inställningar",
     "backToProfile": "Tillbaka till profilen"
+  },
+  "MembershipPrompt": {
+    "title": "Välkommen till {associationName}",
+    "intro": "{associationName} är en liten förening. Här samlar vi våra evenemang, medlemmar och historia — kalendern, vilka som kommer och vad vi gjort tillsammans. Samtalet fortsätter på Discord.",
+    "guestExplanation": "Du är inloggad som gäst, vilket betyder att du ser samma sak som en besökare utan konto. Vill du se allt får du be om medlemskap — vi hör av oss.",
+    "request": "Ansök om medlemskap",
+    "dismiss": "Uppfattat!",
+    "close": "Stäng"
   }
 }

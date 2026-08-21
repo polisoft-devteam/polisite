@@ -50,6 +50,13 @@
       "when": 1787250851828,
       "tag": "0006_fast_northstar",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1787316324205,
+      "tag": "0007_good_molten_man",
+      "breakpoints": true
     }
   ]
 }

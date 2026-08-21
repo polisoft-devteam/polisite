@@ -4,7 +4,14 @@
 import { eq } from "drizzle-orm"
 
 import { db } from "@/db"
-import { memberRoles, members, type Member, type Role } from "@/db/schema"
+import {
+  memberRoles,
+  members,
+  membershipPrompts,
+  type Member,
+  type MembershipPrompt,
+  type Role,
+} from "@/db/schema"
 
 export async function findMemberByAuthUserId(
   authUserId: string,
@@ -46,4 +53,38 @@ export async function findRolesForMember(memberId: string): Promise<Role[]> {
     .where(eq(memberRoles.memberId, memberId))
 
   return rows.map((row) => row.role)
+}
+
+// --- Membership prompt ----------------------------------------------------------
+
+export async function findMembershipPrompt(
+  authUserId: string,
+): Promise<MembershipPrompt | null> {
+  const [prompt] = await db
+    .select()
+    .from(membershipPrompts)
+    .where(eq(membershipPrompts.authUserId, authUserId))
+    .limit(1)
+
+  return prompt ?? null
+}
+
+/**
+ * Records that someone answered the welcome prompt, so it never shows again.
+ * Returns false if they had already answered — which is what will stop a repeated
+ * Discord ping once that's wired up.
+ */
+export async function recordMembershipPrompt(prompt: {
+  authUserId: string
+  email: string
+  fullName: string | null
+  response: MembershipPrompt["response"]
+}): Promise<boolean> {
+  const inserted = await db
+    .insert(membershipPrompts)
+    .values(prompt)
+    .onConflictDoNothing()
+    .returning()
+
+  return inserted.length > 0
 }

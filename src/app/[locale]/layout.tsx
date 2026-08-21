@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { MembershipPrompt } from "@/components/MembershipPrompt"
 import { SiteFooter } from "@/components/SiteFooter"
 import { SiteHeader } from "@/components/SiteHeader"
 import { ThemeProvider } from "@/components/ThemeProvider"
@@ -72,6 +73,7 @@ export default async function LocaleLayout({
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />
+            <MembershipPrompt />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

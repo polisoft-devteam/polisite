@@ -179,5 +179,13 @@
   "Settings": {
     "title": "Settings",
     "backToProfile": "Back to profile"
+  },
+  "MembershipPrompt": {
+    "title": "Welcome to {associationName}",
+    "intro": "{associationName} is a small association. This is where we keep our events, members and history — the calendar, who's coming, and what we've done together. The conversation stays on Discord.",
+    "guestExplanation": "You're signed in as a guest, which means you see the same thing as a visitor without an account. To see everything, ask for membership and we'll get back to you.",
+    "request": "Request membership",
+    "dismiss": "Got it!",
+    "close": "Close"
   }
 }
