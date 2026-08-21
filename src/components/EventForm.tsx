@@ -4,10 +4,10 @@
 import { getTranslations } from "next-intl/server"
 
 import { EventReminderField } from "@/components/EventReminderField"
+import { FormField, FormSelect } from "@/components/FormField"
 import { EventVisibilityField } from "@/components/EventVisibilityField"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import {
   eventCategoryEnum,
@@ -24,9 +24,6 @@ import {
   DEFAULT_EVENT_TIME_ZONE,
   instantToWallTime,
 } from "@/lib/time"
-
-const SELECT_CLASSES =
-  "border-input bg-background focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border px-3 py-1 text-sm shadow-xs focus-visible:ring-[3px] focus-visible:outline-none"
 
 const CATEGORY_TRANSLATION_KEY: Record<EventCategory, string> = {
   music: "categoryMusic",
@@ -81,7 +78,7 @@ export async function EventForm({
     <form action={action} className="mt-8 max-w-lg space-y-6">
       {event && <input type="hidden" name="eventId" value={event.id} />}
 
-      <Field label={translateEvents("fieldTitle")} htmlFor="title">
+      <FormField label={translateEvents("fieldTitle")} htmlFor="title">
         <Input
           id="title"
           name="title"
@@ -89,9 +86,12 @@ export async function EventForm({
           required
           maxLength={140}
         />
-      </Field>
+      </FormField>
 
-      <Field label={translateEvents("fieldDescription")} htmlFor="description">
+      <FormField
+        label={translateEvents("fieldDescription")}
+        htmlFor="description"
+      >
         <Textarea
           id="description"
           name="description"
@@ -99,10 +99,10 @@ export async function EventForm({
           rows={4}
           maxLength={4000}
         />
-      </Field>
+      </FormField>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field
+        <FormField
           label={translateEvents("fieldStartsAt")}
           htmlFor="startsAtWallTime"
         >
@@ -115,9 +115,9 @@ export async function EventForm({
             }
             required
           />
-        </Field>
+        </FormField>
 
-        <Field
+        <FormField
           label={translateEvents("fieldEndsAt")}
           htmlFor="endsAtWallTime"
           hint={translateEvents("fieldEndsAtHint")}
@@ -130,54 +130,48 @@ export async function EventForm({
               event?.endsAt ? instantToWallTime(event.endsAt, timeZone) : ""
             }
           />
-        </Field>
+        </FormField>
       </div>
 
-      <Field
+      <FormField
         label={translateEvents("fieldTimeZone")}
         htmlFor="timeZone"
         hint={translateEvents("fieldTimeZoneHint")}
       >
-        <select
-          id="timeZone"
-          name="timeZone"
-          defaultValue={timeZone}
-          className={SELECT_CLASSES}
-        >
+        <FormSelect id="timeZone" name="timeZone" defaultValue={timeZone}>
           {COMMON_EVENT_TIME_ZONES.map((zone) => (
             <option key={zone} value={zone}>
               {zone.replace("_", " ")}
             </option>
           ))}
-        </select>
-      </Field>
+        </FormSelect>
+      </FormField>
 
-      <Field label={translateEvents("fieldLocation")} htmlFor="location">
+      <FormField label={translateEvents("fieldLocation")} htmlFor="location">
         <Input
           id="location"
           name="location"
           defaultValue={event?.location ?? ""}
           maxLength={200}
         />
-      </Field>
+      </FormField>
 
-      <Field label={translateEvents("fieldCategory")} htmlFor="category">
-        <select
+      <FormField label={translateEvents("fieldCategory")} htmlFor="category">
+        <FormSelect
           id="category"
           name="category"
           defaultValue={event?.category ?? "other"}
-          className={SELECT_CLASSES}
         >
           {eventCategoryEnum.enumValues.map((category) => (
             <option key={category} value={category}>
               {translateEvents(CATEGORY_TRANSLATION_KEY[category])}
             </option>
           ))}
-        </select>
-      </Field>
+        </FormSelect>
+      </FormField>
 
       <div className="grid gap-4 sm:grid-cols-[1fr_8rem]">
-        <Field
+        <FormField
           label={translateEvents("fieldPrice")}
           htmlFor="price"
           hint={translateEvents("fieldPriceHint")}
@@ -196,25 +190,24 @@ export async function EventForm({
                 : ""
             }
           />
-        </Field>
+        </FormField>
 
-        <Field label={translateEvents("fieldCurrency")} htmlFor="currency">
-          <select
+        <FormField label={translateEvents("fieldCurrency")} htmlFor="currency">
+          <FormSelect
             id="currency"
             name="currency"
             defaultValue={event?.priceCurrency ?? "SEK"}
-            className={SELECT_CLASSES}
           >
             {EVENT_CURRENCIES.map((currency) => (
               <option key={currency} value={currency}>
                 {currency}
               </option>
             ))}
-          </select>
-        </Field>
+          </FormSelect>
+        </FormField>
       </div>
 
-      <Field
+      <FormField
         label={translateEvents("fieldMaxAttendees")}
         htmlFor="maxAttendees"
         hint={translateEvents("fieldMaxAttendeesHint")}
@@ -227,9 +220,9 @@ export async function EventForm({
           step="1"
           defaultValue={event?.maxAttendees ?? ""}
         />
-      </Field>
+      </FormField>
 
-      <Field
+      <FormField
         label={translateEvents("fieldEventUrl")}
         htmlFor="eventUrl"
         hint={translateEvents("fieldEventUrlHint")}
@@ -241,9 +234,9 @@ export async function EventForm({
           placeholder="https://"
           defaultValue={event?.eventUrl ?? ""}
         />
-      </Field>
+      </FormField>
 
-      <Field
+      <FormField
         label={translateEvents("fieldExtraLinkUrl")}
         htmlFor="extraLinkUrl"
         hint={translateEvents("fieldExtraLinkUrlHint")}
@@ -255,9 +248,9 @@ export async function EventForm({
           placeholder="https://"
           defaultValue={event?.extraLinkUrl ?? ""}
         />
-      </Field>
+      </FormField>
 
-      <Field
+      <FormField
         label={translateEvents("fieldImageUrl")}
         htmlFor="imageUrl"
         hint={translateEvents("fieldImageUrlHint")}
@@ -269,12 +262,11 @@ export async function EventForm({
           placeholder="https://"
           defaultValue={event?.imageUrl ?? ""}
         />
-      </Field>
+      </FormField>
 
       <EventVisibilityField
         label={translateEvents("fieldVisibility")}
         defaultValue={event?.visibility ?? "members"}
-        selectClassName={SELECT_CLASSES}
         options={eventVisibilityEnum.enumValues.map((visibility) => ({
           value: visibility,
           label: translateEvents(VISIBILITY_TRANSLATION_KEY[visibility]),
@@ -306,27 +298,9 @@ export async function EventForm({
         </label>
       )}
 
-      <Button type="submit">{submitLabel}</Button>
+      <Button type="submit" size="lg">
+        {submitLabel}
+      </Button>
     </form>
-  )
-}
-
-function Field({
-  label,
-  htmlFor,
-  hint,
-  children,
-}: {
-  label: string
-  htmlFor: string
-  hint?: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="space-y-2">
-      <Label htmlFor={htmlFor}>{label}</Label>
-      {children}
-      {hint && <p className="text-muted-foreground text-xs">{hint}</p>}
-    </div>
   )
 }

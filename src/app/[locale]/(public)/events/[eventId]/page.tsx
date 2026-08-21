@@ -8,7 +8,11 @@ import {
 } from "next-intl/server"
 
 import { EventRsvp } from "@/components/EventRsvp"
+import { EmptyState } from "@/components/EmptyState"
+import { ItemList } from "@/components/ItemList"
 import { PageContainer } from "@/components/PageContainer"
+import { PageHeading } from "@/components/PageHeading"
+import { SectionHeading } from "@/components/SectionHeading"
 import { Button } from "@/components/ui/button"
 import type { EventCategory, EventVisibility } from "@/db/schema"
 import { findAttendeesForEvent, findEventById } from "@/features/events/queries"
@@ -104,32 +108,28 @@ export default async function EventPage({
         {translateEvents("back")}
       </Button>
 
-      <div className="mt-4 flex items-start justify-between gap-4">
-        <div>
-          <p className="text-muted-foreground text-xs tracking-wide uppercase">
-            {translateEvents(CATEGORY_TRANSLATION_KEY[event.category])}
-          </p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight">
-            {event.title}
-          </h1>
-        </div>
-
-        {canEditEvent(viewer, event) && (
-          <Button
-            nativeButton={false}
-            render={
-              <Link
-                href={`/events/${event.id}/edit`}
-                transitionTypes={["nav-forward"]}
-              />
-            }
-            variant="outline"
-            size="sm"
-          >
-            <PencilIcon className="size-4" />
-            {translateEvents("edit")}
-          </Button>
-        )}
+      <div className="mt-4">
+        <PageHeading
+          eyebrow={translateEvents(CATEGORY_TRANSLATION_KEY[event.category])}
+          title={event.title}
+          actions={
+            canEditEvent(viewer, event) && (
+              <Button
+                nativeButton={false}
+                render={
+                  <Link
+                    href={`/events/${event.id}/edit`}
+                    transitionTypes={["nav-forward"]}
+                  />
+                }
+                variant="outline"
+              >
+                <PencilIcon className="size-4" />
+                {translateEvents("edit")}
+              </Button>
+            )
+          }
+        />
       </div>
 
       <dl className="mt-6 space-y-1 text-sm">
@@ -234,32 +234,34 @@ export default async function EventPage({
       )}
 
       <section className="mt-12">
-        <h2 className="text-lg font-medium">{translateEvents("attendees")}</h2>
+        <SectionHeading>{translateEvents("attendees")}</SectionHeading>
 
         {attendees.length === 0 ? (
-          <p className="text-muted-foreground mt-4 rounded-lg border border-dashed p-6 text-sm">
-            {translateEvents("attendeesEmpty")}
-          </p>
+          <div className="mt-4">
+            <EmptyState>{translateEvents("attendeesEmpty")}</EmptyState>
+          </div>
         ) : (
-          <ul className="mt-4 divide-y rounded-lg border text-sm">
-            {attendees.map((attendee) => (
-              <li
-                key={attendee.memberId}
-                className="flex justify-between gap-4 p-3"
-              >
-                <span>{attendee.nickname ?? attendee.fullName}</span>
-                <span className="text-muted-foreground">
-                  {translateEvents(
-                    attendee.response === "going"
-                      ? "rsvpGoing"
-                      : attendee.response === "interested"
-                        ? "rsvpInterested"
-                        : "rsvpNotGoing",
-                  )}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-4 text-sm">
+            <ItemList>
+              {attendees.map((attendee) => (
+                <li
+                  key={attendee.memberId}
+                  className="flex justify-between gap-4 p-3"
+                >
+                  <span>{attendee.nickname ?? attendee.fullName}</span>
+                  <span className="text-muted-foreground">
+                    {translateEvents(
+                      attendee.response === "going"
+                        ? "rsvpGoing"
+                        : attendee.response === "interested"
+                          ? "rsvpInterested"
+                          : "rsvpNotGoing",
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ItemList>
+          </div>
         )}
       </section>
     </PageContainer>

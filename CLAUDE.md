@@ -133,6 +133,29 @@ Excluded in the query, not in rendering.
   `<button>`; without the prop it warns and the element loses button semantics for screen
   readers. Only applies when `render` produces an `<a>` — dropdown triggers are fine.
 
+### Design system
+
+Never hand-write a heading, empty state or field wrapper. If a visual pattern appears
+twice, it becomes a component — that is the whole reason these exist:
+
+| Use                                            | Not                                           |
+| ---------------------------------------------- | --------------------------------------------- |
+| `PageHeading` (h1, optional eyebrow + actions) | `<h1 className="text-3xl …">`                 |
+| `SectionHeading` (h2)                          | `<h2 className="text-lg font-medium">`        |
+| `EmptyState`                                   | a dashed-border `<p>`                         |
+| `ItemList` / `ItemRow`                         | `<ul className="divide-y rounded-lg border">` |
+| `FormField` (label + control + hint)           | a `space-y-2` div with a `Label`              |
+| `FormSelect`                                   | `<select>` with a copied class string         |
+| `MemberAvatar`                                 | `Avatar` + `AvatarImage` + `AvatarFallback`   |
+| `Badge` from `ui/`                             | a hand-rolled rounded span                    |
+
+- **Button sizes already exist**: `xs`, `sm`, `default`, `lg`, plus `icon` variants.
+  Variants: `default`, `outline`, `secondary`, `ghost`, `destructive`, `link`.
+- **Colours come from tokens, never literals.** `bg-primary`, `text-muted-foreground`,
+  `bg-card`, `border-border`. No `bg-slate-800`, no hex. Every token is defined once in
+  `globals.css` for light and dark, so re-theming the whole site is one file.
+- Headings use `font-heading`; body inherits `font-sans`.
+
 ### Languages
 
 - Two languages, Swedish default: `/sv` and `/en`. Adding one means an entry in

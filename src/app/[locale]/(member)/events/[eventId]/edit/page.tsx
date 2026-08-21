@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventForm } from "@/components/EventForm"
 import { PageContainer } from "@/components/PageContainer"
+import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
 import { deleteEventAction, updateEventAction } from "@/features/events/actions"
 import {
@@ -61,9 +62,9 @@ export default async function EditEventPage({
         {event.title}
       </Button>
 
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">
-        {translateEvents("editTitle")}
-      </h1>
+      <div className="mt-4">
+        <PageHeading title={translateEvents("editTitle")} />
+      </div>
 
       <EventForm
         action={updateEventAction}

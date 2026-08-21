@@ -2,11 +2,12 @@ import type { Metadata } from "next"
 import { ArrowLeftIcon } from "lucide-react"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { FormField } from "@/components/FormField"
 import { PageContainer } from "@/components/PageContainer"
+import { PageHeading } from "@/components/PageHeading"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { updateMyProfile } from "@/features/members/actions"
 import { Link } from "@/i18n/navigation"
@@ -51,9 +52,9 @@ export default async function SettingsPage({
         {translateSettings("backToProfile")}
       </Button>
 
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">
-        {translateSettings("title")}
-      </h1>
+      <div className="mt-4">
+        <PageHeading title={translateSettings("title")} />
+      </div>
 
       <div className="mt-8 flex items-center gap-4">
         <MemberAvatar
@@ -67,8 +68,7 @@ export default async function SettingsPage({
       </div>
 
       <form action={updateMyProfile} className="mt-8 max-w-lg space-y-5">
-        <div className="space-y-2">
-          <Label htmlFor="fullName">{translateProfile("fullName")}</Label>
+        <FormField label={translateProfile("fullName")} htmlFor="fullName">
           <Input
             id="fullName"
             name="fullName"
@@ -76,22 +76,21 @@ export default async function SettingsPage({
             required
             maxLength={120}
           />
-        </div>
+        </FormField>
 
-        <div className="space-y-2">
-          <Label htmlFor="nickname">{translateProfile("nickname")}</Label>
+        <FormField label={translateProfile("nickname")} htmlFor="nickname">
           <Input
             id="nickname"
             name="nickname"
             defaultValue={member.nickname ?? ""}
             maxLength={60}
           />
-        </div>
+        </FormField>
 
-        <div className="space-y-2">
-          <Label htmlFor="officialTitle">
-            {translateProfile("officialTitle")}
-          </Label>
+        <FormField
+          label={translateProfile("officialTitle")}
+          htmlFor="officialTitle"
+        >
           <Input
             id="officialTitle"
             name="officialTitle"
@@ -99,10 +98,9 @@ export default async function SettingsPage({
             maxLength={60}
             placeholder={translateProfile("officialTitlePlaceholder")}
           />
-        </div>
+        </FormField>
 
-        <div className="space-y-2">
-          <Label htmlFor="funTitle">{translateProfile("funTitle")}</Label>
+        <FormField label={translateProfile("funTitle")} htmlFor="funTitle">
           <Input
             id="funTitle"
             name="funTitle"
@@ -110,10 +108,9 @@ export default async function SettingsPage({
             maxLength={60}
             placeholder={translateProfile("funTitlePlaceholder")}
           />
-        </div>
+        </FormField>
 
-        <div className="space-y-2">
-          <Label htmlFor="bio">{translateProfile("bio")}</Label>
+        <FormField label={translateProfile("bio")} htmlFor="bio">
           <Textarea
             id="bio"
             name="bio"
@@ -121,9 +118,11 @@ export default async function SettingsPage({
             rows={4}
             maxLength={2000}
           />
-        </div>
+        </FormField>
 
-        <Button type="submit">{translateProfile("save")}</Button>
+        <Button type="submit" size="lg">
+          {translateProfile("save")}
+        </Button>
       </form>
     </PageContainer>
   )

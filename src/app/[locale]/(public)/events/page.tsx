@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventList } from "@/components/EventList"
 import { PageContainer } from "@/components/PageContainer"
+import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
 import { findPastEvents, findUpcomingEvents } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
@@ -42,24 +43,22 @@ export default async function EventsPage({
 
   return (
     <PageContainer>
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          {translateEvents("title")}
-        </h1>
-
-        {canCreateEvent(viewer) && (
-          <Button
-            nativeButton={false}
-            render={
-              <Link href="/events/new" transitionTypes={["nav-forward"]} />
-            }
-            size="sm"
-          >
-            <PlusIcon className="size-4" />
-            {translateEvents("newEvent")}
-          </Button>
-        )}
-      </div>
+      <PageHeading
+        title={translateEvents("title")}
+        actions={
+          canCreateEvent(viewer) && (
+            <Button
+              nativeButton={false}
+              render={
+                <Link href="/events/new" transitionTypes={["nav-forward"]} />
+              }
+            >
+              <PlusIcon className="size-4" />
+              {translateEvents("newEvent")}
+            </Button>
+          )
+        }
+      />
 
       <EventList
         heading={translateEvents("upcomingTitle")}

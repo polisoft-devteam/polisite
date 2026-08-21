@@ -4,7 +4,11 @@
 import { SettingsIcon } from "lucide-react"
 import { getFormatter, getTranslations } from "next-intl/server"
 
+import { EmptyState } from "@/components/EmptyState"
+import { ItemList } from "@/components/ItemList"
 import { MemberAvatar } from "@/components/MemberAvatar"
+import { SectionHeading } from "@/components/SectionHeading"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import type { Event, Member } from "@/db/schema"
 import { Link } from "@/i18n/navigation"
@@ -37,7 +41,7 @@ export async function ProfileView({
         />
 
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="font-heading text-2xl font-semibold tracking-tight">
             {member.fullName}
           </h1>
 
@@ -49,9 +53,11 @@ export async function ProfileView({
 
           <div className="mt-2 flex flex-wrap gap-2">
             {member.officialTitle && (
-              <ProfileBadge>{member.officialTitle}</ProfileBadge>
+              <Badge variant="secondary">{member.officialTitle}</Badge>
             )}
-            {member.funTitle && <ProfileBadge>{member.funTitle}</ProfileBadge>}
+            {member.funTitle && (
+              <Badge variant="outline">{member.funTitle}</Badge>
+            )}
           </div>
         </div>
 
@@ -109,14 +115,6 @@ export async function ProfileView({
   )
 }
 
-function ProfileBadge({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="bg-muted text-muted-foreground rounded-full px-2.5 py-0.5 text-xs">
-      {children}
-    </span>
-  )
-}
-
 function ProfileFact({
   label,
   children,
@@ -147,29 +145,31 @@ async function ProfileEventList({
 
   return (
     <section className="mt-12">
-      <h2 className="text-lg font-medium">{heading}</h2>
+      <SectionHeading>{heading}</SectionHeading>
 
       {events.length === 0 ? (
-        <p className="text-muted-foreground mt-4 rounded-lg border border-dashed p-6 text-sm">
-          {emptyText}
-        </p>
+        <div className="mt-4">
+          <EmptyState>{emptyText}</EmptyState>
+        </div>
       ) : (
-        <ul className="mt-4 divide-y rounded-lg border">
-          {events.map((event) => (
-            <li key={event.id} className="flex justify-between gap-4 p-4">
-              <span className="font-medium">{event.title}</span>
-              <time
-                dateTime={event.startsAt.toISOString()}
-                className="text-muted-foreground text-sm"
-              >
-                {format.dateTime(event.startsAt, {
-                  dateStyle: "medium",
-                  timeZone: "Europe/Stockholm",
-                })}
-              </time>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-4">
+          <ItemList>
+            {events.map((event) => (
+              <li key={event.id} className="flex justify-between gap-4 p-4">
+                <span className="font-medium">{event.title}</span>
+                <time
+                  dateTime={event.startsAt.toISOString()}
+                  className="text-muted-foreground text-sm"
+                >
+                  {format.dateTime(event.startsAt, {
+                    dateStyle: "medium",
+                    timeZone: "Europe/Stockholm",
+                  })}
+                </time>
+              </li>
+            ))}
+          </ItemList>
+        </div>
       )}
     </section>
   )

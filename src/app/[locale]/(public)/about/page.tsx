@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { PageContainer } from "@/components/PageContainer"
+import { PageHeading } from "@/components/PageHeading"
+import { SectionHeading } from "@/components/SectionHeading"
 
 export async function generateMetadata({
   params,
@@ -22,17 +24,13 @@ export default async function AboutPage({
 
   return (
     <PageContainer>
-      <h1 className="text-3xl font-semibold tracking-tight">
-        {translateAbout("title")}
-      </h1>
+      <PageHeading title={translateAbout("title")} />
       <p className="text-muted-foreground mt-4 max-w-2xl">
         {translateAbout("intro")}
       </p>
 
       <section className="mt-12">
-        <h2 className="text-xl font-medium">
-          {translateAbout("membershipTitle")}
-        </h2>
+        <SectionHeading>{translateAbout("membershipTitle")}</SectionHeading>
         <p className="text-muted-foreground mt-4 max-w-2xl">
           {translateAbout("membershipBody")}
         </p>

@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventForm } from "@/components/EventForm"
 import { PageContainer } from "@/components/PageContainer"
+import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
 import { createEventAction } from "@/features/events/actions"
 import { Link } from "@/i18n/navigation"
@@ -41,9 +42,9 @@ export default async function NewEventPage({
         {translateEvents("back")}
       </Button>
 
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">
-        {translateEvents("createTitle")}
-      </h1>
+      <div className="mt-4">
+        <PageHeading title={translateEvents("createTitle")} />
+      </div>
 
       <EventForm
         action={createEventAction}

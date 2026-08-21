@@ -5,6 +5,7 @@
 
 import { useState } from "react"
 
+import { FormSelect } from "@/components/FormField"
 import { Label } from "@/components/ui/label"
 import type { EventVisibility } from "@/db/schema"
 
@@ -17,14 +18,12 @@ type EventVisibilityFieldProps = {
     explanation: string
   }[]
   defaultValue: EventVisibility
-  selectClassName: string
 }
 
 export function EventVisibilityField({
   label,
   options,
   defaultValue,
-  selectClassName,
 }: EventVisibilityFieldProps) {
   const [selected, setSelected] = useState<EventVisibility>(defaultValue)
 
@@ -35,19 +34,18 @@ export function EventVisibilityField({
   return (
     <div className="space-y-2">
       <Label htmlFor="visibility">{label}</Label>
-      <select
+      <FormSelect
         id="visibility"
         name="visibility"
         value={selected}
         onChange={(event) => setSelected(event.target.value as EventVisibility)}
-        className={selectClassName}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}
-      </select>
+      </FormSelect>
 
       {explanation && (
         <p className="text-muted-foreground bg-muted/50 rounded-md px-3 py-2 text-xs">

@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { PageContainer } from "@/components/PageContainer"
+import { PageHeading } from "@/components/PageHeading"
+import { SectionHeading } from "@/components/SectionHeading"
 
 export async function generateMetadata({
   params,
@@ -28,9 +30,7 @@ export default async function PrivacyPage({
 
   return (
     <PageContainer>
-      <h1 className="text-3xl font-semibold tracking-tight">
-        {translatePrivacy("title")}
-      </h1>
+      <PageHeading title={translatePrivacy("title")} />
       <p className="text-muted-foreground mt-2 text-sm">
         {translatePrivacy("lastUpdated")}
       </p>
@@ -94,7 +94,7 @@ function PolicySection({
 }) {
   return (
     <section>
-      <h2 className="text-lg font-medium">{heading}</h2>
+      <SectionHeading>{heading}</SectionHeading>
       <div className="text-muted-foreground mt-3 space-y-3 text-sm">
         {children}
       </div>
