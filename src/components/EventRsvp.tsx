@@ -5,13 +5,8 @@ import { getTranslations } from "next-intl/server"
 
 import { Button } from "@/components/ui/button"
 import { attendanceResponseEnum, type AttendanceResponse } from "@/db/schema"
+import { ATTENDANCE_RESPONSE_LABEL_KEY } from "@/features/events/labels"
 import { setAttendanceAction } from "@/features/events/actions"
-
-const RESPONSE_TRANSLATION_KEY: Record<AttendanceResponse, string> = {
-  going: "rsvpGoing",
-  interested: "rsvpInterested",
-  not_going: "rsvpNotGoing",
-}
 
 export async function EventRsvp({
   eventId,
@@ -33,7 +28,7 @@ export async function EventRsvp({
             variant={myResponse === response ? "default" : "outline"}
             size="sm"
           >
-            {translateEvents(RESPONSE_TRANSLATION_KEY[response])}
+            {translateEvents(ATTENDANCE_RESPONSE_LABEL_KEY[response])}
           </Button>
         </form>
       ))}

@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
-import { ArrowLeftIcon } from "lucide-react"
 import { notFound } from "next/navigation"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventForm } from "@/components/EventForm"
+import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
@@ -12,7 +12,6 @@ import {
   findEventById,
   findReminderOffsetsForEvent,
 } from "@/features/events/queries"
-import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import { canEditEvent, visibleEventVisibilitiesFor } from "@/lib/permissions"
 
@@ -49,18 +48,7 @@ export default async function EditEventPage({
 
   return (
     <PageContainer>
-      <Button
-        nativeButton={false}
-        render={
-          <Link href={`/events/${event.id}`} transitionTypes={["nav-back"]} />
-        }
-        variant="ghost"
-        size="sm"
-        className="-ml-3"
-      >
-        <ArrowLeftIcon className="size-4" />
-        {event.title}
-      </Button>
+      <BackLink href={`/events/${event.id}`}>{event.title}</BackLink>
 
       <div className="mt-4">
         <PageHeading title={translateEvents("editTitle")} />

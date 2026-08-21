@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
-import { ArrowLeftIcon } from "lucide-react"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { FormField } from "@/components/FormField"
+import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { MemberAvatar } from "@/components/MemberAvatar"
@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { updateMyProfile } from "@/features/members/actions"
-import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 
 export async function generateMetadata({
@@ -41,16 +40,7 @@ export default async function SettingsPage({
 
   return (
     <PageContainer>
-      <Button
-        nativeButton={false}
-        render={<Link href="/profile" transitionTypes={["nav-back"]} />}
-        variant="ghost"
-        size="sm"
-        className="-ml-3"
-      >
-        <ArrowLeftIcon className="size-4" />
-        {translateSettings("backToProfile")}
-      </Button>
+      <BackLink href="/profile">{translateSettings("backToProfile")}</BackLink>
 
       <div className="mt-4">
         <PageHeading title={translateSettings("title")} />

@@ -148,6 +148,11 @@ twice, it becomes a component — that is the whole reason these exist:
 | `FormSelect`                                   | `<select>` with a copied class string         |
 | `MemberAvatar`                                 | `Avatar` + `AvatarImage` + `AvatarFallback`   |
 | `Badge` from `ui/`                             | a hand-rolled rounded span                    |
+| `PageSection` (heading + spacing)              | `<section className="mt-12">`                 |
+| `BackLink`                                     | a ghost Button with `-ml-3` and an arrow      |
+| `ExternalLink`                                 | an `<a target="_blank">` without `rel`        |
+| `FactList` / `Fact`                            | a hand-rolled `<dl>`                          |
+| `EventList`                                    | a second list of events                       |
 
 - **Button sizes already exist**: `xs`, `sm`, `default`, `lg`, plus `icon` variants.
   Variants: `default`, `outline`, `secondary`, `ghost`, `destructive`, `link`.
@@ -155,6 +160,10 @@ twice, it becomes a component — that is the whole reason these exist:
   `bg-card`, `border-border`. No `bg-slate-800`, no hex. Every token is defined once in
   `globals.css` for light and dark, so re-theming the whole site is one file.
 - Headings use `font-heading`; body inherits `font-sans`.
+- **Enum labels and icons live in `features/events/labels.ts`**, not inline in components.
+  They were duplicated across four files, which is how one category ends up with two
+  different icons. Discord keeps its own emoji map — a Discord message is plain text, so
+  emoji is the only icon system available there.
 
 ### Languages
 

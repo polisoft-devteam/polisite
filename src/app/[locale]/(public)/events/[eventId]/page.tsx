@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { ArrowLeftIcon, PencilIcon } from "lucide-react"
+import { PencilIcon } from "lucide-react"
 import { notFound } from "next/navigation"
 import {
   getFormatter,
@@ -9,12 +9,19 @@ import {
 
 import { EventRsvp } from "@/components/EventRsvp"
 import { EmptyState } from "@/components/EmptyState"
+import { ExternalLink } from "@/components/ExternalLink"
+import { Fact, FactList } from "@/components/FactList"
 import { ItemList } from "@/components/ItemList"
+import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
-import { SectionHeading } from "@/components/SectionHeading"
+import { PageSection } from "@/components/PageSection"
 import { Button } from "@/components/ui/button"
-import type { EventCategory, EventVisibility } from "@/db/schema"
+import {
+  EVENT_CATEGORY_LABEL_KEY,
+  EVENT_VISIBILITY_LABEL_KEY,
+  ATTENDANCE_RESPONSE_LABEL_KEY,
+} from "@/features/events/labels"
 import { findAttendeesForEvent, findEventById } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
@@ -23,24 +30,6 @@ import {
   canRespondToEvent,
   visibleEventVisibilitiesFor,
 } from "@/lib/permissions"
-
-const VISIBILITY_TRANSLATION_KEY: Record<EventVisibility, string> = {
-  public: "visibilityPublic",
-  members: "visibilityMembers",
-  members_and_friends: "visibilityMembersAndFriends",
-}
-
-const CATEGORY_TRANSLATION_KEY: Record<EventCategory, string> = {
-  music: "categoryMusic",
-  party: "categoryParty",
-  trip: "categoryTrip",
-  hike: "categoryHike",
-  sport: "categorySport",
-  food: "categoryFood",
-  board_meeting: "categoryBoardMeeting",
-  birthday: "categoryBirthday",
-  other: "categoryOther",
-}
 
 export async function generateMetadata({
   params,
@@ -97,20 +86,11 @@ export default async function EventPage({
 
   return (
     <PageContainer>
-      <Button
-        nativeButton={false}
-        render={<Link href="/events" transitionTypes={["nav-back"]} />}
-        variant="ghost"
-        size="sm"
-        className="-ml-3"
-      >
-        <ArrowLeftIcon className="size-4" />
-        {translateEvents("back")}
-      </Button>
+      <BackLink href="/events">{translateEvents("back")}</BackLink>
 
       <div className="mt-4">
         <PageHeading
-          eyebrow={translateEvents(CATEGORY_TRANSLATION_KEY[event.category])}
+          eyebrow={translateEvents(EVENT_CATEGORY_LABEL_KEY[event.category])}
           title={event.title}
           actions={
             canEditEvent(viewer, event) && (
@@ -132,67 +112,67 @@ export default async function EventPage({
         />
       </div>
 
-      <dl className="mt-6 space-y-1 text-sm">
-        <Fact label={translateEvents("fieldStartsAt")}>
-          <time dateTime={event.startsAt.toISOString()}>
-            {format.dateTime(event.startsAt, {
-              dateStyle: "full",
-              timeStyle: "short",
-              timeZone: event.timeZone,
-            })}
-          </time>
-          {/* Named so a reader in Copenhagen knows which city's clock this is. */}
-          <span className="text-muted-foreground">
-            {" "}
-            ({event.timeZone.replace("_", " ")})
-          </span>
-        </Fact>
-
-        {event.endsAt && (
-          <Fact label={translateEvents("fieldEndsAt")}>
-            <time dateTime={event.endsAt.toISOString()}>
-              {format.dateTime(event.endsAt, {
+      <div className="mt-6">
+        <FactList>
+          <Fact label={translateEvents("fieldStartsAt")}>
+            <time dateTime={event.startsAt.toISOString()}>
+              {format.dateTime(event.startsAt, {
                 dateStyle: "full",
                 timeStyle: "short",
                 timeZone: event.timeZone,
               })}
             </time>
+            {/* Named so a reader in Copenhagen knows which city's clock this is. */}
+            <span className="text-muted-foreground">
+              {" "}
+              ({event.timeZone.replace("_", " ")})
+            </span>
           </Fact>
-        )}
 
-        {event.location && (
-          <Fact label={translateEvents("fieldLocation")}>
-            {event.location}
-            {/* A plain Maps search link needs no API key and no billing account. */}
-            <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="text-muted-foreground ml-2 underline underline-offset-4"
-            >
-              {translateEvents("showOnMap")}
-            </a>
+          {event.endsAt && (
+            <Fact label={translateEvents("fieldEndsAt")}>
+              <time dateTime={event.endsAt.toISOString()}>
+                {format.dateTime(event.endsAt, {
+                  dateStyle: "full",
+                  timeStyle: "short",
+                  timeZone: event.timeZone,
+                })}
+              </time>
+            </Fact>
+          )}
+
+          {event.location && (
+            <Fact label={translateEvents("fieldLocation")}>
+              {event.location}
+              {/* A plain Maps search link needs no API key and no billing account. */}
+              <ExternalLink
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
+                className="text-muted-foreground ml-2 underline underline-offset-4"
+              >
+                {translateEvents("showOnMap")}
+              </ExternalLink>
+            </Fact>
+          )}
+
+          <Fact label={translateEvents("fieldVisibility")}>
+            {translateEvents(EVENT_VISIBILITY_LABEL_KEY[event.visibility])}
           </Fact>
-        )}
 
-        <Fact label={translateEvents("fieldVisibility")}>
-          {translateEvents(VISIBILITY_TRANSLATION_KEY[event.visibility])}
-        </Fact>
+          <Fact label={translateEvents("fieldPrice")}>
+            {event.priceMinorUnits === null
+              ? translateEvents("free")
+              : `${(event.priceMinorUnits / 100).toFixed(2)} ${event.priceCurrency}`}
+          </Fact>
 
-        <Fact label={translateEvents("fieldPrice")}>
-          {event.priceMinorUnits === null
-            ? translateEvents("free")
-            : `${(event.priceMinorUnits / 100).toFixed(2)} ${event.priceCurrency}`}
-        </Fact>
-
-        <Fact label={translateEvents("fieldMaxAttendees")}>
-          {spotsLeft === null
-            ? translateEvents("unlimited")
-            : spotsLeft > 0
-              ? translateEvents("spotsLeft", { count: spotsLeft })
-              : translateEvents("full")}
-        </Fact>
-      </dl>
+          <Fact label={translateEvents("fieldMaxAttendees")}>
+            {spotsLeft === null
+              ? translateEvents("unlimited")
+              : spotsLeft > 0
+                ? translateEvents("spotsLeft", { count: spotsLeft })
+                : translateEvents("full")}
+          </Fact>
+        </FactList>
+      </div>
 
       {event.description && (
         <p className="mt-6 max-w-2xl text-sm whitespace-pre-line">
@@ -203,24 +183,14 @@ export default async function EventPage({
       {(event.eventUrl || event.extraLinkUrl) && (
         <div className="mt-6 flex flex-wrap gap-4 text-sm">
           {event.eventUrl && (
-            <a
-              href={event.eventUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="underline underline-offset-4"
-            >
+            <ExternalLink href={event.eventUrl}>
               {translateEvents("moreInfo")}
-            </a>
+            </ExternalLink>
           )}
           {event.extraLinkUrl && (
-            <a
-              href={event.extraLinkUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="underline underline-offset-4"
-            >
+            <ExternalLink href={event.extraLinkUrl}>
               {translateEvents("extraLink")}
-            </a>
+            </ExternalLink>
           )}
         </div>
       )}
@@ -233,15 +203,11 @@ export default async function EventPage({
         </p>
       )}
 
-      <section className="mt-12">
-        <SectionHeading>{translateEvents("attendees")}</SectionHeading>
-
+      <PageSection heading={translateEvents("attendees")}>
         {attendees.length === 0 ? (
-          <div className="mt-4">
-            <EmptyState>{translateEvents("attendeesEmpty")}</EmptyState>
-          </div>
+          <EmptyState>{translateEvents("attendeesEmpty")}</EmptyState>
         ) : (
-          <div className="mt-4 text-sm">
+          <div className="text-sm">
             <ItemList>
               {attendees.map((attendee) => (
                 <li
@@ -251,11 +217,7 @@ export default async function EventPage({
                   <span>{attendee.nickname ?? attendee.fullName}</span>
                   <span className="text-muted-foreground">
                     {translateEvents(
-                      attendee.response === "going"
-                        ? "rsvpGoing"
-                        : attendee.response === "interested"
-                          ? "rsvpInterested"
-                          : "rsvpNotGoing",
+                      ATTENDANCE_RESPONSE_LABEL_KEY[attendee.response],
                     )}
                   </span>
                 </li>
@@ -263,22 +225,7 @@ export default async function EventPage({
             </ItemList>
           </div>
         )}
-      </section>
+      </PageSection>
     </PageContainer>
-  )
-}
-
-function Fact({
-  label,
-  children,
-}: {
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      <dt className="text-muted-foreground">{label}:</dt>
-      <dd>{children}</dd>
-    </div>
   )
 }

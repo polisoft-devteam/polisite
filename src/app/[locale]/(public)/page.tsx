@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 import { EmptyState } from "@/components/EmptyState"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
-import { SectionHeading } from "@/components/SectionHeading"
+import { PageSection } from "@/components/PageSection"
 
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params
@@ -18,12 +18,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         {translateHome("intro")}
       </p>
 
-      <section className="mt-12">
-        <SectionHeading>{translateHome("upcomingTitle")}</SectionHeading>
-        <div className="mt-4">
-          <EmptyState>{translateHome("upcomingEmpty")}</EmptyState>
-        </div>
-      </section>
+      <PageSection heading={translateHome("upcomingTitle")}>
+        <EmptyState>{translateHome("upcomingEmpty")}</EmptyState>
+      </PageSection>
     </PageContainer>
   )
 }

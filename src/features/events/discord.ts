@@ -10,6 +10,8 @@
 import type { Event } from "@/db/schema"
 import { toDiscordTimestamp } from "@/lib/time"
 
+// Emoji rather than the app's Lucide icons: a Discord message is text, so this is the
+// only icon system available there.
 const CATEGORY_EMOJI: Record<Event["category"], string> = {
   music: "🎵",
   party: "🎉",

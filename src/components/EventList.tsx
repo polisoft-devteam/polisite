@@ -4,21 +4,10 @@ import { getFormatter, getTranslations } from "next-intl/server"
 
 import { EmptyState } from "@/components/EmptyState"
 import { ItemList } from "@/components/ItemList"
-import { SectionHeading } from "@/components/SectionHeading"
+import { PageSection } from "@/components/PageSection"
 import type { Event } from "@/db/schema"
+import { EVENT_CATEGORY_ICON } from "@/features/events/labels"
 import { Link } from "@/i18n/navigation"
-
-const CATEGORY_EMOJI: Record<Event["category"], string> = {
-  music: "🎵",
-  party: "🎉",
-  trip: "✈️",
-  hike: "🥾",
-  sport: "🏅",
-  food: "🍽️",
-  board_meeting: "📋",
-  birthday: "🎂",
-  other: "📌",
-}
 
 export async function EventList({
   heading,
@@ -34,49 +23,52 @@ export async function EventList({
   const format = await getFormatter({ locale })
   const translateEvents = await getTranslations("Events")
 
+  if (events.length === 0) {
+    return (
+      <PageSection heading={heading}>
+        <EmptyState>{emptyText}</EmptyState>
+      </PageSection>
+    )
+  }
+
   return (
-    <section className="mt-10">
-      <SectionHeading>{heading}</SectionHeading>
+    <PageSection heading={heading}>
+      <ItemList>
+        {events.map((event) => {
+          const CategoryIcon = EVENT_CATEGORY_ICON[event.category]
 
-      {events.length === 0 ? (
-        <div className="mt-4">
-          <EmptyState>{emptyText}</EmptyState>
-        </div>
-      ) : (
-        <div className="mt-4">
-          <ItemList>
-            {events.map((event) => (
-              <li key={event.id}>
-                <Link
-                  href={`/events/${event.id}`}
-                  transitionTypes={["nav-forward"]}
-                  className="hover:bg-muted/50 flex flex-col gap-1 p-4 transition-colors sm:flex-row sm:items-baseline sm:justify-between"
-                >
-                  <span className="font-medium">
-                    {CATEGORY_EMOJI[event.category]} {event.title}
-                  </span>
+          return (
+            <li key={event.id}>
+              <Link
+                href={`/events/${event.id}`}
+                transitionTypes={["nav-forward"]}
+                className="hover:bg-muted/50 flex flex-col gap-1 p-4 transition-colors sm:flex-row sm:items-baseline sm:justify-between"
+              >
+                <span className="flex items-center gap-2 font-medium">
+                  <CategoryIcon className="text-muted-foreground size-4 shrink-0" />
+                  {event.title}
+                </span>
 
-                  <span className="text-muted-foreground shrink-0 text-sm">
-                    <time dateTime={event.startsAt.toISOString()}>
-                      {/* Shown in the event's own zone, so a London gig reads London time. */}
-                      {format.dateTime(event.startsAt, {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                        timeZone: event.timeZone,
-                      })}
-                    </time>
-                    {event.visibility === "public" && (
-                      <span className="ml-2 text-xs">
-                        · {translateEvents("visibilityPublicShort")}
-                      </span>
-                    )}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ItemList>
-        </div>
-      )}
-    </section>
+                <span className="text-muted-foreground shrink-0 text-sm">
+                  <time dateTime={event.startsAt.toISOString()}>
+                    {/* Shown in the event's own zone, so a London gig reads London time. */}
+                    {format.dateTime(event.startsAt, {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                      timeZone: event.timeZone,
+                    })}
+                  </time>
+                  {event.visibility === "public" && (
+                    <span className="ml-2 text-xs">
+                      · {translateEvents("visibilityPublicShort")}
+                    </span>
+                  )}
+                </span>
+              </Link>
+            </li>
+          )
+        })}
+      </ItemList>
+    </PageSection>
   )
 }

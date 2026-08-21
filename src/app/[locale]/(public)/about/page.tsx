@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
-import { SectionHeading } from "@/components/SectionHeading"
+import { PageSection } from "@/components/PageSection"
 
 export async function generateMetadata({
   params,
@@ -29,12 +29,11 @@ export default async function AboutPage({
         {translateAbout("intro")}
       </p>
 
-      <section className="mt-12">
-        <SectionHeading>{translateAbout("membershipTitle")}</SectionHeading>
-        <p className="text-muted-foreground mt-4 max-w-2xl">
+      <PageSection heading={translateAbout("membershipTitle")}>
+        <p className="text-muted-foreground max-w-2xl">
           {translateAbout("membershipBody")}
         </p>
-      </section>
+      </PageSection>
     </PageContainer>
   )
 }

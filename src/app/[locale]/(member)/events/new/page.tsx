@@ -1,13 +1,11 @@
 import type { Metadata } from "next"
-import { ArrowLeftIcon } from "lucide-react"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventForm } from "@/components/EventForm"
+import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
-import { Button } from "@/components/ui/button"
 import { createEventAction } from "@/features/events/actions"
-import { Link } from "@/i18n/navigation"
 
 export async function generateMetadata({
   params,
@@ -31,16 +29,7 @@ export default async function NewEventPage({
 
   return (
     <PageContainer>
-      <Button
-        nativeButton={false}
-        render={<Link href="/events" transitionTypes={["nav-back"]} />}
-        variant="ghost"
-        size="sm"
-        className="-ml-3"
-      >
-        <ArrowLeftIcon className="size-4" />
-        {translateEvents("back")}
-      </Button>
+      <BackLink href="/events">{translateEvents("back")}</BackLink>
 
       <div className="mt-4">
         <PageHeading title={translateEvents("createTitle")} />
