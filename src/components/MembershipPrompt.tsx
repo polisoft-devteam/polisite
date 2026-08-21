@@ -1,5 +1,5 @@
-// Shown once to someone who has signed in with Google but isn't a member: what this site
-// is, and that they can ask to join. Either button dismisses it for good.
+// Shown once to someone who has signed in with Google but isn't a member: a letter from a
+// founder, and the chance to ask to join. Either button dismisses it for good.
 
 import { getTranslations } from "next-intl/server"
 
@@ -10,7 +10,6 @@ import {
   requestMembership,
 } from "@/features/members/membership-prompt-actions"
 import { findMembershipPrompt } from "@/features/members/queries"
-import { ASSOCIATION_NAME } from "@/lib/association"
 import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
 
@@ -23,14 +22,14 @@ export async function MembershipPrompt() {
   if (await findMembershipPrompt(viewer.authUserId)) return null
 
   const translateMembership = await getTranslations("MembershipPrompt")
+  const paragraphs = translateMembership.raw("paragraphs") as string[]
 
   return (
     <Modal
       defaultOpen
-      title={translateMembership("title", {
-        associationName: ASSOCIATION_NAME,
-      })}
+      title={translateMembership("title")}
       closeLabel={translateMembership("close")}
+      className="sm:max-w-2xl"
       footer={
         <>
           <form action={dismissMembershipPrompt}>
@@ -45,11 +44,15 @@ export async function MembershipPrompt() {
         </>
       }
     >
-      <div className="text-muted-foreground space-y-3 text-sm">
-        <p>
-          {translateMembership("intro", { associationName: ASSOCIATION_NAME })}
+      {/* Scrolls rather than growing past the viewport — it's a long letter. */}
+      <div className="max-h-[60vh] space-y-3 overflow-y-auto pr-1 text-sm leading-relaxed">
+        {paragraphs.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
+
+        <p className="text-muted-foreground pt-2 italic">
+          {translateMembership("signature")}
         </p>
-        <p>{translateMembership("guestExplanation")}</p>
       </div>
     </Modal>
   )
