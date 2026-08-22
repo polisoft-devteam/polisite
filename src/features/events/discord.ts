@@ -8,6 +8,7 @@
 // then have two answers.
 
 import type { Event } from "@/db/schema"
+import { mentionRole, postToDiscord } from "@/lib/discord"
 import { toDiscordTimestamp } from "@/lib/time"
 
 // Emoji rather than the app's Lucide icons: a Discord message is text, so this is the
@@ -22,10 +23,6 @@ const CATEGORY_EMOJI: Record<Event["category"], string> = {
   board_meeting: "📋",
   birthday: "🎂",
   other: "📌",
-}
-
-export function isDiscordConfigured(): boolean {
-  return Boolean(process.env.DISCORD_WEBHOOK_URL)
 }
 
 function buildEventUrl(event: Event, locale: string): string {
@@ -81,49 +78,17 @@ type PostOptions = {
   leadText: string
 }
 
-/**
- * Returns the Discord message id so a later edit can update that message instead of
- * posting a correction. Null if Discord isn't configured or the post failed — a failed
- * notification must never block saving the event.
- */
+/** Null if Discord isn't configured or the post failed — never blocks saving the event. */
 export async function postEventToDiscord({
   event,
   locale,
   leadText,
 }: PostOptions): Promise<string | null> {
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL
-  if (!webhookUrl) return null
-
   const roleId = process.env.DISCORD_MEMBER_ROLE_ID
-  const mention = roleId ? `<@&${roleId}> ` : ""
 
-  try {
-    // wait=true makes Discord return the created message rather than an empty 204.
-    const response = await fetch(`${webhookUrl}?wait=true`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        content: `${mention}${leadText}`,
-        // Without naming the role here Discord renders the mention as text and pings
-        // nobody. parse: [] blocks @everyone even if it appears in the text.
-        allowed_mentions: { parse: [], roles: roleId ? [roleId] : [] },
-        embeds: [buildEmbed(event, locale)],
-      }),
-    })
-
-    if (!response.ok) {
-      console.error(
-        "Discord post failed",
-        response.status,
-        await response.text(),
-      )
-      return null
-    }
-
-    const message = (await response.json()) as { id?: string }
-    return message.id ?? null
-  } catch (error) {
-    console.error("Discord post threw", error)
-    return null
-  }
+  return postToDiscord({
+    content: `${mentionRole(roleId)}${leadText}`,
+    mentionRoleIds: roleId ? [roleId] : [],
+    embeds: [buildEmbed(event, locale)],
+  })
 }
