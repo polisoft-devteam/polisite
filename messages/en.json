@@ -179,23 +179,5 @@
   "Settings": {
     "title": "Settings",
     "backToProfile": "Back to profile"
-  },
-  "MembershipPrompt": {
-    "title": "A few words from one of our founders",
-    "paragraphs": [
-      "If you are reading this, the cops have kicked the door in, found my 5 petabyte drive, and I am doing time.",
-      "No, only joking. Let us take a more serious tone.",
-      "Now thirty and more or less freshly divorced, I have realised that male companionship is all you really have in this world. It should not be neglected — and as we scatter across the world, Gothenburg, Copenhagen, London, Bjuv(?), it will matter more than ever to have some structured glue holding a group as good as this one together.",
-      "Life is still full of activity, booze and women. But a day will come when the dementia kicks in, the knee gives out on the hockey, and one's French wife has passed away in a tragic e-scooter-related swimming accident in Högsbo.",
-      "In short: friendship and community are a seed which I, as the association's first self-appointed President, Seth Ruydell style, intend to water and tend with care.",
-      "The first concrete step I am taking is this website. Here I — and hopefully YOU — will create and schedule events.",
-      "There is already plenty in the works. The idea is events for us, but also for those close to us. Nobody can think of everything, but everyone can think of something. A dog, for instance. Or a table.",
-      "I have big plans for this fine association: serious merch, a standing annual meet-up, and trips. Maybe even a shared stock pool where we save towards a trip together. Let us see where this takes us.",
-      "So: welcome to association life. YOUR membership is already booked."
-    ],
-    "signature": "In haste, Victor Interassistsson",
-    "request": "Request membership",
-    "dismiss": "Got it!",
-    "close": "Close"
   }
 }

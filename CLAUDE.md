@@ -181,8 +181,10 @@ twice, it becomes a component — that is the whole reason these exist:
   `i18n/routing.ts` plus a file in `messages/`.
 - **All interface copy lives in `messages/*.json`.** Never hardcode a user-visible string
   in a component, including the About page prose.
-- **Except the association's own name and contact email**, which are constants in
-  `lib/association.ts`. A proper noun isn't translated, and keeping it per-language means
+- **Except things that aren't translatable**: the association's name and contact email
+  (`lib/association.ts`) and the founder's welcome letter (`lib/welcome-letter.ts`, Swedish
+  only — translating the jokes would produce something nobody wrote).
+  For the name specifically: A proper noun isn't translated, and keeping it per-language means
   renaming it twice and missing one. Strings that mention it take an ICU placeholder:
   `t("controllerBody", { associationName: ASSOCIATION_NAME })`.
 - **Import `Link`, `useRouter` and `usePathname` from `@/i18n/navigation`**, not from
