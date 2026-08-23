@@ -12,6 +12,7 @@ import { getTranslations } from "next-intl/server"
 import { EventWhenField } from "@/components/EventWhenField"
 import { EventReminderField } from "@/components/EventReminderField"
 import { ExplainedSelectField } from "@/components/ExplainedSelectField"
+import { IconSelectField } from "@/components/IconSelectField"
 import { FormField, FormSelect } from "@/components/FormField"
 import { Wizard, type WizardStep } from "@/components/Wizard"
 import {
@@ -31,6 +32,7 @@ import {
   type ReminderOffset,
 } from "@/db/schema"
 import {
+  EVENT_CATEGORY_ICON,
   EVENT_CATEGORY_LABEL_KEY,
   EVENT_KIND_EXPLANATION_KEY,
   EVENT_KIND_LABEL_KEY,
@@ -82,22 +84,16 @@ export async function EventForm({
               />
             </FormField>
 
-            <FormField
+            <IconSelectField
+              name="category"
               label={translateEvents("fieldCategory")}
-              htmlFor="category"
-            >
-              <FormSelect
-                id="category"
-                name="category"
-                defaultValue={event?.category ?? "other"}
-              >
-                {eventCategoryEnum.enumValues.map((category) => (
-                  <option key={category} value={category}>
-                    {translateEvents(EVENT_CATEGORY_LABEL_KEY[category])}
-                  </option>
-                ))}
-              </FormSelect>
-            </FormField>
+              defaultValue={event?.category ?? "other"}
+              options={eventCategoryEnum.enumValues.map((category) => ({
+                value: category,
+                label: translateEvents(EVENT_CATEGORY_LABEL_KEY[category]),
+                Icon: EVENT_CATEGORY_ICON[category],
+              }))}
+            />
           </div>
 
           <FormField
@@ -171,6 +167,7 @@ export async function EventForm({
                 id="location"
                 name="location"
                 defaultValue={event?.location ?? ""}
+                required
                 maxLength={200}
               />
             </FormField>
@@ -226,26 +223,13 @@ export async function EventForm({
             }))}
           />
 
-          {/* Only meaningful when creating; an edit shouldn't re-announce. */}
-          {!event && (
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                name="announceOnDiscord"
-                defaultChecked
-                className="border-input size-4 rounded border"
-              />
-              {translateEvents("fieldAnnounce")}
-            </label>
-          )}
-
           {/* Everything with a sensible default lives here, folded away. */}
-          <Accordion>
+          <Accordion className="border-border rounded-lg border">
             <AccordionItem value="advanced">
-              <AccordionTrigger>
+              <AccordionTrigger className="px-4 hover:no-underline">
                 {translateEvents("advancedTitle")}
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="px-4">
                 <p className="text-muted-foreground mb-4 text-xs">
                   {translateEvents("advancedHint")}
                 </p>
@@ -335,6 +319,19 @@ export async function EventForm({
                       defaultValue={event?.maxAttendees ?? ""}
                     />
                   </FormField>
+
+                  {/* Only meaningful when creating; an edit shouldn't re-announce. */}
+                  {!event && (
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        name="announceOnDiscord"
+                        defaultChecked
+                        className="border-input size-4 rounded border"
+                      />
+                      {translateEvents("fieldAnnounce")}
+                    </label>
+                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>

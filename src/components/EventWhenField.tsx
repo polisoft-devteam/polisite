@@ -79,6 +79,9 @@ export function EventWhenField({
             name="startsAtWallTime"
             type="datetime-local"
             value={startsAt}
+            // Either a date or a poll is required, so this is only optional once the
+            // poll has something in it. Cross-field rules can't be expressed in HTML.
+            required={!hasPollDates}
             disabled={hasPollDates}
             onChange={(event) => setStartsAt(event.target.value)}
           />

@@ -163,6 +163,9 @@ twice, it becomes a component — that is the whole reason these exist:
   `bg-card`, `border-border`. No `bg-slate-800`, no hex. Every token is defined once in
   `globals.css` for light and dark, so re-theming the whole site is one file.
 - Headings use `font-heading`; body inherits `font-sans`.
+- **Invalid fields get `aria-invalid`, never `reportValidity()`.** The browser's validation
+  bubble is an OS widget that can't be styled; `aria-invalid` turns the border red through
+  our own tokens and says the same thing to a screen reader. `Wizard` sets it on Next.
 - **Images go through `SiteImage`**, and uploads through `lib/storage.ts`, which resizes
   to WebP and strips metadata. Never store an original: Supabase Free is 1 GB, and phone
   photos carry GPS coordinates in their EXIF.

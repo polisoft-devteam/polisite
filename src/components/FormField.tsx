@@ -1,6 +1,7 @@
 // Label, control and optional hint. Every form field in the app uses this, so spacing and
 // hint styling can't drift between the profile form and the event form.
 
+import { ChevronDownIcon } from "@/lib/icons"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 
@@ -25,22 +26,28 @@ export function FormField({
 }
 
 /**
- * A native select styled to match Input.
+ * A native select, styled to match Input rather than looking like an OS widget.
  *
- * Native rather than the shadcn Select so forms post without client JavaScript — see
- * EventForm. Kept here so the styling lives in one place.
+ * Native so forms still post without client JavaScript. appearance-none removes the
+ * platform arrow, so we draw our own.
  */
 export function FormSelect({
   className,
   ...props
 }: React.ComponentProps<"select">) {
   return (
-    <select
-      className={cn(
-        "border-input bg-background focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border px-3 py-1 text-sm shadow-xs focus-visible:ring-[3px] focus-visible:outline-none",
-        className,
-      )}
-      {...props}
-    />
+    <div className="relative">
+      <select
+        className={cn(
+          "border-input bg-background focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 h-9 w-full appearance-none rounded-md border py-1 pr-9 pl-3 text-sm shadow-xs focus-visible:ring-[3px] focus-visible:outline-none aria-invalid:ring-3",
+          className,
+        )}
+        {...props}
+      />
+      <ChevronDownIcon
+        aria-hidden="true"
+        className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2"
+      />
+    </div>
   )
 }

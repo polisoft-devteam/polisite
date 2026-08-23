@@ -10,6 +10,7 @@ export {
   ArrowLeft as ArrowLeftIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
+  ChevronDown as ChevronDownIcon,
   Check as CheckIcon,
   X as CloseIcon,
   Gear as SettingsIcon,

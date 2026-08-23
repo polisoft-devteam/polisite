@@ -208,3 +208,15 @@
 [data-slot="dialog-overlay"] {
   background-color: --alpha(var(--foreground) / 45%);
 }
+
+/* --- Pointer on anything clickable ------------------------------------------
+   Tailwind v4 resets buttons to the default cursor, which makes controls feel
+   inert. Applied here so no component has to remember it. */
+
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+label:has(input[type="checkbox"]:not(:disabled)),
+summary,
+a[href] {
+  cursor: pointer;
+}

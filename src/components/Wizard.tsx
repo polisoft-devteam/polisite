@@ -42,6 +42,10 @@ export function Wizard({
   /**
    * Blocks advancing past a panel with invalid fields. Without this the browser would
    * refuse to submit on the last step and try to focus an input nobody can see.
+   *
+   * Marks fields with aria-invalid rather than calling reportValidity(): the native bubble
+   * is an OS widget we can't style, and aria-invalid already turns the field's border red
+   * while telling screen readers the same thing.
    */
   function goToNextStep(event: React.MouseEvent<HTMLButtonElement>) {
     const panel = event.currentTarget
@@ -53,10 +57,23 @@ export function Wizard({
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
       >("input, select, textarea") ?? [],
     )
-    const invalidField = fields.find((field) => !field.checkValidity())
 
-    if (invalidField) {
-      invalidField.reportValidity()
+    let firstInvalidField: HTMLElement | null = null
+
+    for (const field of fields) {
+      const isValid = field.checkValidity()
+
+      if (isValid) {
+        field.removeAttribute("aria-invalid")
+      } else {
+        field.setAttribute("aria-invalid", "true")
+        firstInvalidField ??= field
+      }
+    }
+
+    if (firstInvalidField) {
+      firstInvalidField.scrollIntoView({ block: "center", behavior: "smooth" })
+      firstInvalidField.focus({ preventScroll: true })
       return
     }
 
@@ -108,7 +125,13 @@ export function Wizard({
         })}
       </ol>
 
-      <div className="min-w-0 flex-1">
+      <div
+        className="min-w-0 flex-1"
+        // Clears the red outline the moment they start correcting the field.
+        onInput={(event) =>
+          (event.target as HTMLElement).removeAttribute("aria-invalid")
+        }
+      >
         {steps.map((step, index) => (
           <div
             key={step.label}
