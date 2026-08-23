@@ -43,7 +43,7 @@
     "fieldEndsAtHint": "Optional",
     "fieldTimeZone": "Time zone",
     "fieldTimeZoneHint": "Where the event happens — a London concert shows as London time.",
-    "fieldLocation": "Location",
+    "fieldLocation": "Address",
     "fieldCategory": "Type",
     "fieldPrice": "Price",
     "fieldPriceHint": "Leave blank if it's free.",
@@ -109,9 +109,8 @@
     "wizardBack": "Back",
     "wizardNext": "Next",
     "wizardStep": "Step",
-    "fieldStartsAtHint": "Leave blank if the date is going to be voted on.",
     "fieldDatePoll": "Dates to vote on",
-    "fieldDatePollHint": "Add options so members can vote for the dates they can make. Optional.",
+    "fieldDatePollHint": "Add dates so members can vote for the ones they can make.",
     "addDateOption": "Add date",
     "removeDateOption": "Remove date",
     "datePollTitle": "Vote on dates",
@@ -130,7 +129,8 @@
     "advancedHint": "Rarely needed — skip it if you're unsure.",
     "publish": "Publish event",
     "saveChanges": "Save changes",
-    "publishSummary": "The event is only saved when you click here. Nothing goes to Discord before that."
+    "publishSummary": "The event is only saved when you click here. Nothing goes to Discord before that.",
+    "orDivider": "Or"
   },
   "Calendar": {
     "title": "Calendar",

@@ -9,7 +9,7 @@
 
 import { getTranslations } from "next-intl/server"
 
-import { EventDatePollField } from "@/components/EventDatePollField"
+import { EventWhenField } from "@/components/EventWhenField"
 import { EventReminderField } from "@/components/EventReminderField"
 import { ExplainedSelectField } from "@/components/ExplainedSelectField"
 import { FormField, FormSelect } from "@/components/FormField"
@@ -71,15 +71,34 @@ export async function EventForm({
       label: translateEvents("stepBasics"),
       content: (
         <>
-          <FormField label={translateEvents("fieldTitle")} htmlFor="title">
-            <Input
-              id="title"
-              name="title"
-              defaultValue={event?.title ?? ""}
-              required
-              maxLength={140}
-            />
-          </FormField>
+          <div className="grid gap-4 sm:grid-cols-[3fr_1fr]">
+            <FormField label={translateEvents("fieldTitle")} htmlFor="title">
+              <Input
+                id="title"
+                name="title"
+                defaultValue={event?.title ?? ""}
+                required
+                maxLength={140}
+              />
+            </FormField>
+
+            <FormField
+              label={translateEvents("fieldCategory")}
+              htmlFor="category"
+            >
+              <FormSelect
+                id="category"
+                name="category"
+                defaultValue={event?.category ?? "other"}
+              >
+                {eventCategoryEnum.enumValues.map((category) => (
+                  <option key={category} value={category}>
+                    {translateEvents(EVENT_CATEGORY_LABEL_KEY[category])}
+                  </option>
+                ))}
+              </FormSelect>
+            </FormField>
+          </div>
 
           <FormField
             label={translateEvents("fieldDescription")}
@@ -92,23 +111,6 @@ export async function EventForm({
               rows={4}
               maxLength={4000}
             />
-          </FormField>
-
-          <FormField
-            label={translateEvents("fieldCategory")}
-            htmlFor="category"
-          >
-            <FormSelect
-              id="category"
-              name="category"
-              defaultValue={event?.category ?? "other"}
-            >
-              {eventCategoryEnum.enumValues.map((category) => (
-                <option key={category} value={category}>
-                  {translateEvents(EVENT_CATEGORY_LABEL_KEY[category])}
-                </option>
-              ))}
-            </FormSelect>
           </FormField>
 
           <FormField
@@ -160,72 +162,50 @@ export async function EventForm({
       label: translateEvents("stepWhen"),
       content: (
         <>
-          <FormField
-            label={translateEvents("fieldLocation")}
-            htmlFor="location"
-          >
-            <Input
-              id="location"
-              name="location"
-              defaultValue={event?.location ?? ""}
-              maxLength={200}
-            />
-          </FormField>
-
-          <FormField
-            label={translateEvents("fieldTimeZone")}
-            htmlFor="timeZone"
-            hint={translateEvents("fieldTimeZoneHint")}
-          >
-            <FormSelect id="timeZone" name="timeZone" defaultValue={timeZone}>
-              {COMMON_EVENT_TIME_ZONES.map((zone) => (
-                <option key={zone} value={zone}>
-                  {zone.replace("_", " ")}
-                </option>
-              ))}
-            </FormSelect>
-          </FormField>
-
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-[3fr_1fr]">
             <FormField
-              label={translateEvents("fieldStartsAt")}
-              htmlFor="startsAtWallTime"
-              hint={translateEvents("fieldStartsAtHint")}
+              label={translateEvents("fieldLocation")}
+              htmlFor="location"
             >
               <Input
-                id="startsAtWallTime"
-                name="startsAtWallTime"
-                type="datetime-local"
-                defaultValue={
-                  event?.startsAt
-                    ? instantToWallTime(event.startsAt, timeZone)
-                    : ""
-                }
+                id="location"
+                name="location"
+                defaultValue={event?.location ?? ""}
+                maxLength={200}
               />
             </FormField>
 
             <FormField
-              label={translateEvents("fieldEndsAt")}
-              htmlFor="endsAtWallTime"
-              hint={translateEvents("fieldEndsAtHint")}
+              label={translateEvents("fieldTimeZone")}
+              htmlFor="timeZone"
+              hint={translateEvents("fieldTimeZoneHint")}
             >
-              <Input
-                id="endsAtWallTime"
-                name="endsAtWallTime"
-                type="datetime-local"
-                defaultValue={
-                  event?.endsAt ? instantToWallTime(event.endsAt, timeZone) : ""
-                }
-              />
+              <FormSelect id="timeZone" name="timeZone" defaultValue={timeZone}>
+                {COMMON_EVENT_TIME_ZONES.map((zone) => (
+                  <option key={zone} value={zone}>
+                    {zone.replace("_", " ")}
+                  </option>
+                ))}
+              </FormSelect>
             </FormField>
           </div>
 
-          <EventDatePollField
-            legend={translateEvents("fieldDatePoll")}
-            hint={translateEvents("fieldDatePollHint")}
-            addLabel={translateEvents("addDateOption")}
-            removeLabel={translateEvents("removeDateOption")}
-            defaultValues={dateOptions}
+          <EventWhenField
+            startsAtLabel={translateEvents("fieldStartsAt")}
+            endsAtLabel={translateEvents("fieldEndsAt")}
+            endsAtHint={translateEvents("fieldEndsAtHint")}
+            orLabel={translateEvents("orDivider")}
+            pollLegend={translateEvents("fieldDatePoll")}
+            pollHint={translateEvents("fieldDatePollHint")}
+            addDateLabel={translateEvents("addDateOption")}
+            removeDateLabel={translateEvents("removeDateOption")}
+            defaultStartsAt={
+              event?.startsAt ? instantToWallTime(event.startsAt, timeZone) : ""
+            }
+            defaultEndsAt={
+              event?.endsAt ? instantToWallTime(event.endsAt, timeZone) : ""
+            }
+            defaultDateOptions={dateOptions}
           />
         </>
       ),

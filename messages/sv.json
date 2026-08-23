@@ -43,7 +43,7 @@
     "fieldEndsAtHint": "Frivilligt",
     "fieldTimeZone": "Tidszon",
     "fieldTimeZoneHint": "Där evenemanget äger rum — en konsert i London visas som Londontid.",
-    "fieldLocation": "Plats",
+    "fieldLocation": "Adress",
     "fieldCategory": "Typ",
     "fieldPrice": "Pris",
     "fieldPriceHint": "Lämna tomt om det är gratis.",
@@ -109,9 +109,8 @@
     "wizardBack": "Tillbaka",
     "wizardNext": "Nästa",
     "wizardStep": "Steg",
-    "fieldStartsAtHint": "Lämna tomt om datumet ska röstas fram.",
     "fieldDatePoll": "Datum att rösta på",
-    "fieldDatePollHint": "Lägg till förslag så medlemmar kan rösta på vilka datum de kan. Frivilligt.",
+    "fieldDatePollHint": "Lägg till datum så medlemmar kan rösta på vilka de kan.",
     "addDateOption": "Lägg till datum",
     "removeDateOption": "Ta bort datum",
     "datePollTitle": "Rösta på datum",
@@ -130,7 +129,8 @@
     "advancedHint": "Behövs sällan — hoppa över om du är osäker.",
     "publish": "Publicera event",
     "saveChanges": "Spara ändringar",
-    "publishSummary": "Eventet sparas först när du klickar här. Inget skickas till Discord innan dess."
+    "publishSummary": "Eventet sparas först när du klickar här. Inget skickas till Discord innan dess.",
+    "orDivider": "Eller"
   },
   "Calendar": {
     "title": "Kalender",
