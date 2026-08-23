@@ -192,6 +192,9 @@ twice, it becomes a component — that is the whole reason these exist:
 - **User-created content is never translated.** Event titles, descriptions and bios are
   stored and shown exactly as written. Dates and numbers still format per the reader's
   locale automatically. No translation service, no duplicate columns.
+- **Message files are read from disk in development**, so adding a key needs no restart.
+  Production uses a cached import. See `i18n/request.ts` — the cache was silently serving
+  stale messages and reporting new keys as missing.
 - **Every string in `messages/*.json` is shipped to the browser**, because
   `NextIntlClientProvider` serialises them for client components. They are UI copy, so
   that's fine — but never put anything secret in a message file, and don't be surprised
