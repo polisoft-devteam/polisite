@@ -1,0 +1,147 @@
+// A step-by-step form: one panel at a time, with a sidebar showing where you are.
+//
+// Every panel stays in the DOM and is only hidden, so fields keep their values and the
+// whole thing submits as one form — no draft table, no partial saves. Hidden inputs still
+// submit, which is what makes this work.
+//
+// Steps are passed as data rather than inspected from children, so nothing depends on the
+// shape of the JSX handed in.
+
+"use client"
+
+import { useState } from "react"
+
+import { Button } from "@/components/ui/button"
+import { CheckIcon } from "@/lib/icons"
+import { cn } from "@/lib/utils"
+
+export type WizardStep = {
+  label: string
+  /** Server-rendered fields, buttons, uploads — whatever the step needs. */
+  content: React.ReactNode
+}
+
+export function Wizard({
+  steps,
+  submitLabel,
+  backLabel,
+  nextLabel,
+  stepLabel,
+}: {
+  steps: WizardStep[]
+  submitLabel: string
+  backLabel: string
+  nextLabel: string
+  /** e.g. "Steg" — shown with the number in the sidebar. */
+  stepLabel: string
+}) {
+  const [currentStep, setCurrentStep] = useState(0)
+
+  const isLastStep = currentStep === steps.length - 1
+
+  /**
+   * Blocks advancing past a panel with invalid fields. Without this the browser would
+   * refuse to submit on the last step and try to focus an input nobody can see.
+   */
+  function goToNextStep(event: React.MouseEvent<HTMLButtonElement>) {
+    const panel = event.currentTarget
+      .closest("form")
+      ?.querySelector<HTMLElement>(`[data-wizard-panel="${currentStep}"]`)
+
+    const fields = Array.from(
+      panel?.querySelectorAll<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >("input, select, textarea") ?? [],
+    )
+    const invalidField = fields.find((field) => !field.checkValidity())
+
+    if (invalidField) {
+      invalidField.reportValidity()
+      return
+    }
+
+    setCurrentStep((step) => Math.min(step + 1, steps.length - 1))
+  }
+
+  return (
+    <div className="mt-8 flex flex-col gap-8 lg:flex-row-reverse lg:items-start">
+      <ol className="flex shrink-0 gap-4 overflow-x-auto lg:w-56 lg:flex-col lg:gap-1">
+        {steps.map((step, index) => {
+          const isCurrent = index === currentStep
+          const isComplete = index < currentStep
+
+          return (
+            <li key={step.label}>
+              <button
+                type="button"
+                // Only steps already passed are safe to jump back to; jumping forward
+                // would skip the validation on the way.
+                disabled={!isComplete && !isCurrent}
+                onClick={() => setCurrentStep(index)}
+                className={cn(
+                  "flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors",
+                  isCurrent && "bg-muted font-medium",
+                  !isCurrent && isComplete && "hover:bg-muted/50",
+                  !isCurrent && !isComplete && "text-muted-foreground",
+                )}
+              >
+                <span
+                  className={cn(
+                    "flex size-6 shrink-0 items-center justify-center rounded-full border text-xs",
+                    isCurrent &&
+                      "border-primary bg-primary text-primary-foreground",
+                    isComplete && "border-primary text-primary",
+                  )}
+                >
+                  {isComplete ? <CheckIcon className="size-3" /> : index + 1}
+                </span>
+
+                <span className="min-w-0">
+                  <span className="text-muted-foreground block text-xs lg:hidden">
+                    {stepLabel} {index + 1}
+                  </span>
+                  {step.label}
+                </span>
+              </button>
+            </li>
+          )
+        })}
+      </ol>
+
+      <div className="min-w-0 flex-1">
+        {steps.map((step, index) => (
+          <div
+            key={step.label}
+            data-wizard-panel={index}
+            hidden={index !== currentStep}
+            className="space-y-6"
+          >
+            {step.content}
+          </div>
+        ))}
+
+        <div className="mt-8 flex gap-2">
+          {currentStep > 0 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setCurrentStep((step) => step - 1)}
+            >
+              {backLabel}
+            </Button>
+          )}
+
+          {isLastStep ? (
+            <Button type="submit" size="lg">
+              {submitLabel}
+            </Button>
+          ) : (
+            <Button type="button" onClick={goToNextStep}>
+              {nextLabel}
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

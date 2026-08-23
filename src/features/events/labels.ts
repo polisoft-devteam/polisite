@@ -7,6 +7,7 @@
 import type {
   AttendanceResponse,
   EventCategory,
+  EventKind,
   EventVisibility,
   ReminderOffset,
 } from "@/db/schema"
@@ -45,6 +46,16 @@ export const EVENT_CATEGORY_LABEL_KEY: Record<EventCategory, string> = {
   board_meeting: "categoryBoardMeeting",
   birthday: "categoryBirthday",
   other: "categoryOther",
+}
+
+export const EVENT_KIND_LABEL_KEY: Record<EventKind, string> = {
+  suggestion: "kindSuggestion",
+  confirmed: "kindConfirmed",
+}
+
+export const EVENT_KIND_EXPLANATION_KEY: Record<EventKind, string> = {
+  suggestion: "kindSuggestionExplanation",
+  confirmed: "kindConfirmedExplanation",
 }
 
 export const EVENT_VISIBILITY_LABEL_KEY: Record<EventVisibility, string> = {

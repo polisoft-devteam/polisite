@@ -104,7 +104,20 @@
     "kindConfirmed": "Bekräftat",
     "fieldKind": "Är detta ett förslag eller ett bekräftat event?",
     "kindSuggestionExplanation": "En känslokoll. Vi testar om folk är intresserade — datum kan röstas fram.",
-    "kindConfirmedExplanation": "Det här händer. Lägg in det i kalendern."
+    "kindConfirmedExplanation": "Det här händer. Lägg in det i kalendern.",
+    "stepBasics": "Grunderna",
+    "stepKind": "Typ",
+    "stepDates": "Datum",
+    "stepDetails": "Detaljer",
+    "stepDiscord": "Discord",
+    "wizardBack": "Tillbaka",
+    "wizardNext": "Nästa",
+    "wizardStep": "Steg",
+    "fieldStartsAtHint": "Lämna tomt om datumet ska röstas fram.",
+    "fieldDatePoll": "Datum att rösta på",
+    "fieldDatePollHint": "Lägg till förslag så medlemmar kan rösta på vilka datum de kan. Frivilligt.",
+    "addDateOption": "Lägg till datum",
+    "removeDateOption": "Ta bort datum"
   },
   "Calendar": {
     "title": "Kalender",

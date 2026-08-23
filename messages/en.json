@@ -104,7 +104,20 @@
     "kindConfirmed": "Confirmed",
     "fieldKind": "Is this a suggestion or a confirmed event?",
     "kindSuggestionExplanation": "A vibe check. Testing whether people are interested — the date can be voted on.",
-    "kindConfirmedExplanation": "This is happening. Put it in your calendar."
+    "kindConfirmedExplanation": "This is happening. Put it in your calendar.",
+    "stepBasics": "Basics",
+    "stepKind": "Type",
+    "stepDates": "Dates",
+    "stepDetails": "Details",
+    "stepDiscord": "Discord",
+    "wizardBack": "Back",
+    "wizardNext": "Next",
+    "wizardStep": "Step",
+    "fieldStartsAtHint": "Leave blank if the date is going to be voted on.",
+    "fieldDatePoll": "Dates to vote on",
+    "fieldDatePollHint": "Add options so members can vote for the dates they can make. Optional.",
+    "addDateOption": "Add date",
+    "removeDateOption": "Remove date"
   },
   "Calendar": {
     "title": "Calendar",

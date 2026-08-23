@@ -1,16 +1,21 @@
-// Create and edit share this form. Native selects and checkboxes post without any client
-// JavaScript; only the two fields that must react to what you pick are client components.
+// Creating and editing an event, as a five-step wizard.
+//
+// The fields are server-rendered and handed to Wizard as step content; only the stepping,
+// the two explained selects and the repeatable date rows are client-side. It remains one
+// form posting to one server action.
 
 import { getTranslations } from "next-intl/server"
 
+import { EventDatePollField } from "@/components/EventDatePollField"
 import { EventReminderField } from "@/components/EventReminderField"
+import { ExplainedSelectField } from "@/components/ExplainedSelectField"
 import { FormField, FormSelect } from "@/components/FormField"
-import { EventVisibilityField } from "@/components/EventVisibilityField"
-import { Button } from "@/components/ui/button"
+import { Wizard, type WizardStep } from "@/components/Wizard"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import {
   eventCategoryEnum,
+  eventKindEnum,
   eventVisibilityEnum,
   reminderOffsetEnum,
   type Event,
@@ -18,6 +23,8 @@ import {
 } from "@/db/schema"
 import {
   EVENT_CATEGORY_LABEL_KEY,
+  EVENT_KIND_EXPLANATION_KEY,
+  EVENT_KIND_LABEL_KEY,
   EVENT_VISIBILITY_EXPLANATION_KEY,
   EVENT_VISIBILITY_LABEL_KEY,
   REMINDER_OFFSET_LABEL_KEY,
@@ -35,6 +42,8 @@ type EventFormProps = {
   /** Absent when creating. */
   event?: Event
   reminderOffsets?: ReminderOffset[]
+  /** Existing candidate dates, as datetime-local strings. */
+  dateOptions?: string[]
 }
 
 export async function EventForm({
@@ -42,239 +51,313 @@ export async function EventForm({
   submitLabel,
   event,
   reminderOffsets = [],
+  dateOptions = [],
 }: EventFormProps) {
   const translateEvents = await getTranslations("Events")
 
   const timeZone = event?.timeZone ?? DEFAULT_EVENT_TIME_ZONE
 
+  const steps: WizardStep[] = [
+    {
+      label: translateEvents("stepBasics"),
+      content: (
+        <>
+          <FormField label={translateEvents("fieldTitle")} htmlFor="title">
+            <Input
+              id="title"
+              name="title"
+              defaultValue={event?.title ?? ""}
+              required
+              maxLength={140}
+            />
+          </FormField>
+
+          <FormField
+            label={translateEvents("fieldDescription")}
+            htmlFor="description"
+          >
+            <Textarea
+              id="description"
+              name="description"
+              defaultValue={event?.description ?? ""}
+              rows={4}
+              maxLength={4000}
+            />
+          </FormField>
+
+          <FormField
+            label={translateEvents("fieldCategory")}
+            htmlFor="category"
+          >
+            <FormSelect
+              id="category"
+              name="category"
+              defaultValue={event?.category ?? "other"}
+            >
+              {eventCategoryEnum.enumValues.map((category) => (
+                <option key={category} value={category}>
+                  {translateEvents(EVENT_CATEGORY_LABEL_KEY[category])}
+                </option>
+              ))}
+            </FormSelect>
+          </FormField>
+
+          <FormField
+            label={translateEvents("fieldImage")}
+            htmlFor="image"
+            hint={translateEvents("fieldImageHint")}
+          >
+            <Input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/avif"
+              className="cursor-pointer"
+            />
+          </FormField>
+        </>
+      ),
+    },
+
+    {
+      label: translateEvents("stepKind"),
+      content: (
+        <>
+          <ExplainedSelectField
+            name="kind"
+            label={translateEvents("fieldKind")}
+            defaultValue={event?.kind ?? "suggestion"}
+            options={eventKindEnum.enumValues.map((kind) => ({
+              value: kind,
+              label: translateEvents(EVENT_KIND_LABEL_KEY[kind]),
+              explanation: translateEvents(EVENT_KIND_EXPLANATION_KEY[kind]),
+            }))}
+          />
+
+          <ExplainedSelectField
+            name="visibility"
+            label={translateEvents("fieldVisibility")}
+            defaultValue={event?.visibility ?? "members"}
+            options={eventVisibilityEnum.enumValues.map((visibility) => ({
+              value: visibility,
+              label: translateEvents(EVENT_VISIBILITY_LABEL_KEY[visibility]),
+              explanation: translateEvents(
+                EVENT_VISIBILITY_EXPLANATION_KEY[visibility],
+              ),
+            }))}
+          />
+        </>
+      ),
+    },
+
+    {
+      label: translateEvents("stepDates"),
+      content: (
+        <>
+          <FormField
+            label={translateEvents("fieldTimeZone")}
+            htmlFor="timeZone"
+            hint={translateEvents("fieldTimeZoneHint")}
+          >
+            <FormSelect id="timeZone" name="timeZone" defaultValue={timeZone}>
+              {COMMON_EVENT_TIME_ZONES.map((zone) => (
+                <option key={zone} value={zone}>
+                  {zone.replace("_", " ")}
+                </option>
+              ))}
+            </FormSelect>
+          </FormField>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FormField
+              label={translateEvents("fieldStartsAt")}
+              htmlFor="startsAtWallTime"
+              hint={translateEvents("fieldStartsAtHint")}
+            >
+              <Input
+                id="startsAtWallTime"
+                name="startsAtWallTime"
+                type="datetime-local"
+                defaultValue={
+                  event?.startsAt
+                    ? instantToWallTime(event.startsAt, timeZone)
+                    : ""
+                }
+              />
+            </FormField>
+
+            <FormField
+              label={translateEvents("fieldEndsAt")}
+              htmlFor="endsAtWallTime"
+              hint={translateEvents("fieldEndsAtHint")}
+            >
+              <Input
+                id="endsAtWallTime"
+                name="endsAtWallTime"
+                type="datetime-local"
+                defaultValue={
+                  event?.endsAt ? instantToWallTime(event.endsAt, timeZone) : ""
+                }
+              />
+            </FormField>
+          </div>
+
+          <EventDatePollField
+            legend={translateEvents("fieldDatePoll")}
+            hint={translateEvents("fieldDatePollHint")}
+            addLabel={translateEvents("addDateOption")}
+            removeLabel={translateEvents("removeDateOption")}
+            defaultValues={dateOptions}
+          />
+        </>
+      ),
+    },
+
+    {
+      label: translateEvents("stepDetails"),
+      content: (
+        <>
+          <FormField
+            label={translateEvents("fieldLocation")}
+            htmlFor="location"
+          >
+            <Input
+              id="location"
+              name="location"
+              defaultValue={event?.location ?? ""}
+              maxLength={200}
+            />
+          </FormField>
+
+          <div className="grid gap-4 sm:grid-cols-[1fr_8rem]">
+            <FormField
+              label={translateEvents("fieldPrice")}
+              htmlFor="price"
+              hint={translateEvents("fieldPriceHint")}
+            >
+              <Input
+                id="price"
+                name="price"
+                type="number"
+                min="0"
+                step="1"
+                inputMode="decimal"
+                defaultValue={
+                  event?.priceMinorUnits !== null &&
+                  event?.priceMinorUnits !== undefined
+                    ? String(event.priceMinorUnits / 100)
+                    : ""
+                }
+              />
+            </FormField>
+
+            <FormField
+              label={translateEvents("fieldCurrency")}
+              htmlFor="currency"
+            >
+              <FormSelect
+                id="currency"
+                name="currency"
+                defaultValue={event?.priceCurrency ?? "SEK"}
+              >
+                {EVENT_CURRENCIES.map((currency) => (
+                  <option key={currency} value={currency}>
+                    {currency}
+                  </option>
+                ))}
+              </FormSelect>
+            </FormField>
+          </div>
+
+          <FormField
+            label={translateEvents("fieldMaxAttendees")}
+            htmlFor="maxAttendees"
+            hint={translateEvents("fieldMaxAttendeesHint")}
+          >
+            <Input
+              id="maxAttendees"
+              name="maxAttendees"
+              type="number"
+              min="1"
+              step="1"
+              defaultValue={event?.maxAttendees ?? ""}
+            />
+          </FormField>
+
+          <FormField
+            label={translateEvents("fieldEventUrl")}
+            htmlFor="eventUrl"
+            hint={translateEvents("fieldEventUrlHint")}
+          >
+            <Input
+              id="eventUrl"
+              name="eventUrl"
+              type="url"
+              placeholder="https://"
+              defaultValue={event?.eventUrl ?? ""}
+            />
+          </FormField>
+
+          <FormField
+            label={translateEvents("fieldExtraLinkUrl")}
+            htmlFor="extraLinkUrl"
+            hint={translateEvents("fieldExtraLinkUrlHint")}
+          >
+            <Input
+              id="extraLinkUrl"
+              name="extraLinkUrl"
+              type="url"
+              placeholder="https://"
+              defaultValue={event?.extraLinkUrl ?? ""}
+            />
+          </FormField>
+        </>
+      ),
+    },
+
+    {
+      label: translateEvents("stepDiscord"),
+      content: (
+        <>
+          <EventReminderField
+            legend={translateEvents("fieldReminders")}
+            hint={translateEvents("fieldRemindersHint")}
+            atLimitHint={translateEvents("fieldRemindersAtLimit")}
+            defaultSelected={reminderOffsets}
+            options={reminderOffsetEnum.enumValues.map((offset) => ({
+              value: offset,
+              label: translateEvents(REMINDER_OFFSET_LABEL_KEY[offset]),
+            }))}
+          />
+
+          {/* Only meaningful when creating; an edit shouldn't re-announce. */}
+          {!event && (
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                name="announceOnDiscord"
+                defaultChecked
+                className="border-input size-4 rounded border"
+              />
+              {translateEvents("fieldAnnounce")}
+            </label>
+          )}
+        </>
+      ),
+    },
+  ]
+
   return (
-    <form action={action} className="mt-8 max-w-lg space-y-6">
+    <form action={action}>
       {event && <input type="hidden" name="eventId" value={event.id} />}
 
-      <FormField label={translateEvents("fieldTitle")} htmlFor="title">
-        <Input
-          id="title"
-          name="title"
-          defaultValue={event?.title ?? ""}
-          required
-          maxLength={140}
-        />
-      </FormField>
-
-      <FormField
-        label={translateEvents("fieldDescription")}
-        htmlFor="description"
-      >
-        <Textarea
-          id="description"
-          name="description"
-          defaultValue={event?.description ?? ""}
-          rows={4}
-          maxLength={4000}
-        />
-      </FormField>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <FormField
-          label={translateEvents("fieldStartsAt")}
-          htmlFor="startsAtWallTime"
-        >
-          <Input
-            id="startsAtWallTime"
-            name="startsAtWallTime"
-            type="datetime-local"
-            defaultValue={
-              event?.startsAt ? instantToWallTime(event.startsAt, timeZone) : ""
-            }
-          />
-        </FormField>
-
-        <FormField
-          label={translateEvents("fieldEndsAt")}
-          htmlFor="endsAtWallTime"
-          hint={translateEvents("fieldEndsAtHint")}
-        >
-          <Input
-            id="endsAtWallTime"
-            name="endsAtWallTime"
-            type="datetime-local"
-            defaultValue={
-              event?.endsAt ? instantToWallTime(event.endsAt, timeZone) : ""
-            }
-          />
-        </FormField>
-      </div>
-
-      <FormField
-        label={translateEvents("fieldTimeZone")}
-        htmlFor="timeZone"
-        hint={translateEvents("fieldTimeZoneHint")}
-      >
-        <FormSelect id="timeZone" name="timeZone" defaultValue={timeZone}>
-          {COMMON_EVENT_TIME_ZONES.map((zone) => (
-            <option key={zone} value={zone}>
-              {zone.replace("_", " ")}
-            </option>
-          ))}
-        </FormSelect>
-      </FormField>
-
-      <FormField label={translateEvents("fieldLocation")} htmlFor="location">
-        <Input
-          id="location"
-          name="location"
-          defaultValue={event?.location ?? ""}
-          maxLength={200}
-        />
-      </FormField>
-
-      <FormField label={translateEvents("fieldCategory")} htmlFor="category">
-        <FormSelect
-          id="category"
-          name="category"
-          defaultValue={event?.category ?? "other"}
-        >
-          {eventCategoryEnum.enumValues.map((category) => (
-            <option key={category} value={category}>
-              {translateEvents(EVENT_CATEGORY_LABEL_KEY[category])}
-            </option>
-          ))}
-        </FormSelect>
-      </FormField>
-
-      <div className="grid gap-4 sm:grid-cols-[1fr_8rem]">
-        <FormField
-          label={translateEvents("fieldPrice")}
-          htmlFor="price"
-          hint={translateEvents("fieldPriceHint")}
-        >
-          <Input
-            id="price"
-            name="price"
-            type="number"
-            min="0"
-            step="1"
-            inputMode="decimal"
-            defaultValue={
-              event?.priceMinorUnits !== null &&
-              event?.priceMinorUnits !== undefined
-                ? String(event.priceMinorUnits / 100)
-                : ""
-            }
-          />
-        </FormField>
-
-        <FormField label={translateEvents("fieldCurrency")} htmlFor="currency">
-          <FormSelect
-            id="currency"
-            name="currency"
-            defaultValue={event?.priceCurrency ?? "SEK"}
-          >
-            {EVENT_CURRENCIES.map((currency) => (
-              <option key={currency} value={currency}>
-                {currency}
-              </option>
-            ))}
-          </FormSelect>
-        </FormField>
-      </div>
-
-      <FormField
-        label={translateEvents("fieldMaxAttendees")}
-        htmlFor="maxAttendees"
-        hint={translateEvents("fieldMaxAttendeesHint")}
-      >
-        <Input
-          id="maxAttendees"
-          name="maxAttendees"
-          type="number"
-          min="1"
-          step="1"
-          defaultValue={event?.maxAttendees ?? ""}
-        />
-      </FormField>
-
-      <FormField
-        label={translateEvents("fieldEventUrl")}
-        htmlFor="eventUrl"
-        hint={translateEvents("fieldEventUrlHint")}
-      >
-        <Input
-          id="eventUrl"
-          name="eventUrl"
-          type="url"
-          placeholder="https://"
-          defaultValue={event?.eventUrl ?? ""}
-        />
-      </FormField>
-
-      <FormField
-        label={translateEvents("fieldExtraLinkUrl")}
-        htmlFor="extraLinkUrl"
-        hint={translateEvents("fieldExtraLinkUrlHint")}
-      >
-        <Input
-          id="extraLinkUrl"
-          name="extraLinkUrl"
-          type="url"
-          placeholder="https://"
-          defaultValue={event?.extraLinkUrl ?? ""}
-        />
-      </FormField>
-
-      <FormField
-        label={translateEvents("fieldImage")}
-        htmlFor="image"
-        hint={translateEvents("fieldImageHint")}
-      >
-        <Input
-          id="image"
-          name="image"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/avif"
-          className="cursor-pointer"
-        />
-      </FormField>
-
-      <EventVisibilityField
-        label={translateEvents("fieldVisibility")}
-        defaultValue={event?.visibility ?? "members"}
-        options={eventVisibilityEnum.enumValues.map((visibility) => ({
-          value: visibility,
-          label: translateEvents(EVENT_VISIBILITY_LABEL_KEY[visibility]),
-          explanation: translateEvents(
-            EVENT_VISIBILITY_EXPLANATION_KEY[visibility],
-          ),
-        }))}
+      <Wizard
+        steps={steps}
+        submitLabel={submitLabel}
+        backLabel={translateEvents("wizardBack")}
+        nextLabel={translateEvents("wizardNext")}
+        stepLabel={translateEvents("wizardStep")}
       />
-
-      <EventReminderField
-        legend={translateEvents("fieldReminders")}
-        hint={translateEvents("fieldRemindersHint")}
-        atLimitHint={translateEvents("fieldRemindersAtLimit")}
-        defaultSelected={reminderOffsets}
-        options={reminderOffsetEnum.enumValues.map((offset) => ({
-          value: offset,
-          label: translateEvents(REMINDER_OFFSET_LABEL_KEY[offset]),
-        }))}
-      />
-
-      {/* Only meaningful when creating; an edit shouldn't re-announce. */}
-      {!event && (
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            name="announceOnDiscord"
-            defaultChecked
-            className="border-input size-4 rounded border"
-          />
-          {translateEvents("fieldAnnounce")}
-        </label>
-      )}
-
-      <Button type="submit" size="lg">
-        {submitLabel}
-      </Button>
     </form>
   )
 }

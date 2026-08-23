@@ -8,7 +8,10 @@ import {
   createEvent,
   deleteEvent,
   findEventById,
+  findEventIdForDateOption,
+  replaceDateOptions,
   setAttendance,
+  toggleDateVote,
   updateEvent,
 } from "@/features/events/queries"
 import {
@@ -47,7 +50,10 @@ export async function createEventAction(formData: FormData) {
     {
       title: form.title,
       description: form.description,
-      startsAt: wallTimeToInstant(form.startsAtWallTime, form.timeZone),
+      kind: form.kind,
+      startsAt: form.startsAtWallTime
+        ? wallTimeToInstant(form.startsAtWallTime, form.timeZone)
+        : null,
       endsAt: form.endsAtWallTime
         ? wallTimeToInstant(form.endsAtWallTime, form.timeZone)
         : null,
@@ -64,6 +70,13 @@ export async function createEventAction(formData: FormData) {
       createdByMemberId: viewer!.member!.id,
     },
     form.reminderOffsets,
+  )
+
+  await replaceDateOptions(
+    event.id,
+    form.dateOptions.map((wallTime) =>
+      wallTimeToInstant(wallTime, form.timeZone),
+    ),
   )
 
   const locale = await getLocale()
@@ -117,7 +130,10 @@ export async function updateEventAction(formData: FormData) {
     {
       title: form.title,
       description: form.description,
-      startsAt: wallTimeToInstant(form.startsAtWallTime, form.timeZone),
+      kind: form.kind,
+      startsAt: form.startsAtWallTime
+        ? wallTimeToInstant(form.startsAtWallTime, form.timeZone)
+        : null,
       endsAt: form.endsAtWallTime
         ? wallTimeToInstant(form.endsAtWallTime, form.timeZone)
         : null,
@@ -133,6 +149,13 @@ export async function updateEventAction(formData: FormData) {
       visibility: form.visibility,
     },
     form.reminderOffsets,
+  )
+
+  await replaceDateOptions(
+    eventId,
+    form.dateOptions.map((wallTime) =>
+      wallTimeToInstant(wallTime, form.timeZone),
+    ),
   )
 
   if (uploadedImageUrl) {
@@ -186,6 +209,27 @@ export async function setAttendanceAction(formData: FormData) {
     viewer!.member!.id,
     response as (typeof attendanceResponseEnum.enumValues)[number],
   )
+
+  revalidatePath("/", "layout")
+}
+
+export async function toggleDateVoteAction(formData: FormData) {
+  const viewer = await getViewer()
+  const dateOptionId = String(formData.get("dateOptionId") ?? "")
+
+  const eventId = await findEventIdForDateOption(dateOptionId)
+  if (!eventId) throw new Error("Unknown date")
+
+  // Re-checked here rather than trusted from the page that rendered the button.
+  const event = await findEventById(
+    eventId,
+    visibleEventVisibilitiesFor(viewer),
+  )
+  if (!event || !canRespondToEvent(viewer, event)) {
+    throw new Error("Not allowed to vote on this event")
+  }
+
+  await toggleDateVote(dateOptionId, viewer!.member!.id)
 
   revalidatePath("/", "layout")
 }

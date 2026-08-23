@@ -10,11 +10,13 @@ import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
 import { deleteEventAction, updateEventAction } from "@/features/events/actions"
 import {
+  findDateOptionsForEvent,
   findEventById,
   findReminderOffsetsForEvent,
 } from "@/features/events/queries"
 import { getViewer } from "@/lib/auth"
 import { canEditEvent, visibleEventVisibilitiesFor } from "@/lib/permissions"
+import { instantToWallTime } from "@/lib/time"
 
 export async function generateMetadata({
   params,
@@ -45,7 +47,10 @@ export default async function EditEventPage({
   // Not the creator and not an admin gets the same answer as a missing event.
   if (!event || !canEditEvent(viewer, event)) notFound()
 
-  const reminderOffsets = await findReminderOffsetsForEvent(event.id)
+  const [reminderOffsets, dateOptions] = await Promise.all([
+    findReminderOffsetsForEvent(event.id),
+    findDateOptionsForEvent(event.id, viewer?.member?.id ?? null),
+  ])
 
   return (
     <PageContainer>
@@ -60,6 +65,9 @@ export default async function EditEventPage({
         submitLabel={translateEvents("save")}
         event={event}
         reminderOffsets={reminderOffsets}
+        dateOptions={dateOptions.map((option) =>
+          instantToWallTime(option.startsAt, event.timeZone),
+        )}
       />
 
       <div className="mt-12 border-t pt-6">

@@ -5,6 +5,7 @@ import { z } from "zod"
 
 import {
   eventCategoryEnum,
+  eventKindEnum,
   eventVisibilityEnum,
   reminderOffsetEnum,
 } from "@/db/schema"
@@ -36,9 +37,18 @@ export const eventFormSchema = z
     title: z.string().trim().min(1).max(140),
     description: optionalText(4000),
 
+    kind: z.enum(eventKindEnum.enumValues),
+
     // Wall-clock time as typed, plus the zone it was meant in. Converted to a UTC
     // instant in the action — see lib/time.ts.
-    startsAtWallTime: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/),
+    //
+    // Optional: a suggestion may have no date until its poll resolves. Required for a
+    // confirmed event, which the refine below enforces.
+    startsAtWallTime: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)
+      .or(z.literal(""))
+      .transform((value) => (value === "" ? null : value)),
     endsAtWallTime: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)
@@ -82,11 +92,28 @@ export const eventFormSchema = z
       .max(MAX_REMINDERS_PER_EVENT)
       .transform((offsets) => [...new Set(offsets)]),
 
+    // Candidate dates members can vote between. Blank rows are dropped.
+    dateOptions: z
+      .array(z.string())
+      .transform((values) =>
+        values.filter((value) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)),
+      )
+      .transform((values) => [...new Set(values)])
+      .refine((values) => values.length <= 12, "At most 12 dates to vote on"),
+
     announceOnDiscord: z.boolean(),
   })
   .refine(
+    (event) => event.kind !== "confirmed" || event.startsAtWallTime !== null,
+    {
+      message: "A confirmed event needs a date",
+      path: ["startsAtWallTime"],
+    },
+  )
+  .refine(
     (event) =>
       event.endsAtWallTime === null ||
+      event.startsAtWallTime === null ||
       event.endsAtWallTime > event.startsAtWallTime,
     {
       message: "An event cannot end before it starts",
@@ -103,6 +130,7 @@ export function readEventForm(formData: FormData) {
   return {
     title: readText("title"),
     description: readText("description"),
+    kind: readText("kind"),
     startsAtWallTime: readText("startsAtWallTime"),
     endsAtWallTime: readText("endsAtWallTime"),
     timeZone: readText("timeZone"),
@@ -114,6 +142,7 @@ export function readEventForm(formData: FormData) {
     eventUrl: readText("eventUrl"),
     extraLinkUrl: readText("extraLinkUrl"),
     visibility: readText("visibility"),
+    dateOptions: formData.getAll("dateOptions").map(String),
     reminderOffsets: formData.getAll("reminderOffsets").map(String),
     announceOnDiscord: formData.get("announceOnDiscord") === "on",
   }

@@ -10,6 +10,8 @@ import { and, asc, desc, eq, gte, inArray, lt, sql } from "drizzle-orm"
 import { db } from "@/db"
 import {
   eventAttendees,
+  eventDateOptions,
+  eventDateVotes,
   eventReminders,
   events,
   members,
@@ -140,6 +142,109 @@ export async function updateEvent(
       .values(reminderOffsets.map((offset) => ({ eventId, offset })))
       .onConflictDoNothing()
   }
+}
+
+// --- Date poll ------------------------------------------------------------------
+
+export type DateOptionWithVotes = {
+  id: string
+  startsAt: Date
+  voteCount: number
+  votedByViewer: boolean
+}
+
+/** Replaces the candidate dates wholesale. Votes for removed dates go with them. */
+export async function replaceDateOptions(
+  eventId: string,
+  startsAtValues: Date[],
+): Promise<void> {
+  await db.delete(eventDateOptions).where(eq(eventDateOptions.eventId, eventId))
+
+  if (startsAtValues.length > 0) {
+    await db
+      .insert(eventDateOptions)
+      .values(startsAtValues.map((startsAt) => ({ eventId, startsAt })))
+  }
+}
+
+export async function findDateOptionsForEvent(
+  eventId: string,
+  viewerMemberId: string | null,
+): Promise<DateOptionWithVotes[]> {
+  const options = await db
+    .select()
+    .from(eventDateOptions)
+    .where(eq(eventDateOptions.eventId, eventId))
+    .orderBy(asc(eventDateOptions.startsAt))
+
+  if (options.length === 0) return []
+
+  const votes = await db
+    .select()
+    .from(eventDateVotes)
+    .where(
+      inArray(
+        eventDateVotes.dateOptionId,
+        options.map((option) => option.id),
+      ),
+    )
+
+  return options.map((option) => {
+    const optionVotes = votes.filter((vote) => vote.dateOptionId === option.id)
+
+    return {
+      id: option.id,
+      startsAt: option.startsAt,
+      voteCount: optionVotes.length,
+      votedByViewer: optionVotes.some(
+        (vote) => vote.memberId === viewerMemberId,
+      ),
+    }
+  })
+}
+
+/** Adds or removes this member's vote for one date. */
+export async function toggleDateVote(
+  dateOptionId: string,
+  memberId: string,
+): Promise<void> {
+  const existing = await db
+    .select()
+    .from(eventDateVotes)
+    .where(
+      and(
+        eq(eventDateVotes.dateOptionId, dateOptionId),
+        eq(eventDateVotes.memberId, memberId),
+      ),
+    )
+    .limit(1)
+
+  if (existing.length > 0) {
+    await db
+      .delete(eventDateVotes)
+      .where(
+        and(
+          eq(eventDateVotes.dateOptionId, dateOptionId),
+          eq(eventDateVotes.memberId, memberId),
+        ),
+      )
+    return
+  }
+
+  await db.insert(eventDateVotes).values({ dateOptionId, memberId })
+}
+
+/** The event a date option belongs to, for permission checks. */
+export async function findEventIdForDateOption(
+  dateOptionId: string,
+): Promise<string | null> {
+  const [option] = await db
+    .select({ eventId: eventDateOptions.eventId })
+    .from(eventDateOptions)
+    .where(eq(eventDateOptions.id, dateOptionId))
+    .limit(1)
+
+  return option?.eventId ?? null
 }
 
 export async function deleteEvent(eventId: string): Promise<void> {
