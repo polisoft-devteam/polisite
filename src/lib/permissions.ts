@@ -27,6 +27,30 @@ export function canManageMembers(viewer: Viewer | null): boolean {
   return isAdmin(viewer)
 }
 
+/** Just enough about the person being acted on to decide. */
+export type ManageableMember = {
+  id: string
+  roles: Role[]
+}
+
+/**
+ * Admins can deactivate ordinary members, and nobody else.
+ *
+ * Two exclusions, both about not being able to undo the result: deactivating yourself
+ * locks you out of the admin page, and admins can't demote each other — so removing the
+ * last one takes a deliberate trip to the database.
+ */
+export function canDeactivateMember(
+  viewer: Viewer | null,
+  target: ManageableMember,
+): boolean {
+  if (!canManageMembers(viewer)) return false
+  if (target.id === viewer?.member?.id) return false
+  if (target.roles.includes("admin")) return false
+
+  return true
+}
+
 /**
  * Which event visibilities this viewer may see at all.
  *

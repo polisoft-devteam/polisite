@@ -24,6 +24,7 @@ import {
   findPendingMembershipRequests,
 } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
+import { canDeactivateMember } from "@/lib/permissions"
 
 export async function generateMetadata({
   params,
@@ -111,6 +112,7 @@ export default async function AdminPage({
       <PageSection heading={translateAdmin("membersTitle")}>
         <ItemList>
           {allMembers.map((member) => {
+            const canDeactivate = canDeactivateMember(viewer, member)
             const isViewer = member.id === viewer?.member?.id
 
             return (
@@ -141,11 +143,11 @@ export default async function AdminPage({
 
                   {member.status === "active" ? (
                     <>
-                      {/* No button for yourself — deactivating your own account would
-                          lock you out of this page with nobody able to undo it. */}
-                      {isViewer ? (
+                      {!canDeactivate ? (
                         <span className="text-muted-foreground text-xs">
-                          {translateAdmin("thatsYou")}
+                          {isViewer
+                            ? translateAdmin("thatsYou")
+                            : translateAdmin("adminProtected")}
                         </span>
                       ) : (
                         <form action={deactivateMember}>

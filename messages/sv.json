@@ -211,6 +211,7 @@
     "reactivate": "Aktivera igen",
     "statusInactive": "Inaktiv",
     "roleAdmin": "Admin",
-    "thatsYou": "Det är du"
+    "thatsYou": "Det är du",
+    "adminProtected": "Kan inte inaktiveras"
   }
 }

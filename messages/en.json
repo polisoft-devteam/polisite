@@ -211,6 +211,7 @@
     "reactivate": "Reactivate",
     "statusInactive": "Inactive",
     "roleAdmin": "Admin",
-    "thatsYou": "That's you"
+    "thatsYou": "That's you",
+    "adminProtected": "Cannot be deactivated"
   }
 }

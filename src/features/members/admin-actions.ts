@@ -5,10 +5,11 @@ import { revalidatePath } from "next/cache"
 import {
   approveMembershipRequest,
   denyMembershipRequest,
+  findRolesForMember,
   setMemberStatus,
 } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
-import { canManageMembers } from "@/lib/permissions"
+import { canDeactivateMember, canManageMembers } from "@/lib/permissions"
 
 /** Re-read here rather than trusting that the page was only shown to an admin. */
 async function requireAdmin() {
@@ -41,9 +42,10 @@ export async function deactivateMember(formData: FormData) {
   const viewer = await requireAdmin()
   const memberId = String(formData.get("memberId") ?? "")
 
-  // Deactivating yourself would lock you out of this page with nobody able to undo it.
-  if (memberId === viewer.member?.id) {
-    throw new Error("You cannot deactivate yourself")
+  const target = { id: memberId, roles: await findRolesForMember(memberId) }
+
+  if (!canDeactivateMember(viewer, target)) {
+    throw new Error("Not allowed to deactivate this member")
   }
 
   await setMemberStatus(memberId, "inactive")

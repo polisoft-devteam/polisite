@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest"
 import type { Event, Member, Role } from "@/db/schema"
 import {
   canCreateEvent,
+  canDeactivateMember,
   canManageMembers,
   canEditEvent,
   canRespondToEvent,
@@ -116,6 +117,37 @@ describe("managing members", () => {
     ])
 
     expect(canManageMembers(formerAdmin)).toBe(false)
+  })
+})
+
+describe("deactivating members", () => {
+  const ordinaryMember = { id: "member-1", roles: ["member"] as Role[] }
+  const anotherAdmin = {
+    id: "member-other-admin",
+    roles: ["member", "admin"] as Role[],
+  }
+
+  it("lets an admin deactivate an ordinary member", () => {
+    expect(canDeactivateMember(adminMember, ordinaryMember)).toBe(true)
+  })
+
+  it("refuses to deactivate another admin", () => {
+    expect(canDeactivateMember(adminMember, anotherAdmin)).toBe(false)
+  })
+
+  it("refuses to deactivate yourself, even as an admin", () => {
+    expect(
+      canDeactivateMember(adminMember, {
+        id: "member-admin",
+        roles: ["member", "admin"],
+      }),
+    ).toBe(false)
+  })
+
+  it("refuses a non-admin entirely", () => {
+    expect(canDeactivateMember(activeMember, ordinaryMember)).toBe(false)
+    expect(canDeactivateMember(signedInGuest, ordinaryMember)).toBe(false)
+    expect(canDeactivateMember(signedOutVisitor, ordinaryMember)).toBe(false)
   })
 })
 
