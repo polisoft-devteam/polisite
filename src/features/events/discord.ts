@@ -9,6 +9,7 @@
 
 import type { Event } from "@/db/schema"
 import { mentionRole, postToDiscord } from "@/lib/discord"
+import { getSiteUrl } from "@/lib/site-url"
 import { toDiscordTimestamp } from "@/lib/time"
 
 // Emoji rather than the app's Lucide icons: a Discord message is text, so this is the
@@ -26,11 +27,7 @@ const CATEGORY_EMOJI: Record<Event["category"], string> = {
 }
 
 function buildEventUrl(event: Event, locale: string): string {
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
-    "http://localhost:3210"
-
-  return `${siteUrl}/${locale}/events/${event.id}`
+  return `${getSiteUrl()}/${locale}/events/${event.id}`
 }
 
 function buildEmbed(event: Event, locale: string) {
