@@ -11,6 +11,7 @@ import {
   findEventIdForDateOption,
   replaceDateOptions,
   setAttendance,
+  setEventDateFromOption,
   toggleDateVote,
   updateEvent,
 } from "@/features/events/queries"
@@ -230,6 +231,26 @@ export async function toggleDateVoteAction(formData: FormData) {
   }
 
   await toggleDateVote(dateOptionId, viewer!.member!.id)
+
+  revalidatePath("/", "layout")
+}
+
+export async function chooseEventDateAction(formData: FormData) {
+  const viewer = await getViewer()
+  const eventId = String(formData.get("eventId") ?? "")
+  const dateOptionId = String(formData.get("dateOptionId") ?? "")
+
+  const event = await findEventById(
+    eventId,
+    visibleEventVisibilitiesFor(viewer),
+  )
+
+  // Only whoever may edit the event decides which date wins.
+  if (!event || !canEditEvent(viewer, event)) {
+    throw new Error("Not allowed to set the date for this event")
+  }
+
+  await setEventDateFromOption(eventId, dateOptionId)
 
   revalidatePath("/", "layout")
 }

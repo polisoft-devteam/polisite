@@ -117,7 +117,17 @@
     "fieldDatePoll": "Dates to vote on",
     "fieldDatePollHint": "Add options so members can vote for the dates they can make. Optional.",
     "addDateOption": "Add date",
-    "removeDateOption": "Remove date"
+    "removeDateOption": "Remove date",
+    "datePollTitle": "Vote on dates",
+    "datePollHint": "Vote for every date you can make. You can pick several.",
+    "datePollClosed": "Voting is closed — every date has passed.",
+    "datePollVote": "I can make it",
+    "datePollVoted": "I can make it ✓",
+    "datePollVotes": "{count, plural, =0 {Nobody has voted} one {# can make it} other {# can make it}}",
+    "datePollLeading": "most votes",
+    "datePollChoose": "Choose this date",
+    "suggestionsTitle": "Suggestions without a date",
+    "suggestionsEmpty": "No suggestions right now."
   },
   "Calendar": {
     "title": "Calendar",

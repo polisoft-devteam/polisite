@@ -7,6 +7,7 @@ import {
   setRequestLocale,
 } from "next-intl/server"
 
+import { EventDatePoll } from "@/components/EventDatePoll"
 import { EventRsvp } from "@/components/EventRsvp"
 import { EmptyState } from "@/components/EmptyState"
 import { ExternalLink } from "@/components/ExternalLink"
@@ -23,7 +24,11 @@ import {
   EVENT_VISIBILITY_LABEL_KEY,
   ATTENDANCE_RESPONSE_LABEL_KEY,
 } from "@/features/events/labels"
-import { findAttendeesForEvent, findEventById } from "@/features/events/queries"
+import {
+  findAttendeesForEvent,
+  findDateOptionsForEvent,
+  findEventById,
+} from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import { EditIcon } from "@/lib/icons"
@@ -73,7 +78,10 @@ export default async function EventPage({
   // learn which members-only events exist.
   if (!event) notFound()
 
-  const attendees = await findAttendeesForEvent(event.id)
+  const [attendees, dateOptions] = await Promise.all([
+    findAttendeesForEvent(event.id),
+    findDateOptionsForEvent(event.id, viewer?.member?.id ?? null),
+  ])
   const goingAttendees = attendees.filter(
     (attendee) => attendee.response === "going",
   )
@@ -224,6 +232,16 @@ export default async function EventPage({
           {translateEvents("signInToRespond")}
         </p>
       )}
+
+      <EventDatePoll
+        eventId={event.id}
+        timeZone={event.timeZone}
+        options={dateOptions}
+        chosenStartsAt={event.startsAt}
+        canVote={canRespondToEvent(viewer, event)}
+        canChooseDate={canEditEvent(viewer, event)}
+        locale={locale}
+      />
 
       <PageSection heading={translateEvents("attendees")}>
         {attendees.length === 0 ? (

@@ -145,6 +145,11 @@ drag-and-drop turn out to be wanted.
 **4.2 List/agenda view** — the `/events` page already serves this, including on mobile.
 **4.3 Category and visibility filters** — not built yet.
 
+**4.4 Date polls** — ✅ done. Any event can offer candidate dates; members vote for every
+date they can make (approval voting), and whoever may edit the event picks the winner,
+which sets the date and marks it confirmed. Voting closes when every option is past —
+derived from the dates, so there's no job and no stale flag.
+
 ---
 
 ## Phase 5 — Public pages

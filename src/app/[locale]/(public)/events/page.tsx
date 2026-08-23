@@ -6,7 +6,11 @@ import { EventList } from "@/components/EventList"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
-import { findPastEvents, findUpcomingEvents } from "@/features/events/queries"
+import {
+  findDatelessEvents,
+  findPastEvents,
+  findUpcomingEvents,
+} from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import { PlusIcon } from "@/lib/icons"
@@ -37,8 +41,9 @@ export default async function EventsPage({
   // SQL, so nothing they may not see is ever loaded.
   const allowedVisibilities = visibleEventVisibilitiesFor(viewer)
 
-  const [upcomingEvents, pastEvents] = await Promise.all([
+  const [upcomingEvents, datelessEvents, pastEvents] = await Promise.all([
     findUpcomingEvents(allowedVisibilities),
+    findDatelessEvents(allowedVisibilities),
     findPastEvents(allowedVisibilities),
   ])
 
@@ -67,6 +72,15 @@ export default async function EventsPage({
         events={upcomingEvents}
         locale={locale}
       />
+
+      {datelessEvents.length > 0 && (
+        <EventList
+          heading={translateEvents("suggestionsTitle")}
+          emptyText={translateEvents("suggestionsEmpty")}
+          events={datelessEvents}
+          locale={locale}
+        />
+      )}
 
       <EventList
         heading={translateEvents("pastTitle")}

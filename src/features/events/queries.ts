@@ -5,7 +5,7 @@
 // SQL. Fetching everything and hiding rows in the component would ship private data to
 // the browser and only pretend to hide it.
 
-import { and, asc, desc, eq, gte, inArray, lt, sql } from "drizzle-orm"
+import { and, asc, desc, eq, gte, inArray, isNull, lt, sql } from "drizzle-orm"
 
 import { db } from "@/db"
 import {
@@ -75,6 +75,29 @@ export async function findEventsInRange(
       ),
     )
     .orderBy(asc(events.startsAt))
+}
+
+/**
+ * Suggestions with no date yet.
+ *
+ * They match neither upcoming (>= now) nor past (< now), because SQL comparisons exclude
+ * nulls — so without this they appear nowhere at all.
+ */
+export async function findDatelessEvents(
+  allowedVisibilities: EventVisibility[],
+): Promise<Event[]> {
+  if (allowedVisibilities.length === 0) return []
+
+  return db
+    .select()
+    .from(events)
+    .where(
+      and(
+        inArray(events.visibility, allowedVisibilities),
+        isNull(events.startsAt),
+      ),
+    )
+    .orderBy(desc(events.createdAt))
 }
 
 /** Null when the event doesn't exist *or* this viewer may not see it — same answer. */
@@ -386,4 +409,32 @@ export async function findPastEventsForMember(
     .orderBy(desc(events.startsAt))
 
   return rows.map((row) => row.event)
+}
+
+/** Locks in a date the poll landed on, and stops the event being a suggestion. */
+export async function setEventDateFromOption(
+  eventId: string,
+  dateOptionId: string,
+): Promise<void> {
+  const [option] = await db
+    .select()
+    .from(eventDateOptions)
+    .where(
+      and(
+        eq(eventDateOptions.id, dateOptionId),
+        eq(eventDateOptions.eventId, eventId),
+      ),
+    )
+    .limit(1)
+
+  if (!option) throw new Error("That date does not belong to this event")
+
+  await db
+    .update(events)
+    .set({
+      startsAt: option.startsAt,
+      kind: "confirmed",
+      updatedAt: new Date(),
+    })
+    .where(eq(events.id, eventId))
 }
