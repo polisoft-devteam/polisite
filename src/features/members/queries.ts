@@ -191,3 +191,36 @@ export async function denyMembershipRequest(authUserId: string): Promise<void> {
     .set({ deniedAt: new Date() })
     .where(eq(membershipPrompts.authUserId, authUserId))
 }
+
+// --- Members, for the admin page ------------------------------------------------
+
+export type MemberWithRoles = Member & { roles: Role[] }
+
+export async function findAllMembersWithRoles(): Promise<MemberWithRoles[]> {
+  const allMembers = await db.select().from(members).orderBy(members.fullName)
+
+  if (allMembers.length === 0) return []
+
+  const allRoles = await db.select().from(memberRoles)
+
+  return allMembers.map((member) => ({
+    ...member,
+    roles: allRoles
+      .filter((row) => row.memberId === member.id)
+      .map((row) => row.role),
+  }))
+}
+
+/**
+ * Deactivating rather than deleting: the row keeps their name on past events, and losing
+ * that would silently rewrite the association's history.
+ */
+export async function setMemberStatus(
+  memberId: string,
+  status: Member["status"],
+): Promise<void> {
+  await db
+    .update(members)
+    .set({ status, updatedAt: new Date() })
+    .where(eq(members.id, memberId))
+}

@@ -205,6 +205,12 @@
     "requestsEmpty": "Inga ansökningar just nu.",
     "approve": "Godkänn",
     "deny": "Avslå",
-    "nav": "Admin"
+    "nav": "Admin",
+    "membersTitle": "Medlemmar",
+    "deactivate": "Inaktivera",
+    "reactivate": "Aktivera igen",
+    "statusInactive": "Inaktiv",
+    "roleAdmin": "Admin",
+    "thatsYou": "Det är du"
   }
 }

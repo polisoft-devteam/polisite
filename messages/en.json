@@ -205,6 +205,12 @@
     "requestsEmpty": "No requests right now.",
     "approve": "Approve",
     "deny": "Deny",
-    "nav": "Admin"
+    "nav": "Admin",
+    "membersTitle": "Members",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate",
+    "statusInactive": "Inactive",
+    "roleAdmin": "Admin",
+    "thatsYou": "That's you"
   }
 }
