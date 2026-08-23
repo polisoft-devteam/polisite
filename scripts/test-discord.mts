@@ -14,8 +14,8 @@
 import type { Event } from "../src/db/schema"
 import { postEventToDiscord } from "../src/features/events/discord"
 
-if (!process.env.DISCORD_WEBHOOK_URL) {
-  console.error("DISCORD_WEBHOOK_URL is not set in .env.local")
+if (!process.env.DISCORD_GENERAL_CHANNEL_WEBHOOK_URL) {
+  console.error("DISCORD_GENERAL_CHANNEL_WEBHOOK_URL is not set in .env.local")
   process.exit(1)
 }
 

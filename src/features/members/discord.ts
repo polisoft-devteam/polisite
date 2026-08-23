@@ -17,7 +17,7 @@ export async function postMembershipRequestToDiscord(request: {
     : request.email
 
   await postToDiscord({
-    channel: "admin",
+    channel: "bot",
     content: [
       `${mentionUser(adminUserId)}**${who}** har ansökt om medlemskap i Poli.`,
       "",

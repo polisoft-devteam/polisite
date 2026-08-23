@@ -8,20 +8,21 @@ type DiscordEmbed = Record<string, unknown>
 /**
  * A webhook is tied to one channel for good, so each destination needs its own.
  *
- * "announcements" is the channel everyone reads. "admin" is for messages only the admin
- * should see — it falls back to announcements if unset, so a message is never silently
- * dropped, just posted somewhere more public than intended.
+ * "general" is the channel everyone reads. "bot" is the private one only the admin sees;
+ * it falls back to general if unset, so a message is never silently dropped — just posted
+ * somewhere more public than intended.
  */
-export type DiscordChannel = "announcements" | "admin"
+export type DiscordChannel = "general" | "bot"
 
 function webhookUrlFor(channel: DiscordChannel): string | undefined {
-  if (channel === "admin") {
+  if (channel === "bot") {
     return (
-      process.env.DISCORD_ADMIN_WEBHOOK_URL ?? process.env.DISCORD_WEBHOOK_URL
+      process.env.DISCORD_BOT_CHANNEL_WEBHOOK_URL ??
+      process.env.DISCORD_GENERAL_CHANNEL_WEBHOOK_URL
     )
   }
 
-  return process.env.DISCORD_WEBHOOK_URL
+  return process.env.DISCORD_GENERAL_CHANNEL_WEBHOOK_URL
 }
 
 type PostOptions = {
@@ -34,7 +35,7 @@ type PostOptions = {
 }
 
 export function isDiscordConfigured(): boolean {
-  return Boolean(process.env.DISCORD_WEBHOOK_URL)
+  return Boolean(process.env.DISCORD_GENERAL_CHANNEL_WEBHOOK_URL)
 }
 
 /**
