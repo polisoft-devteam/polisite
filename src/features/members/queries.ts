@@ -1,7 +1,7 @@
 // Database access for members. Per CLAUDE.md this is one of the only places allowed to
 // import src/db — pages and components call these functions instead.
 
-import { eq } from "drizzle-orm"
+import { and, eq, isNull, sql } from "drizzle-orm"
 
 import { db } from "@/db"
 import {
@@ -87,4 +87,107 @@ export async function recordMembershipPrompt(prompt: {
     .returning()
 
   return inserted.length > 0
+}
+
+// --- Membership requests, for the admin page ------------------------------------
+
+export type PendingMembershipRequest = {
+  authUserId: string
+  email: string
+  fullName: string | null
+  requestedAt: Date
+}
+
+/**
+ * Requests still waiting on a decision: asked to join, not turned down, and not already a
+ * member. Approving creates a members row, which drops them from this list — so there's
+ * no "handled" flag to keep in step.
+ */
+export async function findPendingMembershipRequests(): Promise<
+  PendingMembershipRequest[]
+> {
+  const rows = await db
+    .select({
+      authUserId: membershipPrompts.authUserId,
+      email: membershipPrompts.email,
+      fullName: membershipPrompts.fullName,
+      requestedAt: membershipPrompts.respondedAt,
+    })
+    .from(membershipPrompts)
+    .where(
+      and(
+        eq(membershipPrompts.response, "requested"),
+        isNull(membershipPrompts.deniedAt),
+        sql`not exists (
+          select 1 from ${members}
+          where ${members.authUserId} = ${membershipPrompts.authUserId}
+        )`,
+      ),
+    )
+
+  // The name isn't in our table for a guest — it lives in Supabase's auth schema.
+  const namesByAuthUserId = new Map<string, string | null>()
+
+  if (rows.length > 0) {
+    const authUsers = await db.execute<{
+      id: string
+      full_name: string | null
+    }>(sql`
+      select id, raw_user_meta_data->>'full_name' as full_name
+      from auth.users
+      where id in (${sql.join(
+        rows.map((row) => sql`${row.authUserId}::uuid`),
+        sql`, `,
+      )})`)
+
+    for (const authUser of authUsers) {
+      namesByAuthUserId.set(authUser.id, authUser.full_name)
+    }
+  }
+
+  return rows.map((row) => ({
+    ...row,
+    fullName: row.fullName ?? namesByAuthUserId.get(row.authUserId) ?? null,
+  }))
+}
+
+/** Creates the member row and grants the base role. Returns false if already a member. */
+export async function approveMembershipRequest(
+  authUserId: string,
+): Promise<boolean> {
+  const [request] = await db
+    .select()
+    .from(membershipPrompts)
+    .where(eq(membershipPrompts.authUserId, authUserId))
+    .limit(1)
+
+  if (!request) return false
+
+  const [created] = await db
+    .insert(members)
+    .values({
+      authUserId,
+      email: request.email,
+      fullName: request.fullName ?? request.email,
+      status: "active",
+      joinedAssociationAt: new Date(),
+    })
+    .onConflictDoNothing()
+    .returning()
+
+  if (!created) return false
+
+  await db
+    .insert(memberRoles)
+    .values({ memberId: created.id, role: "member" })
+    .onConflictDoNothing()
+
+  return true
+}
+
+export async function denyMembershipRequest(authUserId: string): Promise<void> {
+  await db
+    .update(membershipPrompts)
+    .set({ deniedAt: new Date() })
+    .where(eq(membershipPrompts.authUserId, authUserId))
 }

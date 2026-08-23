@@ -72,6 +72,10 @@ export const membershipPrompts = pgTable("membership_prompts", {
   respondedAt: timestamp("responded_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
+
+  // Set when an admin turns the request down. Approval needs no marker — the members row
+  // it creates is the record.
+  deniedAt: timestamp("denied_at", { withTimezone: true }),
 })
 
 // --- Roles ---------------------------------------------------------------------

@@ -22,6 +22,11 @@ export function isAdmin(viewer: Viewer | null): boolean {
   return isActiveMember(viewer) && (viewer?.roles.includes("admin") ?? false)
 }
 
+/** Approving members, and anything else on the admin pages. */
+export function canManageMembers(viewer: Viewer | null): boolean {
+  return isAdmin(viewer)
+}
+
 /**
  * Which event visibilities this viewer may see at all.
  *

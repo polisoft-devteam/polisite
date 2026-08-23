@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest"
 import type { Event, Member, Role } from "@/db/schema"
 import {
   canCreateEvent,
+  canManageMembers,
   canEditEvent,
   canRespondToEvent,
   canViewEvent,
@@ -97,6 +98,24 @@ describe("membership", () => {
     expect(
       isAdmin(buildViewer(buildMember({ status: "inactive" }), ["admin"])),
     ).toBe(false)
+  })
+})
+
+describe("managing members", () => {
+  it("only admins may approve membership requests", () => {
+    expect(canManageMembers(adminMember)).toBe(true)
+    expect(canManageMembers(activeMember)).toBe(false)
+    expect(canManageMembers(signedInGuest)).toBe(false)
+    expect(canManageMembers(signedOutVisitor)).toBe(false)
+  })
+
+  it("refuses an inactive member even holding the admin role", () => {
+    const formerAdmin = buildViewer(buildMember({ status: "inactive" }), [
+      "member",
+      "admin",
+    ])
+
+    expect(canManageMembers(formerAdmin)).toBe(false)
   })
 })
 

@@ -27,10 +27,7 @@ async function answerMembershipPrompt(response: "requested" | "dismissed") {
 
   // Only on the first answer, so clicking twice can't ping twice.
   if (isFirstAnswer && response === "requested") {
-    await postMembershipRequestToDiscord({
-      email: viewer.email,
-      fullName: viewer.member?.fullName ?? null,
-    })
+    await postMembershipRequestToDiscord()
   }
 
   revalidatePath("/", "layout")

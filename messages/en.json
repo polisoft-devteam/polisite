@@ -198,5 +198,13 @@
   "Settings": {
     "title": "Settings",
     "backToProfile": "Back to profile"
+  },
+  "Admin": {
+    "title": "Administration",
+    "requestsTitle": "Membership requests",
+    "requestsEmpty": "No requests right now.",
+    "approve": "Approve",
+    "deny": "Deny",
+    "nav": "Admin"
   }
 }

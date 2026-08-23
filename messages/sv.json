@@ -198,5 +198,13 @@
   "Settings": {
     "title": "Inställningar",
     "backToProfile": "Tillbaka till profilen"
+  },
+  "Admin": {
+    "title": "Administration",
+    "requestsTitle": "Ansökningar om medlemskap",
+    "requestsEmpty": "Inga ansökningar just nu.",
+    "approve": "Godkänn",
+    "deny": "Avslå",
+    "nav": "Admin"
   }
 }

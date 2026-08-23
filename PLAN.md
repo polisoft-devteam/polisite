@@ -193,7 +193,8 @@ Ordered by likely value, not by effort:
 - **Email reminders** — **deprioritised in favour of Discord.** The group is more active on
   Discord, so notifications go there first. Revisit email only if someone actually asks.
 - **Event photos** — start with a Google Photos album URL per event, not an importer.
-- **Admin panel** — until then, use Supabase Studio to _view and nudge_ data (never to change schema).
+- ~~**Admin panel**~~ — ✅ started. `/admin` lists membership requests to approve or deny,
+  behind the `admin` role. Extend it there rather than reaching for Supabase Studio.
 - **Badges and titles** — data-driven, so new badges need no schema change.
 - **History / archive pages.**
 - **Community goals and fund progress.**

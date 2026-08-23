@@ -12,7 +12,7 @@ import { MemberAvatar } from "@/components/MemberAvatar"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { isActiveMember } from "@/lib/permissions"
+import { canManageMembers, isActiveMember } from "@/lib/permissions"
 
 export async function AuthMenu() {
   const translateAuth = await getTranslations("Auth")
@@ -36,8 +36,20 @@ export async function AuthMenu() {
     </>
   )
 
+  const translateAdmin = await getTranslations("Admin")
+
   return (
     <div className="flex items-center gap-2">
+      {canManageMembers(viewer) && (
+        <Link
+          href="/admin"
+          transitionTypes={["nav-forward"]}
+          className="text-muted-foreground hover:text-foreground hidden text-sm transition-colors sm:inline"
+        >
+          {translateAdmin("nav")}
+        </Link>
+      )}
+
       {isActiveMember(viewer) ? (
         <Link
           href="/profile"

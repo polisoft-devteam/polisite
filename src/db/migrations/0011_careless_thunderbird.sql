@@ -1,0 +1,1 @@
+ALTER TABLE "membership_prompts" ADD COLUMN "denied_at" timestamp with time zone;
