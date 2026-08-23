@@ -1,7 +1,10 @@
-// A select that shows an icon next to each option.
+// The category picker, with an icon per type.
 //
-// A native <select> can't render anything but text in its options, so this is a menu with
-// a hidden input carrying the value — the form still posts a plain field.
+// A native <option> can hold only text, so this is a menu with a hidden input carrying the
+// value — the form still posts a plain "category" field.
+//
+// The icons are imported here rather than passed in: only plain data can cross from a
+// Server Component to a Client Component, and a React component isn't plain data.
 
 "use client"
 
@@ -15,42 +18,42 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
-import { ChevronDownIcon, type IconComponent } from "@/lib/icons"
+import type { EventCategory } from "@/db/schema"
+import { EVENT_CATEGORY_ICON } from "@/features/events/labels"
+import { ChevronDownIcon } from "@/lib/icons"
 
-export type IconSelectOption = {
-  value: string
+export type EventCategoryOption = {
+  value: EventCategory
   label: string
-  Icon: IconComponent
 }
 
-export function IconSelectField({
-  name,
+export function EventCategoryField({
   label,
   options,
   defaultValue,
 }: {
-  name: string
   label: string
-  options: IconSelectOption[]
-  defaultValue: string
+  options: EventCategoryOption[]
+  defaultValue: EventCategory
 }) {
-  const [selectedValue, setSelectedValue] = useState(defaultValue)
+  const [selectedValue, setSelectedValue] =
+    useState<EventCategory>(defaultValue)
 
   const selected =
     options.find((option) => option.value === selectedValue) ?? options[0]
-  const SelectedIcon = selected.Icon
+  const SelectedIcon = EVENT_CATEGORY_ICON[selected.value]
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={`${name}-trigger`}>{label}</Label>
+      <Label htmlFor="category-trigger">{label}</Label>
 
-      <input type="hidden" name={name} value={selectedValue} />
+      <input type="hidden" name="category" value={selectedValue} />
 
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
             <Button
-              id={`${name}-trigger`}
+              id="category-trigger"
               type="button"
               variant="outline"
               className="h-9 w-full justify-between font-normal"
@@ -69,7 +72,7 @@ export function IconSelectField({
 
         <DropdownMenuContent align="start" className="w-56">
           {options.map((option) => {
-            const OptionIcon = option.Icon
+            const OptionIcon = EVENT_CATEGORY_ICON[option.value]
 
             return (
               <DropdownMenuItem

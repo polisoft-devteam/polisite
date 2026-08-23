@@ -12,7 +12,7 @@ import { getTranslations } from "next-intl/server"
 import { EventWhenField } from "@/components/EventWhenField"
 import { EventReminderField } from "@/components/EventReminderField"
 import { ExplainedSelectField } from "@/components/ExplainedSelectField"
-import { IconSelectField } from "@/components/IconSelectField"
+import { EventCategoryField } from "@/components/EventCategoryField"
 import { FormField, FormSelect } from "@/components/FormField"
 import { Wizard, type WizardStep } from "@/components/Wizard"
 import {
@@ -32,7 +32,6 @@ import {
   type ReminderOffset,
 } from "@/db/schema"
 import {
-  EVENT_CATEGORY_ICON,
   EVENT_CATEGORY_LABEL_KEY,
   EVENT_KIND_EXPLANATION_KEY,
   EVENT_KIND_LABEL_KEY,
@@ -84,14 +83,12 @@ export async function EventForm({
               />
             </FormField>
 
-            <IconSelectField
-              name="category"
+            <EventCategoryField
               label={translateEvents("fieldCategory")}
               defaultValue={event?.category ?? "other"}
               options={eventCategoryEnum.enumValues.map((category) => ({
                 value: category,
                 label: translateEvents(EVENT_CATEGORY_LABEL_KEY[category]),
-                Icon: EVENT_CATEGORY_ICON[category],
               }))}
             />
           </div>
