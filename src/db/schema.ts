@@ -107,6 +107,8 @@ export const eventVisibilityEnum = pgEnum("event_visibility", [
   "members_and_friends",
 ])
 
+export const eventKindEnum = pgEnum("event_kind", ["suggestion", "confirmed"])
+
 export const eventCategoryEnum = pgEnum("event_category", [
   "music",
   "party",
@@ -125,9 +127,13 @@ export const events = pgTable("events", {
   title: text("title").notNull(),
   description: text("description"),
 
+  kind: eventKindEnum("kind").notNull().default("suggestion"),
+
+  // Null while a suggestion has no date yet — its candidate dates live in
+  // eventDateOptions. A confirmed event always has one.
   // The instant is UTC; timeZone is where the event physically happens, so a London
   // concert reads 19:00 to everyone rather than 20:00 to the Swedes.
-  startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
+  startsAt: timestamp("starts_at", { withTimezone: true }),
   endsAt: timestamp("ends_at", { withTimezone: true }),
   timeZone: text("time_zone").notNull().default("Europe/Stockholm"),
 
@@ -191,6 +197,36 @@ export const eventReminders = pgTable(
   (table) => [primaryKey({ columns: [table.eventId, table.offset] })],
 )
 
+// --- Date poll -----------------------------------------------------------------
+
+// Candidate dates for an event. A confirmed event may still poll — that reads as
+// "we might move this".
+export const eventDateOptions = pgTable("event_date_options", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  eventId: uuid("event_id")
+    .notNull()
+    .references(() => events.id, { onDelete: "cascade" }),
+  startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
+})
+
+// A member may vote for several dates but not twice for the same one, which the composite
+// key enforces rather than the code having to remember.
+export const eventDateVotes = pgTable(
+  "event_date_votes",
+  {
+    dateOptionId: uuid("date_option_id")
+      .notNull()
+      .references(() => eventDateOptions.id, { onDelete: "cascade" }),
+    memberId: uuid("member_id")
+      .notNull()
+      .references(() => members.id, { onDelete: "cascade" }),
+    votedAt: timestamp("voted_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.dateOptionId, table.memberId] })],
+)
+
 export const attendanceResponseEnum = pgEnum("attendance_response", [
   "going",
   "interested",
@@ -224,6 +260,8 @@ export type NewMember = typeof members.$inferInsert
 export type Role = (typeof roleEnum.enumValues)[number]
 export type EventVisibility = (typeof eventVisibilityEnum.enumValues)[number]
 export type EventCategory = (typeof eventCategoryEnum.enumValues)[number]
+export type EventKind = (typeof eventKindEnum.enumValues)[number]
+export type EventDateOption = typeof eventDateOptions.$inferSelect
 export type ReminderOffset = (typeof reminderOffsetEnum.enumValues)[number]
 export type EventReminder = typeof eventReminders.$inferSelect
 export type MembershipPrompt = typeof membershipPrompts.$inferSelect

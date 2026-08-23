@@ -117,18 +117,26 @@ export default async function EventPage({
       <div className="mt-6">
         <FactList>
           <Fact label={translateEvents("fieldStartsAt")}>
-            <time dateTime={event.startsAt.toISOString()}>
-              {format.dateTime(event.startsAt, {
-                dateStyle: "full",
-                timeStyle: "short",
-                timeZone: event.timeZone,
-              })}
-            </time>
-            {/* Named so a reader in Copenhagen knows which city's clock this is. */}
-            <span className="text-muted-foreground">
-              {" "}
-              ({event.timeZone.replace("_", " ")})
-            </span>
+            {event.startsAt ? (
+              <>
+                <time dateTime={event.startsAt.toISOString()}>
+                  {format.dateTime(event.startsAt, {
+                    dateStyle: "full",
+                    timeStyle: "short",
+                    timeZone: event.timeZone,
+                  })}
+                </time>
+                {/* Named so a reader in Copenhagen knows which city's clock this is. */}
+                <span className="text-muted-foreground">
+                  {" "}
+                  ({event.timeZone.replace("_", " ")})
+                </span>
+              </>
+            ) : (
+              <span className="italic">
+                {translateEvents("dateNotDecided")}
+              </span>
+            )}
           </Fact>
 
           {event.endsAt && (

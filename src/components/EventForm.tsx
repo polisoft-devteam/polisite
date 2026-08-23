@@ -84,9 +84,8 @@ export async function EventForm({
             name="startsAtWallTime"
             type="datetime-local"
             defaultValue={
-              event ? instantToWallTime(event.startsAt, timeZone) : ""
+              event?.startsAt ? instantToWallTime(event.startsAt, timeZone) : ""
             }
-            required
           />
         </FormField>
 

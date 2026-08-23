@@ -23,8 +23,13 @@ import { DEFAULT_EVENT_TIME_ZONE } from "@/lib/time"
 import { cn } from "@/lib/utils"
 
 /** Which square an event belongs in, judged in the event's own timezone. */
-function dayKeyForEvent(event: Event): string {
+function dayKeyForEvent(event: Event & { startsAt: Date }): string {
   return formatInTimeZone(event.startsAt, event.timeZone, "yyyy-MM-dd")
+}
+
+/** Suggestions awaiting a date poll have no square to sit in. */
+function hasDate(event: Event): event is Event & { startsAt: Date } {
+  return event.startsAt !== null
 }
 
 export async function EventCalendar({
@@ -40,8 +45,8 @@ export async function EventCalendar({
 
   const days = buildMonthGridDays(month)
 
-  const eventsByDay = new Map<string, Event[]>()
-  for (const event of events) {
+  const eventsByDay = new Map<string, (Event & { startsAt: Date })[]>()
+  for (const event of events.filter(hasDate)) {
     const key = dayKeyForEvent(event)
     eventsByDay.set(key, [...(eventsByDay.get(key) ?? []), event])
   }

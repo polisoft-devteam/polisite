@@ -50,14 +50,20 @@ export async function EventList({
                 </span>
 
                 <span className="text-muted-foreground shrink-0 text-sm">
-                  <time dateTime={event.startsAt.toISOString()}>
-                    {/* Shown in the event's own zone, so a London gig reads London time. */}
-                    {format.dateTime(event.startsAt, {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                      timeZone: event.timeZone,
-                    })}
-                  </time>
+                  {event.startsAt ? (
+                    <time dateTime={event.startsAt.toISOString()}>
+                      {/* The event's own zone, so a London gig reads London time. */}
+                      {format.dateTime(event.startsAt, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                        timeZone: event.timeZone,
+                      })}
+                    </time>
+                  ) : (
+                    <span className="italic">
+                      {translateEvents("dateNotDecided")}
+                    </span>
+                  )}
                   {event.visibility === "public" && (
                     <span className="ml-2 text-xs">
                       · {translateEvents("visibilityPublicShort")}

@@ -31,6 +31,7 @@ const sampleEvent: Event = {
   id: "00000000-0000-0000-0000-000000000000",
   title: "Testinlägg — ignorera",
   description: "Kontrollerar att webhooken fungerar. Inget riktigt evenemang.",
+  kind: "confirmed",
   startsAt: twoDaysFromNow,
   endsAt: null,
   timeZone: "Europe/Stockholm",

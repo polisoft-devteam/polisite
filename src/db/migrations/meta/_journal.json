@@ -71,6 +71,13 @@
       "when": 1787388693980,
       "tag": "0009_fix_membership_prompt_response",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1787476575179,
+      "tag": "0010_sudden_terror",
+      "breakpoints": true
     }
   ]
 }

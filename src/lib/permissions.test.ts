@@ -49,6 +49,7 @@ function buildEvent(overrides: Partial<Event> = {}): Event {
     id: "event-1",
     title: "Bastufestival",
     description: null,
+    kind: "confirmed",
     startsAt: new Date("2026-10-04T18:00:00Z"),
     endsAt: null,
     timeZone: "Europe/Stockholm",

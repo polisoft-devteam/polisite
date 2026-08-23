@@ -35,11 +35,13 @@ function buildEventUrl(event: Event, locale: string): string {
 
 function buildEmbed(event: Event, locale: string) {
   const fields: { name: string; value: string; inline?: boolean }[] = [
-    // Discord renders these in each reader's own timezone, so the Dane and the Swede
-    // both see their own local time without us converting anything.
     {
       name: "När",
-      value: `${toDiscordTimestamp(event.startsAt)}\n${toDiscordTimestamp(event.startsAt, "R")}`,
+      // Discord renders timestamps in each reader's own timezone, so the Dane and the
+      // Swede both see their own local time without us converting anything.
+      value: event.startsAt
+        ? `${toDiscordTimestamp(event.startsAt)}\n${toDiscordTimestamp(event.startsAt, "R")}`
+        : "Datum röstas fram",
     },
   ]
 

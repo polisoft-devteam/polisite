@@ -98,7 +98,13 @@
     "fieldImage": "Image",
     "fieldImageHint": "Optional. Resized automatically.",
     "cancel": "Cancel",
-    "close": "Close"
+    "close": "Close",
+    "dateNotDecided": "Date not decided",
+    "kindSuggestion": "Suggestion",
+    "kindConfirmed": "Confirmed",
+    "fieldKind": "Is this a suggestion or a confirmed event?",
+    "kindSuggestionExplanation": "A vibe check. Testing whether people are interested — the date can be voted on.",
+    "kindConfirmedExplanation": "This is happening. Put it in your calendar."
   },
   "Calendar": {
     "title": "Calendar",

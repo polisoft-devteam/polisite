@@ -98,7 +98,13 @@
     "fieldImage": "Bild",
     "fieldImageHint": "Frivilligt. Skalas ner automatiskt.",
     "cancel": "Avbryt",
-    "close": "Stäng"
+    "close": "Stäng",
+    "dateNotDecided": "Datum ej bestämt",
+    "kindSuggestion": "Förslag",
+    "kindConfirmed": "Bekräftat",
+    "fieldKind": "Är detta ett förslag eller ett bekräftat event?",
+    "kindSuggestionExplanation": "En känslokoll. Vi testar om folk är intresserade — datum kan röstas fram.",
+    "kindConfirmedExplanation": "Det här händer. Lägg in det i kalendern."
   },
   "Calendar": {
     "title": "Kalender",

@@ -32,8 +32,10 @@ export async function GET(request: Request) {
 
   // A daily job can only catch a window, so anything already past due is sent now
   // rather than skipped — better a late reminder than none.
+  // A suggestion with no date yet has nothing to remind anyone about.
   const due = pending.filter(
-    ({ event, offset }) => reminderDueAt(event.startsAt, offset) <= now,
+    ({ event, offset }) =>
+      event.startsAt !== null && reminderDueAt(event.startsAt, offset) <= now,
   )
 
   const sent: string[] = []
