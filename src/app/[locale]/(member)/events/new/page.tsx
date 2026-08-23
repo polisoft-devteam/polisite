@@ -37,7 +37,7 @@ export default async function NewEventPage({
 
       <EventForm
         action={createEventAction}
-        submitLabel={translateEvents("create")}
+        submitLabel={translateEvents("publish")}
       />
     </PageContainer>
   )

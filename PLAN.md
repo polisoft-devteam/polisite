@@ -182,6 +182,11 @@ Members, login, profiles, events, calendar, RSVP, wishlist, deployed on a real d
 
 Ordered by likely value, not by effort:
 
+- **Draft events** — for things permanently "in the planning" that shouldn't ping Discord
+  every time they're touched. The announce checkbox already covers the create case, but
+  a long-lived idea wants a state that keeps it off the main list and out of Discord until
+  it's real. Consider a third `kind`, or a `published_at` timestamp.
+
 - **Discord webhook** — new event posts to Discord. An afternoon's work.
 
   **The rule: duplicate notifications, never duplicate state.** A posted message is

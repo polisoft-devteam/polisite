@@ -1,8 +1,11 @@
-// Creating and editing an event, as a five-step wizard.
+// Creating and editing an event, as a three-step wizard.
 //
-// The fields are server-rendered and handed to Wizard as step content; only the stepping,
-// the two explained selects and the repeatable date rows are client-side. It remains one
-// form posting to one server action.
+// Three rather than five: everything that has a sensible default sits in a folded
+// "Fler inställningar" section on the last step, so the common path is title, when and
+// where, publish.
+//
+// Nothing is written until the final submit — the form is one POST, so stepping through it
+// has no effect and no Discord message goes out early.
 
 import { getTranslations } from "next-intl/server"
 
@@ -11,6 +14,12 @@ import { EventReminderField } from "@/components/EventReminderField"
 import { ExplainedSelectField } from "@/components/ExplainedSelectField"
 import { FormField, FormSelect } from "@/components/FormField"
 import { Wizard, type WizardStep } from "@/components/Wizard"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -115,45 +124,54 @@ export async function EventForm({
               className="cursor-pointer"
             />
           </FormField>
+
+          <FormField
+            label={translateEvents("fieldEventUrl")}
+            htmlFor="eventUrl"
+            hint={translateEvents("fieldEventUrlHint")}
+          >
+            <Input
+              id="eventUrl"
+              name="eventUrl"
+              type="url"
+              placeholder="https://"
+              defaultValue={event?.eventUrl ?? ""}
+            />
+          </FormField>
+
+          <FormField
+            label={translateEvents("fieldExtraLinkUrl")}
+            htmlFor="extraLinkUrl"
+            hint={translateEvents("fieldExtraLinkUrlHint")}
+          >
+            <Input
+              id="extraLinkUrl"
+              name="extraLinkUrl"
+              type="url"
+              placeholder="https://"
+              defaultValue={event?.extraLinkUrl ?? ""}
+            />
+          </FormField>
         </>
       ),
     },
 
     {
-      label: translateEvents("stepKind"),
+      label: translateEvents("stepWhen"),
       content: (
         <>
-          <ExplainedSelectField
-            name="kind"
-            label={translateEvents("fieldKind")}
-            defaultValue={event?.kind ?? "suggestion"}
-            options={eventKindEnum.enumValues.map((kind) => ({
-              value: kind,
-              label: translateEvents(EVENT_KIND_LABEL_KEY[kind]),
-              explanation: translateEvents(EVENT_KIND_EXPLANATION_KEY[kind]),
-            }))}
-          />
+          <FormField
+            label={translateEvents("fieldLocation")}
+            htmlFor="location"
+          >
+            <Input
+              id="location"
+              name="location"
+              defaultValue={event?.location ?? ""}
+              maxLength={200}
+            />
+          </FormField>
 
-          <ExplainedSelectField
-            name="visibility"
-            label={translateEvents("fieldVisibility")}
-            defaultValue={event?.visibility ?? "members"}
-            options={eventVisibilityEnum.enumValues.map((visibility) => ({
-              value: visibility,
-              label: translateEvents(EVENT_VISIBILITY_LABEL_KEY[visibility]),
-              explanation: translateEvents(
-                EVENT_VISIBILITY_EXPLANATION_KEY[visibility],
-              ),
-            }))}
-          />
-        </>
-      ),
-    },
-
-    {
-      label: translateEvents("stepDates"),
-      content: (
-        <>
           <FormField
             label={translateEvents("fieldTimeZone")}
             htmlFor="timeZone"
@@ -214,109 +232,7 @@ export async function EventForm({
     },
 
     {
-      label: translateEvents("stepDetails"),
-      content: (
-        <>
-          <FormField
-            label={translateEvents("fieldLocation")}
-            htmlFor="location"
-          >
-            <Input
-              id="location"
-              name="location"
-              defaultValue={event?.location ?? ""}
-              maxLength={200}
-            />
-          </FormField>
-
-          <div className="grid gap-4 sm:grid-cols-[1fr_8rem]">
-            <FormField
-              label={translateEvents("fieldPrice")}
-              htmlFor="price"
-              hint={translateEvents("fieldPriceHint")}
-            >
-              <Input
-                id="price"
-                name="price"
-                type="number"
-                min="0"
-                step="1"
-                inputMode="decimal"
-                defaultValue={
-                  event?.priceMinorUnits !== null &&
-                  event?.priceMinorUnits !== undefined
-                    ? String(event.priceMinorUnits / 100)
-                    : ""
-                }
-              />
-            </FormField>
-
-            <FormField
-              label={translateEvents("fieldCurrency")}
-              htmlFor="currency"
-            >
-              <FormSelect
-                id="currency"
-                name="currency"
-                defaultValue={event?.priceCurrency ?? "SEK"}
-              >
-                {EVENT_CURRENCIES.map((currency) => (
-                  <option key={currency} value={currency}>
-                    {currency}
-                  </option>
-                ))}
-              </FormSelect>
-            </FormField>
-          </div>
-
-          <FormField
-            label={translateEvents("fieldMaxAttendees")}
-            htmlFor="maxAttendees"
-            hint={translateEvents("fieldMaxAttendeesHint")}
-          >
-            <Input
-              id="maxAttendees"
-              name="maxAttendees"
-              type="number"
-              min="1"
-              step="1"
-              defaultValue={event?.maxAttendees ?? ""}
-            />
-          </FormField>
-
-          <FormField
-            label={translateEvents("fieldEventUrl")}
-            htmlFor="eventUrl"
-            hint={translateEvents("fieldEventUrlHint")}
-          >
-            <Input
-              id="eventUrl"
-              name="eventUrl"
-              type="url"
-              placeholder="https://"
-              defaultValue={event?.eventUrl ?? ""}
-            />
-          </FormField>
-
-          <FormField
-            label={translateEvents("fieldExtraLinkUrl")}
-            htmlFor="extraLinkUrl"
-            hint={translateEvents("fieldExtraLinkUrlHint")}
-          >
-            <Input
-              id="extraLinkUrl"
-              name="extraLinkUrl"
-              type="url"
-              placeholder="https://"
-              defaultValue={event?.extraLinkUrl ?? ""}
-            />
-          </FormField>
-        </>
-      ),
-    },
-
-    {
-      label: translateEvents("stepDiscord"),
+      label: translateEvents("stepPublish"),
       content: (
         <>
           <EventReminderField
@@ -342,6 +258,111 @@ export async function EventForm({
               {translateEvents("fieldAnnounce")}
             </label>
           )}
+
+          {/* Everything with a sensible default lives here, folded away. */}
+          <Accordion>
+            <AccordionItem value="advanced">
+              <AccordionTrigger>
+                {translateEvents("advancedTitle")}
+              </AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground mb-4 text-xs">
+                  {translateEvents("advancedHint")}
+                </p>
+
+                <div className="space-y-6">
+                  <ExplainedSelectField
+                    name="kind"
+                    label={translateEvents("fieldKind")}
+                    defaultValue={event?.kind ?? "confirmed"}
+                    options={eventKindEnum.enumValues.map((kind) => ({
+                      value: kind,
+                      label: translateEvents(EVENT_KIND_LABEL_KEY[kind]),
+                      explanation: translateEvents(
+                        EVENT_KIND_EXPLANATION_KEY[kind],
+                      ),
+                    }))}
+                  />
+
+                  <ExplainedSelectField
+                    name="visibility"
+                    label={translateEvents("fieldVisibility")}
+                    defaultValue={event?.visibility ?? "members"}
+                    options={eventVisibilityEnum.enumValues.map(
+                      (visibility) => ({
+                        value: visibility,
+                        label: translateEvents(
+                          EVENT_VISIBILITY_LABEL_KEY[visibility],
+                        ),
+                        explanation: translateEvents(
+                          EVENT_VISIBILITY_EXPLANATION_KEY[visibility],
+                        ),
+                      }),
+                    )}
+                  />
+
+                  <div className="grid gap-4 sm:grid-cols-[1fr_8rem]">
+                    <FormField
+                      label={translateEvents("fieldPrice")}
+                      htmlFor="price"
+                      hint={translateEvents("fieldPriceHint")}
+                    >
+                      <Input
+                        id="price"
+                        name="price"
+                        type="number"
+                        min="0"
+                        step="1"
+                        inputMode="decimal"
+                        defaultValue={
+                          event?.priceMinorUnits !== null &&
+                          event?.priceMinorUnits !== undefined
+                            ? String(event.priceMinorUnits / 100)
+                            : ""
+                        }
+                      />
+                    </FormField>
+
+                    <FormField
+                      label={translateEvents("fieldCurrency")}
+                      htmlFor="currency"
+                    >
+                      <FormSelect
+                        id="currency"
+                        name="currency"
+                        defaultValue={event?.priceCurrency ?? "SEK"}
+                      >
+                        {EVENT_CURRENCIES.map((currency) => (
+                          <option key={currency} value={currency}>
+                            {currency}
+                          </option>
+                        ))}
+                      </FormSelect>
+                    </FormField>
+                  </div>
+
+                  <FormField
+                    label={translateEvents("fieldMaxAttendees")}
+                    htmlFor="maxAttendees"
+                    hint={translateEvents("fieldMaxAttendeesHint")}
+                  >
+                    <Input
+                      id="maxAttendees"
+                      name="maxAttendees"
+                      type="number"
+                      min="1"
+                      step="1"
+                      defaultValue={event?.maxAttendees ?? ""}
+                    />
+                  </FormField>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          <p className="text-muted-foreground text-xs">
+            {translateEvents("publishSummary")}
+          </p>
         </>
       ),
     },

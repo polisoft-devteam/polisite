@@ -62,7 +62,7 @@ export default async function EditEventPage({
 
       <EventForm
         action={updateEventAction}
-        submitLabel={translateEvents("save")}
+        submitLabel={translateEvents("saveChanges")}
         event={event}
         reminderOffsets={reminderOffsets}
         dateOptions={dateOptions.map((option) =>
