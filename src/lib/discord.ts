@@ -5,7 +5,27 @@
 
 type DiscordEmbed = Record<string, unknown>
 
+/**
+ * A webhook is tied to one channel for good, so each destination needs its own.
+ *
+ * "announcements" is the channel everyone reads. "admin" is for messages only the admin
+ * should see — it falls back to announcements if unset, so a message is never silently
+ * dropped, just posted somewhere more public than intended.
+ */
+export type DiscordChannel = "announcements" | "admin"
+
+function webhookUrlFor(channel: DiscordChannel): string | undefined {
+  if (channel === "admin") {
+    return (
+      process.env.DISCORD_ADMIN_WEBHOOK_URL ?? process.env.DISCORD_WEBHOOK_URL
+    )
+  }
+
+  return process.env.DISCORD_WEBHOOK_URL
+}
+
 type PostOptions = {
+  channel: DiscordChannel
   content: string
   /** Role and user ids that this message is allowed to ping. */
   mentionRoleIds?: string[]
@@ -23,12 +43,13 @@ export function isDiscordConfigured(): boolean {
  * missing must never break the thing that triggered it.
  */
 export async function postToDiscord({
+  channel,
   content,
   mentionRoleIds = [],
   mentionUserIds = [],
   embeds,
 }: PostOptions): Promise<string | null> {
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL
+  const webhookUrl = webhookUrlFor(channel)
   if (!webhookUrl) return null
 
   try {

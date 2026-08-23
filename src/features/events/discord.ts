@@ -87,6 +87,7 @@ export async function postEventToDiscord({
   const roleId = process.env.DISCORD_MEMBER_ROLE_ID
 
   return postToDiscord({
+    channel: "announcements",
     content: `${mentionRole(roleId)}${leadText}`,
     mentionRoleIds: roleId ? [roleId] : [],
     embeds: [buildEmbed(event, locale)],
