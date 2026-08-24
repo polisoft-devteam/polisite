@@ -38,6 +38,7 @@ export function FormSelect({
   return (
     <div className="relative">
       <select
+        data-slot="form-select"
         className={cn(
           "border-input bg-background focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 h-9 w-full appearance-none rounded-md border py-1 pr-9 pl-3 text-sm shadow-xs focus-visible:ring-[3px] focus-visible:outline-none aria-invalid:ring-3",
           className,

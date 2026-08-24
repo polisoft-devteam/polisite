@@ -167,6 +167,11 @@ twice, it becomes a component — that is the whole reason these exist:
 - **Colours come from tokens, never literals.** `bg-primary`, `text-muted-foreground`,
   `bg-card`, `border-border`. No `bg-slate-800`, no hex. Every token is defined once in
   `globals.css` for light and dark, so re-theming the whole site is one file.
+- **Density is tokens too**: `--control-height` and `--field-gap`. Tightening the forms is
+  an edit in `:root`, not a pass through every component.
+- **`/design` lists every component in every state.** Look there when changing anything
+  visual — it's faster than clicking through the app, and it's where a broken state shows
+  up. Add new components to it.
 - Headings use `font-heading`; body inherits `font-sans`.
 - **Invalid fields get `aria-invalid`, never `reportValidity()`.** The browser's validation
   bubble is an OS widget that can't be styled; `aria-invalid` turns the border red through

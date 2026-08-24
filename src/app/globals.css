@@ -9,7 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-heading-family);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,73 +48,108 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* --- Palette ----------------------------------------------------------------
+   Every colour in the app resolves to one of these. Changing the association's
+   look is changing this block, not chasing classes through components.
+
+   Deep teal as the primary, warm amber as the accent: the association's own
+   world is hikes, ski trips, saunas and skating, so a cold green with a warm
+   highlight reads closer to that than the default greyscale did. Neutrals carry
+   a slight cool bias so they look chosen rather than inherited. */
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.99 0.003 210);
+  --foreground: oklch(0.21 0.017 220);
+
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: var(--foreground);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(0.46 0.068 185);
+  --primary-foreground: oklch(0.99 0.004 185);
+
+  /* Warm sand, so a secondary button reads as quieter rather than colder. */
+  --secondary: oklch(0.94 0.021 82);
+  --secondary-foreground: oklch(0.32 0.032 82);
+
+  --muted: oklch(0.96 0.005 210);
+  --muted-foreground: oklch(0.51 0.019 218);
+
+  --accent: oklch(0.72 0.125 68);
+  --accent-foreground: oklch(0.24 0.035 68);
+
+  --destructive: oklch(0.58 0.21 25);
+
+  --border: oklch(0.9 0.006 215);
+  --input: oklch(0.89 0.007 215);
+  --ring: oklch(0.46 0.068 185);
+
+  --chart-1: oklch(0.46 0.068 185);
+  --chart-2: oklch(0.72 0.125 68);
+  --chart-3: oklch(0.6 0.06 240);
+  --chart-4: oklch(0.68 0.09 140);
+  --chart-5: oklch(0.55 0.1 320);
+
+  --radius: 0.5rem;
+
+  --sidebar: oklch(0.98 0.004 210);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--muted);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
+  /* Density. Kept as tokens so "make the forms tighter" is one edit. */
+  --control-height: 2rem;
+  --field-gap: 1.25rem;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: oklch(0.18 0.012 220);
+  --foreground: oklch(0.95 0.005 210);
+
+  --card: oklch(0.22 0.014 220);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.22 0.014 220);
+  --popover-foreground: var(--foreground);
+
+  /* Lifted well above the light-mode teal: the same value on a dark ground reads
+     as almost black. */
+  --primary: oklch(0.74 0.096 184);
+  --primary-foreground: oklch(0.19 0.022 184);
+
+  --secondary: oklch(0.31 0.022 82);
+  --secondary-foreground: oklch(0.93 0.014 82);
+
+  --muted: oklch(0.26 0.012 220);
+  --muted-foreground: oklch(0.69 0.016 212);
+
+  --accent: oklch(0.77 0.125 68);
+  --accent-foreground: oklch(0.2 0.03 68);
+
+  --destructive: oklch(0.68 0.18 25);
+
+  --border: oklch(0.31 0.012 220);
+  --input: oklch(0.34 0.013 220);
+  --ring: oklch(0.74 0.096 184);
+
+  --chart-1: oklch(0.74 0.096 184);
+  --chart-2: oklch(0.77 0.125 68);
+  --chart-3: oklch(0.68 0.08 240);
+  --chart-4: oklch(0.74 0.1 140);
+  --chart-5: oklch(0.68 0.11 320);
+
+  --sidebar: oklch(0.21 0.013 220);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--muted);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 @layer base {
@@ -219,4 +254,17 @@ label:has(input[type="checkbox"]:not(:disabled)),
 summary,
 a[href] {
   cursor: pointer;
+}
+
+/* --- Density ----------------------------------------------------------------
+   Applied through data-slot so the shadcn components stay regenerable. Height
+   and gap come from tokens, so tightening the forms is one edit in :root. */
+
+[data-slot="input"]:not([type="file"]),
+[data-slot="form-select"] {
+  height: var(--control-height);
+}
+
+[data-slot="button"]:not(.h-6, .h-7, .h-9, .size-6, .size-7, .size-9) {
+  height: var(--control-height);
 }
