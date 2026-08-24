@@ -17,7 +17,8 @@
     "discord:test": "tsx --env-file=.env.local scripts/test-discord.mts",
     "storage:setup": "tsx --env-file=.env.local scripts/setup-storage.mts",
     "images:optimize": "tsx scripts/optimize-images.mts",
-    "member:reset": "tsx --env-file=.env.local scripts/reset-member.mts"
+    "member:reset": "tsx --env-file=.env.local scripts/reset-member.mts",
+    "events:seed": "tsx --env-file=.env.local scripts/seed-events.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

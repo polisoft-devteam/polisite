@@ -398,6 +398,44 @@ export async function findAttendeesForEvent(
     .orderBy(asc(members.fullName))
 }
 
+/**
+ * Everyone going, for a list of events, keyed by event id.
+ *
+ * One query for the whole page rather than one per card — a grid of twelve events would
+ * otherwise be twelve round trips.
+ */
+export async function findGoingAttendeesByEvent(
+  eventIds: string[],
+): Promise<Map<string, Attendee[]>> {
+  const byEvent = new Map<string, Attendee[]>()
+  if (eventIds.length === 0) return byEvent
+
+  const rows = await db
+    .select({
+      eventId: eventAttendees.eventId,
+      memberId: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+      avatarUrl: members.avatarUrl,
+      response: eventAttendees.response,
+    })
+    .from(eventAttendees)
+    .innerJoin(members, eq(members.id, eventAttendees.memberId))
+    .where(
+      and(
+        inArray(eventAttendees.eventId, eventIds),
+        eq(eventAttendees.response, "going"),
+      ),
+    )
+    .orderBy(asc(members.fullName))
+
+  for (const { eventId, ...attendee } of rows) {
+    byEvent.set(eventId, [...(byEvent.get(eventId) ?? []), attendee])
+  }
+
+  return byEvent
+}
+
 export async function setAttendance(
   eventId: string,
   memberId: string,
