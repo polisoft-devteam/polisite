@@ -4,6 +4,13 @@
 // Members-only rather than public: it's a working tool, not a page anyone needs.
 
 import type { Metadata } from "next"
+import {
+  Anton,
+  Bricolage_Grotesque,
+  Outfit,
+  Plus_Jakarta_Sans,
+  Space_Grotesk,
+} from "next/font/google"
 
 import { EmptyState } from "@/components/EmptyState"
 import { Fact, FactList } from "@/components/FactList"
@@ -26,6 +33,46 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 export const metadata: Metadata = { title: "Design" }
+
+// Imported here rather than in the layout, so these only download on this page.
+const outfit = Outfit({ subsets: ["latin"] })
+const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] })
+const bricolage = Bricolage_Grotesque({ subsets: ["latin"] })
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"] })
+const anton = Anton({ subsets: ["latin"], weight: "400" })
+
+const HEADING_CANDIDATES = [
+  {
+    name: "Fraunces",
+    note: "Nuvarande. Variabel serif, varm och redaktionell.",
+    className: "font-heading",
+  },
+  {
+    name: "Outfit",
+    note: "Geometrisk sans. Ren och modern, lite anonym.",
+    className: outfit.className,
+  },
+  {
+    name: "Space Grotesk",
+    note: "Teknisk känsla. Närmast spelvärlden av dessa.",
+    className: spaceGrotesk.className,
+  },
+  {
+    name: "Bricolage Grotesque",
+    note: "Egensinnig. Mest personlighet, minst neutral.",
+    className: bricolage.className,
+  },
+  {
+    name: "Plus Jakarta Sans",
+    note: "Vänlig och rundad. Trygg men inte tråkig.",
+    className: jakarta.className,
+  },
+  {
+    name: "Anton",
+    note: "Tung display. Affischenergi — bara för rubriker.",
+    className: anton.className,
+  },
+]
 
 const TOKENS = [
   { name: "background", label: "background" },
@@ -69,6 +116,33 @@ export default function DesignPage() {
               />
               <p className="text-muted-foreground font-mono text-xs">
                 {token.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </PageSection>
+
+      <PageSection heading="Typsnitt att välja mellan">
+        <p className="text-muted-foreground text-sm">
+          Samma rubrik i varje kandidat. Säg vilken du vill ha så byter jag —
+          det är en rad i layouten.
+        </p>
+
+        <div className="space-y-6">
+          {HEADING_CANDIDATES.map((candidate) => (
+            <div key={candidate.name} className="border-border border-t pt-4">
+              <p className="text-muted-foreground font-mono text-xs">
+                {candidate.name} — {candidate.note}
+              </p>
+              <p
+                className={`${candidate.className} mt-2 text-3xl font-semibold tracking-tight`}
+              >
+                Bastufestival på Ön
+              </p>
+              <p
+                className={`${candidate.className} mt-1 text-xl font-semibold`}
+              >
+                Poli Meet — årets träff
               </p>
             </div>
           ))}
