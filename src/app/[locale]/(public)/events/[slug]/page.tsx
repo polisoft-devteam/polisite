@@ -7,6 +7,7 @@ import {
   setRequestLocale,
 } from "next-intl/server"
 
+import { AttendeeAvatars } from "@/components/AttendeeAvatars"
 import { EventDatePoll } from "@/components/EventDatePoll"
 import { EventRsvp } from "@/components/EventRsvp"
 import { EmptyState } from "@/components/EmptyState"
@@ -238,6 +239,8 @@ export default async function EventPage({
       />
 
       <PageSection heading={translateEvents("attendees")}>
+        <AttendeeAvatars attendees={goingAttendees} />
+
         {attendees.length === 0 ? (
           <EmptyState>{translateEvents("attendeesEmpty")}</EmptyState>
         ) : (

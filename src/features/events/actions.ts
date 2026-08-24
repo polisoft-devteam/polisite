@@ -24,6 +24,7 @@ import { redirect } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import {
   canCreateEvent,
+  canDeleteEvent,
   canEditEvent,
   canRespondToEvent,
   visibleEventVisibilitiesFor,
@@ -79,6 +80,9 @@ export async function createEventAction(formData: FormData) {
       wallTimeToInstant(wallTime, form.timeZone),
     ),
   )
+
+  // Whoever arranges it is coming, so don't make them click that separately.
+  await setAttendance(event.id, viewer!.member!.id, "going")
 
   const locale = await getLocale()
 
@@ -177,7 +181,7 @@ export async function deleteEventAction(formData: FormData) {
     visibleEventVisibilitiesFor(viewer),
   )
 
-  if (!existing || !canEditEvent(viewer, existing)) {
+  if (!existing || !canDeleteEvent(viewer, existing)) {
     throw new Error("Not allowed to delete this event")
   }
 

@@ -130,7 +130,8 @@
     "publish": "Publish event",
     "saveChanges": "Save changes",
     "publishSummary": "The event is only saved when you click here. Nothing goes to Discord before that.",
-    "orDivider": "Or"
+    "orDivider": "Or",
+    "goingCount": "{count, plural, one {# going} other {# going}}"
   },
   "Calendar": {
     "title": "Calendar",

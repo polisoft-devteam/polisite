@@ -130,7 +130,8 @@
     "publish": "Publicera event",
     "saveChanges": "Spara ändringar",
     "publishSummary": "Eventet sparas först när du klickar här. Inget skickas till Discord innan dess.",
-    "orDivider": "Eller"
+    "orDivider": "Eller",
+    "goingCount": "{count, plural, one {# kommer} other {# kommer}}"
   },
   "Calendar": {
     "title": "Kalender",
