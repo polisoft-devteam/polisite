@@ -128,6 +128,10 @@ export const eventCategoryEnum = pgEnum("event_category", [
 export const events = pgTable("events", {
   id: uuid("id").primaryKey().defaultRandom(),
 
+  // Frozen when the event is created, so a link already posted to Discord keeps working
+  // even if the title changes. See lib/slug.ts.
+  slug: text("slug").notNull().unique(),
+
   title: text("title").notNull(),
   description: text("description"),
 

@@ -40,7 +40,7 @@ export async function EventList({
           return (
             <li key={event.id}>
               <Link
-                href={`/events/${event.id}`}
+                href={`/events/${event.slug}`}
                 transitionTypes={["nav-forward"]}
                 className="hover:bg-muted/50 flex flex-col gap-1 p-4 transition-colors sm:flex-row sm:items-baseline sm:justify-between"
               >

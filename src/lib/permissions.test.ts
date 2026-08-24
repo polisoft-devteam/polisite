@@ -51,6 +51,7 @@ function buildEvent(overrides: Partial<Event> = {}): Event {
     id: "event-1",
     title: "Bastufestival",
     description: null,
+    slug: "test-event",
     kind: "confirmed",
     startsAt: new Date("2026-10-04T18:00:00Z"),
     endsAt: null,

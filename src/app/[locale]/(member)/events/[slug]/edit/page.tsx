@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { deleteEventAction, updateEventAction } from "@/features/events/actions"
 import {
   findDateOptionsForEvent,
-  findEventById,
+  findEventBySlug,
   findReminderOffsetsForEvent,
 } from "@/features/events/queries"
 import { getViewer } from "@/lib/auth"
@@ -20,7 +20,7 @@ import { instantToWallTime } from "@/lib/time"
 
 export async function generateMetadata({
   params,
-}: PageProps<"/[locale]/events/[eventId]/edit">): Promise<Metadata> {
+}: PageProps<"/[locale]/events/[slug]/edit">): Promise<Metadata> {
   const { locale } = await params
   const translateEvents = await getTranslations({
     locale,
@@ -32,17 +32,14 @@ export async function generateMetadata({
 
 export default async function EditEventPage({
   params,
-}: PageProps<"/[locale]/events/[eventId]/edit">) {
-  const { locale, eventId } = await params
+}: PageProps<"/[locale]/events/[slug]/edit">) {
+  const { locale, slug } = await params
   setRequestLocale(locale)
 
   const translateEvents = await getTranslations("Events")
   const viewer = await getViewer()
 
-  const event = await findEventById(
-    eventId,
-    visibleEventVisibilitiesFor(viewer),
-  )
+  const event = await findEventBySlug(slug, visibleEventVisibilitiesFor(viewer))
 
   // Not the creator and not an admin gets the same answer as a missing event.
   if (!event || !canEditEvent(viewer, event)) notFound()
@@ -54,7 +51,7 @@ export default async function EditEventPage({
 
   return (
     <PageContainer>
-      <BackLink href={`/events/${event.id}`}>{event.title}</BackLink>
+      <BackLink href={`/events/${event.slug}`}>{event.title}</BackLink>
 
       <div className="mt-4">
         <PageHeading title={translateEvents("editTitle")} />

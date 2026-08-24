@@ -27,7 +27,7 @@ import {
 import {
   findAttendeesForEvent,
   findDateOptionsForEvent,
-  findEventById,
+  findEventBySlug,
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
@@ -40,13 +40,10 @@ import {
 
 export async function generateMetadata({
   params,
-}: PageProps<"/[locale]/events/[eventId]">): Promise<Metadata> {
-  const { locale, eventId } = await params
+}: PageProps<"/[locale]/events/[slug]">): Promise<Metadata> {
+  const { locale, slug } = await params
   const viewer = await getViewer()
-  const event = await findEventById(
-    eventId,
-    visibleEventVisibilitiesFor(viewer),
-  )
+  const event = await findEventBySlug(slug, visibleEventVisibilitiesFor(viewer))
 
   if (!event) {
     const translateEvents = await getTranslations({
@@ -61,18 +58,15 @@ export async function generateMetadata({
 
 export default async function EventPage({
   params,
-}: PageProps<"/[locale]/events/[eventId]">) {
-  const { locale, eventId } = await params
+}: PageProps<"/[locale]/events/[slug]">) {
+  const { locale, slug } = await params
   setRequestLocale(locale)
 
   const translateEvents = await getTranslations("Events")
   const format = await getFormatter({ locale })
   const viewer = await getViewer()
 
-  const event = await findEventById(
-    eventId,
-    visibleEventVisibilitiesFor(viewer),
-  )
+  const event = await findEventBySlug(slug, visibleEventVisibilitiesFor(viewer))
 
   // A forbidden event and a missing one give the same answer, so nobody can probe ids to
   // learn which members-only events exist.
@@ -108,7 +102,7 @@ export default async function EventPage({
                 nativeButton={false}
                 render={
                   <Link
-                    href={`/events/${event.id}/edit`}
+                    href={`/events/${event.slug}/edit`}
                     transitionTypes={["nav-forward"]}
                   />
                 }

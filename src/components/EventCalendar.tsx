@@ -144,7 +144,7 @@ export async function EventCalendar({
                 {dayEvents.map((event) => (
                   <li key={event.id}>
                     <Link
-                      href={`/events/${event.id}`}
+                      href={`/events/${event.slug}`}
                       transitionTypes={["nav-forward"]}
                       title={event.title}
                       className="bg-primary/10 hover:bg-primary/20 block truncate rounded px-1.5 py-0.5 text-[11px] leading-tight transition-colors"

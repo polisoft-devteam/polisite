@@ -27,7 +27,7 @@ const CATEGORY_EMOJI: Record<Event["category"], string> = {
 }
 
 function buildEventUrl(event: Event, locale: string): string {
-  return `${getSiteUrl()}/${locale}/events/${event.id}`
+  return `${getSiteUrl()}/${locale}/events/${event.slug}`
 }
 
 function buildEmbed(event: Event, locale: string) {

@@ -8,6 +8,7 @@
 import { and, asc, desc, eq, gte, inArray, isNull, lt, sql } from "drizzle-orm"
 
 import { db } from "@/db"
+import { buildEventSlug, toUniqueSlug } from "@/lib/slug"
 import {
   eventAttendees,
   eventDateOptions,
@@ -100,6 +101,27 @@ export async function findDatelessEvents(
     .orderBy(desc(events.createdAt))
 }
 
+/** Looked up by the readable URL. Same null-for-forbidden rule as findEventById. */
+export async function findEventBySlug(
+  slug: string,
+  allowedVisibilities: EventVisibility[],
+): Promise<Event | null> {
+  if (allowedVisibilities.length === 0) return null
+
+  const [event] = await db
+    .select()
+    .from(events)
+    .where(
+      and(
+        eq(events.slug, slug),
+        inArray(events.visibility, allowedVisibilities),
+      ),
+    )
+    .limit(1)
+
+  return event ?? null
+}
+
 /** Null when the event doesn't exist *or* this viewer may not see it — same answer. */
 export async function findEventById(
   eventId: string,
@@ -121,11 +143,29 @@ export async function findEventById(
   return event ?? null
 }
 
+async function isSlugTaken(slug: string): Promise<boolean> {
+  const [existing] = await db
+    .select({ id: events.id })
+    .from(events)
+    .where(eq(events.slug, slug))
+    .limit(1)
+
+  return Boolean(existing)
+}
+
 export async function createEvent(
-  event: NewEvent,
+  event: Omit<NewEvent, "slug">,
   reminderOffsets: ReminderOffset[],
 ): Promise<Event> {
-  const [created] = await db.insert(events).values(event).returning()
+  const slug = await toUniqueSlug(
+    buildEventSlug(event.title, event.startsAt ?? null, event.timeZone ?? ""),
+    isSlugTaken,
+  )
+
+  const [created] = await db
+    .insert(events)
+    .values({ ...event, slug })
+    .returning()
 
   if (reminderOffsets.length > 0) {
     await db

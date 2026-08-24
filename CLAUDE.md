@@ -97,6 +97,11 @@ Excluded in the query, not in rendering.
 - **Permissions live in `src/lib/permissions.ts`** as plain functions (`canEditEvent(viewer, event)`).
   One place, one language. If you can't answer "who can see this?" by reading that file, it's wrong.
 - **Schema changes go through Drizzle migrations**, committed to git, applied by command.
+  **Read the generated SQL before applying it.** drizzle-kit guesses at renames and cannot
+  know a table has rows — a `NOT NULL` column added in one statement fails on any
+  non-empty table. Both have already caused broken migrations here.
+- **Event URLs use a slug**, frozen when the event is created, so a link already posted to
+  Discord survives a rename. Look events up by slug in pages, by id everywhere else.
 - **Server Components by default.** Add `"use client"` only for genuine interactivity.
 - **Validate input with Zod at the server boundary**, including Server Actions. Client
   validation is a convenience, never a control.

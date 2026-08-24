@@ -100,7 +100,7 @@ export async function createEventAction(formData: FormData) {
   }
 
   revalidatePath("/", "layout")
-  redirect({ href: `/events/${event.id}`, locale })
+  redirect({ href: `/events/${event.slug}`, locale })
 }
 
 export async function updateEventAction(formData: FormData) {
@@ -164,7 +164,8 @@ export async function updateEventAction(formData: FormData) {
   }
 
   revalidatePath("/", "layout")
-  redirect({ href: `/events/${eventId}`, locale: await getLocale() })
+  // The slug is frozen at creation, so an edited title keeps the same URL.
+  redirect({ href: `/events/${existing.slug}`, locale: await getLocale() })
 }
 
 export async function deleteEventAction(formData: FormData) {
