@@ -8,6 +8,7 @@ import { getFormatter, getTranslations } from "next-intl/server"
 
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { SiteImage } from "@/components/SiteImage"
+import { SuggestionRibbon } from "@/components/SuggestionRibbon"
 import type { Event } from "@/db/schema"
 import {
   EVENT_CATEGORY_ICON,
@@ -42,6 +43,7 @@ export async function EventCard({
       className="group border-border bg-card focus-visible:ring-ring/50 block overflow-hidden rounded-lg border transition-shadow hover:shadow-lg focus-visible:ring-3 focus-visible:outline-none"
     >
       <div className="relative aspect-4/3 overflow-hidden">
+        {event.kind === "suggestion" && <SuggestionRibbon />}
         {event.imageUrl ? (
           <SiteImage
             src={event.imageUrl}

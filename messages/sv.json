@@ -158,7 +158,10 @@
     "saveChanges": "Spara ändringar",
     "publishSummary": "Eventet sparas först när du klickar här. Inget skickas till Discord innan dess.",
     "orDivider": "Eller",
-    "goingCount": "{count, plural, one {# kommer} other {# kommer}}"
+    "goingCount": "{count, plural, one {# kommer} other {# kommer}}",
+    "suggestionRibbon": "Förslag",
+    "suggestionCalloutTitle": "Det här är bara ett förslag",
+    "suggestionCalloutBody": "Inget är spikat än. Anmäl dig om du vill att det ska bli av — blir vi tillräckligt många så kör vi."
   },
   "Calendar": {
     "title": "Kalender",

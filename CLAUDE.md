@@ -150,6 +150,7 @@ twice, it becomes a component — that is the whole reason these exist:
 | `SectionHeading` (h2)                          | `<h2 className="text-lg font-medium">`        |
 | `EmptyState`                                   | a dashed-border `<p>`                         |
 | `ItemList` / `ItemRow`                         | `<ul className="divide-y rounded-lg border">` |
+| `StackedList` / `StackedListItem`              | a hand-rolled `<ul>` of bordered cards        |
 | `FormField` (label + control + hint)           | a `space-y-2` div with a `Label`              |
 | `FormSelect`                                   | `<select>` with a copied class string         |
 | `MemberAvatar`                                 | `Avatar` + `AvatarImage` + `AvatarFallback`   |

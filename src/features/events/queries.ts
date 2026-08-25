@@ -209,10 +209,16 @@ export async function updateEvent(
 
 // --- Date poll ------------------------------------------------------------------
 
+export type DateVoter = {
+  memberId: string
+  fullName: string
+  avatarUrl: string | null
+}
+
 export type DateOptionWithVotes = {
   id: string
   startsAt: Date
-  voteCount: number
+  voters: DateVoter[]
   votedByViewer: boolean
 }
 
@@ -242,15 +248,23 @@ export async function findDateOptionsForEvent(
 
   if (options.length === 0) return []
 
+  // Joined to members so the poll can show who voted, not just how many.
   const votes = await db
-    .select()
+    .select({
+      dateOptionId: eventDateVotes.dateOptionId,
+      memberId: members.id,
+      fullName: members.fullName,
+      avatarUrl: members.avatarUrl,
+    })
     .from(eventDateVotes)
+    .innerJoin(members, eq(members.id, eventDateVotes.memberId))
     .where(
       inArray(
         eventDateVotes.dateOptionId,
         options.map((option) => option.id),
       ),
     )
+    .orderBy(asc(members.fullName))
 
   return options.map((option) => {
     const optionVotes = votes.filter((vote) => vote.dateOptionId === option.id)
@@ -258,7 +272,7 @@ export async function findDateOptionsForEvent(
     return {
       id: option.id,
       startsAt: option.startsAt,
-      voteCount: optionVotes.length,
+      voters: optionVotes.map(({ dateOptionId: _, ...voter }) => voter),
       votedByViewer: optionVotes.some(
         (vote) => vote.memberId === viewerMemberId,
       ),

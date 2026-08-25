@@ -158,7 +158,10 @@
     "saveChanges": "Save changes",
     "publishSummary": "The event is only saved when you click here. Nothing goes to Discord before that.",
     "orDivider": "Or",
-    "goingCount": "{count, plural, one {# going} other {# going}}"
+    "goingCount": "{count, plural, one {# going} other {# going}}",
+    "suggestionRibbon": "Idea",
+    "suggestionCalloutTitle": "This is only a suggestion",
+    "suggestionCalloutBody": "Nothing is settled yet. Sign up if you want it to happen — if enough of us are in, we'll do it."
   },
   "Calendar": {
     "title": "Calendar",

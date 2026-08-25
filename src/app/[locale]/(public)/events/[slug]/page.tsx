@@ -19,6 +19,7 @@ import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { SiteImage } from "@/components/SiteImage"
+import { SuggestionCallout } from "@/components/SuggestionCallout"
 import { Button } from "@/components/ui/button"
 import {
   EVENT_CATEGORY_LABEL_KEY,
@@ -187,6 +188,8 @@ export default async function EventPage({
           </Fact>
         </FactList>
       </div>
+
+      {event.kind === "suggestion" && <SuggestionCallout />}
 
       {event.imageUrl && (
         <div className="mt-6">
