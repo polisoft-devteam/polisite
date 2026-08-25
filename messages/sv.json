@@ -6,7 +6,8 @@
     "home": "Hem",
     "events": "Evenemang",
     "calendar": "Kalender",
-    "about": "Om oss"
+    "about": "Om oss",
+    "menu": "Meny"
   },
   "Home": {
     "title": "Välkommen",
@@ -183,7 +184,8 @@
   "Auth": {
     "signIn": "Logga in med Google",
     "signOut": "Logga ut",
-    "guest": "Gäst"
+    "guest": "Gäst",
+    "signInShort": "Logga in"
   },
   "Profile": {
     "title": "Min profil",

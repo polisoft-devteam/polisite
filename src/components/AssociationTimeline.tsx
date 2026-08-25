@@ -19,7 +19,7 @@ export async function AssociationTimeline() {
   const translateAbout = await getTranslations("About")
 
   return (
-    <div className="timeline relative mt-10">
+    <div className="timeline relative mt-10 overflow-x-clip">
       {/* The unlit spine, and the gradient that fills it as you scroll past. */}
       <div
         aria-hidden="true"

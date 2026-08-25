@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils"
 
 // Each extra photo gets its own offset and tilt, so a pile looks dropped rather than
 // arranged. Index 0 is the base image.
+// The overhang is smaller on a phone, where the column is the full screen width.
 const STACK_POSITIONS = [
   "relative w-full",
-  "absolute -bottom-4 -right-3 w-2/5 rotate-6",
+  "absolute -bottom-4 right-0 w-2/5 rotate-6 sm:-right-3",
   "absolute -bottom-6 left-2 w-1/3 -rotate-6",
 ]
 

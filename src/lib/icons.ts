@@ -13,6 +13,7 @@ export {
   ChevronDown as ChevronDownIcon,
   Check as CheckIcon,
   X as CloseIcon,
+  List as MenuIcon,
   Gear as SettingsIcon,
   Pencil as EditIcon,
   PlusLg as PlusIcon,

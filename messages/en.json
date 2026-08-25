@@ -6,7 +6,8 @@
     "home": "Home",
     "events": "Events",
     "calendar": "Calendar",
-    "about": "About"
+    "about": "About",
+    "menu": "Menu"
   },
   "Home": {
     "title": "Welcome",
@@ -183,7 +184,8 @@
   "Auth": {
     "signIn": "Sign in with Google",
     "signOut": "Sign out",
-    "guest": "Guest"
+    "guest": "Guest",
+    "signInShort": "Sign in"
   },
   "Profile": {
     "title": "My profile",
