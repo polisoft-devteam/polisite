@@ -18,7 +18,34 @@
     "title": "About us",
     "intro": "Placeholder text. Write about what {associationName} is, why it exists and what we do together.",
     "membershipTitle": "Membership",
-    "membershipBody": "Placeholder text. Describe how to join {associationName} and what it involves."
+    "membershipBody": "Placeholder text. Describe how to join {associationName} and what it involves.",
+    "timeline": {
+      "before": {
+        "title": "Before all this",
+        "body": "A group who kept ending up in the same places. No association, no plans — just people who liked each other's company."
+      },
+      "founding": {
+        "title": "It started properly",
+        "body": "The first time somebody said it out loud: we should do this more often. We have done it more often ever since."
+      },
+      "firstTrip": {
+        "title": "The first trip",
+        "body": "Proof the group could manage more than one evening at a time. We came home tired and booked the next one."
+      },
+      "football": {
+        "title": "The football nights",
+        "body": "What was meant to be one match became a tradition. The bar knows who we are now."
+      },
+      "formalised": {
+        "title": "We became an association",
+        "body": "Statutes, a board and a shared fund. Not for the bureaucracy — so the things we share outlive us getting busy."
+      },
+      "today": {
+        "title": "Today",
+        "body": "Spread across several cities but sharing one calendar. That's why this site exists."
+      }
+    },
+    "timelineHeading": "How we got here"
   },
   "Events": {
     "title": "Events",

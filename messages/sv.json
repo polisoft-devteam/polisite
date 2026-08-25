@@ -18,7 +18,34 @@
     "title": "Om oss",
     "intro": "Platshållartext. Skriv om vad {associationName} är, varför föreningen finns och vad vi gör tillsammans.",
     "membershipTitle": "Medlemskap",
-    "membershipBody": "Platshållartext. Beskriv hur man blir medlem i {associationName} och vad det innebär."
+    "membershipBody": "Platshållartext. Beskriv hur man blir medlem i {associationName} och vad det innebär.",
+    "timeline": {
+      "before": {
+        "title": "Innan allt",
+        "body": "Ett gäng som råkade hamna på samma ställen. Ingen förening, inga planer — bara personer som gillade varandras sällskap."
+      },
+      "founding": {
+        "title": "Det började på riktigt",
+        "body": "Första gången någon sa det högt: vi borde göra det här oftare. Sedan dess har vi gjort det oftare."
+      },
+      "firstTrip": {
+        "title": "Första resan",
+        "body": "Bevis på att gruppen klarar mer än en kväll i taget. Vi kom hem trötta och bokade nästa."
+      },
+      "football": {
+        "title": "Fotbollsfesterna",
+        "body": "Det som skulle vara en match blev en tradition. Numera vet baren vilka vi är."
+      },
+      "formalised": {
+        "title": "Vi blev en förening",
+        "body": "Stadgar, styrelse och en kassa. Inte för byråkratin — för att det som är gemensamt ska överleva att vi blir upptagna."
+      },
+      "today": {
+        "title": "Idag",
+        "body": "Utspridda över flera städer men med samma kalender. Det är därför den här sidan finns."
+      }
+    },
+    "timelineHeading": "Så här långt"
   },
   "Events": {
     "title": "Evenemang",

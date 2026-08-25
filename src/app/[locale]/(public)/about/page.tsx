@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { AssociationTimeline } from "@/components/AssociationTimeline"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
@@ -29,6 +30,10 @@ export default async function AboutPage({
       <p className="text-muted-foreground mt-4 max-w-2xl">
         {translateAbout("intro", { associationName: ASSOCIATION_NAME })}
       </p>
+
+      <PageSection heading={translateAbout("timelineHeading")}>
+        <AssociationTimeline />
+      </PageSection>
 
       <PageSection heading={translateAbout("membershipTitle")}>
         <p className="text-muted-foreground max-w-2xl">
