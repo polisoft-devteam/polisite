@@ -15,6 +15,7 @@ import {
 import { EmptyState } from "@/components/EmptyState"
 import { Fact, FactList } from "@/components/FactList"
 import { FormField, FormSelect } from "@/components/FormField"
+import { ExternalLink } from "@/components/ExternalLink"
 import { ItemList } from "@/components/ItemList"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { Modal, ModalClose } from "@/components/Modal"
@@ -31,6 +32,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { ExternalLinkIcon, GoogleIcon } from "@/lib/icons"
 
 export const metadata: Metadata = { title: "Design" }
 
@@ -240,6 +242,22 @@ export default function DesignPage() {
             />
             Kryssruta
           </label>
+        </div>
+      </PageSection>
+
+      <PageSection heading="Länkar">
+        <div className="flex flex-wrap items-center gap-6 text-sm">
+          <ExternalLink href="https://www.google.com/maps/search/?api=1&query=Hotell+Pigalle+G%C3%B6teborg">
+            <GoogleIcon className="size-3.5" />
+            Visa på karta
+          </ExternalLink>
+
+          <ExternalLink href="https://example.com">
+            <ExternalLinkIcon className="size-3.5" />
+            Mer information
+          </ExternalLink>
+
+          <ExternalLink href="https://example.com">Utan ikon</ExternalLink>
         </div>
       </PageSection>
 

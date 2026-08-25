@@ -32,7 +32,7 @@ import {
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { EditIcon } from "@/lib/icons"
+import { EditIcon, ExternalLinkIcon, GoogleIcon } from "@/lib/icons"
 import {
   canEditEvent,
   canRespondToEvent,
@@ -160,8 +160,9 @@ export default async function EventPage({
               {/* A plain Maps search link needs no API key and no billing account. */}
               <ExternalLink
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
-                className="text-muted-foreground ml-2 underline underline-offset-4"
+                className="ml-2 text-sm"
               >
+                <GoogleIcon className="size-3.5" />
                 {translateEvents("showOnMap")}
               </ExternalLink>
             </Fact>
@@ -209,11 +210,13 @@ export default async function EventPage({
         <div className="mt-6 flex flex-wrap gap-4 text-sm">
           {event.eventUrl && (
             <ExternalLink href={event.eventUrl}>
+              <ExternalLinkIcon className="size-3.5" />
               {translateEvents("moreInfo")}
             </ExternalLink>
           )}
           {event.extraLinkUrl && (
             <ExternalLink href={event.extraLinkUrl}>
+              <ExternalLinkIcon className="size-3.5" />
               {translateEvents("extraLink")}
             </ExternalLink>
           )}

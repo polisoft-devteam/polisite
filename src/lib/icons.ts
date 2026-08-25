@@ -20,6 +20,9 @@ export {
   Moon as DarkThemeIcon,
   Display as SystemThemeIcon,
   Translate as LanguageIcon,
+  Google as GoogleIcon,
+  GeoAlt as MapPinIcon,
+  BoxArrowUpRight as ExternalLinkIcon,
   // Event categories
   MusicNoteBeamed as MusicIcon,
   Balloon as PartyIcon,
