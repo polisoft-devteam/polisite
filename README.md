@@ -1,7 +1,6 @@
 # Polisite
 
-Private site for Poli, a small Swedish association. Members, profiles, events, a calendar,
-date polls and Discord notifications. Discord stays the chat; this is the structured layer.
+Community site for Poli, featuring events and soon much more!
 
 ## Stack
 
@@ -18,12 +17,10 @@ date polls and Discord notifications. Discord stays the chat; this is the struct
 
 ## Running it
 
-Needs Node 22+, pnpm, and access to the Supabase project.
-
 ```bash
 git clone <repo-url> && cd polisite
 pnpm install
-cp .env.example .env.local     # then fill in the values — see the comments in the file
+cp .env.example .env.local     # then fill in the values / ask @VictorPersson
 pnpm db:migrate                # apply migrations to the database
 pnpm dev                       # http://localhost:3210
 ```
@@ -36,6 +33,7 @@ pnpm member you@example.com --status active --role admin
 
 ## Commands
 
+### General
 ```bash
 pnpm dev            # dev server on :3210
 pnpm build          # production build — run before pushing
@@ -43,10 +41,12 @@ pnpm lint           # ESLint + tsc
 pnpm test           # Vitest
 pnpm format         # Prettier
 
+### DB
 pnpm db:generate    # create a migration after editing src/db/schema.ts
 pnpm db:migrate     # apply migrations
 pnpm db:studio      # browse the data
 
+### Admin
 pnpm member <email> --status active --role admin   # promote someone
 pnpm member:reset <email>                          # wipe someone, for testing sign-up
 pnpm events:seed                                   # two example events, no Discord post
