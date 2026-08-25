@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Polisite
 
-## Getting Started
+Private site for Poli, a small Swedish association. Members, profiles, events, a calendar,
+date polls and Discord notifications. Discord stays the chat; this is the structured layer.
 
-First, run the development server:
+## Stack
+
+|           |                                                           |
+| --------- | --------------------------------------------------------- |
+| Framework | Next.js (App Router, React Server Components), TypeScript |
+| Database  | PostgreSQL on Supabase, via Drizzle ORM                   |
+| Auth      | Supabase Auth — Google sign-in only                       |
+| Files     | Supabase Storage, resized with sharp on upload            |
+| Styling   | Tailwind CSS + shadcn/ui, Bootstrap Icons                 |
+| Languages | Swedish and English (next-intl)                           |
+| Tests     | Vitest                                                    |
+| Hosting   | Vercel                                                    |
+
+## Running it
+
+Needs Node 22+, pnpm, and access to the Supabase project.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repo-url> && cd polisite
+pnpm install
+cp .env.example .env.local     # then fill in the values — see the comments in the file
+pnpm db:migrate                # apply migrations to the database
+pnpm dev                       # http://localhost:3210
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To use the site as a member, sign in with Google once, then:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm member you@example.com --status active --role admin
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Commands
 
-## Learn More
+```bash
+pnpm dev            # dev server on :3210
+pnpm build          # production build — run before pushing
+pnpm lint           # ESLint + tsc
+pnpm test           # Vitest
+pnpm format         # Prettier
 
-To learn more about Next.js, take a look at the following resources:
+pnpm db:generate    # create a migration after editing src/db/schema.ts
+pnpm db:migrate     # apply migrations
+pnpm db:studio      # browse the data
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+pnpm member <email> --status active --role admin   # promote someone
+pnpm member:reset <email>                          # wipe someone, for testing sign-up
+pnpm events:seed                                   # two example events, no Discord post
+pnpm discord:test                                  # check the webhook works
+pnpm storage:setup                                 # create the storage buckets
+pnpm images:optimize                               # resize anything in public/images
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Where things are
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `CLAUDE.md` — conventions, domain rules, and what to use instead of what. Read this first.
+- `PLAN.md` — build order and what's left.
+- `/design` — every UI component in every state, for judging visual changes.
