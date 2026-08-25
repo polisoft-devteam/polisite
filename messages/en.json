@@ -162,7 +162,15 @@
     "goingCount": "{count, plural, one {# going} other {# going}}",
     "suggestionRibbon": "Idea",
     "suggestionCalloutTitle": "This is only a suggestion",
-    "suggestionCalloutBody": "Nothing is settled yet. Sign up if you want it to happen — if enough of us are in, we'll do it."
+    "suggestionCalloutBody": "Nothing is settled yet. Sign up if you want it to happen — if enough of us are in, we'll do it.",
+    "guestsTitle": "Guests",
+    "guestsEmpty": "Nobody has brought anyone along yet.",
+    "guestBroughtBy": "With {memberName}",
+    "guestAdd": "Add",
+    "guestRemove": "Remove {guestName}",
+    "guestNameLabel": "Guest name",
+    "guestNamePlaceholder": "Name",
+    "guestLimitReached": "You've added {count} guests, which is the maximum."
   },
   "Calendar": {
     "title": "Calendar",

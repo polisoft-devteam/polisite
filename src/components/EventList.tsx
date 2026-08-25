@@ -4,7 +4,10 @@ import { EmptyState } from "@/components/EmptyState"
 import { EventCard } from "@/components/EventCard"
 import { PageSection } from "@/components/PageSection"
 import type { Event } from "@/db/schema"
-import { findGoingAttendeesByEvent } from "@/features/events/queries"
+import {
+  findGoingAttendeesByEvent,
+  findGuestsByEvent,
+} from "@/features/events/queries"
 
 export async function EventList({
   heading,
@@ -25,10 +28,12 @@ export async function EventList({
     )
   }
 
-  // One query for the whole grid, not one per card.
-  const attendeesByEvent = await findGoingAttendeesByEvent(
-    events.map((event) => event.id),
-  )
+  // One query each for the whole grid, not one per card.
+  const eventIds = events.map((event) => event.id)
+  const [attendeesByEvent, guestsByEvent] = await Promise.all([
+    findGoingAttendeesByEvent(eventIds),
+    findGuestsByEvent(eventIds),
+  ])
 
   return (
     <PageSection heading={heading}>
@@ -38,6 +43,7 @@ export async function EventList({
             key={event.id}
             event={event}
             attendees={attendeesByEvent.get(event.id) ?? []}
+            guests={guestsByEvent.get(event.id) ?? []}
             locale={locale}
           />
         ))}

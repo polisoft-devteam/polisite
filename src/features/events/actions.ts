@@ -5,10 +5,15 @@ import { getLocale } from "next-intl/server"
 
 import { postEventToDiscord } from "@/features/events/discord"
 import {
+  addGuest,
+  countGuestsBroughtBy,
   createEvent,
   deleteEvent,
+  findAttendanceResponse,
   findEventById,
   findEventIdForDateOption,
+  findGuestById,
+  removeGuest,
   replaceDateOptions,
   setAttendance,
   setEventDateFromOption,
@@ -17,15 +22,20 @@ import {
 } from "@/features/events/queries"
 import {
   eventFormSchema,
+  guestFormSchema,
+  MAX_GUESTS_PER_MEMBER,
   readEventForm,
+  removeGuestFormSchema,
   toMinorUnits,
 } from "@/features/events/schemas"
 import { redirect } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import {
+  canBringGuests,
   canCreateEvent,
   canDeleteEvent,
   canEditEvent,
+  canRemoveGuest,
   canRespondToEvent,
   visibleEventVisibilitiesFor,
 } from "@/lib/permissions"
@@ -215,6 +225,65 @@ export async function setAttendanceAction(formData: FormData) {
     viewer!.member!.id,
     response as (typeof attendanceResponseEnum.enumValues)[number],
   )
+
+  revalidatePath("/", "layout")
+}
+
+export async function addGuestAction(formData: FormData) {
+  const viewer = await getViewer()
+
+  const parsed = guestFormSchema.safeParse({
+    eventId: String(formData.get("eventId") ?? ""),
+    name: String(formData.get("name") ?? ""),
+  })
+  if (!parsed.success) return
+
+  const { eventId, name } = parsed.data
+
+  const event = await findEventById(
+    eventId,
+    visibleEventVisibilitiesFor(viewer),
+  )
+  if (!event) throw new Error("Unknown event")
+
+  const memberId = viewer?.member?.id
+  if (!memberId) throw new Error("Not allowed to bring guests to this event")
+
+  const myResponse = await findAttendanceResponse(eventId, memberId)
+
+  if (!canBringGuests(viewer, event, myResponse)) {
+    throw new Error("Not allowed to bring guests to this event")
+  }
+
+  const alreadyBrought = await countGuestsBroughtBy(eventId, memberId)
+  if (alreadyBrought >= MAX_GUESTS_PER_MEMBER) return
+
+  await addGuest(eventId, memberId, name)
+
+  revalidatePath("/", "layout")
+}
+
+export async function removeGuestAction(formData: FormData) {
+  const viewer = await getViewer()
+
+  const parsed = removeGuestFormSchema.safeParse({
+    guestId: String(formData.get("guestId") ?? ""),
+  })
+  if (!parsed.success) return
+
+  const guest = await findGuestById(parsed.data.guestId)
+  if (!guest) return
+
+  // Re-read the event so someone who has lost access can't still reach in and edit it.
+  const event = await findEventById(
+    guest.eventId,
+    visibleEventVisibilitiesFor(viewer),
+  )
+  if (!event || !canRemoveGuest(viewer, guest)) {
+    throw new Error("Not allowed to remove this guest")
+  }
+
+  await removeGuest(guest.id)
 
   revalidatePath("/", "layout")
 }

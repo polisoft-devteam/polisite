@@ -162,7 +162,15 @@
     "goingCount": "{count, plural, one {# kommer} other {# kommer}}",
     "suggestionRibbon": "Förslag",
     "suggestionCalloutTitle": "Det här är bara ett förslag",
-    "suggestionCalloutBody": "Inget är spikat än. Anmäl dig om du vill att det ska bli av — blir vi tillräckligt många så kör vi."
+    "suggestionCalloutBody": "Inget är spikat än. Anmäl dig om du vill att det ska bli av — blir vi tillräckligt många så kör vi.",
+    "guestsTitle": "Medföljande",
+    "guestsEmpty": "Ingen har tagit med sig någon än.",
+    "guestBroughtBy": "Med {memberName}",
+    "guestAdd": "Lägg till",
+    "guestRemove": "Ta bort {guestName}",
+    "guestNameLabel": "Namn på medföljande",
+    "guestNamePlaceholder": "Namn",
+    "guestLimitReached": "Du har lagt till {count} medföljande, vilket är max."
   },
   "Calendar": {
     "title": "Kalender",

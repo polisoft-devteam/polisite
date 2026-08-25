@@ -5,7 +5,18 @@
 // SQL. Fetching everything and hiding rows in the component would ship private data to
 // the browser and only pretend to hide it.
 
-import { and, asc, desc, eq, gte, inArray, isNull, lt, sql } from "drizzle-orm"
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gte,
+  inArray,
+  isNull,
+  lt,
+  sql,
+} from "drizzle-orm"
 
 import { db } from "@/db"
 import { buildEventSlug, toUniqueSlug } from "@/lib/slug"
@@ -13,11 +24,13 @@ import {
   eventAttendees,
   eventDateOptions,
   eventDateVotes,
+  eventGuests,
   eventReminders,
   events,
   members,
   type AttendanceResponse,
   type Event,
+  type EventGuest,
   type EventVisibility,
   type NewEvent,
   type ReminderOffset,
@@ -448,6 +461,119 @@ export async function findGoingAttendeesByEvent(
   }
 
   return byEvent
+}
+
+/** This member's own answer, for rules that depend on whether they're going. */
+export async function findAttendanceResponse(
+  eventId: string,
+  memberId: string,
+): Promise<AttendanceResponse | null> {
+  const [row] = await db
+    .select({ response: eventAttendees.response })
+    .from(eventAttendees)
+    .where(
+      and(
+        eq(eventAttendees.eventId, eventId),
+        eq(eventAttendees.memberId, memberId),
+      ),
+    )
+    .limit(1)
+
+  return row?.response ?? null
+}
+
+// --- Brought-along guests ------------------------------------------------------
+
+export type EventGuestWithInviter = {
+  id: string
+  name: string
+  invitedByMemberId: string
+  invitedByName: string
+}
+
+export async function findGuestsForEvent(
+  eventId: string,
+): Promise<EventGuestWithInviter[]> {
+  return db
+    .select({
+      id: eventGuests.id,
+      name: eventGuests.name,
+      invitedByMemberId: eventGuests.invitedByMemberId,
+      invitedByName: members.fullName,
+    })
+    .from(eventGuests)
+    .innerJoin(members, eq(members.id, eventGuests.invitedByMemberId))
+    .where(eq(eventGuests.eventId, eventId))
+    .orderBy(asc(eventGuests.addedAt))
+}
+
+/** Guests for a list of events, keyed by event id. Batched like the attendee faces. */
+export async function findGuestsByEvent(
+  eventIds: string[],
+): Promise<Map<string, EventGuestWithInviter[]>> {
+  const byEvent = new Map<string, EventGuestWithInviter[]>()
+  if (eventIds.length === 0) return byEvent
+
+  const rows = await db
+    .select({
+      eventId: eventGuests.eventId,
+      id: eventGuests.id,
+      name: eventGuests.name,
+      invitedByMemberId: eventGuests.invitedByMemberId,
+      invitedByName: members.fullName,
+    })
+    .from(eventGuests)
+    .innerJoin(members, eq(members.id, eventGuests.invitedByMemberId))
+    .where(inArray(eventGuests.eventId, eventIds))
+    .orderBy(asc(eventGuests.addedAt))
+
+  for (const { eventId, ...guest } of rows) {
+    byEvent.set(eventId, [...(byEvent.get(eventId) ?? []), guest])
+  }
+
+  return byEvent
+}
+
+export async function addGuest(
+  eventId: string,
+  invitedByMemberId: string,
+  name: string,
+): Promise<void> {
+  await db.insert(eventGuests).values({ eventId, invitedByMemberId, name })
+}
+
+export async function findGuestById(
+  guestId: string,
+): Promise<EventGuest | undefined> {
+  const [guest] = await db
+    .select()
+    .from(eventGuests)
+    .where(eq(eventGuests.id, guestId))
+    .limit(1)
+
+  return guest
+}
+
+export async function removeGuest(guestId: string): Promise<void> {
+  await db.delete(eventGuests).where(eq(eventGuests.id, guestId))
+}
+
+/** How many guests a member has already brought, so the cap can be enforced. */
+export async function countGuestsBroughtBy(
+  eventId: string,
+  memberId: string,
+): Promise<number> {
+  const [row] = await db
+    .select({ total: count() })
+    .from(eventGuests)
+    .where(
+      and(
+        eq(eventGuests.eventId, eventId),
+        eq(eventGuests.invitedByMemberId, memberId),
+      ),
+    )
+
+  return row?.total ?? 0
 }
 
 export async function setAttendance(

@@ -3,7 +3,13 @@
 //
 // These are plain functions over plain data so they can be tested without a database.
 
-import type { Event, EventVisibility, Member, Role } from "@/db/schema"
+import type {
+  AttendanceResponse,
+  Event,
+  EventVisibility,
+  Member,
+  Role,
+} from "@/db/schema"
 
 /** What a permission check needs to know about the person looking. */
 export type Viewer = {
@@ -91,4 +97,35 @@ export function canRespondToEvent(
   event: Event,
 ): boolean {
   return isActiveMember(viewer) && canViewEvent(viewer, event)
+}
+
+/**
+ * Bringing a friend along needs three things: you're a member, you're going yourself, and
+ * the event isn't the members-only kind — "members" means us for us, so there is nobody
+ * to bring.
+ */
+export function canBringGuests(
+  viewer: Viewer | null,
+  event: Event,
+  myResponse: AttendanceResponse | null,
+): boolean {
+  if (!canRespondToEvent(viewer, event)) return false
+  if (event.visibility === "members") return false
+
+  return myResponse === "going"
+}
+
+/** Just enough about a brought-along guest to decide. */
+export type RemovableGuest = {
+  invitedByMemberId: string
+}
+
+/** You can take off the people you brought; admins can tidy up after anyone. */
+export function canRemoveGuest(
+  viewer: Viewer | null,
+  guest: RemovableGuest,
+): boolean {
+  if (!isActiveMember(viewer)) return false
+
+  return guest.invitedByMemberId === viewer!.member!.id || isAdmin(viewer)
 }

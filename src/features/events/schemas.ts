@@ -152,3 +152,18 @@ export function readEventForm(formData: FormData) {
 export function toMinorUnits(price: number | null): number | null {
   return price === null ? null : Math.round(price * 100)
 }
+
+/**
+ * How many people one member may bring. A cap because the form writes a row per submit
+ * and nothing else bounds it — not because anyone has ten friends too many.
+ */
+export const MAX_GUESTS_PER_MEMBER = 5
+
+export const guestFormSchema = z.object({
+  eventId: z.string().uuid(),
+  name: z.string().trim().min(1).max(80),
+})
+
+export const removeGuestFormSchema = z.object({
+  guestId: z.string().uuid(),
+})

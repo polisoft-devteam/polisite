@@ -14,6 +14,8 @@ export {
   Check as CheckIcon,
   X as CloseIcon,
   List as MenuIcon,
+  PersonFill as GuestIcon,
+  Trash as RemoveIcon,
   Gear as SettingsIcon,
   Pencil as EditIcon,
   PlusLg as PlusIcon,
