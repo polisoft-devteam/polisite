@@ -235,8 +235,14 @@ version matching each range — which silently pins ancient TypeScript. Don't re
 
 - **Never define or alter schema in the Supabase dashboard.** Migrations only. Anything
   defined by clicking is invisible to the repo and to whoever maintains this next.
-- **Never use Row Level Security.** Permissions belong in `permissions.ts`. Splitting them
+- **Never write an RLS _policy_.** Permissions belong in `permissions.ts`. Splitting them
   across SQL policies and TypeScript means neither can be read on its own.
+  **RLS itself must be enabled on every table**, with no policies at all — that is a lock,
+  not a permission system. Supabase serves the whole `public` schema over PostgREST to
+  anyone holding the publishable key, and that key ships in every browser; a table without
+  RLS is readable and writable by the public internet. The app connects as `postgres`,
+  which has BYPASSRLS, so it never notices. Every table in `schema.ts` ends in
+  `.enableRLS()` — a new table without it is public the moment it is migrated.
 - **Never import `src/db` outside `features/*/queries.ts`.**
 - **Never put authorization in `proxy.ts`.** It handles the language prefix and nothing
   else. Next's own docs say proxy is not a session or authorization solution — membership

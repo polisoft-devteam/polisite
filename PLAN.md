@@ -184,6 +184,11 @@ Members, login, profiles, events, calendar, RSVP, wishlist, deployed on a real d
 
 Ordered by likely value, not by effort:
 
+- **Repository automation** — GitHub Actions to tidy up what is currently manual:
+  run lint and tests on every push (the deferred half of 0.7), delete merged branches
+  automatically, and cut a release from `main`. None of it changes the app; it removes
+  steps that are easy to forget.
+
 - **Draft events** — for things permanently "in the planning" that shouldn't ping Discord
   every time they're touched. The announce checkbox already covers the create case, but
   a long-lived idea wants a state that keeps it off the main list and out of Discord until
