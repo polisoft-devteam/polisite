@@ -12,7 +12,21 @@ import {
   Space_Grotesk,
 } from "next/font/google"
 
+import { AttendeeAvatars } from "@/components/AttendeeAvatars"
+import { BackLink } from "@/components/BackLink"
 import { EmptyState } from "@/components/EmptyState"
+import { EventCard } from "@/components/EventCard"
+import { EventForm } from "@/components/EventForm"
+import { ProfileView } from "@/components/ProfileView"
+import { SectionHeading } from "@/components/SectionHeading"
+import { SuggestionCallout } from "@/components/SuggestionCallout"
+import { designNoOpAction } from "./actions"
+import {
+  buildSampleEvent,
+  buildSampleMember,
+  SAMPLE_ATTENDEES,
+  SAMPLE_GUESTS,
+} from "@/lib/design-samples"
 import { Fact, FactList } from "@/components/FactList"
 import { FormField, FormSelect } from "@/components/FormField"
 import { ExternalLink } from "@/components/ExternalLink"
@@ -99,7 +113,11 @@ const BUTTON_VARIANTS = [
 
 const BUTTON_SIZES = ["xs", "sm", "default", "lg"] as const
 
-export default function DesignPage() {
+export default async function DesignPage({
+  params,
+}: PageProps<"/[locale]/design">) {
+  const { locale } = await params
+
   return (
     <PageContainer>
       <PageHeading
@@ -336,6 +354,64 @@ export default function DesignPage() {
             Innehållet i dialogen.
           </p>
         </Modal>
+      </PageSection>
+
+      <PageSection heading="Eventkort">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <EventCard
+            event={buildSampleEvent()}
+            attendees={SAMPLE_ATTENDEES}
+            guests={SAMPLE_GUESTS}
+            locale={locale}
+          />
+          <EventCard
+            event={buildSampleEvent({
+              title: "Kan vi åka skridskor?",
+              kind: "suggestion",
+              startsAt: null,
+              category: "sport",
+            })}
+            attendees={[]}
+            locale={locale}
+          />
+          <EventCard
+            event={buildSampleEvent({
+              title: "Fullsatt fest",
+              category: "party",
+            })}
+            attendees={SAMPLE_ATTENDEES}
+            locale={locale}
+          />
+        </div>
+      </PageSection>
+
+      <PageSection heading="Deltagare">
+        <SectionHeading>Medlemmar och medföljande</SectionHeading>
+        <AttendeeAvatars attendees={SAMPLE_ATTENDEES} guests={SAMPLE_GUESTS} />
+
+        <SectionHeading>Bara medlemmar</SectionHeading>
+        <AttendeeAvatars attendees={SAMPLE_ATTENDEES} />
+
+        <SuggestionCallout />
+        <BackLink href="/design">Tillbaka</BackLink>
+      </PageSection>
+
+      <PageSection heading="Profil">
+        <ProfileView
+          member={buildSampleMember()}
+          upcomingEvents={[buildSampleEvent()]}
+          pastEvents={[]}
+          isOwnProfile={false}
+          locale={locale}
+        />
+      </PageSection>
+
+      <PageSection heading="Eventguiden">
+        <p className="text-muted-foreground text-sm">
+          Samma steg-för-steg-formulär som på /events/new. Knappen här sparar
+          ingenting.
+        </p>
+        <EventForm action={designNoOpAction} submitLabel="Spara (gör inget)" />
       </PageSection>
     </PageContainer>
   )
