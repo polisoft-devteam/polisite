@@ -184,6 +184,18 @@ Members, login, profiles, events, calendar, RSVP, wishlist, deployed on a real d
 
 Ordered by likely value, not by effort:
 
+- **Fun quotes** — Victor writes them; the app features them somewhere. Anyone can be
+  quoted: a member, a film character, or someone famous. So the attribution is free text
+  with an optional link to a member, not a foreign key — most quotes will have nobody in
+  the database to point at. Still open: shown one at a time on the home page, or a page of
+  the lot? And since a quote is user-written content it is never translated, like event
+  titles — see the languages rule in CLAUDE.md.
+
+- **Media archive** — somewhere to show things the association has made, starting with
+  Victor's film, **PoliFilms**. Open questions: members-only or public? One constraint is
+  already settled: Supabase Free is 1 GB in total, so a film has to be a YouTube or Vimeo
+  embed rather than a file in storage.
+
 - **Repository automation** — GitHub Actions to tidy up what is currently manual:
   run lint and tests on every push (the deferred half of 0.7), delete merged branches
   automatically, and cut a release from `main`. None of it changes the app; it removes
