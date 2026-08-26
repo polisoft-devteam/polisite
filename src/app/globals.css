@@ -102,6 +102,12 @@
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
 
+  /* The suggestion ribbon. Pink sits outside the teal/amber palette on purpose — it's a
+     status flag, not part of the brand, and should read as a sticker. */
+  --suggestion-from: oklch(0.68 0.19 350);
+  --suggestion-to: oklch(0.62 0.22 320);
+  --suggestion-foreground: oklch(0.99 0.01 350);
+
   /* Density. Kept as tokens so "make the forms tighter" is one edit. */
   --control-height: 2rem;
   --field-gap: 1.25rem;
@@ -141,6 +147,10 @@
   --chart-3: oklch(0.68 0.08 240);
   --chart-4: oklch(0.74 0.1 140);
   --chart-5: oklch(0.68 0.11 320);
+
+  --suggestion-from: oklch(0.72 0.19 350);
+  --suggestion-to: oklch(0.66 0.22 320);
+  --suggestion-foreground: oklch(0.15 0.02 350);
 
   --sidebar: oklch(0.21 0.013 220);
   --sidebar-foreground: var(--foreground);
@@ -269,28 +279,78 @@ a[href] {
   height: var(--control-height);
 }
 
-/* --- Timeline reveal ---------------------------------------------------------
-   Scroll-driven, so no JavaScript and no IntersectionObserver. Browsers without
-   animation-timeline support simply show the entries, which is the right
-   fallback rather than something to work around. */
+/* --- Timeline ----------------------------------------------------------------
+   Scroll-driven: the spine fills behind you, markers light up as they arrive, and
+   entries slide in from their own side. No JavaScript and no observers.
 
-@supports (animation-timeline: view()) {
-  @media not (prefers-reduced-motion: reduce) {
-    .timeline-entry {
-      animation: timeline-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 10% cover 30%;
-    }
+   Everything is inside @supports, so browsers without animation-timeline show the
+   finished state rather than an empty page — the right fallback, not a bug. */
+
+@keyframes timeline-spine-grow {
+  from {
+    scale: 1 0;
+  }
+  to {
+    scale: 1 1;
   }
 }
 
-@keyframes timeline-reveal {
+@keyframes timeline-enter-left {
   from {
     opacity: 0;
-    translate: 0 1.5rem;
+    translate: -3rem 0;
   }
   to {
     opacity: 1;
     translate: 0 0;
+  }
+}
+
+@keyframes timeline-enter-right {
+  from {
+    opacity: 0;
+    translate: 3rem 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes timeline-marker-light {
+  to {
+    border-color: var(--primary);
+    color: var(--primary-foreground);
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media not (prefers-reduced-motion: reduce) {
+    .timeline-spine-fill {
+      animation: timeline-spine-grow linear both;
+      /* Tracks the whole list's pass through the viewport, so the fill follows the
+         reader rather than jumping. */
+      animation-timeline: view();
+      animation-range: cover 0% cover 65%;
+    }
+
+    .timeline-entry--left {
+      animation: timeline-enter-left linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 32%;
+    }
+
+    .timeline-entry--right {
+      animation: timeline-enter-right linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 32%;
+    }
+
+    .timeline-marker {
+      animation: timeline-marker-light linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 45%;
+    }
   }
 }

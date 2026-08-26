@@ -4,6 +4,7 @@
 
 import Image from "next/image"
 
+import { GuestIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 /** "Victor Persson" → "VP". Falls back to the first two letters of a single name. */
@@ -51,6 +52,23 @@ export function MemberAvatar({
           {toInitials(fullName)}
         </span>
       )}
+    </span>
+  )
+}
+
+/**
+ * Someone brought along by a member. A face rather than initials, so a plus-one is
+ * visibly not one of us in the row without needing a label.
+ */
+export function GuestAvatar({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "bg-muted text-muted-foreground inline-flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full",
+        className,
+      )}
+    >
+      <GuestIcon className="size-1/2" />
     </span>
   )
 }

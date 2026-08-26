@@ -9,6 +9,7 @@ import {
 
 import { AttendeeAvatars } from "@/components/AttendeeAvatars"
 import { EventDatePoll } from "@/components/EventDatePoll"
+import { EventGuests } from "@/components/EventGuests"
 import { EventRsvp } from "@/components/EventRsvp"
 import { EmptyState } from "@/components/EmptyState"
 import { ExternalLink } from "@/components/ExternalLink"
@@ -30,11 +31,13 @@ import {
   findAttendeesForEvent,
   findDateOptionsForEvent,
   findEventBySlug,
+  findGuestsForEvent,
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import { EditIcon, ExternalLinkIcon, GoogleIcon } from "@/lib/icons"
 import {
+  canBringGuests,
   canEditEvent,
   canRespondToEvent,
   visibleEventVisibilitiesFor,
@@ -74,9 +77,10 @@ export default async function EventPage({
   // learn which members-only events exist.
   if (!event) notFound()
 
-  const [attendees, dateOptions] = await Promise.all([
+  const [attendees, dateOptions, guests] = await Promise.all([
     findAttendeesForEvent(event.id),
     findDateOptionsForEvent(event.id, viewer?.member?.id ?? null),
+    findGuestsForEvent(event.id),
   ])
   const goingAttendees = attendees.filter(
     (attendee) => attendee.response === "going",
@@ -85,10 +89,11 @@ export default async function EventPage({
     attendees.find((attendee) => attendee.memberId === viewer?.member?.id)
       ?.response ?? null
 
+  // Guests take up a place too, so the count is everyone actually turning up.
   const spotsLeft =
     event.maxAttendees === null
       ? null
-      : event.maxAttendees - goingAttendees.length
+      : event.maxAttendees - goingAttendees.length - guests.length
 
   return (
     <PageContainer>
@@ -245,7 +250,7 @@ export default async function EventPage({
       />
 
       <PageSection heading={translateEvents("attendees")}>
-        <AttendeeAvatars attendees={goingAttendees} />
+        <AttendeeAvatars attendees={goingAttendees} guests={guests} />
 
         {attendees.length === 0 ? (
           <EmptyState>{translateEvents("attendeesEmpty")}</EmptyState>
@@ -269,6 +274,15 @@ export default async function EventPage({
           </div>
         )}
       </PageSection>
+
+      {event.visibility !== "members" && (
+        <EventGuests
+          eventId={event.id}
+          guests={guests}
+          viewer={viewer}
+          canAddGuests={canBringGuests(viewer, event, myResponse)}
+        />
+      )}
     </PageContainer>
   )
 }

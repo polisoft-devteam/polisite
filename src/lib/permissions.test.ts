@@ -5,10 +5,12 @@ import { describe, expect, it } from "vitest"
 
 import type { Event, Member, Role } from "@/db/schema"
 import {
+  canBringGuests,
   canCreateEvent,
   canDeactivateMember,
   canManageMembers,
   canEditEvent,
+  canRemoveGuest,
   canRespondToEvent,
   canViewEvent,
   isActiveMember,
@@ -220,5 +222,66 @@ describe("creating and responding", () => {
 
     expect(canViewEvent(signedInGuest, publicEvent)).toBe(true)
     expect(canRespondToEvent(signedInGuest, publicEvent)).toBe(false)
+  })
+})
+
+describe("canBringGuests", () => {
+  const goingMember = buildViewer(buildMember())
+
+  it("lets a member going to a public event bring someone", () => {
+    const event = buildEvent({ visibility: "public" })
+    expect(canBringGuests(goingMember, event, "going")).toBe(true)
+  })
+
+  it("lets a member going to a members-and-friends event bring someone", () => {
+    const event = buildEvent({ visibility: "members_and_friends" })
+    expect(canBringGuests(goingMember, event, "going")).toBe(true)
+  })
+
+  it("refuses on a members-only event — there is nobody to bring", () => {
+    const event = buildEvent({ visibility: "members" })
+    expect(canBringGuests(goingMember, event, "going")).toBe(false)
+  })
+
+  it("refuses unless the member is going themselves", () => {
+    const event = buildEvent({ visibility: "public" })
+    expect(canBringGuests(goingMember, event, "interested")).toBe(false)
+    expect(canBringGuests(goingMember, event, "not_going")).toBe(false)
+    expect(canBringGuests(goingMember, event, null)).toBe(false)
+  })
+
+  it("refuses a signed-in guest and a signed-out visitor", () => {
+    const event = buildEvent({ visibility: "public" })
+    expect(canBringGuests(buildViewer(null), event, "going")).toBe(false)
+    expect(canBringGuests(null, event, "going")).toBe(false)
+  })
+
+  it("refuses an inactive member", () => {
+    const inactive = buildViewer(buildMember({ status: "inactive" }))
+    const event = buildEvent({ visibility: "public" })
+    expect(canBringGuests(inactive, event, "going")).toBe(false)
+  })
+})
+
+describe("canRemoveGuest", () => {
+  it("lets a member remove someone they brought", () => {
+    const viewer = buildViewer(buildMember())
+    expect(canRemoveGuest(viewer, { invitedByMemberId: "member-1" })).toBe(true)
+  })
+
+  it("refuses removing someone another member brought", () => {
+    const viewer = buildViewer(buildMember())
+    expect(canRemoveGuest(viewer, { invitedByMemberId: "member-2" })).toBe(
+      false,
+    )
+  })
+
+  it("lets an admin tidy up after anyone", () => {
+    const admin = buildViewer(buildMember(), ["admin"])
+    expect(canRemoveGuest(admin, { invitedByMemberId: "member-2" })).toBe(true)
+  })
+
+  it("refuses a signed-out visitor", () => {
+    expect(canRemoveGuest(null, { invitedByMemberId: "member-1" })).toBe(false)
   })
 })

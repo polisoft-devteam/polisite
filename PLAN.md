@@ -18,12 +18,12 @@ day one it's nothing.
 _Done when:_ `pnpm dev` serves a page locally.
 Result: Next 16.3, React 19.2, Tailwind 4.3, TypeScript 5.9.
 
-**0.2 Git + GitHub** — ⏳ local only
+**0.2 Git + GitHub** — ✅ done
 Init repo, push to a private GitHub repo.
-Local repo is committed on `main`. GitHub push deferred by choice — needs `gh`
-(`brew install gh`) or an empty repo created in the browser, then `git remote add origin`.
+Pushed to `polisoft-devteam/polisite` on `main`. A Google OAuth client secret had been
+swept in by `git add -A`; it was purged from history before the first push.
 
-**0.3 Deploy to Vercel** — ⬜ blocked on 0.2
+**0.3 Deploy to Vercel** — ⬜ next
 Import the GitHub repo. Accept defaults.
 _Done when:_ the placeholder page is live on a `*.vercel.app` URL and a push to `main`
 redeploys it automatically.
@@ -53,7 +53,7 @@ _Done when:_ the deployed site looks intentional, even though it's empty.
 Also delivered: Swedish/English switching (next-intl), since retrofitting it after
 20 pages would have been far more expensive than doing it at 4.
 
-**0.7 Add Vitest** — ✅ done (CI part waits for 0.2)
+**0.7 Add Vitest** — ✅ done, ⬜ CI workflow still to write
 One trivial passing test, running in CI on push.
 First test guards the two translation files against drifting apart. Wiring it to run
 on push needs GitHub, so that half is deferred with 0.2.
@@ -64,45 +64,47 @@ on push needs GitHub, so that half is deferred with 0.2.
 
 The most security-sensitive phase. Get it right before building on it.
 
-**1.1 Google OAuth via Supabase Auth**
+**1.1 Google OAuth via Supabase Auth** — ✅ done
 Configure a Google OAuth client, set the redirect URLs, wire `@supabase/ssr`.
 Sign-in and sign-out buttons.
 _Done when:_ you can sign in with Google on the deployed site and the session survives a refresh.
 
-**1.2 Members schema**
+**1.2 Members schema** — ✅ done
 Tables: `members`, `roles`, `member_roles`. `members.status` is `active | pending | inactive`.
 Link to the Supabase auth user id.
 _Done when:_ migrations applied, your own member row exists as `active` with role `admin`.
 
-**1.3 Session helpers**
+**1.3 Session helpers** — ✅ done
 `src/lib/auth.ts`: `getViewer()` returning the signed-in user _and_ their member row (or null).
 _Done when:_ any server component can ask "who is this, and are they a member?"
 
-**1.4 Permissions module**
+**1.4 Permissions module** — ✅ done
 `src/lib/permissions.ts` with the rules that exist so far. Route groups: `(public)` open,
 `(member)` requires `status = 'active'`.
 _Done when:_ a signed-in non-member is redirected away from `(member)` routes, and there's
 a test proving it.
 
-**1.5 Whitelist / invitation**
-Admin adds an email to the whitelist; on first Google sign-in a matching email becomes an
-active member. Everyone else lands as `pending`.
+**1.5 Whitelist / invitation** — ✅ done, differently
+Replaced by open sign-in: anyone may sign in, nothing is stored about them, and a welcome
+modal offers to request membership. An admin approves or denies at `/admin`.
 _Done when:_ a second person can sign in and get the right status without you touching the database.
 
 ---
 
 ## Phase 2 — Member profiles
 
-**2.1 Profile fields**
+**2.1 Profile fields** — ✅ done
 Name, photo, bio, birthday, name day, member-since, title. Privacy defaults: birthdays and
 name days are member-only; email is never displayed.
 
-**2.2 Profile photo upload**
+**2.2 Profile photo upload** — ✅ done
 Supabase Storage. Resize on upload — the free tier gives 1 GB, and full-size phone photos
 will eat it.
 
-**2.3 Member directory + profile pages**
+**2.3 Member directory + profile pages** — ⬜ not built
 List of members, individual profile pages, respecting visibility rules.
+`ProfileView` already takes an `isOwnProfile` flag for this; the query must return a
+narrower shape that omits email.
 
 _Phase done when:_ every member has filled in their own profile.
 
@@ -131,7 +133,7 @@ Detail page with description, location, attendees, and an optional Discord threa
 Interested / Going / Not going. Counts plus attendee names.
 _Done when:_ members have RSVP'd to a real event.
 
-**3.6 Backfill the event backlog**
+**3.6 Backfill the event backlog** — ⬜ not done
 Enter the real events from the spec so the site isn't empty when members arrive.
 
 ---
@@ -154,9 +156,9 @@ derived from the dates, so there's no job and no stale flag.
 
 ## Phase 5 — Public pages
 
-**5.1 Home** — upcoming events and highlights.
-**5.2 About** — what the association is and how membership works.
-**5.3 Custom domain** — see the hosting notes below.
+**5.1 Home** — ⬜ still placeholder text.
+**5.2 About** — ✅ built, with a scrolling timeline. Copy is still placeholder.
+**5.3 Custom domain** — ⬜ needs 0.3 first.
 
 ---
 

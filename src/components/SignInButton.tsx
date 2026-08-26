@@ -32,9 +32,11 @@ export function SignInButton() {
     })
   }
 
+  // The full label is too wide for a phone header.
   return (
     <Button size="sm" onClick={startGoogleSignIn}>
-      {translateAuth("signIn")}
+      <span className="sm:hidden">{translateAuth("signInShort")}</span>
+      <span className="hidden sm:inline">{translateAuth("signIn")}</span>
     </Button>
   )
 }

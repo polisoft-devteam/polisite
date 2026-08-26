@@ -261,6 +261,25 @@ export const eventAttendees = pgTable(
   (table) => [primaryKey({ columns: [table.eventId, table.memberId] })],
 )
 
+// Friends and family brought along by a member. A name and nothing else — they have no
+// account, and we have no consent to store anything more about someone who isn't here.
+export const eventGuests = pgTable("event_guests", {
+  id: uuid("id").primaryKey().defaultRandom(),
+
+  eventId: uuid("event_id")
+    .notNull()
+    .references(() => events.id, { onDelete: "cascade" }),
+
+  // Who brought them, so only that member (or an admin) can take them off again.
+  invitedByMemberId: uuid("invited_by_member_id")
+    .notNull()
+    .references(() => members.id, { onDelete: "cascade" }),
+
+  name: text("name").notNull(),
+
+  addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
+})
+
 // --- Types ---------------------------------------------------------------------
 
 export type Member = typeof members.$inferSelect
@@ -278,3 +297,4 @@ export type AttendanceResponse =
 export type Event = typeof events.$inferSelect
 export type NewEvent = typeof events.$inferInsert
 export type EventAttendee = typeof eventAttendees.$inferSelect
+export type EventGuest = typeof eventGuests.$inferSelect

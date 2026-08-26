@@ -6,7 +6,7 @@
 
 import { getFormatter, getTranslations } from "next-intl/server"
 
-import { MemberAvatar } from "@/components/MemberAvatar"
+import { GuestAvatar, MemberAvatar } from "@/components/MemberAvatar"
 import { SiteImage } from "@/components/SiteImage"
 import { SuggestionRibbon } from "@/components/SuggestionRibbon"
 import type { Event } from "@/db/schema"
@@ -14,7 +14,7 @@ import {
   EVENT_CATEGORY_ICON,
   EVENT_CATEGORY_LABEL_KEY,
 } from "@/features/events/labels"
-import type { Attendee } from "@/features/events/queries"
+import type { Attendee, EventGuestWithInviter } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 
 const MAX_FACES = 4
@@ -22,11 +22,14 @@ const MAX_FACES = 4
 export async function EventCard({
   event,
   attendees,
+  guests = [],
   locale,
 }: {
   event: Event
   /** Only those going — a face implies presence. */
   attendees: Attendee[]
+  /** Friends and family brought along, shown as faces after the members. */
+  guests?: EventGuestWithInviter[]
   locale: string
 }) {
   const translateEvents = await getTranslations("Events")
@@ -34,7 +37,12 @@ export async function EventCard({
 
   const CategoryIcon = EVENT_CATEGORY_ICON[event.category]
   const shownFaces = attendees.slice(0, MAX_FACES)
-  const hiddenCount = attendees.length - shownFaces.length
+  const shownGuests = guests.slice(
+    0,
+    Math.max(0, MAX_FACES - shownFaces.length),
+  )
+  const totalComing = attendees.length + guests.length
+  const hiddenCount = totalComing - shownFaces.length - shownGuests.length
 
   return (
     <Link
@@ -98,7 +106,7 @@ export async function EventCard({
           )}
         </div>
 
-        {attendees.length > 0 && (
+        {totalComing > 0 && (
           <div className="flex shrink-0 items-center">
             {shownFaces.map((attendee) => (
               <MemberAvatar
@@ -106,6 +114,12 @@ export async function EventCard({
                 fullName={attendee.fullName}
                 avatarUrl={attendee.avatarUrl}
                 className="ring-card -ml-2 size-7 text-[10px] ring-2 first:ml-0"
+              />
+            ))}
+            {shownGuests.map((guest) => (
+              <GuestAvatar
+                key={guest.id}
+                className="ring-card -ml-2 size-7 ring-2 first:ml-0"
               />
             ))}
             {hiddenCount > 0 && (

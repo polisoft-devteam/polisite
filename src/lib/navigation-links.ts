@@ -15,3 +15,11 @@ export const mainNavigationLinks: NavigationLink[] = [
   { href: "/calendar", translationKey: "calendar" },
   { href: "/about", translationKey: "about" },
 ]
+
+/**
+ * Shared by the desktop bar and the mobile menu, so "you are here" can't drift between
+ * them. Home only matches exactly — startsWith would light it up on every page.
+ */
+export function isCurrentNavigationLink(href: string, pathname: string) {
+  return href === "/" ? pathname === "/" : pathname.startsWith(href)
+}
