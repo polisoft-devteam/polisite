@@ -247,5 +247,6 @@ version matching each range — which silently pins ancient TypeScript. Don't re
 - **Never put authorization in `proxy.ts`.** It handles the language prefix and nothing
   else. Next's own docs say proxy is not a session or authorization solution — membership
   is checked server-side in layouts and queries.
-- **Never expose `SUPABASE_SERVICE_ROLE_KEY` to the client.** Server-side only.
+- **Never expose `SUPABASE_SECRET_KEY` to the client.** Server-side only, never behind a
+  `NEXT_PUBLIC_` prefix. Older Supabase projects call this the service role key.
 - **Never trust membership status sent from the client.** Always re-read it server-side.
