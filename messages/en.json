@@ -11,9 +11,12 @@
   },
   "Home": {
     "title": "Welcome",
-    "intro": "This is where we keep the association's events, members and history. The conversation stays on Discord — this is the place for the things meant to last.",
-    "upcomingTitle": "Upcoming events",
-    "upcomingEmpty": "No events yet."
+    "intro": "Events, members and history in one place. The conversation stays on Discord — this is where the things meant to last live.",
+    "upcomingTitle": "Coming up",
+    "upcomingEmpty": "Nothing planned right now. Got an idea? Add a suggestion.",
+    "allEvents": "All events",
+    "newEvent": "New event",
+    "visitorNote": "You're seeing the public events. Members also see the association's own."
   },
   "About": {
     "title": "About us",
