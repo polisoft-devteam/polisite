@@ -12,8 +12,11 @@
   "Home": {
     "title": "Välkommen",
     "intro": "Här samlar vi föreningens evenemang, medlemmar och historia. Samtalet fortsätter på Discord — det här är platsen för det som ska hålla över tid.",
-    "upcomingTitle": "Kommande evenemang",
-    "upcomingEmpty": "Inga evenemang inlagda ännu."
+    "upcomingTitle": "Härnäst",
+    "upcomingEmpty": "Inget planerat just nu. Har du en idé? Lägg in ett förslag.",
+    "allEvents": "Alla evenemang",
+    "newEvent": "Nytt evenemang",
+    "visitorNote": "Du ser de publika evenemangen. Medlemmar ser även föreningens egna."
   },
   "About": {
     "title": "Om oss",
