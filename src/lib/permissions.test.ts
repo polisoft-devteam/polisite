@@ -59,6 +59,7 @@ function buildEvent(overrides: Partial<Event> = {}): Event {
     endsAt: null,
     timeZone: "Europe/Stockholm",
     location: null,
+    isOnline: false,
     category: "other",
     priceMinorUnits: null,
     priceCurrency: "SEK",

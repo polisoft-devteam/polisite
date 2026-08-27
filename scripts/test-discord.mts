@@ -37,6 +37,7 @@ const sampleEvent: Event = {
   endsAt: null,
   timeZone: "Europe/Stockholm",
   location: "Ingenstans",
+  isOnline: false,
   category: "other",
   priceMinorUnits: null,
   priceCurrency: "SEK",

@@ -13,6 +13,7 @@ import { EventWhenField } from "@/components/EventWhenField"
 import { EventReminderField } from "@/components/EventReminderField"
 import { ExplainedSelectField } from "@/components/ExplainedSelectField"
 import { EventCategoryField } from "@/components/EventCategoryField"
+import { EventLocationField } from "@/components/EventLocationField"
 import { FormField, FormSelect } from "@/components/FormField"
 import { Wizard, type WizardStep } from "@/components/Wizard"
 import {
@@ -156,18 +157,14 @@ export async function EventForm({
       content: (
         <>
           <div className="grid gap-4 sm:grid-cols-[3fr_1fr]">
-            <FormField
+            <EventLocationField
               label={translateEvents("fieldLocation")}
-              htmlFor="location"
-            >
-              <Input
-                id="location"
-                name="location"
-                defaultValue={event?.location ?? ""}
-                required
-                maxLength={200}
-              />
-            </FormField>
+              onlineLabel={translateEvents("fieldIsOnline")}
+              onlineHint={translateEvents("fieldIsOnlineHint")}
+              placeholder={translateEvents("fieldLocationPlaceholder")}
+              defaultLocation={event?.location ?? ""}
+              defaultIsOnline={event?.isOnline ?? false}
+            />
 
             <FormField
               label={translateEvents("fieldTimeZone")}

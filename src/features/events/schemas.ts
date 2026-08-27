@@ -57,6 +57,7 @@ export const eventFormSchema = z
     timeZone: z.enum(COMMON_EVENT_TIME_ZONES),
 
     location: optionalText(200),
+    isOnline: z.boolean(),
     category: z.enum(eventCategoryEnum.enumValues),
 
     // Major units as typed ("250"), converted to minor units below. Blank means free.
@@ -120,6 +121,10 @@ export const eventFormSchema = z
       path: ["endsAtWallTime"],
     },
   )
+  .refine((event) => event.isOnline || event.location !== null, {
+    message: "An event needs an address unless it happens online",
+    path: ["location"],
+  })
 
 export type EventFormValues = z.infer<typeof eventFormSchema>
 
@@ -135,6 +140,8 @@ export function readEventForm(formData: FormData) {
     endsAtWallTime: readText("endsAtWallTime"),
     timeZone: readText("timeZone"),
     location: readText("location"),
+    // A disabled input sends nothing, so an online event arrives with no location at all.
+    isOnline: formData.get("isOnline") === "on",
     category: readText("category"),
     price: readText("price"),
     currency: readText("currency"),

@@ -170,7 +170,11 @@
     "guestRemove": "Ta bort {guestName}",
     "guestNameLabel": "Namn på medföljande",
     "guestNamePlaceholder": "Namn",
-    "guestLimitReached": "Du har lagt till {count} medföljande, vilket är max."
+    "guestLimitReached": "Du har lagt till {count} medföljande, vilket är max.",
+    "fieldIsOnline": "Sker online",
+    "fieldIsOnlineHint": "Ingen adress behövs — eventet hålls i Discord.",
+    "fieldLocationPlaceholder": "Gatuadress eller plats",
+    "locationOnline": "Online (Discord)"
   },
   "Calendar": {
     "title": "Kalender",

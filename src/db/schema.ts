@@ -1,8 +1,18 @@
 // The single definition of the database schema.
 // Edit this, then `pnpm db:generate` and `pnpm db:migrate`. Never change tables in the
 // Supabase dashboard — see CLAUDE.md.
+//
+// Every table ends in `.enableRLS()` and has no policies, which is a lock rather than a
+// permission system. Supabase serves the whole `public` schema over PostgREST to anyone
+// holding the publishable key — and that key ships in every browser, so without this the
+// tables are readable and writable by the public internet. RLS with no policies denies
+// that door entirely, while the app is unaffected because it connects as `postgres`,
+// which has BYPASSRLS.
+//
+// A new table without `.enableRLS()` is public the moment it is migrated. Add it.
 
 import {
+  boolean,
   date,
   integer,
   pgEnum,
@@ -53,7 +63,7 @@ export const members = pgTable("members", {
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
-})
+}).enableRLS()
 
 // --- Membership prompt ---------------------------------------------------------
 
@@ -76,7 +86,7 @@ export const membershipPrompts = pgTable("membership_prompts", {
   // Set when an admin turns the request down. Approval needs no marker — the members row
   // it creates is the record.
   deniedAt: timestamp("denied_at", { withTimezone: true }),
-})
+}).enableRLS()
 
 // --- Roles ---------------------------------------------------------------------
 
@@ -96,7 +106,7 @@ export const memberRoles = pgTable(
       .defaultNow(),
   },
   (table) => [primaryKey({ columns: [table.memberId, table.role] })],
-)
+).enableRLS()
 
 // --- Events --------------------------------------------------------------------
 
@@ -146,6 +156,10 @@ export const events = pgTable("events", {
   timeZone: text("time_zone").notNull().default("Europe/Stockholm"),
 
   location: text("location"),
+
+  // Happens online rather than at an address. The location input is disabled when this is
+  // set, so the two can't disagree about where the event is.
+  isOnline: boolean("is_online").notNull().default(false),
   category: eventCategoryEnum("category").notNull().default("other"),
 
   // Null means free. Minor units (öre, pence) so there is no rounding to argue about.
@@ -178,7 +192,7 @@ export const events = pgTable("events", {
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
-})
+}).enableRLS()
 
 // --- Discord reminders ---------------------------------------------------------
 
@@ -203,7 +217,7 @@ export const eventReminders = pgTable(
     sentAt: timestamp("sent_at", { withTimezone: true }),
   },
   (table) => [primaryKey({ columns: [table.eventId, table.offset] })],
-)
+).enableRLS()
 
 // --- Date poll -----------------------------------------------------------------
 
@@ -215,7 +229,7 @@ export const eventDateOptions = pgTable("event_date_options", {
     .notNull()
     .references(() => events.id, { onDelete: "cascade" }),
   startsAt: timestamp("starts_at", { withTimezone: true }).notNull(),
-})
+}).enableRLS()
 
 // A member may vote for several dates but not twice for the same one, which the composite
 // key enforces rather than the code having to remember.
@@ -233,7 +247,7 @@ export const eventDateVotes = pgTable(
       .defaultNow(),
   },
   (table) => [primaryKey({ columns: [table.dateOptionId, table.memberId] })],
-)
+).enableRLS()
 
 export const attendanceResponseEnum = pgEnum("attendance_response", [
   "going",
@@ -259,7 +273,7 @@ export const eventAttendees = pgTable(
   },
   // One answer per member per event; changing your mind updates the row.
   (table) => [primaryKey({ columns: [table.eventId, table.memberId] })],
-)
+).enableRLS()
 
 // Friends and family brought along by a member. A name and nothing else — they have no
 // account, and we have no consent to store anything more about someone who isn't here.
@@ -278,7 +292,7 @@ export const eventGuests = pgTable("event_guests", {
   name: text("name").notNull(),
 
   addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
-})
+}).enableRLS()
 
 // --- Types ---------------------------------------------------------------------
 

@@ -1,0 +1,36 @@
+# Lint, tests and a production build on every push and pull request.
+#
+# No database and no secrets: the tests are pure functions over plain data, and the build
+# only needs the code. If a check here starts needing a secret, something that belongs in
+# a query has leaked into module scope.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8.6.12
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm lint
+
+      - run: pnpm test
+
+      - run: pnpm build
