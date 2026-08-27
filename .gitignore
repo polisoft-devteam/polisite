@@ -45,3 +45,9 @@ client_secret*.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Working notes, kept local on purpose. PLAN.md is the build order and DEPLOY.md the
+# release checklist — both are for us rather than for the repo, so they stay off GitHub.
+# They exist on disk; back them up somewhere that isn't only this laptop.
+PLAN.md
+DEPLOY.md

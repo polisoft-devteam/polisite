@@ -34,19 +34,26 @@ pnpm member you@example.com --status active --role admin
 ## Commands
 
 ### General
+
 ```bash
 pnpm dev            # dev server on :3210
 pnpm build          # production build — run before pushing
 pnpm lint           # ESLint + tsc
 pnpm test           # Vitest
 pnpm format         # Prettier
+```
 
 ### DB
+
+```bash
 pnpm db:generate    # create a migration after editing src/db/schema.ts
 pnpm db:migrate     # apply migrations
 pnpm db:studio      # browse the data
+```
 
 ### Admin
+
+```bash
 pnpm member <email> --status active --role admin   # promote someone
 pnpm member:reset <email>                          # wipe someone, for testing sign-up
 pnpm events:seed                                   # two example events, no Discord post
@@ -58,5 +65,4 @@ pnpm images:optimize                               # resize anything in public/i
 ## Where things are
 
 - `CLAUDE.md` — conventions, domain rules, and what to use instead of what. Read this first.
-- `PLAN.md` — build order and what's left.
 - `/design` — every UI component in every state, for judging visual changes.
