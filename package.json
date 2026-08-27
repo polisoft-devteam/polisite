@@ -6,7 +6,7 @@
     "dev": "next dev -p 3210",
     "build": "next build",
     "start": "next start -p 3210",
-    "lint": "eslint && tsc --noEmit",
+    "lint": "next typegen && eslint && tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -16,19 +16,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: pnpm/action-setup@v4
         with:
           version: 8.6.12
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 
+      # `pnpm lint` runs `next typegen` first: PageProps and friends are generated into
+      # .next/types, and tsc can't see them on a machine that has never built.
       - run: pnpm lint
 
       - run: pnpm test

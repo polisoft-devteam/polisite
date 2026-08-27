@@ -285,7 +285,8 @@ export async function findDateOptionsForEvent(
     return {
       id: option.id,
       startsAt: option.startsAt,
-      voters: optionVotes.map(({ dateOptionId: _, ...voter }) => voter),
+      // The join column isn't part of a voter; drop it rather than leak it outward.
+      voters: optionVotes.map(({ dateOptionId, ...voter }) => voter),
       votedByViewer: optionVotes.some(
         (vote) => vote.memberId === viewerMemberId,
       ),
