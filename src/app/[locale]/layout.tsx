@@ -10,6 +10,7 @@ import { SiteHeader } from "@/components/SiteHeader"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { routing } from "@/i18n/routing"
 import { ASSOCIATION_NAME } from "@/lib/association"
+import { getSiteUrl } from "@/lib/site-url"
 
 import "../globals.css"
 
@@ -43,6 +44,9 @@ export async function generateMetadata({
   const translateSite = await getTranslations({ locale, namespace: "Site" })
 
   return {
+    // Makes canonical and share URLs absolute. Without it Next builds them relative and
+    // they resolve against whatever host served the page.
+    metadataBase: new URL(getSiteUrl()),
     title: {
       default: ASSOCIATION_NAME,
       template: `%s · ${ASSOCIATION_NAME}`,
