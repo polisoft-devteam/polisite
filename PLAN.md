@@ -184,6 +184,11 @@ Members, login, profiles, events, calendar, RSVP, wishlist, deployed on a real d
 
 Ordered by likely value, not by effort:
 
+- **Useful links** — a Discord server invite and the GitHub page, somewhere findable;
+  the footer is the obvious home. Needs from Victor: the Discord invite URL. Note the
+  GitHub repo is private, so that link only helps signed-in members and should probably
+  sit behind the member layout rather than in a public footer.
+
 - **Fun quotes** — Victor writes them; the app features them somewhere. Anyone can be
   quoted: a member, a film character, or someone famous. So the attribution is free text
   with an optional link to a member, not a foreign key — most quotes will have nobody in

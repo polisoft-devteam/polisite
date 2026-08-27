@@ -14,6 +14,7 @@ export {
   Check as CheckIcon,
   X as CloseIcon,
   List as MenuIcon,
+  CameraVideo as OnlineIcon,
   PersonFill as GuestIcon,
   Trash as RemoveIcon,
   Gear as SettingsIcon,

@@ -42,7 +42,9 @@ function buildEmbed(event: Event, locale: string) {
     },
   ]
 
-  if (event.location) {
+  if (event.isOnline) {
+    fields.push({ name: "Var", value: "💻 Online", inline: true })
+  } else if (event.location) {
     fields.push({ name: "Var", value: event.location, inline: true })
   }
 

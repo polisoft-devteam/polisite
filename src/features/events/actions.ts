@@ -70,7 +70,9 @@ export async function createEventAction(formData: FormData) {
         ? wallTimeToInstant(form.endsAtWallTime, form.timeZone)
         : null,
       timeZone: form.timeZone,
-      location: form.location,
+      // An online event keeps no address, so ticking the box can't leave a stale one.
+      location: form.isOnline ? null : form.location,
+      isOnline: form.isOnline,
       category: form.category,
       priceMinorUnits: toMinorUnits(form.price),
       priceCurrency: form.currency,
@@ -153,7 +155,9 @@ export async function updateEventAction(formData: FormData) {
         ? wallTimeToInstant(form.endsAtWallTime, form.timeZone)
         : null,
       timeZone: form.timeZone,
-      location: form.location,
+      // An online event keeps no address, so ticking the box can't leave a stale one.
+      location: form.isOnline ? null : form.location,
+      isOnline: form.isOnline,
       category: form.category,
       priceMinorUnits: toMinorUnits(form.price),
       priceCurrency: form.currency,

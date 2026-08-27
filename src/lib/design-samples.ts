@@ -15,6 +15,7 @@ export function buildSampleEvent(overrides: Partial<Event> = {}): Event {
     endsAt: null,
     timeZone: "Europe/Stockholm",
     location: "Järvsö",
+    isOnline: false,
     category: "trip",
     priceMinorUnits: 25000,
     priceCurrency: "SEK",

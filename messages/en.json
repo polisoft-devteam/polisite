@@ -170,7 +170,11 @@
     "guestRemove": "Remove {guestName}",
     "guestNameLabel": "Guest name",
     "guestNamePlaceholder": "Name",
-    "guestLimitReached": "You've added {count} guests, which is the maximum."
+    "guestLimitReached": "You've added {count} guests, which is the maximum.",
+    "fieldIsOnline": "Happens online",
+    "fieldIsOnlineHint": "No address needed — the event is held on Discord.",
+    "fieldLocationPlaceholder": "Street address or place",
+    "locationOnline": "Online (Discord)"
   },
   "Calendar": {
     "title": "Calendar",

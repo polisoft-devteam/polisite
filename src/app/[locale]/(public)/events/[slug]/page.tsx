@@ -35,7 +35,7 @@ import {
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { EditIcon, ExternalLinkIcon, GoogleIcon } from "@/lib/icons"
+import { EditIcon, ExternalLinkIcon, GoogleIcon, OnlineIcon } from "@/lib/icons"
 import {
   canBringGuests,
   canEditEvent,
@@ -160,18 +160,27 @@ export default async function EventPage({
             </Fact>
           )}
 
-          {event.location && (
+          {event.isOnline ? (
             <Fact label={translateEvents("fieldLocation")}>
-              {event.location}
-              {/* A plain Maps search link needs no API key and no billing account. */}
-              <ExternalLink
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
-                className="ml-2 text-sm"
-              >
-                <GoogleIcon className="size-3.5" />
-                {translateEvents("showOnMap")}
-              </ExternalLink>
+              <span className="flex items-center gap-2">
+                <OnlineIcon className="text-muted-foreground size-4" />
+                {translateEvents("locationOnline")}
+              </span>
             </Fact>
+          ) : (
+            event.location && (
+              <Fact label={translateEvents("fieldLocation")}>
+                {event.location}
+                {/* A plain Maps search link needs no API key and no billing account. */}
+                <ExternalLink
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
+                  className="ml-2 text-sm"
+                >
+                  <GoogleIcon className="size-3.5" />
+                  {translateEvents("showOnMap")}
+                </ExternalLink>
+              </Fact>
+            )
           )}
 
           <Fact label={translateEvents("fieldVisibility")}>

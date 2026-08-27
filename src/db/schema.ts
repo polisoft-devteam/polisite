@@ -12,6 +12,7 @@
 // A new table without `.enableRLS()` is public the moment it is migrated. Add it.
 
 import {
+  boolean,
   date,
   integer,
   pgEnum,
@@ -155,6 +156,10 @@ export const events = pgTable("events", {
   timeZone: text("time_zone").notNull().default("Europe/Stockholm"),
 
   location: text("location"),
+
+  // Happens online rather than at an address. The location input is disabled when this is
+  // set, so the two can't disagree about where the event is.
+  isOnline: boolean("is_online").notNull().default(false),
   category: eventCategoryEnum("category").notNull().default("other"),
 
   // Null means free. Minor units (öre, pence) so there is no rounding to argue about.
