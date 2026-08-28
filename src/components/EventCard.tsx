@@ -75,7 +75,7 @@ export async function EventCard({
             <CategoryIcon className="size-3.5" />
             {translateEvents(EVENT_CATEGORY_LABEL_KEY[event.category])}
           </p>
-          <h3 className="font-heading mt-1 text-xl leading-tight font-semibold text-balance text-white">
+          <h3 className="font-heading mt-1 text-xl leading-tight font-extrabold text-balance text-white">
             {event.title}
           </h3>
         </div>

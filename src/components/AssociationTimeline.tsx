@@ -55,7 +55,7 @@ export async function AssociationTimeline() {
               >
                 {entry.images && <TimelineImageStack images={entry.images} />}
 
-                <h3 className="font-heading text-xl font-semibold tracking-tight">
+                <h3 className="font-heading text-xl font-bold tracking-tight">
                   {translateAbout(`timeline.${entry.id}.title`)}
                 </h3>
                 <p className="text-muted-foreground mt-2 text-sm">

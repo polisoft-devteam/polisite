@@ -60,7 +60,7 @@ const anton = Anton({ subsets: ["latin"], weight: "400" })
 const HEADING_CANDIDATES = [
   {
     name: "Fraunces",
-    note: "Nuvarande. Variabel serif, varm och redaktionell.",
+    note: "Variabel serif, varm och redaktionell.",
     className: "font-heading",
   },
   {
@@ -75,7 +75,7 @@ const HEADING_CANDIDATES = [
   },
   {
     name: "Bricolage Grotesque",
-    note: "Egensinnig. Mest personlighet, minst neutral.",
+    note: "Nuvarande. Egensinnig, mest personlighet.",
     className: bricolage.className,
   },
   {

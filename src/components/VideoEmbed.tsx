@@ -59,7 +59,7 @@ export function VideoEmbed({
       )}
 
       <figcaption className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 py-3">
-        <span className="font-heading text-base font-semibold tracking-tight">
+        <span className="font-heading text-base font-bold tracking-tight">
           {title}
         </span>
         <span className="text-muted-foreground text-sm tabular-nums">
