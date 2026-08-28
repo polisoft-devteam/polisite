@@ -49,7 +49,10 @@
         "body": "Utspridda över flera städer men med samma kalender. Det är därför den här sidan finns."
       }
     },
-    "timelineHeading": "Så här långt"
+    "timelineHeading": "Så här långt",
+    "filmsTitle": "Film",
+    "filmPlay": "Spela",
+    "filmPrivacyNote": "Videon laddas från YouTube först när du klickar på play."
   },
   "Events": {
     "title": "Evenemang",

@@ -49,7 +49,10 @@
         "body": "Spread across several cities but sharing one calendar. That's why this site exists."
       }
     },
-    "timelineHeading": "How we got here"
+    "timelineHeading": "How we got here",
+    "filmsTitle": "Film",
+    "filmPlay": "Play",
+    "filmPrivacyNote": "The video loads from YouTube only when you press play."
   },
   "Events": {
     "title": "Events",

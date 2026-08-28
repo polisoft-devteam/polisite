@@ -15,6 +15,7 @@ export {
   X as CloseIcon,
   List as MenuIcon,
   CameraVideo as OnlineIcon,
+  PlayFill as PlayIcon,
   PersonFill as GuestIcon,
   Trash as RemoveIcon,
   Gear as SettingsIcon,
