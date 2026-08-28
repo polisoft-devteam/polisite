@@ -25,7 +25,7 @@ export async function SiteHeader() {
         <Link
           href="/"
           transitionTypes={["nav-back"]}
-          className="mr-1 font-semibold tracking-tight sm:mr-2"
+          className="font-heading mr-1 text-xl font-extrabold tracking-tight sm:mr-2 sm:text-2xl"
         >
           {ASSOCIATION_NAME}
         </Link>
