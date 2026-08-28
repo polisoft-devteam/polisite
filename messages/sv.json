@@ -7,7 +7,8 @@
     "events": "Evenemang",
     "calendar": "Kalender",
     "about": "Om oss",
-    "menu": "Meny"
+    "menu": "Meny",
+    "archive": "Öppet arkiv"
   },
   "Home": {
     "title": "Välkommen",
@@ -49,10 +50,7 @@
         "body": "Utspridda över flera städer men med samma kalender. Det är därför den här sidan finns."
       }
     },
-    "timelineHeading": "Så här långt",
-    "filmsTitle": "Film",
-    "filmPlay": "Spela",
-    "filmPrivacyNote": "Videon laddas från YouTube först när du klickar på play."
+    "timelineHeading": "Så här långt"
   },
   "Events": {
     "title": "Evenemang",
@@ -277,5 +275,11 @@
     "roleAdmin": "Admin",
     "thatsYou": "Det är du",
     "adminProtected": "Kan inte inaktiveras"
+  },
+  "Archive": {
+    "title": "Öppet arkiv",
+    "intro": "Filmer och annat föreningen har gjort.",
+    "empty": "Inget i arkivet än.",
+    "play": "Spela"
   }
 }

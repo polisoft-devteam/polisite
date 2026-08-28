@@ -7,7 +7,8 @@
     "events": "Events",
     "calendar": "Calendar",
     "about": "About",
-    "menu": "Menu"
+    "menu": "Menu",
+    "archive": "Open archive"
   },
   "Home": {
     "title": "Welcome",
@@ -49,10 +50,7 @@
         "body": "Spread across several cities but sharing one calendar. That's why this site exists."
       }
     },
-    "timelineHeading": "How we got here",
-    "filmsTitle": "Film",
-    "filmPlay": "Play",
-    "filmPrivacyNote": "The video loads from YouTube only when you press play."
+    "timelineHeading": "How we got here"
   },
   "Events": {
     "title": "Events",
@@ -277,5 +275,11 @@
     "roleAdmin": "Admin",
     "thatsYou": "That's you",
     "adminProtected": "Cannot be deactivated"
+  },
+  "Archive": {
+    "title": "Open archive",
+    "intro": "Films and other things the association has made.",
+    "empty": "Nothing in the archive yet.",
+    "play": "Play"
   }
 }

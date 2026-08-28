@@ -5,14 +5,15 @@
  * Member-only links are added here in Phase 1, once membership exists to check.
  */
 export type NavigationLink = {
-  href: "/" | "/events" | "/calendar" | "/about"
-  translationKey: "home" | "events" | "calendar" | "about"
+  href: "/" | "/events" | "/calendar" | "/archive" | "/about"
+  translationKey: "home" | "events" | "calendar" | "archive" | "about"
 }
 
 export const mainNavigationLinks: NavigationLink[] = [
   { href: "/", translationKey: "home" },
   { href: "/events", translationKey: "events" },
   { href: "/calendar", translationKey: "calendar" },
+  { href: "/archive", translationKey: "archive" },
   { href: "/about", translationKey: "about" },
 ]
 
