@@ -4,26 +4,54 @@
 // them and nothing in the header moves as they change. Pure CSS — no state, no client
 // component, and the animation is dropped entirely for prefers-reduced-motion.
 //
-// Hidden from screen readers: the name is "Poli", and reading six variations of it aloud
-// on every page would be noise.
+// Hidden from screen readers: the name is "Poli", and reading a dozen variations of it
+// aloud on every page would be noise.
 
 import { ASSOCIATION_NAME } from "@/lib/association"
 
+// Soft leads: it is the one the association actually goes by, and it is what a reader
+// with reduced motion sees held still.
 const WORDMARK_SUFFIXES = [
-  "site",
   "Soft",
+  "site",
   "Group",
   "Love",
   "Friends",
   "Everything",
+  "Community",
+  "Games",
+  "Vacation",
+  "Thailand",
+  "Craft",
+  "Trip",
+  "Wagooo",
 ]
 
-/** One full turn through the list, in seconds. */
-const CYCLE_SECONDS = WORDMARK_SUFFIXES.length * 2
+/** How long each word holds the slot. */
+const SECONDS_PER_WORD = 2
+const CYCLE_SECONDS = WORDMARK_SUFFIXES.length * SECONDS_PER_WORD
+
+/**
+ * The keyframes have to be generated, because each word's visible window is a fraction of
+ * the whole cycle — add a word and every percentage moves. Hard-coding them in globals.css
+ * would mean the animation silently breaks the next time this list changes.
+ */
+const wordmarkKeyframes = (() => {
+  const window = 100 / WORDMARK_SUFFIXES.length
+
+  return `@keyframes wordmark-flip {
+  0% { opacity: 0; transform: rotateX(-90deg); }
+  ${(window * 0.18).toFixed(3)}% { opacity: 1; transform: rotateX(0); }
+  ${(window * 0.82).toFixed(3)}% { opacity: 1; transform: rotateX(0); }
+  ${window.toFixed(3)}% { opacity: 0; transform: rotateX(90deg); }
+  100% { opacity: 0; transform: rotateX(90deg); }
+}`
+})()
 
 export function Wordmark() {
   return (
-    <span className="font-heading text-lg font-extrabold tracking-tight sm:text-2xl">
+    <span className="font-heading text-base font-extrabold tracking-tight sm:text-lg lg:text-2xl">
+      <style>{wordmarkKeyframes}</style>
       {ASSOCIATION_NAME}
       <span aria-hidden="true" className="wordmark-slot text-primary">
         {WORDMARK_SUFFIXES.map((suffix, index) => (
@@ -32,7 +60,7 @@ export function Wordmark() {
             className="wordmark-word"
             style={{
               animationDuration: `${CYCLE_SECONDS}s`,
-              animationDelay: `${index * 2}s`,
+              animationDelay: `${index * SECONDS_PER_WORD}s`,
             }}
           >
             {suffix}

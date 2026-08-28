@@ -358,8 +358,9 @@ a[href] {
 /* --- Wordmark ----------------------------------------------------------------
    "Poli" stays put; the rest flips through the list in Wordmark.tsx.
 
-   The words share one grid cell, so the slot is as wide as the longest of them and
-   the header never reflows mid-animation. Each word's delay is set inline. */
+   The words share one grid cell, so the slot is as wide as the longest of them and the
+   header never reflows mid-animation. Delays and the keyframes themselves are generated
+   in Wordmark.tsx, because both depend on how many words are in the list. */
 
 .wordmark-slot {
   display: inline-grid;
@@ -390,28 +391,5 @@ a[href] {
   /* Overridden by the animation, so the static fallback doesn't linger. */
   .wordmark-word:first-child {
     opacity: 0;
-  }
-}
-
-@keyframes wordmark-flip {
-  0% {
-    opacity: 0;
-    transform: rotateX(-90deg);
-  }
-  3% {
-    opacity: 1;
-    transform: rotateX(0);
-  }
-  14% {
-    opacity: 1;
-    transform: rotateX(0);
-  }
-  17% {
-    opacity: 0;
-    transform: rotateX(90deg);
-  }
-  100% {
-    opacity: 0;
-    transform: rotateX(90deg);
   }
 }
