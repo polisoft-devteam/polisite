@@ -354,3 +354,64 @@ a[href] {
     }
   }
 }
+
+/* --- Wordmark ----------------------------------------------------------------
+   "Poli" stays put; the rest flips through the list in Wordmark.tsx.
+
+   The words share one grid cell, so the slot is as wide as the longest of them and
+   the header never reflows mid-animation. Each word's delay is set inline. */
+
+.wordmark-slot {
+  display: inline-grid;
+  vertical-align: baseline;
+  perspective: 400px;
+}
+
+.wordmark-word {
+  grid-area: 1 / 1;
+  text-align: left;
+  /* Only the first is visible without the animation — see the reduced-motion case. */
+  opacity: 0;
+}
+
+.wordmark-word:first-child {
+  opacity: 1;
+}
+
+@media not (prefers-reduced-motion: reduce) {
+  .wordmark-word {
+    opacity: 0;
+    transform-origin: center bottom;
+    animation-name: wordmark-flip;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+    animation-iteration-count: infinite;
+  }
+
+  /* Overridden by the animation, so the static fallback doesn't linger. */
+  .wordmark-word:first-child {
+    opacity: 0;
+  }
+}
+
+@keyframes wordmark-flip {
+  0% {
+    opacity: 0;
+    transform: rotateX(-90deg);
+  }
+  3% {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  14% {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+  17% {
+    opacity: 0;
+    transform: rotateX(90deg);
+  }
+  100% {
+    opacity: 0;
+    transform: rotateX(90deg);
+  }
+}
