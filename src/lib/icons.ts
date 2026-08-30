@@ -26,6 +26,10 @@ export {
   Display as SystemThemeIcon,
   Translate as LanguageIcon,
   Google as GoogleIcon,
+  Discord as DiscordIcon,
+  Github as GithubIcon,
+  Images as PhotosIcon,
+  FolderFill as DriveIcon,
   GeoAlt as MapPinIcon,
   BoxArrowUpRight as ExternalLinkIcon,
   // Event categories

@@ -281,5 +281,25 @@
     "intro": "”Fota, filma, hela dagen!” A future grand library of our triumphs and failures.",
     "empty": "Nothing in the archive yet.",
     "play": "Play"
+  },
+  "Links": {
+    "title": "Association links",
+    "membersOnlyNote": "Members only. The links themselves grant access — don't pass them on.",
+    "discord": {
+      "label": "Discord",
+      "description": "Where the conversation actually happens."
+    },
+    "photos": {
+      "label": "Google Photos",
+      "description": "The shared photo album."
+    },
+    "drive": {
+      "label": "Google Drive",
+      "description": "Documents and originals."
+    },
+    "github": {
+      "label": "GitHub",
+      "description": "The code behind this site."
+    }
   }
 }

@@ -281,5 +281,25 @@
     "intro": "”Fota, filma, hela dagen!” Ett framtida grand library över våra framgångar och misslyckanden.",
     "empty": "Inget i arkivet än.",
     "play": "Spela"
+  },
+  "Links": {
+    "title": "Föreningens länkar",
+    "membersOnlyNote": "Bara för medlemmar. Länkarna ger åtkomst i sig — dela dem inte vidare.",
+    "discord": {
+      "label": "Discord",
+      "description": "Där samtalet faktiskt händer."
+    },
+    "photos": {
+      "label": "Google Foto",
+      "description": "Det delade fotoalbumet."
+    },
+    "drive": {
+      "label": "Google Drive",
+      "description": "Dokument och original."
+    },
+    "github": {
+      "label": "GitHub",
+      "description": "Koden bakom den här sidan."
+    }
   }
 }

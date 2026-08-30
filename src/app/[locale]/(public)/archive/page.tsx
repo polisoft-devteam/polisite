@@ -1,11 +1,14 @@
 import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { AssociationLinks } from "@/components/AssociationLinks"
 import { EmptyState } from "@/components/EmptyState"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { VideoEmbed } from "@/components/VideoEmbed"
 import { ASSOCIATION_FILMS } from "@/lib/association-media"
+import { getViewer } from "@/lib/auth"
+import { isActiveMember } from "@/lib/permissions"
 
 export async function generateMetadata({
   params,
@@ -26,6 +29,7 @@ export default async function ArchivePage({
   setRequestLocale(locale)
 
   const translateArchive = await getTranslations("Archive")
+  const viewer = await getViewer()
 
   return (
     <PageContainer>
@@ -51,6 +55,9 @@ export default async function ArchivePage({
           ))}
         </div>
       )}
+
+      {/* Shared album and Drive folder are link-is-the-password, so members only. */}
+      {isActiveMember(viewer) && <AssociationLinks />}
     </PageContainer>
   )
 }
