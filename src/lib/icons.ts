@@ -28,6 +28,7 @@ export {
   Google as GoogleIcon,
   Discord as DiscordIcon,
   Spotify as SpotifyIcon,
+  LockFill as LockIcon,
   Github as GithubIcon,
   Images as PhotosIcon,
   FolderFill as DriveIcon,

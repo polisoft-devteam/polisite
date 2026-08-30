@@ -12,7 +12,7 @@
   },
   "Home": {
     "title": "Välkommen",
-    "intro": "Här samlar vi föreningens evenemang, medlemmar och historia. Samtalet fortsätter på Discord — det här är platsen för det som ska hålla över tid.",
+    "intro": "Här samlar vi föreningens evenemang, medlemmar och historia. Samtalet fortsätter på Discord. Det här är platsen för det som ska hålla över tid.",
     "upcomingTitle": "Härnäst",
     "upcomingEmpty": "Inget planerat just nu. Har du en idé? Lägg in ett förslag.",
     "allEvents": "Alla evenemang",
@@ -27,7 +27,7 @@
     "timeline": {
       "before": {
         "title": "Innan allt",
-        "body": "Ett gäng som råkade hamna på samma ställen. Ingen förening, inga planer — bara personer som gillade varandras sällskap."
+        "body": "Ett gäng som råkade hamna på samma ställen. Ingen förening, inga planer, bara personer som gillade varandras sällskap."
       },
       "founding": {
         "title": "Det började på riktigt",
@@ -43,7 +43,7 @@
       },
       "formalised": {
         "title": "Vi blev en förening",
-        "body": "Stadgar, styrelse och en kassa. Inte för byråkratin — för att det som är gemensamt ska överleva att vi blir upptagna."
+        "body": "Stadgar, styrelse och en kassa. Inte för byråkratin, utan för att det som är gemensamt ska överleva att vi blir upptagna."
       },
       "today": {
         "title": "Idag",
@@ -74,7 +74,7 @@
     "fieldEndsAt": "Slutar",
     "fieldEndsAtHint": "Frivilligt",
     "fieldTimeZone": "Tidszon",
-    "fieldTimeZoneHint": "Där evenemanget äger rum — en konsert i London visas som Londontid.",
+    "fieldTimeZoneHint": "Där evenemanget äger rum. En konsert i London visas som Londontid.",
     "fieldLocation": "Adress",
     "fieldCategory": "Typ",
     "fieldPrice": "Pris",
@@ -122,8 +122,8 @@
     "visibilityPublicExplanation": "Ett publikt event som arrangeras av någon annan. Syns även för gäster som inte är inloggade.",
     "visibilityMembersExplanation": "Slutet event, av oss för oss. Endast Poli-medlemmar ser det.",
     "visibilityMembersAndFriends": "Poli & vänner",
-    "visibilityMembersAndFriendsExplanation": "Event där vi tar med vänner och familj — skidresor, födelsedagar och liknande. Bara medlemmar ser det i appen.",
-    "fieldRemindersAtLimit": "Två valda — avmarkera en för att byta.",
+    "visibilityMembersAndFriendsExplanation": "Event där vi tar med vänner och familj, som skidresor och födelsedagar. Bara medlemmar ser det i appen.",
+    "fieldRemindersAtLimit": "Två valda. Avmarkera en för att byta.",
     "previousMonth": "Föregående månad",
     "nextMonth": "Nästa månad",
     "fieldImage": "Bild",
@@ -134,7 +134,7 @@
     "kindSuggestion": "Förslag",
     "kindConfirmed": "Bekräftat",
     "fieldKind": "Är detta ett förslag eller ett bekräftat event?",
-    "kindSuggestionExplanation": "En känslokoll. Vi testar om folk är intresserade — datum kan röstas fram.",
+    "kindSuggestionExplanation": "En känslokoll. Vi testar om folk är intresserade, och datum kan röstas fram.",
     "kindConfirmedExplanation": "Det här händer. Lägg in det i kalendern.",
     "stepBasics": "Om eventet",
     "wizardBack": "Tillbaka",
@@ -146,7 +146,7 @@
     "removeDateOption": "Ta bort datum",
     "datePollTitle": "Rösta på datum",
     "datePollHint": "Rösta på alla datum du kan. Du kan välja flera.",
-    "datePollClosed": "Röstningen är stängd — alla datum har passerat.",
+    "datePollClosed": "Röstningen är stängd. Alla datum har passerat.",
     "datePollVote": "Jag kan",
     "datePollVoted": "Jag kan ✓",
     "datePollVotes": "{count, plural, =0 {Ingen har röstat} one {# kan} other {# kan}}",
@@ -157,7 +157,7 @@
     "stepWhen": "Tid och plats",
     "stepPublish": "Publicera",
     "advancedTitle": "Fler inställningar",
-    "advancedHint": "Behövs sällan — hoppa över om du är osäker.",
+    "advancedHint": "Behövs sällan. Hoppa över om du är osäker.",
     "publish": "Publicera event",
     "saveChanges": "Spara ändringar",
     "publishSummary": "Eventet sparas först när du klickar här. Inget skickas till Discord innan dess.",
@@ -165,7 +165,7 @@
     "goingCount": "{count, plural, one {# kommer} other {# kommer}}",
     "suggestionRibbon": "Förslag",
     "suggestionCalloutTitle": "Det här är bara ett förslag",
-    "suggestionCalloutBody": "Inget är spikat än. Anmäl dig om du vill att det ska bli av — blir vi tillräckligt många så kör vi.",
+    "suggestionCalloutBody": "Inget är spikat än. Anmäl dig om du vill att det ska bli av, blir vi tillräckligt många så kör vi.",
     "guestsTitle": "Medföljande",
     "guestsEmpty": "Ingen har tagit med sig någon än.",
     "guestBroughtBy": "Med {memberName}",
@@ -175,7 +175,7 @@
     "guestNamePlaceholder": "Namn",
     "guestLimitReached": "Du har lagt till {count} medföljande, vilket är max.",
     "fieldIsOnline": "Sker online",
-    "fieldIsOnlineHint": "Ingen adress behövs — eventet hålls i Discord.",
+    "fieldIsOnlineHint": "Ingen adress behövs, eventet hålls i Discord.",
     "fieldLocationPlaceholder": "Gatuadress eller plats",
     "locationOnline": "Online (Discord)"
   },
@@ -242,7 +242,7 @@
     "whereTitle": "Var det lagras",
     "whereBody": "I en databas hos Supabase med servrar i Stockholm, inom EU. Webbplatsen driftas av Vercel.",
     "retentionTitle": "Hur länge",
-    "retentionBody": "Så länge du är medlem. Lämnar du föreningen kan vi behålla namn och evenemangshistorik som en del av föreningens historia — men du kan alltid begära att allt raderas.",
+    "retentionBody": "Så länge du är medlem. Lämnar du föreningen kan vi behålla namn och evenemangshistorik som en del av föreningens historia, men du kan alltid begära att allt raderas.",
     "rightsTitle": "Dina rättigheter",
     "rightsItems": [
       "Få veta vilka uppgifter vi har om dig.",
@@ -252,7 +252,7 @@
       "Klaga till Integritetsskyddsmyndigheten (IMY) om du tycker att vi gör fel."
     ],
     "cookiesTitle": "Kakor",
-    "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser. Sidor med inbäddat innehåll — kartor, Spotify, YouTube — laddar det från respektive tjänst, och då gäller deras villkor.",
+    "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser. Sidor med inbäddat innehåll som kartor, Spotify och YouTube laddar det från respektive tjänst, och då gäller deras villkor.",
     "contactTitle": "Kontakt",
     "contactBody": "Skriv till {contactEmail} så hjälper vi dig."
   },
@@ -284,14 +284,17 @@
     "gamingTitle": "Gaming",
     "openInGooglePhotos": "Öppna i Google Foto",
     "musicTitle": "Musik",
-    "openInSpotify": "Spela i Spotify"
+    "openInSpotify": "Spela i Spotify",
+    "membersOnlyTitle": "Bara för medlemmar",
+    "membersOnlyBody": "Logga in som medlem för att öppna det här.",
+    "membersOnlyHint": "Bara för medlemmar",
+    "membersOnlyClose": "Stäng"
   },
   "Links": {
     "title": "Föreningens länkar",
-    "membersOnlyNote": "Bara för medlemmar. Länkarna ger åtkomst i sig — dela dem inte vidare.",
     "discord": {
       "label": "Discord",
-      "description": "Där samtalet faktiskt händer."
+      "description": "Kräver Poli-rollen."
     },
     "photos": {
       "label": "Google Foto",

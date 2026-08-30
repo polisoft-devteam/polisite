@@ -11,7 +11,10 @@ export type AssociationFilm = {
   videoId: string
   title: string
   year?: string
-  /** Ours, in public/images/films — a YouTube thumbnail would contact Google on load. */
+  /**
+   * Ours, in public/images/films. Not named after the video id: an unlisted film is
+   * only as private as its id, and an image path is readable by anyone.
+   */
   thumbnail: string
 }
 
@@ -19,16 +22,16 @@ export const ASSOCIATION_FILMS: AssociationFilm[] = [
   {
     videoId: "4YU7wdGniXE",
     title: "Poli tribute",
-    thumbnail: "/images/films/4YU7wdGniXE.webp",
+    thumbnail: "/images/films/poli-tribute.webp",
   },
   {
     videoId: "UHUWKOX_M7s",
     title: "Poog reel #1 ( Typiskt vårt clan )",
-    thumbnail: "/images/films/UHUWKOX_M7s.webp",
+    thumbnail: "/images/films/poog-reel-1.webp",
   },
   {
     videoId: "VvEEHjrxWzA",
     title: "Poog reel #2 ( Typiskt vår klan )",
-    thumbnail: "/images/films/VvEEHjrxWzA.webp",
+    thumbnail: "/images/films/poog-reel-2.webp",
   },
 ]

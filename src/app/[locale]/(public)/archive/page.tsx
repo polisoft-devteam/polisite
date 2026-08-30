@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { AlbumGrid } from "@/components/AlbumGrid"
+import { LockedMediaCard } from "@/components/LockedMediaCard"
 import { PageSection } from "@/components/PageSection"
 import { PlaylistEmbed } from "@/components/PlaylistEmbed"
 import { AssociationLinks } from "@/components/AssociationLinks"
@@ -35,6 +36,7 @@ export default async function ArchivePage({
 
   const translateArchive = await getTranslations("Archive")
   const viewer = await getViewer()
+  const isMember = isActiveMember(viewer)
 
   return (
     <PageContainer>
@@ -49,33 +51,44 @@ export default async function ArchivePage({
         </div>
       ) : (
         <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {ASSOCIATION_FILMS.map((film) => (
-            <VideoEmbed
-              key={film.videoId}
-              videoId={film.videoId}
-              title={film.title}
-              year={film.year}
-              thumbnail={film.thumbnail}
-              playLabel={translateArchive("play")}
-            />
-          ))}
+          {ASSOCIATION_FILMS.map((film) =>
+            isMember ? (
+              <VideoEmbed
+                key={film.title}
+                videoId={film.videoId}
+                title={film.title}
+                year={film.year}
+                thumbnail={film.thumbnail}
+                playLabel={translateArchive("play")}
+              />
+            ) : (
+              <LockedMediaCard
+                key={film.title}
+                label={film.title}
+                coverUrl={film.thumbnail}
+                caption={film.year}
+              />
+            ),
+          )}
         </div>
       )}
 
-      {isActiveMember(viewer) && (
+      {
         <>
           <AlbumGrid
             heading={translateArchive("albumsTitle")}
             albums={PHOTO_ALBUMS.filter((album) => album.group === "main")}
             openLabel={translateArchive("openInGooglePhotos")}
+            canOpen={isMember}
           />
           <AlbumGrid
             heading={translateArchive("gamingTitle")}
             albums={PHOTO_ALBUMS.filter((album) => album.group === "gaming")}
             openLabel={translateArchive("openInGooglePhotos")}
+            canOpen={isMember}
           />
         </>
-      )}
+      }
 
       {ASSOCIATION_PLAYLISTS.length > 0 && (
         <PageSection heading={translateArchive("musicTitle")}>

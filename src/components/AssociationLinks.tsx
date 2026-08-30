@@ -32,10 +32,6 @@ export async function AssociationLinks() {
 
   return (
     <PageSection heading={translateLinks("title")}>
-      <p className="text-muted-foreground max-w-2xl text-sm">
-        {translateLinks("membersOnlyNote")}
-      </p>
-
       {links.length > 0 && (
         <ItemList>
           {links.map((link) => {
