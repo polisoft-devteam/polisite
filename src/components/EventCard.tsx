@@ -15,6 +15,7 @@ import {
   EVENT_CATEGORY_LABEL_KEY,
 } from "@/features/events/labels"
 import type { Attendee, EventGuestWithInviter } from "@/features/events/queries"
+import { MembersOnlyCard } from "@/components/MembersOnlyCard"
 import { Link } from "@/i18n/navigation"
 
 const MAX_FACES = 4
@@ -24,6 +25,7 @@ export async function EventCard({
   attendees,
   guests = [],
   locale,
+  canOpen,
 }: {
   event: Event
   /** Only those going — a face implies presence. */
@@ -31,6 +33,8 @@ export async function EventCard({
   /** Friends and family brought along, shown as faces after the members. */
   guests?: EventGuestWithInviter[]
   locale: string
+  /** False for a viewer who may not see event detail. */
+  canOpen: boolean
 }) {
   const translateEvents = await getTranslations("Events")
   const format = await getFormatter({ locale })
@@ -44,12 +48,11 @@ export async function EventCard({
   const totalComing = attendees.length + guests.length
   const hiddenCount = totalComing - shownFaces.length - shownGuests.length
 
-  return (
-    <Link
-      href={`/events/${event.slug}`}
-      transitionTypes={["nav-forward"]}
-      className="group border-border bg-card focus-visible:ring-ring/50 block overflow-hidden rounded-lg border transition-shadow hover:shadow-lg focus-visible:ring-3 focus-visible:outline-none"
-    >
+  const cardClassName =
+    "group border-border bg-card focus-visible:ring-ring/50 block w-full overflow-hidden rounded-lg border text-left transition-shadow hover:shadow-lg focus-visible:ring-3 focus-visible:outline-none"
+
+  const card = (
+    <>
       <div className="relative aspect-4/3 overflow-hidden">
         {event.kind === "suggestion" && <SuggestionRibbon />}
         {event.imageUrl ? (
@@ -130,6 +133,25 @@ export async function EventCard({
           </div>
         )}
       </div>
+    </>
+  )
+
+  // A viewer who may not open the event is never given its address: no href, no slug.
+  if (!canOpen) {
+    return (
+      <MembersOnlyCard className={cardClassName} label={event.title}>
+        {card}
+      </MembersOnlyCard>
+    )
+  }
+
+  return (
+    <Link
+      href={`/events/${event.slug}`}
+      transitionTypes={["nav-forward"]}
+      className={cardClassName}
+    >
+      {card}
     </Link>
   )
 }

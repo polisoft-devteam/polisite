@@ -41,6 +41,7 @@ import {
   canBringGuests,
   canEditEvent,
   canRespondToEvent,
+  isActiveMember,
   visibleEventVisibilitiesFor,
 } from "@/lib/permissions"
 
@@ -76,7 +77,11 @@ export default async function EventPage({
 
   // A forbidden event and a missing one give the same answer, so nobody can probe ids to
   // learn which members-only events exist.
-  if (!event) notFound()
+  //
+  // Detail is members only whatever the event's visibility: a guest sees the card on the
+  // list and gets the modal, so reaching this page by typing the URL must fail the same
+  // way an unknown slug does.
+  if (!event || !isActiveMember(viewer)) notFound()
 
   const [attendees, dateOptions, guests] = await Promise.all([
     findAttendeesForEvent(event.id),

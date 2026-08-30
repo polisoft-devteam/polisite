@@ -363,6 +363,7 @@ export default async function DesignPage({
             attendees={SAMPLE_ATTENDEES}
             guests={SAMPLE_GUESTS}
             locale={locale}
+            canOpen
           />
           <EventCard
             event={buildSampleEvent({
@@ -373,6 +374,7 @@ export default async function DesignPage({
             })}
             attendees={[]}
             locale={locale}
+            canOpen
           />
           <EventCard
             event={buildSampleEvent({
@@ -381,6 +383,7 @@ export default async function DesignPage({
             })}
             attendees={SAMPLE_ATTENDEES}
             locale={locale}
+            canOpen
           />
         </div>
       </PageSection>
