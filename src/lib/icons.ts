@@ -27,6 +27,7 @@ export {
   Translate as LanguageIcon,
   Google as GoogleIcon,
   Discord as DiscordIcon,
+  Spotify as SpotifyIcon,
   Github as GithubIcon,
   Images as PhotosIcon,
   FolderFill as DriveIcon,

@@ -283,7 +283,9 @@
     "play": "Play",
     "albumsTitle": "Albums",
     "gamingTitle": "Gaming",
-    "openInGooglePhotos": "Open in Google Photos"
+    "openInGooglePhotos": "Open in Google Photos",
+    "musicTitle": "Music",
+    "openInSpotify": "Play on Spotify"
   },
   "Links": {
     "title": "Association links",

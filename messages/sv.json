@@ -283,7 +283,9 @@
     "play": "Spela",
     "albumsTitle": "Album",
     "gamingTitle": "Gaming",
-    "openInGooglePhotos": "Öppna i Google Foto"
+    "openInGooglePhotos": "Öppna i Google Foto",
+    "musicTitle": "Musik",
+    "openInSpotify": "Spela i Spotify"
   },
   "Links": {
     "title": "Föreningens länkar",

@@ -2,12 +2,15 @@ import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { AlbumGrid } from "@/components/AlbumGrid"
+import { PageSection } from "@/components/PageSection"
+import { PlaylistEmbed } from "@/components/PlaylistEmbed"
 import { AssociationLinks } from "@/components/AssociationLinks"
 import { EmptyState } from "@/components/EmptyState"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { VideoEmbed } from "@/components/VideoEmbed"
 import { PHOTO_ALBUMS } from "@/lib/association-albums"
+import { ASSOCIATION_PLAYLISTS } from "@/lib/association-playlists"
 import { ASSOCIATION_FILMS } from "@/lib/association-media"
 import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
@@ -72,6 +75,21 @@ export default async function ArchivePage({
             openLabel={translateArchive("openInGooglePhotos")}
           />
         </>
+      )}
+
+      {ASSOCIATION_PLAYLISTS.length > 0 && (
+        <PageSection heading={translateArchive("musicTitle")}>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {ASSOCIATION_PLAYLISTS.map((playlist) => (
+              <PlaylistEmbed
+                key={playlist.playlistId}
+                playlistId={playlist.playlistId}
+                label={playlist.label}
+                openLabel={translateArchive("openInSpotify")}
+              />
+            ))}
+          </div>
+        </PageSection>
       )}
 
       {/* Shared albums and Drive folder are link-is-the-password, so members only. */}
