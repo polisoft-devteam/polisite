@@ -280,7 +280,10 @@
     "title": "Open archive",
     "intro": "”Fota, filma, hela dagen!” A future grand library of our triumphs and failures.",
     "empty": "Nothing in the archive yet.",
-    "play": "Play"
+    "play": "Play",
+    "albumsTitle": "Albums",
+    "gamingTitle": "Gaming",
+    "openInGooglePhotos": "Open in Google Photos"
   },
   "Links": {
     "title": "Association links",

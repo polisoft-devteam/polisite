@@ -280,7 +280,10 @@
     "title": "Öppet arkiv",
     "intro": "”Fota, filma, hela dagen!” Ett framtida grand library över våra framgångar och misslyckanden.",
     "empty": "Inget i arkivet än.",
-    "play": "Spela"
+    "play": "Spela",
+    "albumsTitle": "Album",
+    "gamingTitle": "Gaming",
+    "openInGooglePhotos": "Öppna i Google Foto"
   },
   "Links": {
     "title": "Föreningens länkar",
