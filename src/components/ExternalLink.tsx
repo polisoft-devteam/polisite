@@ -12,17 +12,24 @@ export function ExternalLink({
   href,
   children,
   className,
+  variant = "inline",
 }: {
   href: string
   children: React.ReactNode
   className?: string
+  /**
+   * "plain" drops the link styling for links that are a whole card or image rather than
+   * words in a sentence. The rel and target still apply, which is why those cases come
+   * through here instead of a bare anchor.
+   */
+  variant?: "inline" | "plain"
 }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer noopener"
-      className={cn(EXTERNAL_LINK_CLASSES, className)}
+      className={cn(variant === "inline" && EXTERNAL_LINK_CLASSES, className)}
     >
       {children}
     </a>
