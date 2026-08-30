@@ -1,8 +1,9 @@
-// A film in the archive: a poster card that becomes the player once clicked.
+// A film in the archive: a thumbnail card that becomes the player once clicked.
 //
-// Nothing reaches Google until the play button is pressed — not even the thumbnail, which
-// is why the poster is drawn here rather than fetched from i.ytimg.com. An ordinary embed
-// contacts YouTube on page load for every visitor, including the ones who never watch.
+// Nothing reaches Google until the play button is pressed — the thumbnail is ours, in
+// public/images/films, because loading YouTube's would contact them on page load for
+// every visitor including the ones who never watch. This section is public, so that
+// matters more here than on the members-only album grid.
 //
 // The player is youtube-nocookie.com, so even watching sets no third-party cookies.
 
@@ -10,17 +11,20 @@
 
 import { useState } from "react"
 
+import { SiteImage } from "@/components/SiteImage"
 import { PlayIcon } from "@/lib/icons"
 
 export function VideoEmbed({
   videoId,
   title,
   year,
+  thumbnail,
   playLabel,
 }: {
   videoId: string
   title: string
   year?: string
+  thumbnail: string
   playLabel: string
 }) {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -45,27 +49,31 @@ export function VideoEmbed({
           aria-label={`${playLabel}: ${title}`}
           className="group focus-visible:ring-ring/50 relative block aspect-video w-full cursor-pointer overflow-hidden focus-visible:ring-3 focus-visible:outline-none"
         >
-          <span className="from-primary/25 via-card to-accent/25 absolute inset-0 bg-linear-135" />
-          {/* Two soft pools of colour, so the empty poster reads as designed. */}
-          <span className="bg-primary/20 absolute -top-16 -left-10 size-56 rounded-full blur-3xl" />
-          <span className="bg-accent/20 absolute -right-10 -bottom-16 size-56 rounded-full blur-3xl" />
+          <SiteImage
+            src={thumbnail}
+            alt=""
+            rounded=""
+            className="size-full transition-transform duration-500 group-hover:scale-105"
+            sizes="(min-width: 1024px) 16rem, (min-width: 640px) 30vw, 100vw"
+          />
 
-          <span className="relative flex size-full items-center justify-center">
-            <span className="bg-background/90 text-primary ring-primary/20 flex size-20 items-center justify-center rounded-full shadow-xl ring-1 transition-transform duration-300 group-hover:scale-110">
-              <PlayIcon className="ml-1 size-9" />
+          <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/45 text-white transition-colors duration-300 group-hover:bg-black/60">
+            <span className="bg-background/90 text-primary flex size-12 items-center justify-center rounded-full shadow-lg transition-transform duration-300 group-hover:scale-110">
+              <PlayIcon className="ml-0.5 size-6" />
+            </span>
+            <span className="px-3 text-center text-xs font-medium opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              {playLabel}
             </span>
           </span>
         </button>
       )}
 
-      <figcaption className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 py-3">
-        <span className="font-heading text-base font-bold tracking-tight">
+      <figcaption className="block px-3 py-2.5">
+        <span className="font-heading block truncate text-sm font-bold tracking-tight">
           {title}
         </span>
         {year && (
-          <span className="text-muted-foreground text-sm tabular-nums">
-            {year}
-          </span>
+          <span className="text-muted-foreground block text-xs">{year}</span>
         )}
       </figcaption>
     </figure>

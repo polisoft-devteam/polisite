@@ -45,13 +45,14 @@ export default async function ArchivePage({
           <EmptyState>{translateArchive("empty")}</EmptyState>
         </div>
       ) : (
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {ASSOCIATION_FILMS.map((film) => (
             <VideoEmbed
               key={film.videoId}
               videoId={film.videoId}
               title={film.title}
               year={film.year}
+              thumbnail={film.thumbnail}
               playLabel={translateArchive("play")}
             />
           ))}
