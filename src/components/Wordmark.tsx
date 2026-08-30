@@ -25,6 +25,13 @@ const WORDMARK_SUFFIXES = [
   "Craft",
   "Trip",
   "Wagooo",
+  "Code",
+  "BP",
+  "420",
+  "234",
+  "BootyBoys",
+  "Dev",
+  "Borås",
 ]
 
 /** How long each word holds the slot. */
