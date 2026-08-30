@@ -124,7 +124,6 @@
     "visibilityMembersAndFriends": "Poli & vänner",
     "visibilityMembersAndFriendsExplanation": "Event där vi tar med vänner och familj — skidresor, födelsedagar och liknande. Bara medlemmar ser det i appen.",
     "fieldRemindersAtLimit": "Två valda — avmarkera en för att byta.",
-    "showOnMap": "Visa på karta",
     "previousMonth": "Föregående månad",
     "nextMonth": "Nästa månad",
     "fieldImage": "Bild",
@@ -253,7 +252,7 @@
       "Klaga till Integritetsskyddsmyndigheten (IMY) om du tycker att vi gör fel."
     ],
     "cookiesTitle": "Kakor",
-    "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser. Sidor med inbäddat innehåll — Spotify, YouTube när du trycker på play — laddar det från dem, och då gäller deras villkor.",
+    "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser. Sidor med inbäddat innehåll — kartor, Spotify, YouTube — laddar det från respektive tjänst, och då gäller deras villkor.",
     "contactTitle": "Kontakt",
     "contactBody": "Skriv till {contactEmail} så hjälper vi dig."
   },

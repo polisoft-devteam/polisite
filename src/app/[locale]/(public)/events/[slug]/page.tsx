@@ -10,6 +10,7 @@ import {
 import { AttendeeAvatars } from "@/components/AttendeeAvatars"
 import { EventDatePoll } from "@/components/EventDatePoll"
 import { EventGuests } from "@/components/EventGuests"
+import { EventMap } from "@/components/EventMap"
 import { EventRsvp } from "@/components/EventRsvp"
 import { EmptyState } from "@/components/EmptyState"
 import { ExternalLink } from "@/components/ExternalLink"
@@ -35,7 +36,7 @@ import {
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { EditIcon, ExternalLinkIcon, GoogleIcon, OnlineIcon } from "@/lib/icons"
+import { EditIcon, ExternalLinkIcon, OnlineIcon } from "@/lib/icons"
 import {
   canBringGuests,
   canEditEvent,
@@ -171,14 +172,6 @@ export default async function EventPage({
             event.location && (
               <Fact label={translateEvents("fieldLocation")}>
                 {event.location}
-                {/* A plain Maps search link needs no API key and no billing account. */}
-                <ExternalLink
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
-                  className="ml-2 text-sm"
-                >
-                  <GoogleIcon className="size-3.5" />
-                  {translateEvents("showOnMap")}
-                </ExternalLink>
               </Fact>
             )
           )}
@@ -202,6 +195,12 @@ export default async function EventPage({
           </Fact>
         </FactList>
       </div>
+
+      {!event.isOnline && event.location && (
+        <div className="mt-6">
+          <EventMap location={event.location} />
+        </div>
+      )}
 
       {event.kind === "suggestion" && <SuggestionCallout />}
 

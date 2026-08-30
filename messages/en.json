@@ -124,7 +124,6 @@
     "visibilityMembersAndFriends": "Poli & friends",
     "visibilityMembersAndFriendsExplanation": "Events where we bring friends and family — ski trips, birthdays and the like. Still only members see it in the app.",
     "fieldRemindersAtLimit": "Two selected — untick one to change.",
-    "showOnMap": "Show on map",
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
     "fieldImage": "Image",
@@ -253,7 +252,7 @@
       "Complain to the Swedish Authority for Privacy Protection (IMY) if you think we are getting it wrong."
     ],
     "cookiesTitle": "Cookies",
-    "cookiesBody": "We use a single necessary cookie, to keep you signed in. No analytics, no tracking, no ads. Pages with embedded content — Spotify, and YouTube once you press play — load it from them, and their terms apply to that.",
+    "cookiesBody": "We use a single necessary cookie, to keep you signed in. No analytics, no tracking, no ads. Pages with embedded content — maps, Spotify, YouTube — load it from those services, and their terms apply to that.",
     "contactTitle": "Contact",
     "contactBody": "Write to {contactEmail} and we will help you."
   },
