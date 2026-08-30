@@ -291,7 +291,7 @@
     },
     "photos": {
       "label": "Google Photos",
-      "description": "The shared photo album."
+      "description": "Shared albums from trips and parties."
     },
     "drive": {
       "label": "Google Drive",
