@@ -81,12 +81,7 @@ export default async function ArchivePage({
         <PageSection heading={translateArchive("musicTitle")}>
           <div className="grid gap-4 sm:grid-cols-2">
             {ASSOCIATION_PLAYLISTS.map((playlist) => (
-              <PlaylistEmbed
-                key={playlist.playlistId}
-                playlistId={playlist.playlistId}
-                label={playlist.label}
-                openLabel={translateArchive("openInSpotify")}
-              />
+              <PlaylistEmbed key={playlist.playlistId} playlist={playlist} />
             ))}
           </div>
         </PageSection>

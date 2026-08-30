@@ -10,13 +10,11 @@ import { getTranslations } from "next-intl/server"
 import { ExternalLink } from "@/components/ExternalLink"
 import { ItemList } from "@/components/ItemList"
 import { PageSection } from "@/components/PageSection"
-import { SectionHeading } from "@/components/SectionHeading"
-import { getAssociationLinks, getPhotoAlbums } from "@/lib/association-links"
+import { getAssociationLinks } from "@/lib/association-links"
 import {
   DiscordIcon,
   DriveIcon,
   GithubIcon,
-  PhotosIcon,
   type IconComponent,
 } from "@/lib/icons"
 
@@ -29,9 +27,8 @@ const LINK_ICON: Record<string, IconComponent> = {
 export async function AssociationLinks() {
   const translateLinks = await getTranslations("Links")
   const links = getAssociationLinks()
-  const albums = getPhotoAlbums()
 
-  if (links.length === 0 && albums.length === 0) return null
+  if (links.length === 0) return null
 
   return (
     <PageSection heading={translateLinks("title")}>
@@ -64,35 +61,6 @@ export async function AssociationLinks() {
             )
           })}
         </ItemList>
-      )}
-
-      {albums.length > 0 && (
-        <>
-          <SectionHeading>
-            <span className="flex items-center gap-2">
-              <PhotosIcon className="size-5 shrink-0" />
-              {translateLinks("photos.label")}
-            </span>
-          </SectionHeading>
-
-          <p className="text-muted-foreground text-sm">
-            {translateLinks("photos.description")}
-          </p>
-
-          {/* A grid rather than a list: eighteen stacked rows is a scroll, not a menu. */}
-          <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {albums.map((album) => (
-              <li key={album.url}>
-                <ExternalLink
-                  href={album.url}
-                  className="border-border hover:bg-muted flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors"
-                >
-                  <span className="truncate">{album.label}</span>
-                </ExternalLink>
-              </li>
-            ))}
-          </ul>
-        </>
       )}
     </PageSection>
   )

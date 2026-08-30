@@ -8,15 +8,8 @@
 // Not NEXT_PUBLIC: they are read on the server and only rendered for active members, so
 // they never reach a guest's browser at all.
 
-import { z } from "zod"
-
 export type AssociationLink = {
   id: "discord" | "drive" | "github"
-  url: string
-}
-
-export type PhotoAlbum = {
-  label: string
   url: string
 }
 
@@ -33,30 +26,4 @@ export function getAssociationLinks(): AssociationLink[] {
       Boolean(entry[1]?.trim()),
     )
     .map(([id, url]) => ({ id, url: url.trim() }))
-}
-
-const photoAlbumsSchema = z.array(
-  z.object({
-    label: z.string().trim().min(1),
-    url: z.string().trim().url(),
-  }),
-)
-
-/**
- * The shared albums, as a JSON array in GOOGLE_PHOTOS_ALBUMS.
- *
- * One variable rather than one per album: there are already seventeen of them, and a
- * numbered set of variables is how two of them end up pointing at the same place.
- * A malformed value yields no albums rather than a crash — the page still renders.
- */
-export function getPhotoAlbums(): PhotoAlbum[] {
-  const raw = process.env.GOOGLE_PHOTOS_ALBUMS?.trim()
-  if (!raw) return []
-
-  try {
-    const parsed = photoAlbumsSchema.safeParse(JSON.parse(raw))
-    return parsed.success ? parsed.data : []
-  } catch {
-    return []
-  }
 }
