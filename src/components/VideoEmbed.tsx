@@ -20,7 +20,7 @@ export function VideoEmbed({
 }: {
   videoId: string
   title: string
-  year: string
+  year?: string
   playLabel: string
 }) {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -62,9 +62,11 @@ export function VideoEmbed({
         <span className="font-heading text-base font-bold tracking-tight">
           {title}
         </span>
-        <span className="text-muted-foreground text-sm tabular-nums">
-          {year}
-        </span>
+        {year && (
+          <span className="text-muted-foreground text-sm tabular-nums">
+            {year}
+          </span>
+        )}
       </figcaption>
     </figure>
   )
