@@ -291,19 +291,15 @@
     "title": "Association links",
     "discord": {
       "label": "Discord",
-      "description": "Requires the Poli role."
-    },
-    "photos": {
-      "label": "Google Photos",
-      "description": "Shared albums from trips and parties."
+      "description": "Requires the Poli role"
     },
     "drive": {
       "label": "Google Drive",
-      "description": "Documents and originals."
+      "description": "Documents and originals"
     },
     "github": {
       "label": "GitHub",
-      "description": "The code behind this site."
+      "description": "All our repositories"
     }
   }
 }

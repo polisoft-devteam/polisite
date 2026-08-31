@@ -291,19 +291,15 @@
     "title": "Föreningens länkar",
     "discord": {
       "label": "Discord",
-      "description": "Kräver Poli-rollen."
-    },
-    "photos": {
-      "label": "Google Foto",
-      "description": "Delade album från resor och fester."
+      "description": "Kräver Poli-rollen"
     },
     "drive": {
       "label": "Google Drive",
-      "description": "Dokument och original."
+      "description": "Dokument och original"
     },
     "github": {
       "label": "GitHub",
-      "description": "Koden bakom den här sidan."
+      "description": "Alla våra repon"
     }
   }
 }
