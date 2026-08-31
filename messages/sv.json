@@ -184,10 +184,7 @@
     "empty": "Kalendern byggs i fas 4."
   },
   "Theme": {
-    "label": "Byt tema",
-    "light": "Ljust",
-    "dark": "Mörkt",
-    "system": "System"
+    "label": "Byt tema"
   },
   "Language": {
     "label": "Byt språk"

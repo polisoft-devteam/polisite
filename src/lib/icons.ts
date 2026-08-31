@@ -23,7 +23,6 @@ export {
   PlusLg as PlusIcon,
   Sun as LightThemeIcon,
   Moon as DarkThemeIcon,
-  Display as SystemThemeIcon,
   Translate as LanguageIcon,
   Google as GoogleIcon,
   Discord as DiscordIcon,

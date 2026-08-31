@@ -184,10 +184,7 @@
     "empty": "The calendar is built in phase 4."
   },
   "Theme": {
-    "label": "Change theme",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
+    "label": "Change theme"
   },
   "Language": {
     "label": "Change language"
