@@ -28,7 +28,7 @@ const WORDMARK_SUFFIXES = [
   "Code",
   "BP",
   "420",
-  "234",
+  "239",
   "BootyBoys",
   "Dev",
   "Borås",
