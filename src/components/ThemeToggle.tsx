@@ -1,7 +1,8 @@
 // The sun/moon button in the header. One click flips between light and dark.
 //
 // Whichever icon is hidden waits below the button, so switching reads as one setting and
-// the other rising: click the moon and it sinks while the sun comes up.
+// the other rising: click the moon and it sinks while the sun comes up. The easing
+// overshoots slightly, so each icon lands with a bounce rather than gliding to a stop.
 //
 // Driven by the `dark` class rather than React state, so there is nothing to mismatch on
 // hydration and the right icon is showing before any JavaScript runs.
@@ -30,8 +31,8 @@ export function ThemeToggle() {
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       className="relative overflow-hidden"
     >
-      <LightThemeIcon className="size-4 transition-all duration-500 dark:translate-y-6 dark:rotate-90 dark:opacity-0" />
-      <DarkThemeIcon className="absolute size-4 translate-y-6 rotate-90 opacity-0 transition-all duration-500 dark:translate-y-0 dark:rotate-0 dark:opacity-100" />
+      <LightThemeIcon className="size-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none dark:translate-y-6 dark:rotate-90 dark:opacity-0" />
+      <DarkThemeIcon className="absolute size-4 translate-y-6 rotate-90 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none dark:translate-y-0 dark:rotate-0 dark:opacity-100" />
     </Button>
   )
 }

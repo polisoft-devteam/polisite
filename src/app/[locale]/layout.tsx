@@ -77,12 +77,9 @@ export default async function LocaleLayout({
     >
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          {/* No disableTransitionOnChange: it injects `transition: none` on everything
+              while the theme switches, which also flattens the toggle's own animation. */}
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />
