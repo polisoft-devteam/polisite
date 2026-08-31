@@ -11,6 +11,8 @@ import { ExternalLink } from "@/components/ExternalLink"
 import { ItemList } from "@/components/ItemList"
 import { PageSection } from "@/components/PageSection"
 import { getAssociationLinks } from "@/lib/association-links"
+import { getViewer } from "@/lib/auth"
+import { isActiveMember } from "@/lib/permissions"
 import {
   DiscordIcon,
   DriveIcon,
@@ -25,6 +27,10 @@ const LINK_ICON: Record<string, IconComponent> = {
 }
 
 export async function AssociationLinks() {
+  // Checked here as well as by the caller. The Discord invite grants the Poli role on
+  // click, so it must be impossible to leak by rendering this in the wrong place.
+  if (!isActiveMember(await getViewer())) return null
+
   const translateLinks = await getTranslations("Links")
   const links = getAssociationLinks()
 
