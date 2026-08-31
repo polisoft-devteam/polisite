@@ -107,7 +107,7 @@ export function Wizard({
                     "flex size-6 shrink-0 items-center justify-center rounded-full border text-xs",
                     isCurrent &&
                       "border-primary bg-primary text-primary-foreground",
-                    isComplete && "border-primary text-primary",
+                    isComplete && "border-primary-ink text-primary-ink",
                   )}
                 >
                   {isComplete ? <CheckIcon className="size-3" /> : index + 1}

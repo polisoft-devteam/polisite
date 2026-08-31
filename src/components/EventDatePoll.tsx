@@ -80,7 +80,7 @@ export async function EventDatePoll({
               className={cn(
                 "border-border bg-card relative overflow-hidden rounded-lg border p-4",
                 isPast && "opacity-60",
-                isChosen && "border-primary",
+                isChosen && "border-primary-ink",
               )}
             >
               {/* The bar is the background of the row, so the text sits on top of it. */}
@@ -97,7 +97,7 @@ export async function EventDatePoll({
                 <div className="min-w-0">
                   <p className="flex items-center gap-2 font-medium">
                     {isChosen && (
-                      <CheckIcon className="text-primary size-4 shrink-0" />
+                      <CheckIcon className="text-primary-ink size-4 shrink-0" />
                     )}
                     <time dateTime={option.startsAt.toISOString()}>
                       {format.dateTime(option.startsAt, {

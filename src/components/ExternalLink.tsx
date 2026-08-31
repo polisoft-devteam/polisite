@@ -6,7 +6,7 @@
 import { cn } from "@/lib/utils"
 
 export const EXTERNAL_LINK_CLASSES =
-  "text-primary decoration-primary/40 hover:decoration-primary inline-flex items-center gap-1.5 font-medium underline underline-offset-4 transition-colors"
+  "text-primary-ink decoration-primary-ink/40 hover:decoration-primary-ink inline-flex items-center gap-1.5 font-medium underline underline-offset-4 transition-colors"
 
 export function ExternalLink({
   href,
