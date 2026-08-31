@@ -7,7 +7,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-heading-family);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -352,5 +352,44 @@ a[href] {
       animation-timeline: view();
       animation-range: entry 20% cover 45%;
     }
+  }
+}
+
+/* --- Wordmark ----------------------------------------------------------------
+   "Poli" stays put; the rest flips through the list in Wordmark.tsx.
+
+   The words share one grid cell, so the slot is as wide as the longest of them and the
+   header never reflows mid-animation. Delays and the keyframes themselves are generated
+   in Wordmark.tsx, because both depend on how many words are in the list. */
+
+.wordmark-slot {
+  display: inline-grid;
+  vertical-align: baseline;
+  perspective: 400px;
+}
+
+.wordmark-word {
+  grid-area: 1 / 1;
+  text-align: left;
+  /* Only the first is visible without the animation — see the reduced-motion case. */
+  opacity: 0;
+}
+
+.wordmark-word:first-child {
+  opacity: 1;
+}
+
+@media not (prefers-reduced-motion: reduce) {
+  .wordmark-word {
+    opacity: 0;
+    transform-origin: center bottom;
+    animation-name: wordmark-flip;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+    animation-iteration-count: infinite;
+  }
+
+  /* Overridden by the animation, so the static fallback doesn't linger. */
+  .wordmark-word:first-child {
+    opacity: 0;
   }
 }

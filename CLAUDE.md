@@ -82,8 +82,14 @@ visitor sees. Access is granted afterwards by an admin promoting them to `active
 **Roles:** `member`, `moderator`, `board`, `treasurer`, `admin`. Stored as rows, not enum
 columns on the member — a member can hold several.
 
-**Event visibility:** `public` (guests included), `members` (active members), `private`
-(invited only). Visibility is filtered in the query, never by hiding UI.
+**Event visibility:** `public`, `members`, `members_and_friends`. Visibility decides which
+events appear in a list, and is filtered in the query, never by hiding UI.
+
+**Event detail is members only, whatever the visibility.** A guest sees the cards on
+`/events` and on the archive, but they carry no link and no slug, and the detail page
+returns not-found. So `public` means "a guest sees this event exists", not "a guest reads
+it". The same holds for album and film cards: a non-member's page never contains the URL,
+because a hidden link is still in the markup.
 
 **Wishlist claiming:** the owner may see _that_ an item is claimed. The owner must never
 see _who_ claimed it. The claimer's identity is omitted at the query level when the

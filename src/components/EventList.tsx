@@ -4,6 +4,8 @@ import { EmptyState } from "@/components/EmptyState"
 import { EventCard } from "@/components/EventCard"
 import { PageSection } from "@/components/PageSection"
 import type { Event } from "@/db/schema"
+import { getViewer } from "@/lib/auth"
+import { isActiveMember } from "@/lib/permissions"
 import {
   findGoingAttendeesByEvent,
   findGuestsByEvent,
@@ -28,6 +30,9 @@ export async function EventList({
     )
   }
 
+  // Event detail is members only, so a guest's cards carry no link and no slug.
+  const canOpen = isActiveMember(await getViewer())
+
   // One query each for the whole grid, not one per card.
   const eventIds = events.map((event) => event.id)
   const [attendeesByEvent, guestsByEvent] = await Promise.all([
@@ -45,6 +50,7 @@ export async function EventList({
             attendees={attendeesByEvent.get(event.id) ?? []}
             guests={guestsByEvent.get(event.id) ?? []}
             locale={locale}
+            canOpen={canOpen}
           />
         ))}
       </div>

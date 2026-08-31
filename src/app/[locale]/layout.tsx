@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Fraunces, Geist, Geist_Mono } from "next/font/google"
+import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google"
 import { notFound } from "next/navigation"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
@@ -24,12 +24,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
-// Headings. A variable serif with some character, so titles aren't the body face
-// at a larger size. Self-hosted by next/font — no request to Google at runtime.
-const headingFont = Fraunces({
+// Headings. Enough character to sound like a club rather than a publication, set heavy
+// so titles carry weight against plain body text.
+// Self-hosted by next/font — no request to Google at runtime.
+const headingFont = Bricolage_Grotesque({
   variable: "--font-heading-family",
   subsets: ["latin"],
-  axes: ["SOFT", "WONK"],
+  weight: ["600", "700", "800"],
 })
 
 // Lets Next build /sv and /en ahead of time instead of on first request.
@@ -76,12 +77,9 @@ export default async function LocaleLayout({
     >
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          {/* No disableTransitionOnChange: it injects `transition: none` on everything
+              while the theme switches, which also flattens the toggle's own animation. */}
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />
