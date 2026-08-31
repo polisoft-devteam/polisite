@@ -31,8 +31,8 @@ export function ThemeToggle() {
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       className="relative overflow-hidden"
     >
-      <LightThemeIcon className="size-4 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none dark:translate-y-6 dark:rotate-90 dark:opacity-0" />
-      <DarkThemeIcon className="absolute size-4 translate-y-6 rotate-90 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none dark:translate-y-0 dark:rotate-0 dark:opacity-100" />
+      <LightThemeIcon className="size-4 transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none dark:translate-y-6 dark:rotate-90 dark:opacity-0" />
+      <DarkThemeIcon className="absolute size-4 translate-y-6 rotate-90 opacity-0 transition-all duration-1000 ease-[cubic-bezier(0.34,1.56,0.64,1)] motion-reduce:transition-none dark:translate-y-0 dark:rotate-0 dark:opacity-100" />
     </Button>
   )
 }
