@@ -332,11 +332,12 @@
     "ownerBlindNote": "You never see whether anyone has picked something off your own list. That would spoil it."
   },
   "Notifications": {
-    "label": "Notifications",
-    "empty": "Nothing new since last time.",
-    "membershipRequests": "Want to join",
-    "newSignUps": "New sign ins",
-    "responsesToMyEvents": "Replies to your events",
-    "newEvents": "New events"
+    "title": "Notifications",
+    "empty": "Nothing new in the past month.",
+    "unseen": "{count, plural, one {# new notification} other {# new notifications}}",
+    "membershipRequest": "{who} wants to join",
+    "signUp": "{who} signed in for the first time",
+    "responseToMyEvent": "{who} replied to {what}",
+    "newEvent": "{who} created {what}"
   }
 }

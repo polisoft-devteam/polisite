@@ -332,11 +332,12 @@
     "ownerBlindNote": "Du ser aldrig om någon har fixat något från din egen lista. Det vore ju tråkigt."
   },
   "Notifications": {
-    "label": "Notiser",
-    "empty": "Inget nytt sedan sist.",
-    "membershipRequests": "Vill bli medlem",
-    "newSignUps": "Nya inloggningar",
-    "responsesToMyEvents": "Svar på dina event",
-    "newEvents": "Nya event"
+    "title": "Notiser",
+    "empty": "Inget nytt den senaste månaden.",
+    "unseen": "{count, plural, one {# ny notis} other {# nya notiser}}",
+    "membershipRequest": "{who} vill bli medlem",
+    "signUp": "{who} har loggat in för första gången",
+    "responseToMyEvent": "{who} svarade på {what}",
+    "newEvent": "{who} skapade {what}"
   }
 }
