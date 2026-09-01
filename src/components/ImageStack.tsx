@@ -1,5 +1,7 @@
 // One to three photos in a pile: a large one with the others tilted on top.
 //
+// Used by the timeline and beside the About page's history.
+//
 // Hovering lifts a photo above its neighbours and scales it up. Pure CSS — the stack has no
 // state, so it stays a Server Component.
 
@@ -15,7 +17,7 @@ const STACK_POSITIONS = [
   "absolute -bottom-6 left-2 w-1/3 -rotate-6",
 ]
 
-export function TimelineImageStack({ images }: { images: string[] }) {
+export function ImageStack({ images }: { images: string[] }) {
   return (
     <div className="relative mb-10 w-full">
       {images.slice(0, STACK_POSITIONS.length).map((image, index) => (

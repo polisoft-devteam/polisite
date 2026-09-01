@@ -55,7 +55,7 @@ import {
   SignOutIcon,
   WishlistIcon,
 } from "@/lib/icons"
-import { readHeroImages } from "@/lib/hero-images"
+import { readHeroImages } from "@/lib/site-images"
 import { WELCOME_LETTER } from "@/lib/welcome-letter"
 
 export const metadata: Metadata = { title: "Design" }

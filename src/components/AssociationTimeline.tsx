@@ -11,7 +11,7 @@
 
 import { getTranslations } from "next-intl/server"
 
-import { TimelineImageStack } from "@/components/TimelineImageStack"
+import { ImageStack } from "@/components/ImageStack"
 import { ASSOCIATION_TIMELINE } from "@/lib/association-timeline"
 import { cn } from "@/lib/utils"
 
@@ -53,7 +53,7 @@ export async function AssociationTimeline() {
                     : "sm:mr-[calc(50%+2.5rem)]"
                 }
               >
-                {entry.images && <TimelineImageStack images={entry.images} />}
+                {entry.images && <ImageStack images={entry.images} />}
 
                 <h3 className="font-heading text-xl font-bold tracking-tight">
                   {translateAbout(`timeline.${entry.id}.title`)}

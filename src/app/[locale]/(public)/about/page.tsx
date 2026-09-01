@@ -9,12 +9,14 @@ import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { AssociationTimeline } from "@/components/AssociationTimeline"
+import { ImageStack } from "@/components/ImageStack"
 import { MembersTable } from "@/components/MembersTable"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { PageSubNav, type SubNavItem } from "@/components/PageSubNav"
 import { Badge } from "@/components/ui/badge"
+import { readAboutImages } from "@/lib/site-images"
 import { getViewer } from "@/lib/auth"
 import { ASSOCIATION_FULL_NAME } from "@/lib/association"
 import { canViewMemberDirectory, isAdmin } from "@/lib/permissions"
@@ -37,6 +39,7 @@ export default async function AboutPage({
   const translateAbout = await getTranslations("About")
   const translateMembers = await getTranslations("Members")
   const viewer = await getViewer()
+  const aboutImages = await readAboutImages()
 
   const showMembers = canViewMemberDirectory(viewer)
   const showTimeline = isAdmin(viewer)
@@ -59,16 +62,28 @@ export default async function AboutPage({
       <PageSubNav items={sections} />
 
       <PageSection id="about-us">
-        <p className="max-w-2xl font-medium">{translateAbout("motto")}</p>
+        {/* The pile sits beside the history on a wide screen and above it on a phone,
+            where a column narrow enough for both would leave neither readable. */}
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
+          <div>
+            <p className="font-medium">{translateAbout("motto")}</p>
 
-        {/* The association's own history, in the order it happened. Named keys rather than
-            an array, so a paragraph can be reworded without renumbering the rest. */}
-        <div className="text-muted-foreground max-w-2xl space-y-4">
-          <p>{translateAbout("origin")}</p>
-          <p>{translateAbout("growth")}</p>
-          <p>{translateAbout("arrivals")}</p>
-          <p>{translateAbout("guests")}</p>
-          <p>{translateAbout("bond")}</p>
+            {/* The association's own history, in the order it happened. Named keys rather
+                than an array, so a paragraph can be reworded without renumbering. */}
+            <div className="text-muted-foreground mt-4 space-y-4">
+              <p>{translateAbout("origin")}</p>
+              <p>{translateAbout("growth")}</p>
+              <p>{translateAbout("arrivals")}</p>
+              <p>{translateAbout("guests")}</p>
+              <p>{translateAbout("bond")}</p>
+            </div>
+          </div>
+
+          {aboutImages.length > 0 && (
+            <div className="order-first lg:order-none">
+              <ImageStack images={aboutImages} />
+            </div>
+          )}
         </div>
       </PageSection>
 

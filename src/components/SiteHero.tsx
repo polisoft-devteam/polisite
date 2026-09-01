@@ -14,7 +14,7 @@ import { requestMembership } from "@/features/members/membership-prompt-actions"
 import { findMembershipPrompt } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 import { ASSOCIATION_NAME } from "@/lib/association"
-import { readHeroImages } from "@/lib/hero-images"
+import { readHeroImages } from "@/lib/site-images"
 import { PendingIcon } from "@/lib/icons"
 import { isActiveMember } from "@/lib/permissions"
 
