@@ -109,6 +109,21 @@ export default async function SettingsPage({
           />
         </FormField>
 
+        <FormField
+          label={translateProfile("githubUrl")}
+          htmlFor="githubUrl"
+          hint={translateProfile("githubUrlHint")}
+        >
+          <Input
+            id="githubUrl"
+            name="githubUrl"
+            type="url"
+            placeholder="https://github.com/"
+            defaultValue={member.githubUrl ?? ""}
+            maxLength={300}
+          />
+        </FormField>
+
         <FormField label={translateProfile("bio")} htmlFor="bio">
           <Textarea
             id="bio"

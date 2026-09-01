@@ -29,7 +29,7 @@
     "guests": "Special shoutout to our more inactive guest members, such as the tireless Ivar, Frans and Simon.",
     "bond": "Our love for the computing machine in all its forms, shorts, games, music, art, and the making of all that through programming and the rest, is what binds us together. But our journey has only just begun.",
     "membershipTitle": "Membership",
-    "membershipBody": "Placeholder text. Describe how to join {associationName} and what it involves.",
+    "membershipBody": "Sign in with Google and send a request. An admin lets you in, and only then do you see the association's own events, members and wishlists. Until then you see the same page a visitor does.",
     "timeline": {
       "before": {
         "title": "Before all this",
@@ -226,7 +226,9 @@
     "joinedAssociationAt": "Member since",
     "birthday": "Birthday",
     "avatar": "Profile picture",
-    "avatarHint": "Optional. Resized automatically."
+    "avatarHint": "Optional. Resized automatically.",
+    "githubUrl": "GitHub",
+    "githubUrlHint": "Optional. Shown as an icon in the members list."
   },
   "Privacy": {
     "title": "Privacy policy",

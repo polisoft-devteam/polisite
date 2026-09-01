@@ -29,7 +29,7 @@
     "guests": "Special shoutout till våra mer inaktiva gästande medlemmar, såsom den oförtröttliga Ivar, Frans och Simon.",
     "bond": "Vår kärlek till datamaskinen i alla dess former, shorts, spel, musik, konst samt skapandet av dessa medier genom diverse programmering med mera binder oss samman. Men vår resa har bara börjat.",
     "membershipTitle": "Medlemskap",
-    "membershipBody": "Platshållartext. Beskriv hur man blir medlem i {associationName} och vad det innebär.",
+    "membershipBody": "Logga in med Google och skicka en förfrågan. En admin släpper in dig, och först då ser du föreningens egna evenemang, medlemmar och önskelistor. Innan dess ser du samma sida som en besökare.",
     "timeline": {
       "before": {
         "title": "Innan allt",
@@ -226,7 +226,9 @@
     "joinedAssociationAt": "Medlem sedan",
     "birthday": "Födelsedag",
     "avatar": "Profilbild",
-    "avatarHint": "Frivilligt. Skalas ner automatiskt."
+    "avatarHint": "Frivilligt. Skalas ner automatiskt.",
+    "githubUrl": "GitHub",
+    "githubUrlHint": "Frivilligt. Visas som en ikon i medlemslistan."
   },
   "Privacy": {
     "title": "Integritetspolicy",

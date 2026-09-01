@@ -16,7 +16,7 @@ import { PageSection } from "@/components/PageSection"
 import { PageSubNav, type SubNavItem } from "@/components/PageSubNav"
 import { Badge } from "@/components/ui/badge"
 import { getViewer } from "@/lib/auth"
-import { ASSOCIATION_FULL_NAME, ASSOCIATION_NAME } from "@/lib/association"
+import { ASSOCIATION_FULL_NAME } from "@/lib/association"
 import { canViewMemberDirectory, isAdmin } from "@/lib/permissions"
 
 export async function generateMetadata({
@@ -93,9 +93,7 @@ export default async function AboutPage({
 
       <PageSection id="membership" heading={translateAbout("membershipTitle")}>
         <p className="text-muted-foreground max-w-2xl">
-          {translateAbout("membershipBody", {
-            associationName: ASSOCIATION_NAME,
-          })}
+          {translateAbout("membershipBody")}
         </p>
       </PageSection>
     </PageContainer>

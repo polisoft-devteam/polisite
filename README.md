@@ -62,21 +62,34 @@ pnpm storage:setup                                 # create the storage buckets
 pnpm images:optimize                               # resize anything in public/images
 ```
 
-## Before release
+## Deploying
 
-Things that must not ship as they are:
+Vercel builds from the repo; the parts it cannot work out on its own:
 
-- **`About.membershipBody` is still placeholder text**, in both languages. The history
-  above it is written; how to join is not.
-- **The timeline is admin only**, badged "under construction", because its six
-  `About.timeline` steps read as prose but none names an actual year or event. It is a post
-  launch job. Drop the `isAdmin` check in the About page to show it to everyone.
+1. **Set every variable in `.env.example`** in the Vercel project. `CRON_SECRET` is not
+   optional: `/api/cron/reminders` refuses to run at all without it rather than running
+   unprotected, so reminders would silently never send.
+2. **Apply migrations against production**, `pnpm db:migrate` with `DATABASE_URL` pointing
+   there. Never through the Supabase dashboard. Read the SQL first if any are unapplied.
+3. **Promote yourself**: `pnpm member <your email> --status active --role admin`. First
+   sign-in only creates a guest, and a site with no admin has nobody who can let anyone in.
+4. **Check the cron is registered** in Vercel after the first deploy. It comes from
+   `vercel.json`, one run a day, which is all the Hobby plan allows.
+
+Creating the events that are already planned, without waking Discord: untick **Announce on
+Discord** _and_ leave the reminders unticked. Every Discord post mentions the member role,
+reminders included, so an event created quietly but with a reminder set still pings the
+role when the daily sweep reaches it.
+
+## Still to do
+
+- **The timeline names no real years.** It is admin only and badged as unfinished, so it
+  ships without showing anyone a half-written page. Drop the `isAdmin` check in the About
+  page when it is ready.
 - **The English About page is a translation of Swedish in-jokes**, nicknames included. If
-  it should be Swedish only, like the founder's letter, that is a decision to make rather
-  than a wording to fix.
-- **`ALWAYS_SHOW_WELCOME_LETTER` in `src/components/MembershipPrompt.tsx` is `true`**, so
-  the founder's letter reopens on every page load while it is being written. Set it back to
-  `false` and it returns to appearing once, to a signed-in guest who has not answered.
+  it should be Swedish only, like the founder's letter, that is a decision rather than a
+  wording fix, and it needs an exception to the rule that About prose lives in the message
+  files.
 
 ## Where things are
 

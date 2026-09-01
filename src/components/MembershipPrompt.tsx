@@ -1,7 +1,10 @@
 // Shown once to someone who has signed in with Google but isn't a member: a letter from a
-// founder, and the chance to ask to join. Either button dismisses it for good.
+// founder, and the chance to ask to join.
+//
+// Asking is what stops it coming back. Closing with the X leaves the question open, so it
+// returns next visit. To read the letter without signing out, it is on /design.
 
-import { Modal, ModalClose } from "@/components/Modal"
+import { Modal } from "@/components/Modal"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import { Button } from "@/components/ui/button"
 import { requestMembership } from "@/features/members/membership-prompt-actions"
@@ -10,26 +13,13 @@ import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
 import { WELCOME_LETTER } from "@/lib/welcome-letter"
 
-/**
- * TEMPORARY, REMOVE BEFORE RELEASE.
- *
- * While the letter is being written it reopens on every page load, for anyone signed in.
- * Set back to false and the letter goes back to appearing once, to a signed-in guest who
- * has not answered yet. Tracked in README under "Before release".
- */
-const ALWAYS_SHOW_WELCOME_LETTER = true
-
 export async function MembershipPrompt() {
   const viewer = await getViewer()
 
-  if (!viewer) return null
+  if (!viewer || isActiveMember(viewer)) return null
 
-  if (!ALWAYS_SHOW_WELCOME_LETTER) {
-    if (isActiveMember(viewer)) return null
-
-    // Answered already — never show it again.
-    if (await findMembershipPrompt(viewer.authUserId)) return null
-  }
+  // Answered already — never show it again.
+  if (await findMembershipPrompt(viewer.authUserId)) return null
 
   return (
     <Modal
@@ -40,18 +30,9 @@ export async function MembershipPrompt() {
       backgroundImage="/images/misc/viggeRasse.webp"
       titleClassName="text-center text-xl font-extrabold tracking-tight sm:text-2xl"
       footer={
-        // An active member is only here because of the flag above, and asking to join
-        // something you are already in does nothing: the action refuses it. So for them
-        // the button closes the letter instead of submitting into a dead end.
-        isActiveMember(viewer) ? (
-          <ModalClose render={<Button />}>
-            {WELCOME_LETTER.closeLabel}
-          </ModalClose>
-        ) : (
-          <form action={requestMembership}>
-            <Button type="submit">{WELCOME_LETTER.requestLabel}</Button>
-          </form>
-        )
+        <form action={requestMembership}>
+          <Button type="submit">{WELCOME_LETTER.requestLabel}</Button>
+        </form>
       }
     >
       <WelcomeCrawl
