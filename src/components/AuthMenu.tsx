@@ -69,7 +69,7 @@ export async function AuthMenu() {
           href="/profile"
           transitionTypes={["nav-forward"]}
           aria-label={displayName}
-          className="hover:text-foreground text-muted-foreground group/reveal flex items-center gap-1.5 rounded-md transition-colors"
+          className="hover:text-foreground text-muted-foreground group/reveal flex cursor-pointer items-center gap-1.5 rounded-md transition-colors"
         >
           <HoverRevealLabel icon={identity} label={displayName} />
         </Link>
