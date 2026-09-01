@@ -4,6 +4,10 @@
 // where the list lives. A separate bell would have been a second thing pointing at the
 // same place.
 //
+// Icons rather than text, with the label sliding out on hover: an email is as long as it
+// likes, and one squeezed the navigation into itself. Nothing here is hidden from a screen
+// reader, the labels are clipped rather than removed.
+//
 // A server component — it reads the session on the server, so nothing about membership
 // is decided in the browser. Signing out is a server action submitted by a plain form,
 // which is why this needs no client JavaScript at all.
@@ -12,9 +16,11 @@ import { getTranslations } from "next-intl/server"
 
 import { signOut } from "@/app/auth/actions"
 import { SignInButton } from "@/components/SignInButton"
+import { HoverRevealLabel } from "@/components/HoverRevealLabel"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
+import { SignOutIcon } from "@/lib/icons"
 import { countUnseenActivity } from "@/features/notifications/queries"
 import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
@@ -53,33 +59,44 @@ export async function AuthMenu() {
           </span>
         )}
       </span>
-
-      <span className="hidden text-sm sm:inline">{displayName}</span>
     </>
   )
 
   return (
-    <div className="flex items-center gap-1 sm:gap-2">
+    <div className="flex min-w-0 items-center gap-1">
       {isActiveMember(viewer) ? (
         <Link
           href="/profile"
           transitionTypes={["nav-forward"]}
-          className="hover:text-foreground text-muted-foreground flex items-center gap-2 rounded-md transition-colors"
+          aria-label={displayName}
+          className="hover:text-foreground text-muted-foreground group/reveal flex items-center gap-1.5 rounded-md transition-colors"
         >
-          {identity}
+          <HoverRevealLabel icon={identity} label={displayName} />
         </Link>
       ) : (
-        <div className="text-muted-foreground flex items-center gap-2">
-          {identity}
-          <span className="hidden text-xs sm:inline">
-            {translateAuth("guest")}
-          </span>
-        </div>
+        <span
+          className="text-muted-foreground group/reveal flex items-center gap-1.5"
+          title={displayName}
+        >
+          <HoverRevealLabel
+            icon={identity}
+            label={`${displayName} · ${translateAuth("guest")}`}
+          />
+        </span>
       )}
 
       <form action={signOut}>
-        <Button type="submit" variant="ghost" size="sm">
-          {translateAuth("signOut")}
+        <Button
+          type="submit"
+          variant="ghost"
+          size="icon"
+          aria-label={translateAuth("signOut")}
+          className="group/reveal w-auto px-2"
+        >
+          <HoverRevealLabel
+            icon={<SignOutIcon className="size-4" />}
+            label={translateAuth("signOut")}
+          />
         </Button>
       </form>
     </div>

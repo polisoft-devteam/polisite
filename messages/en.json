@@ -198,14 +198,14 @@
     "switchTo": "Switch to {language}"
   },
   "Footer": {
-    "note": "Private site for association members.",
+    "builtWith": "Made with",
+    "builtBy": "by {associationFullName}",
     "privacy": "Privacy"
   },
   "Auth": {
-    "signIn": "Sign in with Google",
+    "signIn": "Sign in",
     "signOut": "Sign out",
-    "guest": "Guest",
-    "signInShort": "Sign in"
+    "guest": "Guest"
   },
   "Profile": {
     "title": "My profile",

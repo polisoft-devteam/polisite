@@ -198,14 +198,14 @@
     "switchTo": "Byt till {language}"
   },
   "Footer": {
-    "note": "Privat sida för föreningens medlemmar.",
+    "builtWith": "Skapad med",
+    "builtBy": "av {associationFullName}",
     "privacy": "Integritetspolicy"
   },
   "Auth": {
-    "signIn": "Logga in med Google",
+    "signIn": "Logga in",
     "signOut": "Logga ut",
-    "guest": "Gäst",
-    "signInShort": "Logga in"
+    "guest": "Gäst"
   },
   "Profile": {
     "title": "Min profil",

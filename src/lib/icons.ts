@@ -38,6 +38,8 @@ export {
   FolderFill as DriveIcon,
   GeoAlt as MapPinIcon,
   BoxArrowUpRight as ExternalLinkIcon,
+  BoxArrowRight as SignOutIcon,
+  HeartFill as HeartIcon,
   // Event categories
   MusicNoteBeamed as MusicIcon,
   Balloon as PartyIcon,

@@ -36,6 +36,7 @@ import { Modal, ModalClose } from "@/components/Modal"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
+import { HoverRevealLabel } from "@/components/HoverRevealLabel"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import {
@@ -48,7 +49,12 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { ExternalLinkIcon, GoogleIcon } from "@/lib/icons"
+import {
+  ExternalLinkIcon,
+  GoogleIcon,
+  SignOutIcon,
+  WishlistIcon,
+} from "@/lib/icons"
 import { readHeroImages } from "@/lib/hero-images"
 import { WELCOME_LETTER } from "@/lib/welcome-letter"
 
@@ -280,6 +286,34 @@ export default async function DesignPage({
           </ExternalLink>
 
           <ExternalLink href="https://example.com">Utan ikon</ExternalLink>
+        </div>
+      </PageSection>
+
+      <PageSection heading="Ikon som fäller ut sin text">
+        {/* Hover or tab to it. The group class sits on the button, not inside the
+            component, because that is where keyboard focus lands. */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="group/reveal w-auto px-2"
+          >
+            <HoverRevealLabel
+              icon={<SignOutIcon className="size-4" />}
+              label="Logga ut"
+            />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="group/reveal w-auto px-2"
+          >
+            <HoverRevealLabel
+              icon={<WishlistIcon className="size-4" />}
+              label="En ganska lång etikett"
+            />
+          </Button>
         </div>
       </PageSection>
 
