@@ -7,21 +7,20 @@
 // founder, not interface copy. Translating the jokes would produce something nobody wrote.
 
 export const WELCOME_LETTER = {
-  title: "Välkommen Poli och eller Sverigevän!",
+  title: "Välkommen Poli och/eller Sverigevän!",
 
   paragraphs: [
-    "Om du läser detta så har snuten sprängt dörren, hittat min 5 petabyte-disk och jag sitter inne.",
-    "Nej fan, jag bara skojar. Nu tar vi till en mer seriös ton.",
-    "Som nu 30-åring och mer eller mindre nyskild har jag insett att manlig gemenskap är allt man har här i världen. Det bör inte försummas, eftersom vi alla sprider ut oss i olika delar av världen, Göteborg, Köpenhamn, London, Bjuv(?) kommer det bli viktigare än någonsin med ett strukturerat klibb som håller fast en så mysig grupp som denna.",
-    "Ännu är livet fyllt med aktivitet, sprit och kvinnor. Men det kommer en dag är demensen kickar, knät inte klarar hockeyn, ens franska fru har gått bort efter en tragisk elskoterrelaterad simningsolycka i Högsbo.",
-    "Kort sagt, vänskap och gemenskap är ett frö som jag i egenskap av förenings första självutnämda President, Seth Ruydell style, nu ska vattna och sköta med omsorg.",
-    "Det första konkreta steget tänker jag ta i form av denna hemsida. Här kommer jag, och förhoppningsvis DU, skapa och schemalägga events.",
-    "Det är redan en hel del i görningen. Tanken är att det ska vara events för oss men också nära och kära. Ingen kan komma på allt men alla kan komma på något, exempelvis en hund eller ett bord!",
-    "Jag har stora planer för denna fina förening, fet merch, stående årsträff och resor. Kanske t.o.m. en gemensam aktiepool där vi sparar mot gemensam resa. Låt oss se vart detta tar oss.",
-    "Jag säger, välkommen till föreningslivet, DITT medlemskap är redan bokat.",
+    "Om du läser detta så har snuten sprängt dörren, hittat min 5 petabytedisk och jag sitter inne...",
+    "Där fick jag dig allt, bara lite skoj sådär",
+    "Nu undrar du säkert, vad är detta?",
+    "Som nu 30-åring och mer eller mindre nyskild har jag insett att manlig gemenskap är fan det enda man har här i världen, när allt annat rämnat! Ännu är livet fyllt med aktivitet, sprit och IKEA-kvinnor. Men det kommer en dag när frugan sticker med barnen, demensen kickar in, knäet inte pallar hockeyn, ens franska fru har gått bort efter en tragisk elskoterrelaterad simningsolycka i Högsbo... vem vet? Inte du i alla fall.",
+    "Med avstamp i detta förklarar jag lösningen till mitt och numera ditt problem: föreningslivet!",
+    "Den här fina lilla webbappen är ett frö som jag, i egenskap av föreningens första självutnämnda President, Seth Ruydell style, nu ska vattna och sköta med omsorg! Här kommer jag, och förhoppningsvis DU, skapa och schemalägga events och annat mys.",
+    "Jag har stora planer för denna fina Poli-förening: fet merch, stående årsträff och resor. Kanske tom en gemensam aktiepool där vi sparar mot gemensam resa??",
+    "Jag säger: välkommen till föreningslivet, DITT medlemskap är redan bokat.",
   ],
 
-  signature: "I hast, Victor Interassistsson",
+  signature: "I hast,\nVictor Interassistsson",
 
   requestLabel: "Redan certified PoliBoy? Clicka här!",
   closeLabel: "Stäng",

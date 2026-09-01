@@ -373,6 +373,80 @@ a[href] {
   }
 }
 
+/* --- Star Wars crawl ---------------------------------------------------------
+   The founder's letter, receding into the distance and floating away.
+
+   Three nested elements, because each does one job: the stage owns the
+   perspective, the tilt leans the text back, and only the innermost moves. Put
+   the rotation and the translation on one element and the keyframes overwrite
+   the tilt.
+
+   It runs once. An endless loop would mean the one paragraph you wanted to
+   re-read is always 80 seconds away.
+
+   Deliberately not themed: yellow text receding into black is the whole joke,
+   and it is a fixed reference to one film rather than a colour this site picks.
+   Same reasoning as the flags in LanguageToggle. */
+
+.crawl-stage {
+  height: 20rem;
+  overflow: hidden;
+  perspective: 300px;
+  /* Fades into the distance at the top rather than being cut off by the edge. */
+  mask-image: linear-gradient(
+    to top,
+    transparent 0%,
+    black 12%,
+    black 58%,
+    transparent 94%
+  );
+}
+
+.crawl-tilt {
+  height: 100%;
+  transform: rotateX(26deg);
+  transform-origin: 50% 100%;
+}
+
+.crawl-text {
+  color: #ffe81f;
+  font-weight: 700;
+  text-align: center;
+  animation: crawl-up 85s linear forwards;
+}
+
+@keyframes crawl-up {
+  from {
+    transform: translateY(55%);
+  }
+  to {
+    transform: translateY(-320%);
+  }
+}
+
+/* No crawl, no timer: the letter becomes something you scroll and read. */
+@media (prefers-reduced-motion: reduce) {
+  .crawl-stage {
+    height: auto;
+    max-height: 60vh;
+    overflow-y: auto;
+    perspective: none;
+    mask-image: none;
+  }
+
+  .crawl-tilt {
+    height: auto;
+    transform: none;
+  }
+
+  .crawl-text {
+    animation: none;
+    color: inherit;
+    font-weight: inherit;
+    text-align: left;
+  }
+}
+
 /* --- Unanswered RSVP ---------------------------------------------------------
    A ring that swells and fades out of the three buttons until one is chosen.
    Applied to the group by EventRsvp, so answering removes it. */

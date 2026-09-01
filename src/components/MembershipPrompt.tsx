@@ -43,15 +43,19 @@ export async function MembershipPrompt() {
         </form>
       }
     >
-      {/* Scrolls rather than growing past the viewport — it's a long letter. */}
-      <div className="max-h-[60vh] space-y-3 overflow-y-auto pr-1 text-sm leading-relaxed">
-        {WELCOME_LETTER.paragraphs.map((paragraph) => (
-          <p key={paragraph}>{paragraph}</p>
-        ))}
+      {/* A dark screen for the crawl to recede into, with Vigge showing through. */}
+      <div className="crawl-stage rounded-lg bg-black/70 px-6">
+        <div className="crawl-tilt">
+          <div className="crawl-text space-y-4 text-sm leading-relaxed">
+            {WELCOME_LETTER.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
 
-        <p className="text-muted-foreground pt-2 italic">
-          {WELCOME_LETTER.signature}
-        </p>
+            <p className="pt-2 whitespace-pre-line italic">
+              {WELCOME_LETTER.signature}
+            </p>
+          </div>
+        </div>
       </div>
     </Modal>
   )
