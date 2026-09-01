@@ -64,6 +64,9 @@
   },
   "Events": {
     "title": "Evenemang",
+    "quote": "Kom ihåg, en båt är tryggare i hamnen, men det är inte där båten hör hemma.",
+    "quoteAttribution": "Felix Morau, anno 2022",
+    "intro": "Se nu till att joina något!",
     "upcomingTitle": "Det här händer",
     "pastTitle": "Tidigare",
     "upcomingEmpty": "Inga kommande evenemang.",
