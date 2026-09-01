@@ -33,12 +33,15 @@ export function PhotoHero({
   eyebrow,
   title,
   tagline,
+  children,
 }: {
   images: string[]
   /** Small label above the title, a category or a status. */
   eyebrow?: string
   title: string
   tagline?: string
+  /** Sits under the tagline, for a call to action. */
+  children?: React.ReactNode
 }) {
   // One photo holds still. Fading a single image in and out would just blink it.
   const isCrossfading = images.length > 1
@@ -99,6 +102,8 @@ export function PhotoHero({
               {tagline}
             </p>
           )}
+
+          {children && <div className="mt-4">{children}</div>}
         </div>
       </div>
 

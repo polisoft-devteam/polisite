@@ -17,7 +17,9 @@
     "upcomingEmpty": "Nothing planned right now. Got an idea? Add a suggestion.",
     "allEvents": "All events",
     "newEvent": "New event",
-    "visitorNote": "You're seeing the public events. Members also see the association's own."
+    "visitorNote": "You're seeing the public events. Members also see the association's own.",
+    "requestMembership": "Request membership",
+    "membershipPending": "Membership request pending"
   },
   "About": {
     "title": "About us",

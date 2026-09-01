@@ -91,7 +91,7 @@ export async function AuthMenu() {
           variant="ghost"
           size="icon"
           aria-label={translateAuth("signOut")}
-          className="group/reveal w-auto px-2"
+          className="group/reveal w-auto cursor-pointer px-2"
         >
           <HoverRevealLabel
             icon={<SignOutIcon className="size-4" />}
