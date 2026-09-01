@@ -3,10 +3,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { PageContainer } from "@/components/PageContainer"
 import { ProfileView } from "@/components/ProfileView"
+import { Wishlist } from "@/components/Wishlist"
 import {
   findPastEventsForMember,
   findUpcomingEventsForMember,
 } from "@/features/events/queries"
+import { findWishlistForMember } from "@/features/wishlist/queries"
 import { getViewer } from "@/lib/auth"
 
 export async function generateMetadata({
@@ -32,9 +34,11 @@ export default async function ProfilePage({
   // The (member) layout already redirected anyone without an active membership.
   const member = viewer!.member!
 
-  const [upcomingEvents, pastEvents] = await Promise.all([
+  const [upcomingEvents, pastEvents, wishlist] = await Promise.all([
     findUpcomingEventsForMember(member.id),
     findPastEventsForMember(member.id),
+    // Your own list, so the query returns no claims at all.
+    findWishlistForMember(member.id, member.id),
   ])
 
   return (
@@ -46,6 +50,8 @@ export default async function ProfilePage({
         isOwnProfile
         locale={locale}
       />
+
+      <Wishlist entries={wishlist} isOwnList />
     </PageContainer>
   )
 }

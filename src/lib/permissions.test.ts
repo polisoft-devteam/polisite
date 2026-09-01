@@ -6,12 +6,14 @@ import { describe, expect, it } from "vitest"
 import type { Event, Member, Role } from "@/db/schema"
 import {
   canBringGuests,
+  canClaimWish,
   canCreateEvent,
   canDeactivateMember,
   canManageMembers,
   canEditEvent,
   canRemoveGuest,
   canRespondToEvent,
+  canViewMemberDirectory,
   canViewEvent,
   isActiveMember,
   isAdmin,
@@ -30,6 +32,7 @@ function buildMember(overrides: Partial<Member> = {}): Member {
     officialTitle: null,
     funTitle: null,
     bio: null,
+    githubUrl: null,
     birthday: null,
     status: "active",
     joinedAssociationAt: new Date("2026-01-01"),
@@ -284,5 +287,37 @@ describe("canRemoveGuest", () => {
 
   it("refuses a signed-out visitor", () => {
     expect(canRemoveGuest(null, { invitedByMemberId: "member-1" })).toBe(false)
+  })
+})
+
+describe("wishlist claiming", () => {
+  const me = buildMember({ id: "me" })
+  const someoneElse = buildMember({ id: "them" })
+
+  it("lets a member claim someone else's wish", () => {
+    expect(canClaimWish(buildViewer(me), someoneElse.id)).toBe(true)
+  })
+
+  it("refuses to let a member claim their own wish", () => {
+    // Claiming your own would tell you a claim exists, which is the one thing the owner
+    // must never learn about their own list.
+    expect(canClaimWish(buildViewer(me), me.id)).toBe(false)
+  })
+
+  it("refuses a guest and a signed-out visitor", () => {
+    const guest = buildViewer(buildMember({ id: "guest", status: "inactive" }))
+
+    expect(canClaimWish(guest, someoneElse.id)).toBe(false)
+    expect(canClaimWish(null, someoneElse.id)).toBe(false)
+  })
+})
+
+describe("member directory", () => {
+  it("is for members, not guests", () => {
+    expect(canViewMemberDirectory(buildViewer(buildMember()))).toBe(true)
+    expect(
+      canViewMemberDirectory(buildViewer(buildMember({ status: "inactive" }))),
+    ).toBe(false)
+    expect(canViewMemberDirectory(null)).toBe(false)
   })
 })

@@ -44,6 +44,7 @@ export function buildSampleMember(overrides: Partial<Member> = {}): Member {
     officialTitle: "Sekreterare",
     funTitle: "Bastuansvarig",
     bio: "Gillar långa vandringar och korta möten.",
+    githubUrl: "https://github.com/polisoft-devteam",
     birthday: "1991-04-17",
     status: "active",
     joinedAssociationAt: new Date("2019-06-01"),

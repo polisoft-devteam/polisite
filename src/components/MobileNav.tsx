@@ -61,7 +61,13 @@ function MenuBars({ isOpen }: { isOpen: boolean }) {
   )
 }
 
-export function MobileNav({ showAdminLink }: { showAdminLink: boolean }) {
+export function MobileNav({
+  showAdminLink,
+  showMembersLink,
+}: {
+  showAdminLink: boolean
+  showMembersLink: boolean
+}) {
   const translateNav = useTranslations("Nav")
   const translateAdmin = useTranslations("Admin")
   const currentPathname = usePathname()
@@ -110,6 +116,15 @@ export function MobileNav({ showAdminLink }: { showAdminLink: boolean }) {
             </DropdownMenuItem>
           )
         })}
+
+        {showMembersLink && (
+          <DropdownMenuItem
+            onClick={closeMenu}
+            render={<Link href="/members" transitionTypes={["nav-forward"]} />}
+          >
+            {translateNav("members")}
+          </DropdownMenuItem>
+        )}
 
         {showAdminLink && (
           <>

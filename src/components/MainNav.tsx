@@ -20,7 +20,13 @@ import { cn } from "@/lib/utils"
 
 type IndicatorPosition = { left: number; width: number }
 
-export function MainNav({ showAdminLink }: { showAdminLink: boolean }) {
+export function MainNav({
+  showAdminLink,
+  showMembersLink,
+}: {
+  showAdminLink: boolean
+  showMembersLink: boolean
+}) {
   const translateNav = useTranslations("Nav")
   const translateAdmin = useTranslations("Admin")
   const currentPathname = usePathname()
@@ -58,6 +64,7 @@ export function MainNav({ showAdminLink }: { showAdminLink: boolean }) {
   const activeClassName = "text-foreground font-medium"
   const inactiveClassName = "text-muted-foreground hover:text-foreground"
   const isAdminPage = currentPathname.startsWith("/admin")
+  const isMembersPage = currentPathname.startsWith("/members")
 
   return (
     <nav
@@ -85,6 +92,20 @@ export function MainNav({ showAdminLink }: { showAdminLink: boolean }) {
           </Link>
         )
       })}
+
+      {showMembersLink && (
+        <Link
+          href="/members"
+          transitionTypes={["nav-forward"]}
+          aria-current={isMembersPage ? "page" : undefined}
+          className={cn(
+            linkClassName,
+            isMembersPage ? activeClassName : inactiveClassName,
+          )}
+        >
+          {translateNav("members")}
+        </Link>
+      )}
 
       {showAdminLink && (
         <Link

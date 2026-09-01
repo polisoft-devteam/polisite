@@ -91,9 +91,13 @@ returns not-found. So `public` means "a guest sees this event exists", not "a gu
 it". The same holds for album and film cards: a non-member's page never contains the URL,
 because a hidden link is still in the markup.
 
-**Wishlist claiming:** the owner may see _that_ an item is claimed. The owner must never
-see _who_ claimed it. The claimer's identity is omitted at the query level when the
-viewer is the owner — not filtered in the component.
+**Wishlist claiming:** the owner learns nothing about the claims on their own wishes. Not
+who claimed, and not that anything was claimed at all — knowing a wish is spoken for
+spoils the surprise as surely as knowing who is buying it. `findWishlistForMember` returns
+early for the owner and never reads the claim rows, so there is nothing in the page for a
+careless render to leak. A wish is a title and a URL, both required. Several members can
+claim one wish, which is how a shared present is paid for, so claims are rows rather than
+a column on the item.
 
 **Secret gift ideas (later phase):** the target member must never receive the data.
 Excluded in the query, not in rendering.

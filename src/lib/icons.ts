@@ -29,6 +29,8 @@ export {
   Spotify as SpotifyIcon,
   LockFill as LockIcon,
   Github as GithubIcon,
+  GiftFill as WishlistIcon,
+  PeopleFill as MembersIcon,
   Images as PhotosIcon,
   FolderFill as DriveIcon,
   GeoAlt as MapPinIcon,

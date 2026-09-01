@@ -9,11 +9,12 @@ import { ThemeToggle } from "@/components/ThemeToggle"
 import { Wordmark } from "@/components/Wordmark"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { canManageMembers } from "@/lib/permissions"
+import { canManageMembers, canViewMemberDirectory } from "@/lib/permissions"
 
 export async function SiteHeader() {
   const viewer = await getViewer()
   const showAdminLink = canManageMembers(viewer)
+  const showMembersLink = canViewMemberDirectory(viewer)
 
   return (
     <header
@@ -26,14 +27,20 @@ export async function SiteHeader() {
           <Wordmark />
         </Link>
 
-        <MainNav showAdminLink={showAdminLink} />
+        <MainNav
+          showAdminLink={showAdminLink}
+          showMembersLink={showMembersLink}
+        />
 
         <div className="ml-auto flex items-center gap-1">
           <LanguageToggle />
           <ThemeToggle />
           <AuthMenu />
           <div className="md:hidden">
-            <MobileNav showAdminLink={showAdminLink} />
+            <MobileNav
+              showAdminLink={showAdminLink}
+              showMembersLink={showMembersLink}
+            />
           </div>
         </div>
       </div>

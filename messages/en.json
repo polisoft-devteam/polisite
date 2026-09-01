@@ -8,7 +8,8 @@
     "calendar": "Calendar",
     "about": "About",
     "menu": "Menu",
-    "archive": "Open archive"
+    "archive": "Open archive",
+    "members": "Members"
   },
   "Home": {
     "title": "Welcome",
@@ -302,5 +303,25 @@
       "label": "GitHub",
       "description": "All our repositories"
     }
+  },
+  "Members": {
+    "title": "Members",
+    "back": "All members",
+    "github": "GitHub",
+    "wishlist": "Wishlist"
+  },
+  "Wishlist": {
+    "title": "Wishlist",
+    "emptyOwn": "Nothing here yet. Add something you would like.",
+    "emptyOther": "No wishes yet.",
+    "fieldTitle": "What would you like?",
+    "fieldUrl": "Link",
+    "add": "Add",
+    "remove": "Remove",
+    "claim": "I'll get it",
+    "join": "Join in",
+    "release": "Back out",
+    "claimedBy": "{count, plural, one {# joined} other {# joined}}",
+    "ownerBlindNote": "You never see whether anyone has picked something off your own list. That would spoil it."
   }
 }

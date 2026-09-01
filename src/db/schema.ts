@@ -47,6 +47,8 @@ export const members = pgTable("members", {
 
   bio: text("bio"),
 
+  githubUrl: text("github_url"),
+
   // Date, not timestamp: a birthday must not shift a day across timezones.
   birthday: date("birthday"),
 
@@ -294,6 +296,52 @@ export const eventGuests = pgTable("event_guests", {
   addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
 }).enableRLS()
 
+// --- Wishlist ------------------------------------------------------------------
+//
+// A member lists things they want; everyone else can claim one, or join a claim someone
+// already made so a bigger present can be shared.
+//
+// The owner must never learn anything about the claims on their own wishes, not who
+// claimed and not that anything was claimed at all. That is enforced in the queries, which
+// leave the claim rows out entirely when the viewer is the owner. Nothing here can express
+// it, so a new query that joins these two tables has to think about it again.
+
+export const wishlistItems = pgTable("wishlist_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+
+  memberId: uuid("member_id")
+    .notNull()
+    .references(() => members.id, { onDelete: "cascade" }),
+
+  title: text("title").notNull(),
+
+  // Required: a wish nobody can find in a shop is not much of a wish.
+  url: text("url").notNull(),
+
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+}).enableRLS()
+
+export const wishlistClaims = pgTable(
+  "wishlist_claims",
+  {
+    itemId: uuid("item_id")
+      .notNull()
+      .references(() => wishlistItems.id, { onDelete: "cascade" }),
+
+    memberId: uuid("member_id")
+      .notNull()
+      .references(() => members.id, { onDelete: "cascade" }),
+
+    claimedAt: timestamp("claimed_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  // One row per member per wish, so joining a claim twice is not a thing.
+  (table) => [primaryKey({ columns: [table.itemId, table.memberId] })],
+).enableRLS()
+
 // --- Types ---------------------------------------------------------------------
 
 export type Member = typeof members.$inferSelect
@@ -312,3 +360,5 @@ export type Event = typeof events.$inferSelect
 export type NewEvent = typeof events.$inferInsert
 export type EventAttendee = typeof eventAttendees.$inferSelect
 export type EventGuest = typeof eventGuests.$inferSelect
+export type WishlistItem = typeof wishlistItems.$inferSelect
+export type WishlistClaim = typeof wishlistClaims.$inferSelect
