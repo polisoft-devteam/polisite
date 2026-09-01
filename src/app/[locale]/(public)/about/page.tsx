@@ -81,7 +81,7 @@ export default async function AboutPage({
 
           {aboutImages.length > 0 && (
             <div className="order-first md:order-none">
-              <ImageStack images={aboutImages} />
+              <ImageStack images={aboutImages} layout="cascade" />
             </div>
           )}
         </div>
