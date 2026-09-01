@@ -40,6 +40,7 @@ export {
   BoxArrowUpRight as ExternalLinkIcon,
   BoxArrowRight as SignOutIcon,
   HeartFill as HeartIcon,
+  HourglassSplit as PendingIcon,
   // Event categories
   MusicNoteBeamed as MusicIcon,
   Balloon as PartyIcon,

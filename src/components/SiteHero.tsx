@@ -15,6 +15,7 @@ import { findMembershipPrompt } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 import { ASSOCIATION_NAME } from "@/lib/association"
 import { readHeroImages } from "@/lib/hero-images"
+import { PendingIcon } from "@/lib/icons"
 import { isActiveMember } from "@/lib/permissions"
 
 export async function SiteHero() {
@@ -38,7 +39,10 @@ export async function SiteHero() {
           nothing, and a button that writes nothing is worse than none. */}
       {canAsk && !prompt?.deniedAt ? (
         prompt?.response === "requested" ? (
-          <p className="rounded-full bg-white/15 px-3 py-1.5 text-sm text-white ring-1 ring-white/30 backdrop-blur-sm">
+          // inline-flex, so the pill is as wide as its words. A p is a block and the
+          // background ran the full width of the hero.
+          <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm text-white ring-1 ring-white/30 backdrop-blur-sm">
+            <PendingIcon aria-hidden="true" className="size-3.5" />
             {translateHome("membershipPending")}
           </p>
         ) : (
