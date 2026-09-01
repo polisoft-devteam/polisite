@@ -412,7 +412,7 @@ a[href] {
   color: #ffe81f;
   font-weight: 700;
   text-align: center;
-  animation: crawl-up 120s linear forwards;
+  animation: crawl-up 115s linear forwards;
 }
 
 /* Offsets in rem at the start and in its own height at the end, deliberately: a
@@ -421,7 +421,7 @@ a[href] {
    screen, and -100% is the whole letter having passed above it. */
 @keyframes crawl-up {
   from {
-    transform: translateY(22rem);
+    transform: translateY(14rem);
   }
   to {
     transform: translateY(-100%);

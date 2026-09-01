@@ -3,6 +3,15 @@
 //
 // Built on ui/dialog so Base UI handles focus trapping, Escape, scroll locking and ARIA —
 // a lot to get right by hand. The close button is ours so it uses the Bootstrap icon.
+//
+// Focus opens on the panel itself rather than on whatever happens to be the first button
+// inside it, which otherwise lands a focus ring on a control nobody asked for. Focus still
+// moves into the dialog, so Escape and the focus trap keep working; `initialFocus={false}`
+// would leave it on the page behind.
+
+"use client"
+
+import { useRef } from "react"
 
 import {
   Dialog,
@@ -52,11 +61,15 @@ export function Modal({
   className?: string
   children?: React.ReactNode
 }) {
+  const panelRef = useRef<HTMLDivElement>(null)
+
   return (
     <Dialog defaultOpen={defaultOpen}>
       {trigger && <DialogTrigger render={trigger as React.ReactElement} />}
 
       <DialogContent
+        ref={panelRef}
+        initialFocus={panelRef}
         showCloseButton={false}
         className={cn(
           "sm:max-w-md",
