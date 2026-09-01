@@ -423,11 +423,12 @@ a[href] {
 
 /* Offsets in rem at the start and in its own height at the end, deliberately: a
    percentage start is a share of the text's height, so a longer letter meant a
-   longer wait before the first line appeared. 22rem is just below the 20rem
-   screen, and -100% is the whole letter having passed above it. */
+   longer wait before the first line appeared. 18rem starts the first line just
+   inside the 20rem screen, and -100% is the whole letter having passed above
+   it. */
 @keyframes crawl-up {
   from {
-    transform: translateY(14rem);
+    transform: translateY(18rem);
   }
   to {
     transform: translateY(-100%);
