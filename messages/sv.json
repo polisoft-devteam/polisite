@@ -23,7 +23,12 @@
   },
   "About": {
     "title": "Om oss",
-    "intro": "Platshållartext. Skriv om vad {associationName} är, varför föreningen finns och vad vi gör tillsammans.",
+    "motto": "Vi har tre ledord här på Poligroup: Glädje, lojalitet, hjärta. Vi lever alltid efter detta!",
+    "origin": "Poli grundades informellt 2017 av ett gäng goa studenter på Malmö Universitet. Namnet Poli kommer av PoliSoft, som från början var namnet på det första projektet gruppen skapade tillsammans, som även satte grunden till vad som skulle komma att bli gruppen som vi känner den idag.",
+    "growth": "Med hjälp av vår Head of Recruitment, Adam Inge Mellahnamn Hermansson, har gruppen sedan vuxit stadigt. Från början långsamt, med en av gruppens numera mest stadiga pelare, Petter \"Pidde\" Månsson, som har gått från att vara Adams mystiska roomie till en ovärderlig grundpelare.",
+    "arrivals": "Inte långt efter detta gjorde ett gäng goa gubbar och andra fuck boys sitt inträde, såsom Jacob \"Faheem\" Bergqvist och Jonathan (kärt barn har för många namn) Earnest. Tätnande efterföljande har oförglömliga karaktärer såsom Richard Lejonhjärta Azar, Martin och många, många fler.",
+    "guests": "Special shoutout till våra mer inaktiva gästande medlemmar, såsom den oförtröttliga Ivar, Frans och Simon.",
+    "bond": "Vår kärlek till datamaskinen i alla dess former, shorts, spel, musik, konst samt skapandet av dessa medier genom diverse programmering med mera binder oss samman. Men vår resa har bara börjat.",
     "membershipTitle": "Medlemskap",
     "membershipBody": "Platshållartext. Beskriv hur man blir medlem i {associationName} och vad det innebär.",
     "timeline": {

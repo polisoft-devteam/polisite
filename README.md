@@ -66,9 +66,13 @@ pnpm images:optimize                               # resize anything in public/i
 
 Things that must not ship as they are:
 
-- **The About page and the timeline are placeholder text**, in both languages. Victor is
-  writing the real copy. See `About.intro`, `About.membershipBody` and the `About.timeline`
-  entries in `messages/*.json`.
+- **`About.membershipBody` is still placeholder text**, in both languages. The history
+  above it is written; how to join is not.
+- **The timeline still needs its real entries.** The six `About.timeline` steps read as
+  prose but none of them names an actual year or event.
+- **The English About page is a translation of Swedish in-jokes**, nicknames included. If
+  it should be Swedish only, like the founder's letter, that is a decision to make rather
+  than a wording to fix.
 - **`ALWAYS_SHOW_WELCOME_LETTER` in `src/components/MembershipPrompt.tsx` is `true`**, so
   the founder's letter reopens on every page load while it is being written. Set it back to
   `false` and it returns to appearing once, to a signed-in guest who has not answered.
