@@ -356,6 +356,19 @@ export default async function DesignPage({
             Innehållet i dialogen.
           </p>
         </Modal>
+
+        <Modal
+          trigger={<Button variant="outline">Dialog med foto</Button>}
+          title="Dialog med bakgrund"
+          closeLabel="Stäng"
+          backgroundImage="/images/misc/viggeRasse.webp"
+          footer={<Button>Knapp</Button>}
+        >
+          <p className="text-sm">
+            Texten ligger på en tvättad platta över fotot, så den går att läsa i
+            både ljust och mörkt läge.
+          </p>
+        </Modal>
       </PageSection>
 
       <PageSection heading="Hjältebild">

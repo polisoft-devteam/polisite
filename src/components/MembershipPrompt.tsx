@@ -3,10 +3,7 @@
 
 import { Modal } from "@/components/Modal"
 import { Button } from "@/components/ui/button"
-import {
-  dismissMembershipPrompt,
-  requestMembership,
-} from "@/features/members/membership-prompt-actions"
+import { requestMembership } from "@/features/members/membership-prompt-actions"
 import { findMembershipPrompt } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
@@ -39,18 +36,11 @@ export async function MembershipPrompt() {
       title={WELCOME_LETTER.title}
       closeLabel={WELCOME_LETTER.closeLabel}
       className="sm:max-w-2xl"
+      backgroundImage="/images/misc/viggeRasse.webp"
       footer={
-        <>
-          <form action={dismissMembershipPrompt}>
-            <Button type="submit" variant="outline">
-              {WELCOME_LETTER.dismissLabel}
-            </Button>
-          </form>
-
-          <form action={requestMembership}>
-            <Button type="submit">{WELCOME_LETTER.requestLabel}</Button>
-          </form>
-        </>
+        <form action={requestMembership}>
+          <Button type="submit">{WELCOME_LETTER.requestLabel}</Button>
+        </form>
       }
     >
       {/* Scrolls rather than growing past the viewport — it's a long letter. */}

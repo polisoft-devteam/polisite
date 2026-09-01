@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { SiteImage } from "@/components/SiteImage"
 import { Button } from "@/components/ui/button"
 import { CloseIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -25,6 +26,7 @@ export function Modal({
   description,
   footer,
   closeLabel,
+  backgroundImage,
   className,
   children,
 }: {
@@ -39,6 +41,11 @@ export function Modal({
   footer?: React.ReactNode
   /** Accessible name for the X, since the icon alone says nothing. */
   closeLabel: string
+  /**
+   * A photograph behind the whole modal, under a wash of the panel colour so the text
+   * stays readable in either theme.
+   */
+  backgroundImage?: string
   className?: string
   children?: React.ReactNode
 }) {
@@ -48,8 +55,30 @@ export function Modal({
 
       <DialogContent
         showCloseButton={false}
-        className={cn("sm:max-w-md", className)}
+        className={cn(
+          "sm:max-w-md",
+          // isolate so the negative-z layers below paint above the panel's own
+          // background rather than behind it, and clipped so they follow the rounding.
+          backgroundImage && "isolate overflow-hidden",
+          className,
+        )}
       >
+        {backgroundImage && (
+          <>
+            <SiteImage
+              src={backgroundImage}
+              alt=""
+              rounded=""
+              className="absolute inset-0 -z-10 size-full"
+              sizes="(min-width: 640px) 32rem, 100vw"
+            />
+            <div
+              aria-hidden="true"
+              className="bg-popover/85 absolute inset-0 -z-10"
+            />
+          </>
+        )}
+
         <DialogHeader>
           <DialogTitle className="font-bold">{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}

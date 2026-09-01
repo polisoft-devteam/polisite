@@ -1,10 +1,13 @@
 // The letter shown once to a signed-in guest.
 //
+// One button, and it asks to join. Closing with the X leaves the question open, so the
+// letter comes back next visit rather than being dismissed for good.
+//
 // Swedish only, and deliberately not in messages/*.json: it's a personal letter from a
 // founder, not interface copy. Translating the jokes would produce something nobody wrote.
 
 export const WELCOME_LETTER = {
-  title: "Några ord från en av våra grundare",
+  title: "Välkommen Poli och eller Sverigevän!",
 
   paragraphs: [
     "Om du läser detta så har snuten sprängt dörren, hittat min 5 petabyte-disk och jag sitter inne.",
@@ -20,7 +23,6 @@ export const WELCOME_LETTER = {
 
   signature: "I hast, Victor Interassistsson",
 
-  requestLabel: "Ansök om medlemskap",
-  dismissLabel: "Uppfattat!",
+  requestLabel: "Redan certified PoliBoy? Clicka här!",
   closeLabel: "Stäng",
 } as const
