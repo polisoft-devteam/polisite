@@ -36,6 +36,7 @@ import { Modal, ModalClose } from "@/components/Modal"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
+import { PhotoHero } from "@/components/PhotoHero"
 import {
   Accordion,
   AccordionContent,
@@ -47,6 +48,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { ExternalLinkIcon, GoogleIcon } from "@/lib/icons"
+import { readHeroImages } from "@/lib/hero-images"
 
 export const metadata: Metadata = { title: "Design" }
 
@@ -354,6 +356,19 @@ export default async function DesignPage({
             Innehållet i dialogen.
           </p>
         </Modal>
+      </PageSection>
+
+      <PageSection heading="Hjältebild">
+        {/* Normally full bleed at the top of a page. Boxed in here so the wave cut and the
+            title's contrast can be checked without leaving the reference. */}
+        <div className="overflow-hidden rounded-lg">
+          <PhotoHero
+            images={await readHeroImages()}
+            eyebrow="Fest"
+            title="Bastufestival"
+            tagline="Underrubriken som ligger på fotot."
+          />
+        </div>
       </PageSection>
 
       <PageSection heading="Eventkort">

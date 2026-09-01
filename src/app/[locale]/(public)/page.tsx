@@ -6,7 +6,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventList } from "@/components/EventList"
 import { PageContainer } from "@/components/PageContainer"
-import { PageHeading } from "@/components/PageHeading"
+import { SiteHero } from "@/components/SiteHero"
 import { Button } from "@/components/ui/button"
 import { findUpcomingEvents } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
@@ -36,11 +36,34 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const shownEvents = upcomingEvents.slice(0, EVENTS_SHOWN)
 
   return (
-    <PageContainer>
-      <PageHeading
-        title={translateHome("title")}
-        actions={
-          canCreateEvent(viewer) && (
+    <>
+      {/* Full bleed, so it sits outside the container every other page lines up with. */}
+      <SiteHero />
+
+      <PageContainer>
+        <p className="text-muted-foreground max-w-2xl">
+          {translateHome("intro")}
+        </p>
+
+        <EventList
+          heading={translateHome("upcomingTitle")}
+          emptyText={translateHome("upcomingEmpty")}
+          events={shownEvents}
+          locale={locale}
+        />
+
+        <div className="mt-6 flex flex-wrap items-center gap-4">
+          <Button
+            nativeButton={false}
+            variant="outline"
+            render={<Link href="/events" transitionTypes={["nav-forward"]} />}
+          >
+            {translateHome("allEvents")}
+            <ChevronRightIcon className="size-4" />
+          </Button>
+
+          {/* The h1 lives in the hero now, so this is where creating one belongs. */}
+          {canCreateEvent(viewer) && (
             <Button
               nativeButton={false}
               render={
@@ -50,37 +73,15 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               <PlusIcon className="size-4" />
               {translateHome("newEvent")}
             </Button>
-          )
-        }
-      />
+          )}
 
-      <p className="text-muted-foreground mt-4 max-w-2xl">
-        {translateHome("intro")}
-      </p>
-
-      <EventList
-        heading={translateHome("upcomingTitle")}
-        emptyText={translateHome("upcomingEmpty")}
-        events={shownEvents}
-        locale={locale}
-      />
-
-      <div className="mt-6 flex flex-wrap items-center gap-4">
-        <Button
-          nativeButton={false}
-          variant="outline"
-          render={<Link href="/events" transitionTypes={["nav-forward"]} />}
-        >
-          {translateHome("allEvents")}
-          <ChevronRightIcon className="size-4" />
-        </Button>
-
-        {!isActiveMember(viewer) && (
-          <p className="text-muted-foreground text-sm">
-            {translateHome("visitorNote")}
-          </p>
-        )}
-      </div>
-    </PageContainer>
+          {!isActiveMember(viewer) && (
+            <p className="text-muted-foreground text-sm">
+              {translateHome("visitorNote")}
+            </p>
+          )}
+        </div>
+      </PageContainer>
+    </>
   )
 }
