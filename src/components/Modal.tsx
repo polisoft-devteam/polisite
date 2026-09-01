@@ -3,6 +3,15 @@
 //
 // Built on ui/dialog so Base UI handles focus trapping, Escape, scroll locking and ARIA —
 // a lot to get right by hand. The close button is ours so it uses the Bootstrap icon.
+//
+// Focus opens on the panel itself rather than on whatever happens to be the first button
+// inside it, which otherwise lands a focus ring on a control nobody asked for. Focus still
+// moves into the dialog, so Escape and the focus trap keep working; `initialFocus={false}`
+// would leave it on the page behind.
+
+"use client"
+
+import { useRef } from "react"
 
 import {
   Dialog,
@@ -14,6 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { SiteImage } from "@/components/SiteImage"
 import { Button } from "@/components/ui/button"
 import { CloseIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
@@ -25,6 +35,8 @@ export function Modal({
   description,
   footer,
   closeLabel,
+  backgroundImage,
+  titleClassName,
   className,
   children,
 }: {
@@ -39,19 +51,54 @@ export function Modal({
   footer?: React.ReactNode
   /** Accessible name for the X, since the icon alone says nothing. */
   closeLabel: string
+  /**
+   * A photograph behind the whole modal, under a wash of the panel colour so the text
+   * stays readable in either theme.
+   */
+  backgroundImage?: string
+  /** For a title that needs to sit differently, like the crawl's centred one. */
+  titleClassName?: string
   className?: string
   children?: React.ReactNode
 }) {
+  const panelRef = useRef<HTMLDivElement>(null)
+
   return (
     <Dialog defaultOpen={defaultOpen}>
       {trigger && <DialogTrigger render={trigger as React.ReactElement} />}
 
       <DialogContent
+        ref={panelRef}
+        initialFocus={panelRef}
         showCloseButton={false}
-        className={cn("sm:max-w-md", className)}
+        className={cn(
+          "sm:max-w-md",
+          // isolate so the negative-z layers below paint above the panel's own
+          // background rather than behind it, and clipped so they follow the rounding.
+          backgroundImage && "isolate overflow-hidden",
+          className,
+        )}
       >
+        {backgroundImage && (
+          <>
+            <SiteImage
+              src={backgroundImage}
+              alt=""
+              rounded=""
+              className="absolute inset-0 -z-10 size-full"
+              sizes="(min-width: 640px) 32rem, 100vw"
+            />
+            <div
+              aria-hidden="true"
+              className="bg-popover/85 absolute inset-0 -z-10"
+            />
+          </>
+        )}
+
         <DialogHeader>
-          <DialogTitle className="font-bold">{title}</DialogTitle>
+          <DialogTitle className={cn("font-bold", titleClassName)}>
+            {title}
+          </DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 

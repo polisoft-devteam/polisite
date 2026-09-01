@@ -91,9 +91,13 @@ returns not-found. So `public` means "a guest sees this event exists", not "a gu
 it". The same holds for album and film cards: a non-member's page never contains the URL,
 because a hidden link is still in the markup.
 
-**Wishlist claiming:** the owner may see _that_ an item is claimed. The owner must never
-see _who_ claimed it. The claimer's identity is omitted at the query level when the
-viewer is the owner — not filtered in the component.
+**Wishlist claiming:** the owner learns nothing about the claims on their own wishes. Not
+who claimed, and not that anything was claimed at all — knowing a wish is spoken for
+spoils the surprise as surely as knowing who is buying it. `findWishlistForMember` returns
+early for the owner and never reads the claim rows, so there is nothing in the page for a
+careless render to leak. A wish is a title and a URL, both required. Several members can
+claim one wish, which is how a shared present is paid for, so claims are rows rather than
+a column on the item.
 
 **Secret gift ideas (later phase):** the target member must never receive the data.
 Excluded in the query, not in rendering.
@@ -124,6 +128,18 @@ Excluded in the query, not in rendering.
 - **Test the rules, not the UI.** Cover permissions, visibility filtering and wishlist
   claiming. Skip snapshot tests.
 - Prefer self-explanatory code. Comment _why_, not _what_.
+
+### Copy I hand you
+
+- **Proofread what I write, and ask before changing it.** When copy I give you looks like
+  it has a spelling or grammar slip, say so and ask whether to fix it. Do not correct it
+  silently, and do not leave it unmentioned either: some of it is deliberate, in a voice
+  that is not always standard Swedish, and I am the one who can tell which is which.
+- Quote the word or line you mean and what you would change it to, so answering is one
+  word. Obvious typing artefacts, a doubled space or a transposed letter in a word that is
+  otherwise clearly intended, you may just fix, and say that you did.
+- This applies to Swedish and English alike, and to the letters and page prose as much as
+  to interface strings.
 
 ### Naming and comments
 

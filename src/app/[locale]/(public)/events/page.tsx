@@ -47,6 +47,18 @@ export default async function EventsPage({
     findPastEvents(allowedVisibilities),
   ])
 
+  // Split by kind rather than by whether a date is set: a suggestion with a date pencilled
+  // in is still a suggestion, and used to sit among the events that are actually happening.
+  // Every dateless event is a suggestion, because the schema refuses a confirmed one
+  // without a date.
+  const suggestedEvents = [
+    ...datelessEvents,
+    ...upcomingEvents.filter((event) => event.kind === "suggestion"),
+  ]
+  const confirmedEvents = upcomingEvents.filter(
+    (event) => event.kind === "confirmed",
+  )
+
   return (
     <PageContainer>
       <PageHeading
@@ -66,21 +78,34 @@ export default async function EventsPage({
         }
       />
 
+      {/* A real blockquote rather than quote marks in the string, so the attribution has
+          somewhere to sit and a screen reader knows it is a quotation. */}
+      <figure className="mt-6 max-w-2xl">
+        <blockquote className="border-border text-muted-foreground border-l-2 pl-4">
+          {translateEvents("quote")}
+        </blockquote>
+        <figcaption className="text-muted-foreground mt-2 pl-4 text-xs italic">
+          {translateEvents("quoteAttribution")}
+        </figcaption>
+      </figure>
+
+      <p className="text-muted-foreground mt-4 max-w-2xl">
+        {translateEvents("intro")}
+      </p>
+
       <EventList
-        heading={translateEvents("upcomingTitle")}
-        emptyText={translateEvents("upcomingEmpty")}
-        events={upcomingEvents}
+        heading={translateEvents("suggestionsTitle")}
+        emptyText={translateEvents("suggestionsEmpty")}
+        events={suggestedEvents}
         locale={locale}
       />
 
-      {datelessEvents.length > 0 && (
-        <EventList
-          heading={translateEvents("suggestionsTitle")}
-          emptyText={translateEvents("suggestionsEmpty")}
-          events={datelessEvents}
-          locale={locale}
-        />
-      )}
+      <EventList
+        heading={translateEvents("upcomingTitle")}
+        emptyText={translateEvents("upcomingEmpty")}
+        events={confirmedEvents}
+        locale={locale}
+      />
 
       <EventList
         heading={translateEvents("pastTitle")}

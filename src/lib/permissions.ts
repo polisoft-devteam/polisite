@@ -129,3 +129,31 @@ export function canRemoveGuest(
 
   return guest.invitedByMemberId === viewer!.member!.id || isAdmin(viewer)
 }
+
+// --- Wishlist ------------------------------------------------------------------
+
+/** Any active member keeps a wishlist, and only their own. */
+export function canEditOwnWishlist(viewer: Viewer | null): boolean {
+  return isActiveMember(viewer)
+}
+
+/**
+ * You may claim anyone's wish but your own.
+ *
+ * Claiming your own would tell you a claim exists, which is exactly what the owner must
+ * never learn. The queries already leave claims out of an owner's list; this stops the
+ * action being called directly with your own item id.
+ */
+export function canClaimWish(
+  viewer: Viewer | null,
+  ownerMemberId: string,
+): boolean {
+  if (!isActiveMember(viewer)) return false
+
+  return viewer!.member!.id !== ownerMemberId
+}
+
+/** Members can see each other. A guest sees no one. */
+export function canViewMemberDirectory(viewer: Viewer | null): boolean {
+  return isActiveMember(viewer)
+}

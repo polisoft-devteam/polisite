@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 import { AlbumGrid } from "@/components/AlbumGrid"
 import { LockedMediaCard } from "@/components/LockedMediaCard"
 import { PageSection } from "@/components/PageSection"
+import { PageSubNav, type SubNavItem } from "@/components/PageSubNav"
 import { PlaylistEmbed } from "@/components/PlaylistEmbed"
 import { AssociationLinks } from "@/components/AssociationLinks"
 import { EmptyState } from "@/components/EmptyState"
@@ -38,6 +39,19 @@ export default async function ArchivePage({
   const viewer = await getViewer()
   const isMember = isActiveMember(viewer)
 
+  // Only the sections that actually have something in them, so the navigation never
+  // points at a heading that was not rendered.
+  const sections: SubNavItem[] = [
+    ...(ASSOCIATION_FILMS.length > 0
+      ? [{ id: "films", label: translateArchive("filmsTitle") }]
+      : []),
+    { id: "albums", label: translateArchive("albumsTitle") },
+    { id: "gaming", label: translateArchive("gamingTitle") },
+    ...(ASSOCIATION_PLAYLISTS.length > 0
+      ? [{ id: "music", label: translateArchive("musicTitle") }]
+      : []),
+  ]
+
   return (
     <PageContainer>
       <PageHeading title={translateArchive("title")} />
@@ -45,43 +59,49 @@ export default async function ArchivePage({
         {translateArchive("intro")}
       </p>
 
+      <PageSubNav items={sections} />
+
       {ASSOCIATION_FILMS.length === 0 ? (
         <div className="mt-8">
           <EmptyState>{translateArchive("empty")}</EmptyState>
         </div>
       ) : (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {ASSOCIATION_FILMS.map((film) =>
-            isMember ? (
-              <VideoEmbed
-                key={film.title}
-                videoId={film.videoId}
-                title={film.title}
-                year={film.year}
-                thumbnail={film.thumbnail}
-                playLabel={translateArchive("play")}
-              />
-            ) : (
-              <LockedMediaCard
-                key={film.title}
-                label={film.title}
-                coverUrl={film.thumbnail}
-                caption={film.year}
-              />
-            ),
-          )}
-        </div>
+        <PageSection id="films" heading={translateArchive("filmsTitle")}>
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {ASSOCIATION_FILMS.map((film) =>
+              isMember ? (
+                <VideoEmbed
+                  key={film.title}
+                  videoId={film.videoId}
+                  title={film.title}
+                  year={film.year}
+                  thumbnail={film.thumbnail}
+                  playLabel={translateArchive("play")}
+                />
+              ) : (
+                <LockedMediaCard
+                  key={film.title}
+                  label={film.title}
+                  coverUrl={film.thumbnail}
+                  caption={film.year}
+                />
+              ),
+            )}
+          </div>
+        </PageSection>
       )}
 
       {
         <>
           <AlbumGrid
+            id="albums"
             heading={translateArchive("albumsTitle")}
             albums={PHOTO_ALBUMS.filter((album) => album.group === "main")}
             openLabel={translateArchive("openInGooglePhotos")}
             canOpen={isMember}
           />
           <AlbumGrid
+            id="gaming"
             heading={translateArchive("gamingTitle")}
             albums={PHOTO_ALBUMS.filter((album) => album.group === "gaming")}
             openLabel={translateArchive("openInGooglePhotos")}
@@ -91,7 +111,7 @@ export default async function ArchivePage({
       }
 
       {ASSOCIATION_PLAYLISTS.length > 0 && (
-        <PageSection heading={translateArchive("musicTitle")}>
+        <PageSection id="music" heading={translateArchive("musicTitle")}>
           <div className="grid gap-4 sm:grid-cols-2">
             {ASSOCIATION_PLAYLISTS.map((playlist) => (
               <PlaylistEmbed key={playlist.playlistId} playlist={playlist} />

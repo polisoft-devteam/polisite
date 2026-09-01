@@ -1,8 +1,9 @@
 // When the event happens: either a known date, or a list of dates for members to vote on.
 //
-// The two are mutually exclusive, which is why they're one component — each side disables
-// the other as soon as it's used. Disabled inputs are left out of FormData, so the server
-// receives one answer or the other and never both.
+// The two are mutually exclusive, which is why they're one component. The fixed date opens
+// filled in with today, so the poll can't be the side that gives way — adding a poll date
+// is the deliberate act, and it greys the fixed date out. Disabled inputs are left out of
+// FormData, so the server receives one answer or the other and never both.
 
 "use client"
 
@@ -12,7 +13,6 @@ import { FormField } from "@/components/FormField"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { CloseIcon, PlusIcon } from "@/lib/icons"
-import { cn } from "@/lib/utils"
 
 type EventWhenFieldProps = {
   startsAtLabel: string
@@ -50,7 +50,6 @@ export function EventWhenField({
   )
   const [nextRowId, setNextRowId] = useState(defaultDateOptions.length)
 
-  const hasFixedDate = startsAt.length > 0
   const hasPollDates = pollRows.some((row) => row.value.length > 0)
 
   function addPollRow() {
@@ -66,13 +65,7 @@ export function EventWhenField({
 
   return (
     <div className="space-y-6">
-      {/* Dimmed as well as disabled, so it's obvious why it won't take input. */}
-      <div
-        className={cn(
-          "grid gap-4 transition-opacity sm:grid-cols-2",
-          hasPollDates && "opacity-50",
-        )}
-      >
+      <div className="grid gap-4 sm:grid-cols-2">
         <FormField label={startsAtLabel} htmlFor="startsAtWallTime">
           <Input
             id="startsAtWallTime"
@@ -111,17 +104,12 @@ export function EventWhenField({
         <hr className="flex-1" />
       </div>
 
-      <fieldset
-        disabled={hasFixedDate}
-        className={cn(
-          "space-y-2 transition-opacity",
-          hasFixedDate && "opacity-50",
-        )}
-      >
+      <fieldset className="space-y-2">
         <legend className="text-sm font-medium">{pollLegend}</legend>
         <p className="text-muted-foreground text-xs">{pollHint}</p>
 
-        <div className="space-y-2 pt-1">
+        {/* A date and a delete button need nothing like the full form width. */}
+        <div className="max-w-xs space-y-2 pt-1">
           {pollRows.map((row) => (
             <div key={row.id} className="flex gap-2">
               <Input

@@ -12,18 +12,26 @@
   },
   "Home": {
     "title": "Välkommen",
-    "intro": "Här samlar vi föreningens evenemang, medlemmar och historia. Samtalet fortsätter på Discord. Det här är platsen för det som ska hålla över tid.",
+    "heroTagline": "Vuxna män gör saker tillsammans, {associationName} gör mycket mer än så!",
+    "intro": "Här kan du skapa och kika runt på kommande events, pimpa din profil, eller kika på vårt öppna arkiv där det finns massa smått och gott. Det mesta ligger bakom paywall så se till att du loggar in och ansöker om medlemskap!",
     "upcomingTitle": "Härnäst",
     "upcomingEmpty": "Inget planerat just nu. Har du en idé? Lägg in ett förslag.",
     "allEvents": "Alla evenemang",
     "newEvent": "Nytt evenemang",
-    "visitorNote": "Du ser de publika evenemangen. Medlemmar ser även föreningens egna."
+    "visitorNote": "Du ser de publika evenemangen. Medlemmar ser även föreningens egna.",
+    "requestMembership": "Ansök om medlemskap",
+    "membershipPending": "Medlemskap granskas"
   },
   "About": {
     "title": "Om oss",
-    "intro": "Platshållartext. Skriv om vad {associationName} är, varför föreningen finns och vad vi gör tillsammans.",
+    "motto": "Vi har tre ledord här på Poligroup: Glädje, lojalitet, hjärta. Vi lever alltid efter detta!",
+    "origin": "Poli grundades informellt 2017 av ett gäng goa studenter på Malmö Universitet. Namnet Poli kommer av PoliSoft, som från början var namnet på det första projektet gruppen skapade tillsammans, som även satte grunden till vad som skulle komma att bli gruppen som vi känner den idag.",
+    "growth": "Med hjälp av vår Head of Recruitment, Adam Inge Mellahnamn Hermansson, har gruppen sedan vuxit stadigt. Från början långsamt, med en av gruppens numera mest stadiga pelare, Petter \"Pidde\" Månsson, som har gått från att vara Adams mystiska roomie till en ovärderlig grundpelare.",
+    "arrivals": "Inte långt efter detta gjorde ett gäng goa gubbar och andra fuck boys sitt inträde, såsom Jacob \"Faheem\" Bergqvist och Jonathan (kärt barn har för många namn) Earnest. Tätnande efterföljande har oförglömliga karaktärer såsom Richard Lejonhjärta Azar, Martin och många, många fler.",
+    "guests": "Special shoutout till våra mer inaktiva gästande medlemmar, såsom den oförtröttliga Ivar, Frans och Simon.",
+    "bond": "Vår kärlek till datamaskinen i alla dess former, shorts, spel, musik, konst samt skapandet av dessa medier genom diverse programmering med mera binder oss samman. Men vår resa har bara börjat.",
     "membershipTitle": "Medlemskap",
-    "membershipBody": "Platshållartext. Beskriv hur man blir medlem i {associationName} och vad det innebär.",
+    "membershipBody": "Logga in med Google och skicka en förfrågan. En admin släpper in dig, och först då ser du föreningens egna evenemang, medlemmar och önskelistor. Innan dess ser du samma sida som en besökare.",
     "timeline": {
       "before": {
         "title": "Innan allt",
@@ -50,11 +58,16 @@
         "body": "Utspridda över flera städer men med samma kalender. Det är därför den här sidan finns."
       }
     },
-    "timelineHeading": "Så här långt"
+    "timelineHeading": "Så här långt",
+    "timelineUnderConstruction": "Under uppbyggnad",
+    "aboutHeading": "Om oss"
   },
   "Events": {
     "title": "Evenemang",
-    "upcomingTitle": "Kommande",
+    "quote": "En båt är tryggare i hamnen, men det är inte där båten hör hemma.",
+    "quoteAttribution": "Felix Morau, anno 2022",
+    "intro": "Se nu till att joina något!",
+    "upcomingTitle": "Det här händer",
     "pastTitle": "Tidigare",
     "upcomingEmpty": "Inga kommande evenemang.",
     "pastEmpty": "Inga tidigare evenemang.",
@@ -74,11 +87,11 @@
     "fieldEndsAt": "Slutar",
     "fieldEndsAtHint": "Frivilligt",
     "fieldTimeZone": "Tidszon",
-    "fieldTimeZoneHint": "Där evenemanget äger rum. En konsert i London visas som Londontid.",
+    "fieldTimeZoneHint": "Där evenemanget äger rum.",
     "fieldLocation": "Adress",
     "fieldCategory": "Typ",
     "fieldPrice": "Pris",
-    "fieldPriceHint": "Lämna tomt om det är gratis.",
+    "fieldPriceHint": "Lämna tomt om det inte kräver nån biljett/etc.",
     "fieldCurrency": "Valuta",
     "fieldMaxAttendees": "Max antal deltagare",
     "fieldMaxAttendeesHint": "Lämna tomt för obegränsat.",
@@ -119,10 +132,10 @@
     "signInToRespond": "Logga in som medlem för att svara.",
     "visibilityPublicShort": "publikt",
     "fieldEventUrlHint": "Officiell sida, biljetter eller evenemangsinfo.",
-    "visibilityPublicExplanation": "Ett publikt event som arrangeras av någon annan. Syns även för gäster som inte är inloggade.",
-    "visibilityMembersExplanation": "Slutet event, av oss för oss. Endast Poli-medlemmar ser det.",
+    "visibilityPublicExplanation": "Event hostat av någon annan.",
+    "visibilityMembersExplanation": "Slutet event, endast Poli-medlemmar ser det.",
     "visibilityMembersAndFriends": "Poli & vänner",
-    "visibilityMembersAndFriendsExplanation": "Event där vi tar med vänner och familj, som skidresor och födelsedagar. Bara medlemmar ser det i appen.",
+    "visibilityMembersAndFriendsExplanation": "Vänner och familj är varmt välkomna!",
     "fieldRemindersAtLimit": "Två valda. Avmarkera en för att byta.",
     "previousMonth": "Föregående månad",
     "nextMonth": "Nästa månad",
@@ -134,7 +147,7 @@
     "kindSuggestion": "Förslag",
     "kindConfirmed": "Bekräftat",
     "fieldKind": "Är detta ett förslag eller ett bekräftat event?",
-    "kindSuggestionExplanation": "En känslokoll. Vi testar om folk är intresserade, och datum kan röstas fram.",
+    "kindSuggestionExplanation": "Vibe check, inget spikat ännu.",
     "kindConfirmedExplanation": "Det här händer. Lägg in det i kalendern.",
     "stepBasics": "Om eventet",
     "wizardBack": "Tillbaka",
@@ -152,11 +165,11 @@
     "datePollVotes": "{count, plural, =0 {Ingen har röstat} one {# kan} other {# kan}}",
     "datePollLeading": "flest röster",
     "datePollChoose": "Välj detta datum",
-    "suggestionsTitle": "Förslag utan datum",
+    "suggestionsTitle": "Förslag",
     "suggestionsEmpty": "Inga förslag just nu.",
     "stepWhen": "Tid och plats",
     "stepPublish": "Publicera",
-    "advancedTitle": "Fler inställningar",
+    "advancedTitle": "Avancerat",
     "advancedHint": "Behövs sällan. Hoppa över om du är osäker.",
     "publish": "Publicera event",
     "saveChanges": "Spara ändringar",
@@ -187,17 +200,17 @@
     "label": "Byt tema"
   },
   "Language": {
-    "label": "Byt språk"
+    "switchTo": "Byt till {language}"
   },
   "Footer": {
-    "note": "Privat sida för föreningens medlemmar.",
+    "builtWith": "Skapad med",
+    "builtBy": "av {associationFullName}",
     "privacy": "Integritetspolicy"
   },
   "Auth": {
-    "signIn": "Logga in med Google",
+    "signIn": "Logga in",
     "signOut": "Logga ut",
-    "guest": "Gäst",
-    "signInShort": "Logga in"
+    "guest": "Gäst"
   },
   "Profile": {
     "title": "Min profil",
@@ -218,7 +231,9 @@
     "joinedAssociationAt": "Medlem sedan",
     "birthday": "Födelsedag",
     "avatar": "Profilbild",
-    "avatarHint": "Frivilligt. Skalas ner automatiskt."
+    "avatarHint": "Frivilligt. Skalas ner automatiskt.",
+    "githubUrl": "GitHub",
+    "githubUrlHint": "Frivilligt. Visas som en ikon i medlemslistan."
   },
   "Privacy": {
     "title": "Integritetspolicy",
@@ -275,6 +290,7 @@
   "Archive": {
     "title": "Öppet arkiv",
     "intro": "”Fota, filma, hela dagen!” Ett framtida grand library över våra framgångar och misslyckanden.",
+    "filmsTitle": "Videos",
     "empty": "Inget i arkivet än.",
     "play": "Spela",
     "albumsTitle": "Album",
@@ -301,5 +317,34 @@
       "label": "GitHub",
       "description": "Alla våra repon"
     }
+  },
+  "Members": {
+    "title": "Medlemmar",
+    "back": "Alla medlemmar",
+    "github": "GitHub",
+    "wishlist": "Önskelista"
+  },
+  "Wishlist": {
+    "title": "Önskelista",
+    "emptyOwn": "Inget här än. Lägg till något du önskar dig.",
+    "emptyOther": "Ingen önskelista än.",
+    "fieldTitle": "Vad önskar du dig?",
+    "fieldUrl": "Länk",
+    "add": "Lägg till",
+    "remove": "Ta bort",
+    "claim": "Jag fixar den",
+    "join": "Haka på",
+    "release": "Hoppa av",
+    "claimedBy": "{count, plural, one {# har hakat på} other {# har hakat på}}",
+    "ownerBlindNote": "Du ser aldrig om någon har fixat något från din egen lista. Det vore ju tråkigt."
+  },
+  "Notifications": {
+    "title": "Notiser",
+    "empty": "Inget nytt den senaste månaden.",
+    "unseen": "{count, plural, one {# ny notis} other {# nya notiser}}",
+    "membershipRequest": "{who} vill bli medlem",
+    "signUp": "{who} har loggat in för första gången",
+    "eventResponse": "{who} svarade på {what}",
+    "newEvent": "{who} skapade {what}"
   }
 }

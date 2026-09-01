@@ -6,6 +6,7 @@
 import { useLocale, useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
+import { GoogleIcon } from "@/lib/icons"
 import { usePathname } from "@/i18n/navigation"
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 
@@ -32,11 +33,11 @@ export function SignInButton() {
     })
   }
 
-  // The full label is too wide for a phone header.
+  // The logo says which provider, so the label does not have to.
   return (
     <Button size="sm" onClick={startGoogleSignIn}>
-      <span className="sm:hidden">{translateAuth("signInShort")}</span>
-      <span className="hidden sm:inline">{translateAuth("signIn")}</span>
+      <GoogleIcon className="size-4" />
+      {translateAuth("signIn")}
     </Button>
   )
 }

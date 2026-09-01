@@ -36,6 +36,9 @@ import { Modal, ModalClose } from "@/components/Modal"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
+import { HoverRevealLabel } from "@/components/HoverRevealLabel"
+import { PhotoHero } from "@/components/PhotoHero"
+import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import {
   Accordion,
   AccordionContent,
@@ -46,7 +49,14 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { ExternalLinkIcon, GoogleIcon } from "@/lib/icons"
+import {
+  ExternalLinkIcon,
+  GoogleIcon,
+  SignOutIcon,
+  WishlistIcon,
+} from "@/lib/icons"
+import { readHeroImages } from "@/lib/site-images"
+import { WELCOME_LETTER } from "@/lib/welcome-letter"
 
 export const metadata: Metadata = { title: "Design" }
 
@@ -279,6 +289,48 @@ export default async function DesignPage({
         </div>
       </PageSection>
 
+      <PageSection heading="Ikon som fäller ut sin text">
+        {/* Hover or tab to it. The group class sits on the button, not inside the
+            component, because that is where keyboard focus lands. */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="group/reveal w-auto px-2"
+          >
+            <HoverRevealLabel
+              icon={<SignOutIcon className="size-4" />}
+              label="Logga ut"
+            />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="group/reveal w-auto px-2"
+          >
+            <HoverRevealLabel
+              icon={<WishlistIcon className="size-4" />}
+              label="En ganska lång etikett"
+            />
+          </Button>
+        </div>
+      </PageSection>
+
+      <PageSection heading="Notiser">
+        {/* The bubble in isolation: it has to carry against either theme, which is why its
+            colour is one value rather than a light and a dark one. */}
+        <div className="flex items-center gap-4">
+          <span className="bg-notification flex size-4 items-center justify-center rounded-full text-[0.625rem] font-bold text-white tabular-nums">
+            3
+          </span>
+          <span className="bg-notification rounded-full px-1.5 text-xs font-bold text-white tabular-nums">
+            12
+          </span>
+          <span className="text-muted-foreground text-sm">#f52055</span>
+        </div>
+      </PageSection>
+
       <PageSection heading="Märken och ansikten">
         <div className="flex flex-wrap items-center gap-3">
           <Badge>default</Badge>
@@ -354,6 +406,38 @@ export default async function DesignPage({
             Innehållet i dialogen.
           </p>
         </Modal>
+
+        {/* The real letter, so the crawl can be timed and read without signing out. */}
+        <Modal
+          trigger={<Button variant="outline">Grundarens brev</Button>}
+          title={WELCOME_LETTER.title}
+          closeLabel={WELCOME_LETTER.closeLabel}
+          backgroundImage="/images/misc/viggeRasse.webp"
+          titleClassName="text-center text-xl font-extrabold tracking-tight sm:text-2xl"
+          className="sm:max-w-2xl"
+          footer={<Button>{WELCOME_LETTER.requestLabel}</Button>}
+        >
+          <WelcomeCrawl
+            paragraphs={WELCOME_LETTER.paragraphs}
+            signature={WELCOME_LETTER.signature}
+            pauseLabel={WELCOME_LETTER.pauseLabel}
+            playLabel={WELCOME_LETTER.playLabel}
+            replayLabel={WELCOME_LETTER.replayLabel}
+          />
+        </Modal>
+      </PageSection>
+
+      <PageSection heading="Hjältebild">
+        {/* Normally full bleed at the top of a page. Boxed in here so the wave cut and the
+            title's contrast can be checked without leaving the reference. */}
+        <div className="overflow-hidden rounded-lg">
+          <PhotoHero
+            images={await readHeroImages()}
+            eyebrow="Fest"
+            title="Bastufestival"
+            tagline="Underrubriken som ligger på fotot."
+          />
+        </div>
       </PageSection>
 
       <PageSection heading="Eventkort">

@@ -58,7 +58,7 @@ export function VideoEmbed({
           />
 
           <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/45 text-white transition-colors duration-300 group-hover:bg-black/60">
-            <span className="bg-background/90 text-primary flex size-12 items-center justify-center rounded-full shadow-lg transition-transform duration-300 group-hover:scale-110">
+            <span className="bg-background/90 text-primary-ink flex size-12 items-center justify-center rounded-full shadow-lg transition-transform duration-300 group-hover:scale-110">
               <PlayIcon className="ml-0.5 size-6" />
             </span>
             <span className="px-3 text-center text-xs font-medium opacity-0 transition-opacity duration-300 group-hover:opacity-100">

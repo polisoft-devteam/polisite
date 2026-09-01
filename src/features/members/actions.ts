@@ -18,6 +18,9 @@ const profileSchema = z.object({
   officialTitle: z.string().trim().max(60),
   funTitle: z.string().trim().max(60),
   bio: z.string().trim().max(2000),
+
+  // A URL or nothing. An empty string is the usual case and must not fail validation.
+  githubUrl: z.union([z.literal(""), z.string().trim().url().max(300)]),
 })
 
 /** Empty inputs come through as "" — store null so the database has one kind of blank. */
@@ -39,6 +42,7 @@ export async function updateMyProfile(formData: FormData) {
     officialTitle: formData.get("officialTitle") ?? "",
     funTitle: formData.get("funTitle") ?? "",
     bio: formData.get("bio") ?? "",
+    githubUrl: formData.get("githubUrl") ?? "",
   })
 
   if (!parsed.success) return
@@ -54,6 +58,7 @@ export async function updateMyProfile(formData: FormData) {
     officialTitle: emptyToNull(parsed.data.officialTitle),
     funTitle: emptyToNull(parsed.data.funTitle),
     bio: emptyToNull(parsed.data.bio),
+    githubUrl: emptyToNull(parsed.data.githubUrl),
     ...(uploadedAvatarUrl ? { avatarUrl: uploadedAvatarUrl } : {}),
   })
 

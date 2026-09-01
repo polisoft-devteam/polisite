@@ -44,6 +44,28 @@ export function instantToWallTime(instant: Date, timeZone: string): string {
   return format(toZonedTime(instant, timeZone), "yyyy-MM-dd'T'HH:mm")
 }
 
+/** What a new event's start and end are set to, so the form opens filled in. */
+const DEFAULT_EVENT_HOUR = "10:00"
+
+/**
+ * Today and tomorrow at DEFAULT_EVENT_HOUR, as datetime-local strings.
+ *
+ * An empty datetime-local shows "dd/mm/yyyy, --:--", which reads as broken rather than as
+ * a prompt. Today is read in the event's own timezone, and the day is stepped in UTC so a
+ * daylight-saving change can't drag the hour with it.
+ */
+export function defaultEventWallTimes(timeZone: string) {
+  const today = format(toZonedTime(new Date(), timeZone), "yyyy-MM-dd")
+
+  const tomorrow = new Date(`${today}T00:00:00Z`)
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1)
+
+  return {
+    startsAt: `${today}T${DEFAULT_EVENT_HOUR}`,
+    endsAt: `${tomorrow.toISOString().slice(0, 10)}T${DEFAULT_EVENT_HOUR}`,
+  }
+}
+
 const DAY_IN_MS = 24 * 60 * 60 * 1000
 
 /**

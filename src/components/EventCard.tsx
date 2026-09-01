@@ -66,7 +66,7 @@ export async function EventCard({
         ) : (
           // No photo yet — the category icon fills the space rather than a grey hole.
           <div className="from-primary/15 to-accent/15 flex size-full items-center justify-center bg-linear-to-br">
-            <CategoryIcon className="text-primary/40 size-16" />
+            <CategoryIcon className="text-primary-ink/40 size-16" />
           </div>
         )}
 

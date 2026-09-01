@@ -1,8 +1,9 @@
 // Daylight saving and per-event timezones are the whole reason this module exists.
 
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 
 import {
+  defaultEventWallTimes,
   instantToWallTime,
   reminderDueAt,
   toDiscordTimestamp,
@@ -51,6 +52,44 @@ describe("instant back to wall time", () => {
 
       expect(instantToWallTime(instant, "Europe/Stockholm")).toBe(wallTime)
     }
+  })
+})
+
+describe("default wall times for a new event", () => {
+  it("starts today and ends tomorrow, at the same hour", () => {
+    const { startsAt, endsAt } = defaultEventWallTimes("Europe/Stockholm")
+
+    const dayAfterStart = new Date(`${startsAt.slice(0, 10)}T00:00:00Z`)
+    dayAfterStart.setUTCDate(dayAfterStart.getUTCDate() + 1)
+
+    expect(endsAt.slice(0, 10)).toBe(dayAfterStart.toISOString().slice(0, 10))
+    expect(endsAt.slice(11)).toBe(startsAt.slice(11))
+  })
+
+  it("keeps the hour across a daylight-saving change", () => {
+    // Stockholm puts the clocks back on 25 October 2026.
+    vi.useFakeTimers().setSystemTime(new Date("2026-10-24T12:00:00.000Z"))
+
+    const { startsAt, endsAt } = defaultEventWallTimes("Europe/Stockholm")
+
+    expect(startsAt).toBe("2026-10-24T10:00")
+    expect(endsAt).toBe("2026-10-25T10:00")
+
+    vi.useRealTimers()
+  })
+
+  it("reads today in the event's zone, not the machine's", () => {
+    // Just past midnight in Stockholm is still the previous day in New York.
+    vi.useFakeTimers().setSystemTime(new Date("2026-07-01T22:30:00.000Z"))
+
+    expect(defaultEventWallTimes("Europe/Stockholm").startsAt).toBe(
+      "2026-07-02T10:00",
+    )
+    expect(defaultEventWallTimes("America/New_York").startsAt).toBe(
+      "2026-07-01T10:00",
+    )
+
+    vi.useRealTimers()
   })
 })
 

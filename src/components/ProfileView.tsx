@@ -22,6 +22,8 @@ type ProfileViewProps = {
   pastEvents: Event[]
   isOwnProfile: boolean
   locale: string
+  /** Rendered between the facts and the events, where the profile's own news belongs. */
+  notifications?: React.ReactNode
 }
 
 export async function ProfileView({
@@ -30,6 +32,7 @@ export async function ProfileView({
   pastEvents,
   isOwnProfile,
   locale,
+  notifications,
 }: ProfileViewProps) {
   const translateProfile = await getTranslations("Profile")
   const format = await getFormatter({ locale })
@@ -102,6 +105,8 @@ export async function ProfileView({
           )}
         </FactList>
       </div>
+
+      {notifications}
 
       <EventList
         heading={translateProfile("upcomingTitle")}

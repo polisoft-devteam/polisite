@@ -44,6 +44,7 @@ import { EVENT_CURRENCIES } from "@/features/events/schemas"
 import {
   COMMON_EVENT_TIME_ZONES,
   DEFAULT_EVENT_TIME_ZONE,
+  defaultEventWallTimes,
   instantToWallTime,
 } from "@/lib/time"
 
@@ -67,6 +68,17 @@ export async function EventForm({
   const translateEvents = await getTranslations("Events")
 
   const timeZone = event?.timeZone ?? DEFAULT_EVENT_TIME_ZONE
+
+  // A new event opens on today and tomorrow. An existing one keeps what it has, including
+  // the empty pair that means it runs on a date poll instead.
+  const defaultWhen = event
+    ? {
+        startsAt: event.startsAt
+          ? instantToWallTime(event.startsAt, timeZone)
+          : "",
+        endsAt: event.endsAt ? instantToWallTime(event.endsAt, timeZone) : "",
+      }
+    : defaultEventWallTimes(timeZone)
 
   const steps: WizardStep[] = [
     {
@@ -181,6 +193,20 @@ export async function EventForm({
             </FormField>
           </div>
 
+          {/* Next to the dates rather than folded into Advanced: a date poll only makes
+              sense for a suggestion, and a confirmed event is rejected without a date, so
+              the two belong in view of each other. */}
+          <ExplainedSelectField
+            name="kind"
+            label={translateEvents("fieldKind")}
+            defaultValue={event?.kind ?? "confirmed"}
+            options={eventKindEnum.enumValues.map((kind) => ({
+              value: kind,
+              label: translateEvents(EVENT_KIND_LABEL_KEY[kind]),
+              explanation: translateEvents(EVENT_KIND_EXPLANATION_KEY[kind]),
+            }))}
+          />
+
           <EventWhenField
             startsAtLabel={translateEvents("fieldStartsAt")}
             endsAtLabel={translateEvents("fieldEndsAt")}
@@ -190,12 +216,8 @@ export async function EventForm({
             pollHint={translateEvents("fieldDatePollHint")}
             addDateLabel={translateEvents("addDateOption")}
             removeDateLabel={translateEvents("removeDateOption")}
-            defaultStartsAt={
-              event?.startsAt ? instantToWallTime(event.startsAt, timeZone) : ""
-            }
-            defaultEndsAt={
-              event?.endsAt ? instantToWallTime(event.endsAt, timeZone) : ""
-            }
+            defaultStartsAt={defaultWhen.startsAt}
+            defaultEndsAt={defaultWhen.endsAt}
             defaultDateOptions={dateOptions}
           />
         </>
@@ -230,19 +252,6 @@ export async function EventForm({
 
                 <div className="space-y-6">
                   <ExplainedSelectField
-                    name="kind"
-                    label={translateEvents("fieldKind")}
-                    defaultValue={event?.kind ?? "confirmed"}
-                    options={eventKindEnum.enumValues.map((kind) => ({
-                      value: kind,
-                      label: translateEvents(EVENT_KIND_LABEL_KEY[kind]),
-                      explanation: translateEvents(
-                        EVENT_KIND_EXPLANATION_KEY[kind],
-                      ),
-                    }))}
-                  />
-
-                  <ExplainedSelectField
                     name="visibility"
                     label={translateEvents("fieldVisibility")}
                     defaultValue={event?.visibility ?? "members"}
@@ -259,7 +268,7 @@ export async function EventForm({
                     )}
                   />
 
-                  <div className="grid gap-4 sm:grid-cols-[1fr_8rem]">
+                  <div className="grid gap-4 sm:grid-cols-[1fr_7rem_1fr] sm:items-start">
                     <FormField
                       label={translateEvents("fieldPrice")}
                       htmlFor="price"
@@ -297,22 +306,22 @@ export async function EventForm({
                         ))}
                       </FormSelect>
                     </FormField>
-                  </div>
 
-                  <FormField
-                    label={translateEvents("fieldMaxAttendees")}
-                    htmlFor="maxAttendees"
-                    hint={translateEvents("fieldMaxAttendeesHint")}
-                  >
-                    <Input
-                      id="maxAttendees"
-                      name="maxAttendees"
-                      type="number"
-                      min="1"
-                      step="1"
-                      defaultValue={event?.maxAttendees ?? ""}
-                    />
-                  </FormField>
+                    <FormField
+                      label={translateEvents("fieldMaxAttendees")}
+                      htmlFor="maxAttendees"
+                      hint={translateEvents("fieldMaxAttendeesHint")}
+                    >
+                      <Input
+                        id="maxAttendees"
+                        name="maxAttendees"
+                        type="number"
+                        min="1"
+                        step="1"
+                        defaultValue={event?.maxAttendees ?? ""}
+                      />
+                    </FormField>
+                  </div>
 
                   {/* Only meaningful when creating; an edit shouldn't re-announce. */}
                   {!event && (
