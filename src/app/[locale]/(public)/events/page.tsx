@@ -81,10 +81,10 @@ export default async function EventsPage({
       {/* A real blockquote rather than quote marks in the string, so the attribution has
           somewhere to sit and a screen reader knows it is a quotation. */}
       <figure className="mt-6 max-w-2xl">
-        <blockquote className="border-border text-muted-foreground border-l-2 pl-4 italic">
+        <blockquote className="border-border text-muted-foreground border-l-2 pl-4">
           {translateEvents("quote")}
         </blockquote>
-        <figcaption className="text-muted-foreground mt-2 pl-4 text-xs">
+        <figcaption className="text-muted-foreground mt-2 pl-4 text-xs italic">
           {translateEvents("quoteAttribution")}
         </figcaption>
       </figure>
