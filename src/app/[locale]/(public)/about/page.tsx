@@ -62,9 +62,9 @@ export default async function AboutPage({
       <PageSubNav items={sections} />
 
       <PageSection id="about-us">
-        {/* The pile sits beside the history on a wide screen and above it on a phone,
+        {/* The pile sits to the right of the history from md up, and above it on a phone,
             where a column narrow enough for both would leave neither readable. */}
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
+        <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_14rem] md:items-start">
           <div>
             <p className="font-medium">{translateAbout("motto")}</p>
 
@@ -80,7 +80,7 @@ export default async function AboutPage({
           </div>
 
           {aboutImages.length > 0 && (
-            <div className="order-first lg:order-none">
+            <div className="order-first md:order-none">
               <ImageStack images={aboutImages} />
             </div>
           )}
