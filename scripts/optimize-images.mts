@@ -1,5 +1,5 @@
 /**
- * Resizes everything in public/images to WebP, in place.
+ * Resizes everything under public/images to WebP, in place, subfolders included.
  *
  *   pnpm images:optimize
  *
@@ -18,7 +18,9 @@ const QUALITY = 82
 
 const SOURCE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".tif", ".tiff", ".heic"]
 
-const entries = await readdir(IMAGES_DIR)
+// Recursive: the photos are grouped into folders now (hero, films), and a flat read
+// silently converted nothing while reporting success.
+const entries = await readdir(IMAGES_DIR, { recursive: true })
 let converted = 0
 
 for (const entry of entries) {
@@ -28,6 +30,7 @@ for (const entry of entries) {
   const sourcePath = path.join(IMAGES_DIR, entry)
   const targetPath = path.join(
     IMAGES_DIR,
+    path.dirname(entry),
     `${path.basename(entry, extension)}.webp`,
   )
 
@@ -50,7 +53,7 @@ for (const entry of entries) {
 
   const saved = Math.round((1 - output.length / before) * 100)
   console.log(
-    `${entry} → ${path.basename(targetPath)}  ${Math.round(before / 1024)} KB → ${Math.round(output.length / 1024)} KB  (-${saved}%)`,
+    `${entry} → ${path.relative(IMAGES_DIR, targetPath)}  ${Math.round(before / 1024)} KB → ${Math.round(output.length / 1024)} KB  (-${saved}%)`,
   )
   converted += 1
 }
@@ -58,4 +61,3 @@ for (const entry of entries) {
 console.log(
   converted === 0 ? "Nothing to convert." : `Converted ${converted} image(s).`,
 )
-process.exit(0)
