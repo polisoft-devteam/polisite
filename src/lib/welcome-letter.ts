@@ -11,7 +11,7 @@ export const WELCOME_LETTER = {
 
   paragraphs: [
     "Om du läser detta så har snuten sprängt dörren, hittat min 5 petabytedisk och jag sitter inne...",
-    "Där fick jag dig allt, bara lite skoj sådär",
+    "Hehe där fick jag dig allt, bara lite skoj sådär...",
     "Nu undrar du säkert, vad är detta?",
     "Som nu 30-åring och mer eller mindre nyskild har jag insett att manlig gemenskap är fan det enda man har här i världen, när allt annat rämnat! Ännu är livet fyllt med aktivitet, sprit och IKEA-kvinnor. Men det kommer en dag när frugan sticker med barnen, demensen kickar in, knäet inte pallar hockeyn, ens franska fru har gått bort efter en tragisk elskoterrelaterad simningsolycka i Högsbo... vem vet? Inte du i alla fall.",
     "Med avstamp i detta förklarar jag lösningen till mitt och numera ditt problem: föreningslivet!",
@@ -21,6 +21,10 @@ export const WELCOME_LETTER = {
   ],
 
   signature: "I hast,\nVictor Interassistsson",
+
+  pauseLabel: "Pausa",
+  playLabel: "Spela",
+  replayLabel: "Spela om",
 
   requestLabel: "Redan certified PoliBoy? Clicka här!",
   closeLabel: "Stäng",

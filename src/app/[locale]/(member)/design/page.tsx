@@ -37,6 +37,7 @@ import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { PhotoHero } from "@/components/PhotoHero"
+import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import {
   Accordion,
   AccordionContent,
@@ -49,6 +50,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { ExternalLinkIcon, GoogleIcon } from "@/lib/icons"
 import { readHeroImages } from "@/lib/hero-images"
+import { WELCOME_LETTER } from "@/lib/welcome-letter"
 
 export const metadata: Metadata = { title: "Design" }
 
@@ -357,17 +359,23 @@ export default async function DesignPage({
           </p>
         </Modal>
 
+        {/* The real letter, so the crawl can be timed and read without signing out. */}
         <Modal
-          trigger={<Button variant="outline">Dialog med foto</Button>}
-          title="Dialog med bakgrund"
-          closeLabel="Stäng"
+          trigger={<Button variant="outline">Grundarens brev</Button>}
+          title={WELCOME_LETTER.title}
+          closeLabel={WELCOME_LETTER.closeLabel}
           backgroundImage="/images/misc/viggeRasse.webp"
-          footer={<Button>Knapp</Button>}
+          titleClassName="text-center text-xl font-extrabold tracking-tight sm:text-2xl"
+          className="sm:max-w-2xl"
+          footer={<Button>{WELCOME_LETTER.requestLabel}</Button>}
         >
-          <p className="text-sm">
-            Texten ligger på en tvättad platta över fotot, så den går att läsa i
-            både ljust och mörkt läge.
-          </p>
+          <WelcomeCrawl
+            paragraphs={WELCOME_LETTER.paragraphs}
+            signature={WELCOME_LETTER.signature}
+            pauseLabel={WELCOME_LETTER.pauseLabel}
+            playLabel={WELCOME_LETTER.playLabel}
+            replayLabel={WELCOME_LETTER.replayLabel}
+          />
         </Modal>
       </PageSection>
 

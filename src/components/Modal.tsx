@@ -27,6 +27,7 @@ export function Modal({
   footer,
   closeLabel,
   backgroundImage,
+  titleClassName,
   className,
   children,
 }: {
@@ -46,6 +47,8 @@ export function Modal({
    * stays readable in either theme.
    */
   backgroundImage?: string
+  /** For a title that needs to sit differently, like the crawl's centred one. */
+  titleClassName?: string
   className?: string
   children?: React.ReactNode
 }) {
@@ -80,7 +83,9 @@ export function Modal({
         )}
 
         <DialogHeader>
-          <DialogTitle className="font-bold">{title}</DialogTitle>
+          <DialogTitle className={cn("font-bold", titleClassName)}>
+            {title}
+          </DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 

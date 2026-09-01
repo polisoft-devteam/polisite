@@ -2,6 +2,7 @@
 // founder, and the chance to ask to join. Either button dismisses it for good.
 
 import { Modal } from "@/components/Modal"
+import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import { Button } from "@/components/ui/button"
 import { requestMembership } from "@/features/members/membership-prompt-actions"
 import { findMembershipPrompt } from "@/features/members/queries"
@@ -37,26 +38,20 @@ export async function MembershipPrompt() {
       closeLabel={WELCOME_LETTER.closeLabel}
       className="sm:max-w-2xl"
       backgroundImage="/images/misc/viggeRasse.webp"
+      titleClassName="text-center text-xl font-extrabold tracking-tight sm:text-2xl"
       footer={
         <form action={requestMembership}>
           <Button type="submit">{WELCOME_LETTER.requestLabel}</Button>
         </form>
       }
     >
-      {/* A dark screen for the crawl to recede into, with Vigge showing through. */}
-      <div className="crawl-stage rounded-lg bg-black/70 px-6">
-        <div className="crawl-tilt">
-          <div className="crawl-text space-y-4 text-sm leading-relaxed">
-            {WELCOME_LETTER.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-
-            <p className="pt-2 whitespace-pre-line italic">
-              {WELCOME_LETTER.signature}
-            </p>
-          </div>
-        </div>
-      </div>
+      <WelcomeCrawl
+        paragraphs={WELCOME_LETTER.paragraphs}
+        signature={WELCOME_LETTER.signature}
+        pauseLabel={WELCOME_LETTER.pauseLabel}
+        playLabel={WELCOME_LETTER.playLabel}
+        replayLabel={WELCOME_LETTER.replayLabel}
+      />
     </Modal>
   )
 }

@@ -412,7 +412,7 @@ a[href] {
   color: #ffe81f;
   font-weight: 700;
   text-align: center;
-  animation: crawl-up 85s linear forwards;
+  animation: crawl-up 115s linear forwards;
 }
 
 @keyframes crawl-up {

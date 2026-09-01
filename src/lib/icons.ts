@@ -16,6 +16,8 @@ export {
   List as MenuIcon,
   CameraVideo as OnlineIcon,
   PlayFill as PlayIcon,
+  PauseFill as PauseIcon,
+  ArrowCounterclockwise as ReplayIcon,
   PersonFill as GuestIcon,
   Trash as RemoveIcon,
   Gear as SettingsIcon,
