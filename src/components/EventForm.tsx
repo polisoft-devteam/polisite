@@ -193,6 +193,20 @@ export async function EventForm({
             </FormField>
           </div>
 
+          {/* Next to the dates rather than folded into Advanced: a date poll only makes
+              sense for a suggestion, and a confirmed event is rejected without a date, so
+              the two belong in view of each other. */}
+          <ExplainedSelectField
+            name="kind"
+            label={translateEvents("fieldKind")}
+            defaultValue={event?.kind ?? "confirmed"}
+            options={eventKindEnum.enumValues.map((kind) => ({
+              value: kind,
+              label: translateEvents(EVENT_KIND_LABEL_KEY[kind]),
+              explanation: translateEvents(EVENT_KIND_EXPLANATION_KEY[kind]),
+            }))}
+          />
+
           <EventWhenField
             startsAtLabel={translateEvents("fieldStartsAt")}
             endsAtLabel={translateEvents("fieldEndsAt")}
@@ -237,39 +251,22 @@ export async function EventForm({
                 </p>
 
                 <div className="space-y-6">
-                  {/* Every field here is short, so they pair up rather than each taking a
-                      row of their own. */}
-                  <div className="grid gap-4 sm:grid-cols-2 sm:items-start">
-                    <ExplainedSelectField
-                      name="kind"
-                      label={translateEvents("fieldKind")}
-                      defaultValue={event?.kind ?? "confirmed"}
-                      options={eventKindEnum.enumValues.map((kind) => ({
-                        value: kind,
-                        label: translateEvents(EVENT_KIND_LABEL_KEY[kind]),
-                        explanation: translateEvents(
-                          EVENT_KIND_EXPLANATION_KEY[kind],
+                  <ExplainedSelectField
+                    name="visibility"
+                    label={translateEvents("fieldVisibility")}
+                    defaultValue={event?.visibility ?? "members"}
+                    options={eventVisibilityEnum.enumValues.map(
+                      (visibility) => ({
+                        value: visibility,
+                        label: translateEvents(
+                          EVENT_VISIBILITY_LABEL_KEY[visibility],
                         ),
-                      }))}
-                    />
-
-                    <ExplainedSelectField
-                      name="visibility"
-                      label={translateEvents("fieldVisibility")}
-                      defaultValue={event?.visibility ?? "members"}
-                      options={eventVisibilityEnum.enumValues.map(
-                        (visibility) => ({
-                          value: visibility,
-                          label: translateEvents(
-                            EVENT_VISIBILITY_LABEL_KEY[visibility],
-                          ),
-                          explanation: translateEvents(
-                            EVENT_VISIBILITY_EXPLANATION_KEY[visibility],
-                          ),
-                        }),
-                      )}
-                    />
-                  </div>
+                        explanation: translateEvents(
+                          EVENT_VISIBILITY_EXPLANATION_KEY[visibility],
+                        ),
+                      }),
+                    )}
+                  />
 
                   <div className="grid gap-4 sm:grid-cols-[1fr_7rem_1fr] sm:items-start">
                     <FormField
