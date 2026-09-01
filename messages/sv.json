@@ -8,11 +8,12 @@
     "calendar": "Kalender",
     "about": "Om oss",
     "menu": "Meny",
-    "archive": "Öppet arkiv"
+    "archive": "Öppet arkiv",
+    "members": "Medlemmar"
   },
   "Home": {
     "title": "Välkommen",
-    "heroTagline": "Allt {associationName} gör tillsammans, samlat på ett ställe.",
+    "heroTagline": "Allt {associationName} gör tillsammans, samlat på ett ställe för ditt tittande och konsuuuumerande nöje.",
     "intro": "Här samlar vi föreningens evenemang, medlemmar och historia. Samtalet fortsätter på Discord. Det här är platsen för det som ska hålla över tid.",
     "upcomingTitle": "Härnäst",
     "upcomingEmpty": "Inget planerat just nu. Har du en idé? Lägg in ett förslag.",
@@ -302,5 +303,25 @@
       "label": "GitHub",
       "description": "Alla våra repon"
     }
+  },
+  "Members": {
+    "title": "Medlemmar",
+    "back": "Alla medlemmar",
+    "github": "GitHub",
+    "wishlist": "Önskelista"
+  },
+  "Wishlist": {
+    "title": "Önskelista",
+    "emptyOwn": "Inget här än. Lägg till något du önskar dig.",
+    "emptyOther": "Ingen önskelista än.",
+    "fieldTitle": "Vad önskar du dig?",
+    "fieldUrl": "Länk",
+    "add": "Lägg till",
+    "remove": "Ta bort",
+    "claim": "Jag fixar den",
+    "join": "Haka på",
+    "release": "Hoppa av",
+    "claimedBy": "{count, plural, one {# har hakat på} other {# har hakat på}}",
+    "ownerBlindNote": "Du ser aldrig om någon har fixat något från din egen lista. Det vore ju tråkigt."
   }
 }
