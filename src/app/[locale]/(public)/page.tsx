@@ -41,10 +41,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       <SiteHero />
 
       <PageContainer>
-        <p className="text-muted-foreground max-w-2xl">
-          {translateHome("intro")}
-        </p>
-
         <EventList
           heading={translateHome("upcomingTitle")}
           emptyText={translateHome("upcomingEmpty")}

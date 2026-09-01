@@ -12,8 +12,7 @@
   },
   "Home": {
     "title": "Välkommen",
-    "heroTagline": "Allt {associationName} gör tillsammans, samlat på ett ställe för ditt tittande och konsuuuumerande nöje.",
-    "intro": "Här samlar vi föreningens evenemang, medlemmar och historia. Samtalet fortsätter på Discord. Det här är platsen för det som ska hålla över tid.",
+    "heroTagline": "Vuxna män gör saker tillsammans, {associationName} gör mycket mer än så!",
     "upcomingTitle": "Härnäst",
     "upcomingEmpty": "Inget planerat just nu. Har du en idé? Lägg in ett förslag.",
     "allEvents": "Alla evenemang",
