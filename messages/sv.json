@@ -13,6 +13,7 @@
   "Home": {
     "title": "Välkommen",
     "heroTagline": "Vuxna män gör saker tillsammans, {associationName} gör mycket mer än så!",
+    "intro": "Här kan du skapa och kika runt på kommande events, pimpa din profil, eller kika på vårt öppna arkiv där det finns massa smått och gott. Det mesta ligger bakom paywall så se till att du loggar in och ansöker om medlemskap!",
     "upcomingTitle": "Härnäst",
     "upcomingEmpty": "Inget planerat just nu. Har du en idé? Lägg in ett förslag.",
     "allEvents": "Alla evenemang",

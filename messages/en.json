@@ -13,6 +13,7 @@
   "Home": {
     "title": "Welcome",
     "heroTagline": "Grown men doing things together, {associationName} does a great deal more than that!",
+    "intro": "Here you can create and browse upcoming events, pimp your profile, or take a look in our open archive where there is plenty to be found. Most of it sits behind a paywall, so make sure you sign in and request membership!",
     "upcomingTitle": "Coming up",
     "upcomingEmpty": "Nothing planned right now. Got an idea? Add a suggestion.",
     "allEvents": "All events",
