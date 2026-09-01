@@ -12,13 +12,26 @@ import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
 import { WELCOME_LETTER } from "@/lib/welcome-letter"
 
+/**
+ * TEMPORARY, REMOVE BEFORE RELEASE.
+ *
+ * While the letter is being written it reopens on every page load, for anyone signed in.
+ * Set back to false and the letter goes back to appearing once, to a signed-in guest who
+ * has not answered yet. Tracked in README under "Before release".
+ */
+const ALWAYS_SHOW_WELCOME_LETTER = true
+
 export async function MembershipPrompt() {
   const viewer = await getViewer()
 
-  if (!viewer || isActiveMember(viewer)) return null
+  if (!viewer) return null
 
-  // Answered already — never show it again.
-  if (await findMembershipPrompt(viewer.authUserId)) return null
+  if (!ALWAYS_SHOW_WELCOME_LETTER) {
+    if (isActiveMember(viewer)) return null
+
+    // Answered already — never show it again.
+    if (await findMembershipPrompt(viewer.authUserId)) return null
+  }
 
   return (
     <Modal

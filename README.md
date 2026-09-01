@@ -62,6 +62,17 @@ pnpm storage:setup                                 # create the storage buckets
 pnpm images:optimize                               # resize anything in public/images
 ```
 
+## Before release
+
+Things that must not ship as they are:
+
+- **The About page and the timeline are placeholder text**, in both languages. Victor is
+  writing the real copy. See `About.intro`, `About.membershipBody` and the `About.timeline`
+  entries in `messages/*.json`.
+- **`ALWAYS_SHOW_WELCOME_LETTER` in `src/components/MembershipPrompt.tsx` is `true`**, so
+  the founder's letter reopens on every page load while it is being written. Set it back to
+  `false` and it returns to appearing once, to a signed-in guest who has not answered.
+
 ## Where things are
 
 - `CLAUDE.md` — conventions, domain rules, and what to use instead of what. Read this first.
