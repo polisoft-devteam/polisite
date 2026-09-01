@@ -86,10 +86,6 @@ role when the daily sweep reaches it.
 - **The timeline names no real years.** It is admin only and badged as unfinished, so it
   ships without showing anyone a half-written page. Drop the `isAdmin` check in the About
   page when it is ready.
-- **The English About page is a translation of Swedish in-jokes**, nicknames included. If
-  it should be Swedish only, like the founder's letter, that is a decision rather than a
-  wording fix, and it needs an exception to the rule that About prose lives in the message
-  files.
 
 ## Where things are
 

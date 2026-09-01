@@ -129,6 +129,18 @@ Excluded in the query, not in rendering.
   claiming. Skip snapshot tests.
 - Prefer self-explanatory code. Comment _why_, not _what_.
 
+### Copy I hand you
+
+- **Proofread what I write, and ask before changing it.** When copy I give you looks like
+  it has a spelling or grammar slip, say so and ask whether to fix it. Do not correct it
+  silently, and do not leave it unmentioned either: some of it is deliberate, in a voice
+  that is not always standard Swedish, and I am the one who can tell which is which.
+- Quote the word or line you mean and what you would change it to, so answering is one
+  word. Obvious typing artefacts, a doubled space or a transposed letter in a word that is
+  otherwise clearly intended, you may just fix, and say that you did.
+- This applies to Swedish and English alike, and to the letters and page prose as much as
+  to interface strings.
+
 ### Naming and comments
 
 - **Names are descriptive, even when that makes them long.** `mainNavigationLinks`, not
