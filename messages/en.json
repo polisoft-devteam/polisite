@@ -57,7 +57,8 @@
         "body": "Spread across several cities but sharing one calendar. That's why this site exists."
       }
     },
-    "timelineHeading": "How we got here"
+    "timelineHeading": "How we got here",
+    "timelineUnderConstruction": "Under construction"
   },
   "Events": {
     "title": "Events",

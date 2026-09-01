@@ -5,7 +5,10 @@ import { AssociationTimeline } from "@/components/AssociationTimeline"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
+import { Badge } from "@/components/ui/badge"
+import { getViewer } from "@/lib/auth"
 import { ASSOCIATION_FULL_NAME, ASSOCIATION_NAME } from "@/lib/association"
+import { isAdmin } from "@/lib/permissions"
 
 export async function generateMetadata({
   params,
@@ -23,6 +26,7 @@ export default async function AboutPage({
   setRequestLocale(locale)
 
   const translateAbout = await getTranslations("About")
+  const viewer = await getViewer()
 
   return (
     <PageContainer>
@@ -40,9 +44,18 @@ export default async function AboutPage({
         <p>{translateAbout("bond")}</p>
       </div>
 
-      <PageSection heading={translateAbout("timelineHeading")}>
-        <AssociationTimeline />
-      </PageSection>
+      {/* Admins only until it names real years and events. Kept in the page rather than
+          commented out, so it is still being looked at while it is being written. Its copy
+          is not secret: every message file is shipped to the browser either way. */}
+      {isAdmin(viewer) && (
+        <PageSection heading={translateAbout("timelineHeading")}>
+          <Badge variant="outline">
+            {translateAbout("timelineUnderConstruction")}
+          </Badge>
+
+          <AssociationTimeline />
+        </PageSection>
+      )}
 
       <PageSection heading={translateAbout("membershipTitle")}>
         <p className="text-muted-foreground max-w-2xl">

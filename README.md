@@ -68,8 +68,9 @@ Things that must not ship as they are:
 
 - **`About.membershipBody` is still placeholder text**, in both languages. The history
   above it is written; how to join is not.
-- **The timeline still needs its real entries.** The six `About.timeline` steps read as
-  prose but none of them names an actual year or event.
+- **The timeline is admin only**, badged "under construction", because its six
+  `About.timeline` steps read as prose but none names an actual year or event. It is a post
+  launch job. Drop the `isAdmin` check in the About page to show it to everyone.
 - **The English About page is a translation of Swedish in-jokes**, nicknames included. If
   it should be Swedish only, like the founder's letter, that is a decision to make rather
   than a wording to fix.
