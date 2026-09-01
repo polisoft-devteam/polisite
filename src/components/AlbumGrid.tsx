@@ -8,11 +8,14 @@ import type { PhotoAlbum } from "@/lib/association-albums"
 
 export function AlbumGrid({
   heading,
+  id,
   albums,
   openLabel,
   canOpen,
 }: {
   heading: string
+  /** Set when the page has a sub navigation pointing at this section. */
+  id?: string
   albums: PhotoAlbum[]
   openLabel: string
   /** When false, the share URLs are never passed to the browser. */
@@ -21,7 +24,7 @@ export function AlbumGrid({
   if (albums.length === 0) return null
 
   return (
-    <PageSection heading={heading}>
+    <PageSection id={id} heading={heading}>
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {albums.map((album) =>
           canOpen ? (
