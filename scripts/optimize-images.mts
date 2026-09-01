@@ -24,8 +24,11 @@ const entries = await readdir(IMAGES_DIR, { recursive: true })
 let converted = 0
 
 for (const entry of entries) {
-  const extension = path.extname(entry).toLowerCase()
-  if (!SOURCE_EXTENSIONS.includes(extension)) continue
+  // Kept as written rather than lowercased, because basename() strips a suffix
+  // case-sensitively: a lowercased ".png" leaves "photo.PNG" intact and the result is
+  // named "photo.PNG.webp".
+  const extension = path.extname(entry)
+  if (!SOURCE_EXTENSIONS.includes(extension.toLowerCase())) continue
 
   const sourcePath = path.join(IMAGES_DIR, entry)
   const targetPath = path.join(
