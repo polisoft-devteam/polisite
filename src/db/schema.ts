@@ -59,6 +59,13 @@ export const members = pgTable("members", {
     withTimezone: true,
   }),
 
+  // Everything newer than this counts as a notification. One timestamp rather than a row
+  // per notification: the counts are all derivable from tables we already keep, and a
+  // notifications table would be a second copy of the truth to keep in step.
+  notificationsSeenAt: timestamp("notifications_seen_at", {
+    withTimezone: true,
+  }),
+
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

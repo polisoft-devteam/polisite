@@ -32,6 +32,7 @@ export {
   LockFill as LockIcon,
   Github as GithubIcon,
   GiftFill as WishlistIcon,
+  BellFill as NotificationIcon,
   PeopleFill as MembersIcon,
   Images as PhotosIcon,
   FolderFill as DriveIcon,

@@ -330,5 +330,13 @@
     "release": "Hoppa av",
     "claimedBy": "{count, plural, one {# har hakat på} other {# har hakat på}}",
     "ownerBlindNote": "Du ser aldrig om någon har fixat något från din egen lista. Det vore ju tråkigt."
+  },
+  "Notifications": {
+    "label": "Notiser",
+    "empty": "Inget nytt sedan sist.",
+    "membershipRequests": "Vill bli medlem",
+    "newSignUps": "Nya inloggningar",
+    "responsesToMyEvents": "Svar på dina event",
+    "newEvents": "Nya event"
   }
 }

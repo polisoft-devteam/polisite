@@ -283,6 +283,20 @@ export default async function DesignPage({
         </div>
       </PageSection>
 
+      <PageSection heading="Notiser">
+        {/* The bubble in isolation: it has to carry against either theme, which is why its
+            colour is one value rather than a light and a dark one. */}
+        <div className="flex items-center gap-4">
+          <span className="bg-notification flex size-4 items-center justify-center rounded-full text-[0.625rem] font-bold text-white tabular-nums">
+            3
+          </span>
+          <span className="bg-notification rounded-full px-1.5 text-xs font-bold text-white tabular-nums">
+            12
+          </span>
+          <span className="text-muted-foreground text-sm">#f52055</span>
+        </div>
+      </PageSection>
+
       <PageSection heading="Märken och ansikten">
         <div className="flex flex-wrap items-center gap-3">
           <Badge>default</Badge>

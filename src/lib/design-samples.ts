@@ -48,6 +48,7 @@ export function buildSampleMember(overrides: Partial<Member> = {}): Member {
     birthday: "1991-04-17",
     status: "active",
     joinedAssociationAt: new Date("2019-06-01"),
+    notificationsSeenAt: null,
     createdAt: new Date("2019-06-01"),
     updatedAt: new Date("2019-06-01"),
     ...overrides,

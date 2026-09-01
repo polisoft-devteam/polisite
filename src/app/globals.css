@@ -27,6 +27,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-notification: var(--notification);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -98,6 +99,10 @@
 
   --destructive: oklch(0.58 0.21 25);
 
+  /* #f52055. Deliberately the same in both themes: an unread count is a flag, not
+     part of the palette, and it has to carry against either background. */
+  --notification: #f52055;
+
   --border: oklch(0.9 0.008 197);
   --input: oklch(0.89 0.009 197);
   --ring: oklch(0.5 0.085 197);
@@ -155,6 +160,7 @@
   --accent-foreground: oklch(0.97 0.01 197);
 
   --destructive: oklch(0.68 0.18 25);
+  --notification: #f52055;
 
   --border: oklch(0.31 0.013 200);
   --input: oklch(0.34 0.014 200);

@@ -330,5 +330,13 @@
     "release": "Back out",
     "claimedBy": "{count, plural, one {# joined} other {# joined}}",
     "ownerBlindNote": "You never see whether anyone has picked something off your own list. That would spoil it."
+  },
+  "Notifications": {
+    "label": "Notifications",
+    "empty": "Nothing new since last time.",
+    "membershipRequests": "Want to join",
+    "newSignUps": "New sign ins",
+    "responsesToMyEvents": "Replies to your events",
+    "newEvents": "New events"
   }
 }
