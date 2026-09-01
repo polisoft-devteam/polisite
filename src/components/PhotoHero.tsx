@@ -86,7 +86,7 @@ export function PhotoHero({
           className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-black/10"
         />
 
-        <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-5xl px-4 pb-10 sm:pb-24">
+        <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-6xl 2xl:max-w-7xl px-4 pb-10 sm:pb-24">
           {eyebrow && (
             <p className="text-xs tracking-wide text-white/80 uppercase drop-shadow">
               {eyebrow}

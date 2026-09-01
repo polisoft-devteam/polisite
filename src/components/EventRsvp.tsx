@@ -12,6 +12,18 @@ import { ATTENDANCE_RESPONSE_LABEL_KEY } from "@/features/events/labels"
 import { setAttendanceAction } from "@/features/events/actions"
 import { cn } from "@/lib/utils"
 
+// By meaning rather than by hue, so the colours live in globals.css with the rest of the
+// palette. Only the answer you picked is coloured; the other two stay plain outlines, or
+// three tinted buttons would read as three states at once.
+const SELECTED_RESPONSE_STYLE: Record<AttendanceResponse, string> = {
+  going:
+    "border-rsvp-going/40 bg-rsvp-going/15 text-rsvp-going hover:bg-rsvp-going/25",
+  interested:
+    "border-rsvp-interested/40 bg-rsvp-interested/15 text-rsvp-interested hover:bg-rsvp-interested/25",
+  not_going:
+    "border-rsvp-not-going/40 bg-rsvp-not-going/15 text-rsvp-not-going hover:bg-rsvp-not-going/25",
+}
+
 export async function EventRsvp({
   eventId,
   myResponse,
@@ -34,8 +46,11 @@ export async function EventRsvp({
           <input type="hidden" name="response" value={response} />
           <Button
             type="submit"
-            variant={myResponse === response ? "default" : "outline"}
+            variant="outline"
             size="sm"
+            className={cn(
+              myResponse === response && SELECTED_RESPONSE_STYLE[response],
+            )}
           >
             {translateEvents(ATTENDANCE_RESPONSE_LABEL_KEY[response])}
           </Button>

@@ -19,7 +19,7 @@ export function PageContainer({ children }: { children: React.ReactNode }) {
       exit={directionalSlide}
       default="none"
     >
-      <div className="mx-auto w-full max-w-5xl px-4 py-12">{children}</div>
+      <div className="mx-auto w-full max-w-6xl 2xl:max-w-7xl px-4 py-12">{children}</div>
     </ViewTransition>
   )
 }

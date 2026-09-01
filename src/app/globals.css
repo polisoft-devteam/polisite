@@ -28,6 +28,9 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-notification: var(--notification);
+  --color-rsvp-going: var(--rsvp-going);
+  --color-rsvp-interested: var(--rsvp-interested);
+  --color-rsvp-not-going: var(--rsvp-not-going);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -103,6 +106,12 @@
      part of the palette, and it has to carry against either background. */
   --notification: #f52055;
 
+  /* Answering an invitation, by meaning rather than by hue. Muted on purpose: three
+     saturated buttons in a row would shout louder than anything else on the page. */
+  --rsvp-going: oklch(0.62 0.13 155);
+  --rsvp-interested: oklch(0.68 0.13 70);
+  --rsvp-not-going: oklch(0.62 0.16 22);
+
   --border: oklch(0.9 0.008 197);
   --input: oklch(0.89 0.009 197);
   --ring: oklch(0.5 0.085 197);
@@ -161,6 +170,11 @@
 
   --destructive: oklch(0.68 0.18 25);
   --notification: #f52055;
+
+  /* Lifted for dark, where the light values sink into the background. */
+  --rsvp-going: oklch(0.76 0.14 155);
+  --rsvp-interested: oklch(0.8 0.13 70);
+  --rsvp-not-going: oklch(0.74 0.16 22);
 
   --border: oklch(0.31 0.013 200);
   --input: oklch(0.34 0.014 200);
@@ -455,6 +469,17 @@ a[href] {
     color: inherit;
     font-weight: inherit;
     text-align: left;
+  }
+}
+
+/* --- Large screens -----------------------------------------------------------
+   Everything is sized in rem, spacing included, so nudging the root size scales
+   the whole site rather than only its text. A 2560px monitor was showing the
+   same physical size as a laptop, with far more empty margin. */
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 17px;
   }
 }
 

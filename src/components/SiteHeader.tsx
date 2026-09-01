@@ -21,7 +21,7 @@ export async function SiteHeader() {
       style={{ viewTransitionName: "site-header" }}
       className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur"
     >
-      <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-1 px-4 sm:gap-2">
+      <div className="mx-auto flex h-14 w-full max-w-6xl 2xl:max-w-7xl items-center gap-1 px-4 sm:gap-2">
         <Link href="/" transitionTypes={["nav-back"]} className="mr-1 sm:mr-2">
           <Wordmark />
         </Link>
