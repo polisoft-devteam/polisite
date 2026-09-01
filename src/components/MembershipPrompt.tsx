@@ -1,7 +1,7 @@
 // Shown once to someone who has signed in with Google but isn't a member: a letter from a
 // founder, and the chance to ask to join. Either button dismisses it for good.
 
-import { Modal } from "@/components/Modal"
+import { Modal, ModalClose } from "@/components/Modal"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import { Button } from "@/components/ui/button"
 import { requestMembership } from "@/features/members/membership-prompt-actions"
@@ -40,9 +40,18 @@ export async function MembershipPrompt() {
       backgroundImage="/images/misc/viggeRasse.webp"
       titleClassName="text-center text-xl font-extrabold tracking-tight sm:text-2xl"
       footer={
-        <form action={requestMembership}>
-          <Button type="submit">{WELCOME_LETTER.requestLabel}</Button>
-        </form>
+        // An active member is only here because of the flag above, and asking to join
+        // something you are already in does nothing: the action refuses it. So for them
+        // the button closes the letter instead of submitting into a dead end.
+        isActiveMember(viewer) ? (
+          <ModalClose render={<Button />}>
+            {WELCOME_LETTER.closeLabel}
+          </ModalClose>
+        ) : (
+          <form action={requestMembership}>
+            <Button type="submit">{WELCOME_LETTER.requestLabel}</Button>
+          </form>
+        )
       }
     >
       <WelcomeCrawl
