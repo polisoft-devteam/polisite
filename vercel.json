@@ -1,7 +1,6 @@
 {
   "crons": [
     {
-      "comment": "Vercel's Hobby plan allows one run per day, so reminders are sent in a single morning sweep rather than at an exact hour before the event.",
       "path": "/api/cron/reminders",
       "schedule": "0 7 * * *"
     }
