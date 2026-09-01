@@ -13,7 +13,7 @@ export const WELCOME_LETTER = {
     "Om du läser detta så har snuten sprängt dörren, hittat min 5 petabytedisk och jag sitter inne...",
     "Hehe där fick jag dig allt, bara lite skoj sådär...",
     "Nu undrar du säkert, vad är detta?",
-    "Som nu 30-åring och mer eller mindre nyskild har jag insett att manlig gemenskap är fan det enda man har här i världen, när allt annat rämnat! Ännu är livet fyllt med aktivitet, sprit och IKEA-kvinnor.",
+    "Som nu 30-åring och mer eller mindre nyskild har jag insett att manlig gemenskap är fan det enda man har här i världen, när allt annat rämnat! Nu tänker du kanske: Nej fan, livet fyllt med aktivitet, sprit och IKEA-kvinnor.",
     "Men det kommer en dag när frugan sticker med barnen, demensen kickar in, knäet inte pallar hockeyn, ens franska fru har gått bort efter en tragisk elskoterrelaterad simningsolycka i Högsbo... vem vet? Inte du i alla fall.",
     "Med avstamp i detta förklarar jag lösningen till mitt och numera ditt problem: föreningslivet!",
     "Den här fina lilla webbappen är ett frö som jag, i egenskap av föreningens första självutnämnda President, Seth Ruydell style, nu ska vattna och sköta med omsorg!",
