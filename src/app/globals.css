@@ -373,6 +373,25 @@ a[href] {
   }
 }
 
+/* --- Unanswered RSVP ---------------------------------------------------------
+   A ring that swells and fades out of the three buttons until one is chosen.
+   Applied to the group by EventRsvp, so answering removes it. */
+
+@keyframes rsvp-pulse {
+  from {
+    box-shadow: 0 0 0 0 --alpha(var(--primary) / 55%);
+  }
+  to {
+    box-shadow: 0 0 0 0.5rem --alpha(var(--primary) / 0%);
+  }
+}
+
+@media not (prefers-reduced-motion: reduce) {
+  .rsvp-unanswered [data-slot="button"] {
+    animation: rsvp-pulse 1.8s ease-out infinite;
+  }
+}
+
 /* --- Wordmark ----------------------------------------------------------------
    "Poli" stays put; the rest flips through the list in Wordmark.tsx.
 
