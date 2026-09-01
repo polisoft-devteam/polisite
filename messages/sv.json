@@ -337,7 +337,7 @@
     "unseen": "{count, plural, one {# ny notis} other {# nya notiser}}",
     "membershipRequest": "{who} vill bli medlem",
     "signUp": "{who} har loggat in för första gången",
-    "responseToMyEvent": "{who} svarade på {what}",
+    "eventResponse": "{who} svarade på {what}",
     "newEvent": "{who} skapade {what}"
   }
 }

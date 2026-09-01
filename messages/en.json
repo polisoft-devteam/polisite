@@ -337,7 +337,7 @@
     "unseen": "{count, plural, one {# new notification} other {# new notifications}}",
     "membershipRequest": "{who} wants to join",
     "signUp": "{who} signed in for the first time",
-    "responseToMyEvent": "{who} replied to {what}",
+    "eventResponse": "{who} replied to {what}",
     "newEvent": "{who} created {what}"
   }
 }

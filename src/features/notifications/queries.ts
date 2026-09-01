@@ -8,20 +8,24 @@
 // The list itself is not filtered by that timestamp: reading it once should not empty the
 // section for good. Only the count on the badge is.
 
-import { and, desc, eq, gte, isNull, ne } from "drizzle-orm"
+import { and, desc, eq, gte, inArray, isNull, ne, or } from "drizzle-orm"
 
 import { db } from "@/db"
 import { eventAttendees, events, members, membershipPrompts } from "@/db/schema"
 import type { Viewer } from "@/lib/permissions"
-import { canManageMembers, isActiveMember } from "@/lib/permissions"
+import {
+  canManageMembers,
+  isActiveMember,
+  visibleEventVisibilitiesFor,
+} from "@/lib/permissions"
 
 export type ActivityKind =
   /** A guest asked to join. Admins only. */
   | "membershipRequest"
   /** A Google sign-in created a member row. Admins only. */
   | "signUp"
-  /** Someone answered on an event you created. */
-  | "responseToMyEvent"
+  /** Someone answered on an event you are part of, whether you made it or joined it. */
+  | "eventResponse"
   /** Someone else created an event. */
   | "newEvent"
 
@@ -60,6 +64,21 @@ export async function findActivityFor(
     Date.now() - ACTIVITY_WINDOW_DAYS * 24 * 60 * 60 * 1000,
   )
   const isAdminViewer = canManageMembers(viewer)
+  const allowedVisibilities = visibleEventVisibilitiesFor(viewer)
+
+  // The events you have a stake in: the ones you made and the ones you answered on. Who
+  // replied to a stranger's event is not your news.
+  const myEventRows = await db
+    .selectDistinct({ id: events.id })
+    .from(events)
+    .leftJoin(eventAttendees, eq(eventAttendees.eventId, events.id))
+    .where(
+      or(
+        eq(events.createdByMemberId, member.id),
+        eq(eventAttendees.memberId, member.id),
+      ),
+    )
+  const myEventIds = myEventRows.map((row) => row.id)
 
   const [requests, signUps, responses, createdEvents] = await Promise.all([
     isAdminViewer
@@ -95,28 +114,31 @@ export async function findActivityFor(
           .limit(ACTIVITY_LIMIT)
       : [],
 
-    // Your own answer on your own event is not news to you.
-    db
-      .select({
-        memberId: eventAttendees.memberId,
-        fullName: members.fullName,
-        nickname: members.nickname,
-        eventTitle: events.title,
-        eventSlug: events.slug,
-        at: eventAttendees.respondedAt,
-      })
-      .from(eventAttendees)
-      .innerJoin(events, eq(events.id, eventAttendees.eventId))
-      .innerJoin(members, eq(members.id, eventAttendees.memberId))
-      .where(
-        and(
-          eq(events.createdByMemberId, member.id),
-          ne(eventAttendees.memberId, member.id),
-          gte(eventAttendees.respondedAt, since),
-        ),
-      )
-      .orderBy(desc(eventAttendees.respondedAt))
-      .limit(ACTIVITY_LIMIT),
+    // Your own answer is not news to you, and neither is an event you have no part in.
+    myEventIds.length === 0
+      ? []
+      : db
+          .select({
+            memberId: eventAttendees.memberId,
+            fullName: members.fullName,
+            nickname: members.nickname,
+            eventTitle: events.title,
+            eventSlug: events.slug,
+            at: eventAttendees.respondedAt,
+          })
+          .from(eventAttendees)
+          .innerJoin(events, eq(events.id, eventAttendees.eventId))
+          .innerJoin(members, eq(members.id, eventAttendees.memberId))
+          .where(
+            and(
+              inArray(events.id, myEventIds),
+              inArray(events.visibility, allowedVisibilities),
+              ne(eventAttendees.memberId, member.id),
+              gte(eventAttendees.respondedAt, since),
+            ),
+          )
+          .orderBy(desc(eventAttendees.respondedAt))
+          .limit(ACTIVITY_LIMIT),
 
     db
       .select({
@@ -131,6 +153,7 @@ export async function findActivityFor(
       .where(
         and(
           ne(events.createdByMemberId, member.id),
+          inArray(events.visibility, allowedVisibilities),
           gte(events.createdAt, since),
         ),
       )
@@ -159,7 +182,7 @@ export async function findActivityFor(
 
     ...responses.map((row) => ({
       key: `response-${row.memberId}-${row.eventSlug}-${row.at.getTime()}`,
-      kind: "responseToMyEvent" as const,
+      kind: "eventResponse" as const,
       who: row.nickname ?? row.fullName,
       what: row.eventTitle,
       href: `/events/${row.eventSlug}`,
