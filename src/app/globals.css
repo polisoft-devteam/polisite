@@ -412,15 +412,19 @@ a[href] {
   color: #ffe81f;
   font-weight: 700;
   text-align: center;
-  animation: crawl-up 115s linear forwards;
+  animation: crawl-up 120s linear forwards;
 }
 
+/* Offsets in rem at the start and in its own height at the end, deliberately: a
+   percentage start is a share of the text's height, so a longer letter meant a
+   longer wait before the first line appeared. 22rem is just below the 20rem
+   screen, and -100% is the whole letter having passed above it. */
 @keyframes crawl-up {
   from {
-    transform: translateY(55%);
+    transform: translateY(22rem);
   }
   to {
-    transform: translateY(-320%);
+    transform: translateY(-100%);
   }
 }
 
