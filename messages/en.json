@@ -12,6 +12,7 @@
   },
   "Home": {
     "title": "Welcome",
+    "heroTagline": "Everything {associationName} does together, gathered in one place for your viewing consuooooming pleasure.",
     "intro": "Events, members and history in one place. The conversation stays on Discord. This is where the things meant to last live.",
     "upcomingTitle": "Coming up",
     "upcomingEmpty": "Nothing planned right now. Got an idea? Add a suggestion.",
@@ -74,11 +75,11 @@
     "fieldEndsAt": "Ends",
     "fieldEndsAtHint": "Optional",
     "fieldTimeZone": "Time zone",
-    "fieldTimeZoneHint": "Where the event happens. A London concert shows as London time.",
+    "fieldTimeZoneHint": "Where the event happens.",
     "fieldLocation": "Address",
     "fieldCategory": "Type",
     "fieldPrice": "Price",
-    "fieldPriceHint": "Leave blank if it's free.",
+    "fieldPriceHint": "Leave blank if there is no ticket or similar.",
     "fieldCurrency": "Currency",
     "fieldMaxAttendees": "Maximum participants",
     "fieldMaxAttendeesHint": "Leave blank for unlimited.",
@@ -119,10 +120,10 @@
     "signInToRespond": "Sign in as a member to respond.",
     "visibilityPublicShort": "public",
     "fieldEventUrlHint": "Official page, tickets or event details.",
-    "visibilityPublicExplanation": "A public event hosted by someone else. Visible to guests who aren't signed in.",
-    "visibilityMembersExplanation": "Closed event, by us for us. Only Poli members can see it.",
+    "visibilityPublicExplanation": "Event hosted by someone else.",
+    "visibilityMembersExplanation": "Closed event, only Poli members see it.",
     "visibilityMembersAndFriends": "Poli & friends",
-    "visibilityMembersAndFriendsExplanation": "Events where we bring friends and family, like ski trips and birthdays. Still only members see it in the app.",
+    "visibilityMembersAndFriendsExplanation": "Friends and family are very welcome!",
     "fieldRemindersAtLimit": "Two selected. Untick one to change.",
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
@@ -134,7 +135,7 @@
     "kindSuggestion": "Suggestion",
     "kindConfirmed": "Confirmed",
     "fieldKind": "Is this a suggestion or a confirmed event?",
-    "kindSuggestionExplanation": "A vibe check. Testing whether people are interested, and the date can be voted on.",
+    "kindSuggestionExplanation": "Vibe check, nothing settled yet.",
     "kindConfirmedExplanation": "This is happening. Put it in your calendar.",
     "stepBasics": "About the event",
     "wizardBack": "Back",
@@ -156,7 +157,7 @@
     "suggestionsEmpty": "No suggestions right now.",
     "stepWhen": "Time and place",
     "stepPublish": "Publish",
-    "advancedTitle": "More settings",
+    "advancedTitle": "Advanced",
     "advancedHint": "Rarely needed. Skip it if you're unsure.",
     "publish": "Publish event",
     "saveChanges": "Save changes",
@@ -187,7 +188,7 @@
     "label": "Change theme"
   },
   "Language": {
-    "label": "Change language"
+    "switchTo": "Switch to {language}"
   },
   "Footer": {
     "note": "Private site for association members.",

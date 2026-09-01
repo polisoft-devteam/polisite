@@ -12,6 +12,7 @@
   },
   "Home": {
     "title": "Välkommen",
+    "heroTagline": "Allt {associationName} gör tillsammans, samlat på ett ställe.",
     "intro": "Här samlar vi föreningens evenemang, medlemmar och historia. Samtalet fortsätter på Discord. Det här är platsen för det som ska hålla över tid.",
     "upcomingTitle": "Härnäst",
     "upcomingEmpty": "Inget planerat just nu. Har du en idé? Lägg in ett förslag.",
@@ -74,11 +75,11 @@
     "fieldEndsAt": "Slutar",
     "fieldEndsAtHint": "Frivilligt",
     "fieldTimeZone": "Tidszon",
-    "fieldTimeZoneHint": "Där evenemanget äger rum. En konsert i London visas som Londontid.",
+    "fieldTimeZoneHint": "Där evenemanget äger rum.",
     "fieldLocation": "Adress",
     "fieldCategory": "Typ",
     "fieldPrice": "Pris",
-    "fieldPriceHint": "Lämna tomt om det är gratis.",
+    "fieldPriceHint": "Lämna tomt om det inte kräver nån biljett/etc.",
     "fieldCurrency": "Valuta",
     "fieldMaxAttendees": "Max antal deltagare",
     "fieldMaxAttendeesHint": "Lämna tomt för obegränsat.",
@@ -119,10 +120,10 @@
     "signInToRespond": "Logga in som medlem för att svara.",
     "visibilityPublicShort": "publikt",
     "fieldEventUrlHint": "Officiell sida, biljetter eller evenemangsinfo.",
-    "visibilityPublicExplanation": "Ett publikt event som arrangeras av någon annan. Syns även för gäster som inte är inloggade.",
-    "visibilityMembersExplanation": "Slutet event, av oss för oss. Endast Poli-medlemmar ser det.",
+    "visibilityPublicExplanation": "Event hostat av någon annan.",
+    "visibilityMembersExplanation": "Slutet event, endast Poli-medlemmar ser det.",
     "visibilityMembersAndFriends": "Poli & vänner",
-    "visibilityMembersAndFriendsExplanation": "Event där vi tar med vänner och familj, som skidresor och födelsedagar. Bara medlemmar ser det i appen.",
+    "visibilityMembersAndFriendsExplanation": "Vänner och familj är varmt välkomna!",
     "fieldRemindersAtLimit": "Två valda. Avmarkera en för att byta.",
     "previousMonth": "Föregående månad",
     "nextMonth": "Nästa månad",
@@ -134,7 +135,7 @@
     "kindSuggestion": "Förslag",
     "kindConfirmed": "Bekräftat",
     "fieldKind": "Är detta ett förslag eller ett bekräftat event?",
-    "kindSuggestionExplanation": "En känslokoll. Vi testar om folk är intresserade, och datum kan röstas fram.",
+    "kindSuggestionExplanation": "Vibe check, inget spikat ännu.",
     "kindConfirmedExplanation": "Det här händer. Lägg in det i kalendern.",
     "stepBasics": "Om eventet",
     "wizardBack": "Tillbaka",
@@ -156,7 +157,7 @@
     "suggestionsEmpty": "Inga förslag just nu.",
     "stepWhen": "Tid och plats",
     "stepPublish": "Publicera",
-    "advancedTitle": "Fler inställningar",
+    "advancedTitle": "Avancerat",
     "advancedHint": "Behövs sällan. Hoppa över om du är osäker.",
     "publish": "Publicera event",
     "saveChanges": "Spara ändringar",
@@ -187,7 +188,7 @@
     "label": "Byt tema"
   },
   "Language": {
-    "label": "Byt språk"
+    "switchTo": "Byt till {language}"
   },
   "Footer": {
     "note": "Privat sida för föreningens medlemmar.",
