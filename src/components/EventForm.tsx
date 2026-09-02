@@ -6,6 +6,11 @@
 //
 // Nothing is written until the final submit — the form is one POST, so stepping through it
 // has no effect and no Discord message goes out early.
+//
+// Nothing is remembered between visits either. Every step stays mounted and merely hidden,
+// and so does the Advanced panel, so the values survive stepping back and forth on their
+// own. Leaving the page is meant to lose them: a form that reopens holding the last event
+// you created is worse than one that starts empty.
 
 import { getTranslations } from "next-intl/server"
 
@@ -14,7 +19,6 @@ import { EventReminderField } from "@/components/EventReminderField"
 import { ExplainedSelectField } from "@/components/ExplainedSelectField"
 import { EventCategoryField } from "@/components/EventCategoryField"
 import { EventLocationField } from "@/components/EventLocationField"
-import { FormDraft } from "@/components/FormDraft"
 import { FormField, FormSelect } from "@/components/FormField"
 import { ImageDropZone } from "@/components/ImageDropZone"
 import { Wizard, type WizardStep } from "@/components/Wizard"
@@ -349,9 +353,6 @@ export async function EventForm({
 
   return (
     <form action={action}>
-      {/* Keeps what has been typed across steps and navigations; see FormDraft. */}
-      <FormDraft storageKey={`event-form:${event?.id ?? "new"}`} />
-
       {event && <input type="hidden" name="eventId" value={event.id} />}
 
       <Wizard
