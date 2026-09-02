@@ -300,6 +300,17 @@
   background-color: --alpha(var(--foreground) / 45%);
 }
 
+/* --- Scrollbar gutter --------------------------------------------------------
+   A dropdown or a modal locks page scroll while it is open, which takes the
+   scrollbar away. Without a reserved gutter the page becomes a scrollbar wider
+   for as long as the menu is up, text re-wraps, and everything below the thing
+   you just opened jumps. Reserving it always costs a few pixels and holds the
+   layout still. */
+
+html {
+  scrollbar-gutter: stable;
+}
+
 /* --- Pointer on anything clickable ------------------------------------------
    Tailwind v4 resets buttons to the default cursor, which makes controls feel
    inert. Applied here so no component has to remember it. */
