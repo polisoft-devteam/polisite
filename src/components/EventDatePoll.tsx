@@ -182,12 +182,13 @@ export async function EventDatePoll({
     </ul>
   )
 
-  // Beside the facts it is an aside, so it takes its own width and skips the section's
-  // top margin, which would otherwise push it below the facts it is meant to sit level
-  // with.
+  // Beside the facts it is the same card as the facts, opening with the same heading at
+  // the same height, so the two read as one row rather than as a box with something
+  // floating next to it. The section's top margin would push it out of line, so it is a
+  // plain section here.
   if (beside) {
     return (
-      <section className="space-y-4 lg:max-w-[38rem] lg:shrink">
+      <section className="bg-card space-y-4 rounded-lg border p-4 lg:max-w-[38rem] lg:shrink">
         <SectionHeading>{translateEvents("datePollTitle")}</SectionHeading>
         {hint}
         {bars}

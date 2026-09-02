@@ -22,6 +22,7 @@ import { CelebrateOnMount } from "@/components/CelebrateOnMount"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
+import { SectionHeading } from "@/components/SectionHeading"
 import { PhotoHero } from "@/components/PhotoHero"
 import { SuggestionCallout } from "@/components/SuggestionCallout"
 import { Button } from "@/components/ui/button"
@@ -213,13 +214,24 @@ export default async function EventPage({
 
         {!pollFitsBeside && datePoll}
 
+        {/* Two matching cards on one row: stretched to the same height and each opening
+            with a heading, so the poll sits level with the facts rather than floating
+            beside them. */}
         <div
           className={cn(
             "mt-6",
-            pollFitsBeside && "flex flex-col gap-6 lg:flex-row lg:items-start",
+            pollFitsBeside &&
+              "flex flex-col gap-6 lg:flex-row lg:items-stretch",
           )}
         >
-          <div className={cn(pollFitsBeside && "min-w-0 lg:flex-1")}>
+          <div
+            className={cn(
+              "bg-card space-y-4 rounded-lg border p-4",
+              pollFitsBeside && "min-w-0 lg:flex-1",
+            )}
+          >
+            <SectionHeading>{translateEvents("detailsTitle")}</SectionHeading>
+
             <FactList>
               <Fact label={translateEvents("fieldStartsAt")}>
                 {event.startsAt ? (

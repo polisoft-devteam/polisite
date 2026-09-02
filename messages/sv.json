@@ -160,6 +160,7 @@
     "fieldDatePollHint": "Lägg till datum så medlemmar kan rösta på vilka de kan.",
     "addDateOption": "Lägg till datum",
     "removeDateOption": "Ta bort datum",
+    "detailsTitle": "Detaljer",
     "datePollTitle": "Rösta på datum",
     "datePollHint": "Rösta på alla datum du kan. Välj flera, alla du kan wagoo!",
     "datePollClosed": "Röstningen är stängd. Alla datum har passerat.",
