@@ -34,6 +34,7 @@ export type EditableProfileFields = {
   bio: string | null
   githubUrl: string | null
   birthday: string | null
+  displayedBadge: string | null
   /** Omitted when no new photo was uploaded, so the existing one is kept. */
   avatarUrl?: string
 }

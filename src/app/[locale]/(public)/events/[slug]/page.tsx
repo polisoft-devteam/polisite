@@ -11,6 +11,7 @@ import { AttendeeAvatars } from "@/components/AttendeeAvatars"
 import { EventDatePoll } from "@/components/EventDatePoll"
 import { EventGuests } from "@/components/EventGuests"
 import { EventMap } from "@/components/EventMap"
+import { MemberAvatar } from "@/components/MemberAvatar"
 import { EventRsvp } from "@/components/EventRsvp"
 import { EmptyState } from "@/components/EmptyState"
 import { ExternalLink } from "@/components/ExternalLink"
@@ -33,9 +34,11 @@ import {
   findAttendeesForEvent,
   findDateOptionsForEvent,
   findEventBySlug,
+  findEventHost,
   findGuestsForEvent,
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
+import { findBadge } from "@/features/members/badges"
 import { getViewer } from "@/lib/auth"
 import { EditIcon, ExternalLinkIcon, OnlineIcon } from "@/lib/icons"
 import {
@@ -74,6 +77,7 @@ export default async function EventPage({
   setRequestLocale(locale)
 
   const translateEvents = await getTranslations("Events")
+  const translateBadges = await getTranslations("Badges")
   const format = await getFormatter({ locale })
   const viewer = await getViewer()
 
@@ -87,10 +91,11 @@ export default async function EventPage({
   // way an unknown slug does.
   if (!event || !isActiveMember(viewer)) notFound()
 
-  const [attendees, dateOptions, guests] = await Promise.all([
+  const [attendees, dateOptions, guests, host] = await Promise.all([
     findAttendeesForEvent(event.id),
     findDateOptionsForEvent(event.id, viewer?.member?.id ?? null),
     findGuestsForEvent(event.id),
+    findEventHost(event),
   ])
   const goingAttendees = attendees.filter(
     (attendee) => attendee.response === "going",
@@ -220,6 +225,19 @@ export default async function EventPage({
               )
             )}
 
+            {host && (
+              <Fact label={translateEvents("host")}>
+                <span className="flex items-center gap-2">
+                  <MemberAvatar
+                    fullName={host.fullName}
+                    avatarUrl={host.avatarUrl}
+                    className="size-5 text-[0.625rem]"
+                  />
+                  {host.nickname ?? host.fullName}
+                </span>
+              </Fact>
+            )}
+
             <Fact label={translateEvents("fieldVisibility")}>
               {translateEvents(EVENT_VISIBILITY_LABEL_KEY[event.visibility])}
             </Fact>
@@ -294,7 +312,19 @@ export default async function EventPage({
                     key={attendee.memberId}
                     className="flex justify-between gap-4 p-3"
                   >
-                    <span>{attendee.nickname ?? attendee.fullName}</span>
+                    <span className="min-w-0">
+                      <span className="block truncate">
+                        {attendee.nickname ?? attendee.fullName}
+                      </span>
+                      {attendee.displayedBadge &&
+                        findBadge(attendee.displayedBadge) && (
+                          <span className="text-muted-foreground block text-xs">
+                            {translateBadges(
+                              `${attendee.displayedBadge}.title`,
+                            )}
+                          </span>
+                        )}
+                    </span>
                     <span className="text-muted-foreground">
                       {translateEvents(
                         ATTENDANCE_RESPONSE_LABEL_KEY[attendee.response],

@@ -49,6 +49,7 @@ export function buildSampleMember(overrides: Partial<Member> = {}): Member {
     joinedAssociationAt: new Date("2019-06-01"),
     notificationsSeenAt: null,
     lastBirthdayGreetingYear: null,
+    displayedBadge: null,
     createdAt: new Date("2019-06-01"),
     updatedAt: new Date("2019-06-01"),
     ...overrides,
@@ -61,6 +62,7 @@ export const SAMPLE_ATTENDEES: Attendee[] = [
     fullName: "Astrid Lindqvist",
     nickname: "Assi",
     avatarUrl: null,
+    displayedBadge: "poli",
     response: "going",
   },
   {
@@ -68,6 +70,7 @@ export const SAMPLE_ATTENDEES: Attendee[] = [
     fullName: "Bengt Karlsson",
     nickname: null,
     avatarUrl: null,
+    displayedBadge: "poli",
     response: "going",
   },
   {
@@ -75,6 +78,7 @@ export const SAMPLE_ATTENDEES: Attendee[] = [
     fullName: "Cecilia Ohlsson",
     nickname: null,
     avatarUrl: null,
+    displayedBadge: "poli",
     response: "going",
   },
 ]

@@ -18,6 +18,7 @@ import { ProfileFields } from "@/components/ProfileFields"
 import { Button } from "@/components/ui/button"
 import { updateMemberProfileAsAdmin } from "@/features/members/actions"
 import { findMemberById } from "@/features/members/queries"
+import { findBadgesForMember } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 import { canManageMembers } from "@/lib/permissions"
 
@@ -45,6 +46,8 @@ export default async function AdminMemberPage({
   const member = await findMemberById(memberId)
   if (!member) notFound()
 
+  const badges = await findBadgesForMember(member.id)
+
   return (
     <PageContainer>
       <BackLink href="/admin">{translateAdmin("nav")}</BackLink>
@@ -59,7 +62,7 @@ export default async function AdminMemberPage({
       >
         <input type="hidden" name="memberId" value={member.id} />
 
-        <ProfileFields member={member} />
+        <ProfileFields member={member} badges={badges} />
 
         <Button type="submit" size="lg">
           {translateProfile("save")}

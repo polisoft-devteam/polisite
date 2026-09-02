@@ -141,6 +141,13 @@
       "when": 1788358999384,
       "tag": "0019_nervous_vivisector",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1788361480472,
+      "tag": "0020_abandoned_captain_britain",
+      "breakpoints": true
     }
   ]
 }

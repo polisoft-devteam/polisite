@@ -4,7 +4,11 @@ import { revalidatePath } from "next/cache"
 import { getLocale } from "next-intl/server"
 import { z } from "zod"
 
-import { findMemberById, updateMemberProfile } from "@/features/members/queries"
+import {
+  findBadgesForMember,
+  findMemberById,
+  updateMemberProfile,
+} from "@/features/members/queries"
 import { redirect } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import { canManageMembers, isActiveMember } from "@/lib/permissions"
@@ -23,6 +27,9 @@ const profileSchema = z.object({
   // yyyy-mm-dd from a date input, or nothing. Stored as a date, never a timestamp, so it
   // cannot shift a day across timezones.
   birthday: z.union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]),
+
+  // A badge key or nothing. Whether they hold it is checked against the awards, not here.
+  displayedBadge: z.string().max(40),
 })
 
 /** Empty inputs come through as "" — store null so the database has one kind of blank. */
@@ -31,11 +38,16 @@ function emptyToNull(value: string): string | null {
 }
 
 async function saveProfile(memberId: string, formData: FormData) {
+  const heldBadges = new Set(
+    (await findBadgesForMember(memberId)).map((badge) => badge.badge),
+  )
+
   const parsed = profileSchema.safeParse({
     fullName: formData.get("fullName") ?? "",
     nickname: formData.get("nickname") ?? "",
     bio: formData.get("bio") ?? "",
     birthday: formData.get("birthday") ?? "",
+    displayedBadge: formData.get("displayedBadge") ?? "",
     githubUrl: formData.get("githubUrl") ?? "",
   })
 
@@ -51,6 +63,10 @@ async function saveProfile(memberId: string, formData: FormData) {
     nickname: emptyToNull(parsed.data.nickname),
     bio: emptyToNull(parsed.data.bio),
     birthday: emptyToNull(parsed.data.birthday),
+    // Only a badge they hold: the select offers no other, and this is the boundary.
+    displayedBadge: heldBadges.has(parsed.data.displayedBadge)
+      ? parsed.data.displayedBadge
+      : null,
     githubUrl: emptyToNull(parsed.data.githubUrl),
     ...(uploadedAvatarUrl ? { avatarUrl: uploadedAvatarUrl } : {}),
   })
@@ -93,35 +109,12 @@ export async function updateMyProfile(formData: FormData) {
     throw new Error("Not a member")
   }
 
-  const parsed = profileSchema.safeParse({
-    fullName: formData.get("fullName") ?? "",
-    nickname: formData.get("nickname") ?? "",
-    bio: formData.get("bio") ?? "",
-    birthday: formData.get("birthday") ?? "",
-    githubUrl: formData.get("githubUrl") ?? "",
-  })
-
-  if (!parsed.success) return
-
-  const uploadedAvatarUrl = await uploadImage(
-    "avatars",
-    formData.get("avatar") as File | null,
-  )
-
-  await updateMemberProfile(viewer.member.id, {
-    fullName: parsed.data.fullName,
-    nickname: emptyToNull(parsed.data.nickname),
-    bio: emptyToNull(parsed.data.bio),
-    birthday: emptyToNull(parsed.data.birthday),
-    githubUrl: emptyToNull(parsed.data.githubUrl),
-    ...(uploadedAvatarUrl ? { avatarUrl: uploadedAvatarUrl } : {}),
-  })
+  const previousAvatarUrl = viewer.member.avatarUrl
+  const uploadedAvatarUrl = await saveProfile(viewer.member.id, formData)
 
   if (uploadedAvatarUrl) {
-    await deleteImageIfOurs("avatars", viewer.member.avatarUrl)
+    await deleteImageIfOurs("avatars", previousAvatarUrl)
   }
-
-  revalidatePath("/", "layout")
 
   redirect({ href: "/profile", locale: await getLocale() })
 }

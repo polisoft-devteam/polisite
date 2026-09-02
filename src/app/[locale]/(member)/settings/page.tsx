@@ -9,6 +9,7 @@ import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
 import { updateMyProfile } from "@/features/members/actions"
+import { findBadgesForMember } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 
 export async function generateMetadata({
@@ -37,6 +38,7 @@ export default async function SettingsPage({
 
   // The (member) layout already redirected anyone without an active membership.
   const member = viewer!.member!
+  const badges = await findBadgesForMember(member.id)
 
   return (
     <PageContainer>
@@ -47,7 +49,7 @@ export default async function SettingsPage({
       </div>
 
       <form action={updateMyProfile} className="mt-8 max-w-lg space-y-6">
-        <ProfileFields member={member} />
+        <ProfileFields member={member} badges={badges} />
 
         {/* Read-only rather than a control: an office is handed out by an admin, and a
             disabled dropdown cannot even be opened to see the list. */}

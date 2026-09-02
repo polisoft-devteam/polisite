@@ -9,14 +9,22 @@
 
 import { getTranslations } from "next-intl/server"
 
-import { FormField } from "@/components/FormField"
+import { FormField, FormSelect } from "@/components/FormField"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import type { Member } from "@/db/schema"
+import type { Member, MemberBadge } from "@/db/schema"
 
-export async function ProfileFields({ member }: { member: Member }) {
+export async function ProfileFields({
+  member,
+  badges,
+}: {
+  member: Member
+  /** The badges this member holds; only these can be the one on show. */
+  badges: MemberBadge[]
+}) {
   const translateProfile = await getTranslations("Profile")
+  const translateBadges = await getTranslations("Badges")
 
   return (
     <>
@@ -76,6 +84,29 @@ export async function ProfileFields({ member }: { member: Member }) {
           defaultValue={member.birthday ?? ""}
         />
       </FormField>
+
+      {/* Only offered when there is something to choose between, and it lists only what
+          they have been awarded: the action checks the same thing again. */}
+      {badges.length > 0 && (
+        <FormField
+          label={translateProfile("displayedBadge")}
+          htmlFor="displayedBadge"
+          hint={translateProfile("displayedBadgeHint")}
+        >
+          <FormSelect
+            id="displayedBadge"
+            name="displayedBadge"
+            defaultValue={member.displayedBadge ?? ""}
+          >
+            <option value="">{translateProfile("displayedBadgeNone")}</option>
+            {badges.map((badge) => (
+              <option key={badge.badge} value={badge.badge}>
+                {translateBadges(`${badge.badge}.title`)}
+              </option>
+            ))}
+          </FormSelect>
+        </FormField>
+      )}
 
       <FormField label={translateProfile("bio")} htmlFor="bio">
         <Textarea

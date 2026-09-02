@@ -408,6 +408,8 @@ export type Attendee = {
   fullName: string
   nickname: string | null
   avatarUrl: string | null
+  /** The badge they chose to show, if any; a key from BADGES. */
+  displayedBadge: string | null
   response: AttendanceResponse
 }
 
@@ -420,6 +422,7 @@ export async function findAttendeesForEvent(
       fullName: members.fullName,
       nickname: members.nickname,
       avatarUrl: members.avatarUrl,
+      displayedBadge: members.displayedBadge,
       response: eventAttendees.response,
     })
     .from(eventAttendees)
@@ -447,6 +450,7 @@ export async function findGoingAttendeesByEvent(
       fullName: members.fullName,
       nickname: members.nickname,
       avatarUrl: members.avatarUrl,
+      displayedBadge: members.displayedBadge,
       response: eventAttendees.response,
     })
     .from(eventAttendees)
@@ -697,4 +701,27 @@ export async function findEventCountsByMonth(
     .groupBy(sql`to_char(${localStart}, 'YYYY-MM')`)
 
   return new Map(rows.map((row) => [row.month, Number(row.total)]))
+}
+
+/** Who made the event, for the host line on its page. */
+export async function findEventHost(event: Event): Promise<{
+  id: string
+  fullName: string
+  nickname: string | null
+  avatarUrl: string | null
+} | null> {
+  if (!event.createdByMemberId) return null
+
+  const [host] = await db
+    .select({
+      id: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+      avatarUrl: members.avatarUrl,
+    })
+    .from(members)
+    .where(eq(members.id, event.createdByMemberId))
+    .limit(1)
+
+  return host ?? null
 }

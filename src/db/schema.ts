@@ -50,6 +50,10 @@ export const members = pgTable("members", {
 
   githubUrl: text("github_url"),
 
+  // Which of their badges to show under their name in lists. A key from BADGES, and only
+  // meaningful if they actually hold it, which the query checks rather than the column.
+  displayedBadge: text("displayed_badge"),
+
   // Date, not timestamp: a birthday must not shift a day across timezones.
   birthday: date("birthday"),
 

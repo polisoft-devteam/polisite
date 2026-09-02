@@ -38,6 +38,7 @@ function buildMember(overrides: Partial<Member> = {}): Member {
     joinedAssociationAt: new Date("2026-01-01"),
     notificationsSeenAt: null,
     lastBirthdayGreetingYear: null,
+    displayedBadge: null,
     createdAt: new Date("2026-01-01"),
     updatedAt: new Date("2026-01-01"),
     ...overrides,

@@ -193,7 +193,8 @@
     "fieldIsOnline": "Happens online",
     "fieldIsOnlineHint": "No address needed, the event is held on Discord.",
     "fieldLocationPlaceholder": "Street address or place",
-    "locationOnline": "Online (Discord)"
+    "locationOnline": "Online (Discord)",
+    "host": "Host"
   },
   "Calendar": {
     "title": "Calendar",
@@ -237,7 +238,10 @@
     "officialTitleHint": "Given by an admin. You can see what exists, but not pick one.",
     "officialTitleNone": "No title",
     "officialTitleSeeAll": "See every office",
-    "birthdayHint": "Optional. Shows in the calendar and gets you a greeting on Discord."
+    "birthdayHint": "Optional. Shows in the calendar and gets you a greeting on Discord.",
+    "displayedBadge": "Badge on show",
+    "displayedBadgeNone": "None",
+    "displayedBadgeHint": "Shown under your name in attendee lists."
   },
   "Privacy": {
     "title": "Privacy policy",
