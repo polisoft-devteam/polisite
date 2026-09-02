@@ -62,8 +62,8 @@ export default async function ArchivePage({
       {archiveImages.length > 0 ? (
         <PhotoHero
           images={archiveImages}
-          // A portrait photo, with its subject low: keep the bottom of the frame.
-          focalPoint="bottom"
+          // A portrait photo, with its subject below centre but not at the very foot.
+          focalPoint="lower"
           title={translateArchive("title")}
           tagline={translateArchive("intro")}
         />
