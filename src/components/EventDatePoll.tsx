@@ -15,6 +15,7 @@ import { getFormatter, getTranslations } from "next-intl/server"
 
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { PageSection } from "@/components/PageSection"
+import { SectionHeading } from "@/components/SectionHeading"
 import { Button } from "@/components/ui/button"
 import {
   chooseEventDateAction,
@@ -37,6 +38,7 @@ export async function EventDatePoll({
   canVote,
   canChooseDate,
   locale,
+  beside = false,
 }: {
   eventId: string
   timeZone: string
@@ -46,6 +48,8 @@ export async function EventDatePoll({
   canVote: boolean
   canChooseDate: boolean
   locale: string
+  /** Sharing a row with the event's facts rather than owning one. */
+  beside?: boolean
 }) {
   const translateEvents = await getTranslations("Events")
   const format = await getFormatter({ locale })
@@ -62,119 +66,139 @@ export async function EventDatePoll({
 
   const mostVotes = Math.max(...options.map((option) => option.voters.length))
 
+  const hint = (
+    <p className="text-muted-foreground text-sm">
+      {isClosed
+        ? translateEvents("datePollClosed")
+        : translateEvents("datePollHint")}
+    </p>
+  )
+
+  // Side by side and scrollable, so a poll with eight dates is still one glance rather
+  // than eight rows of scrolling.
+  const bars = (
+    <ul className="flex gap-3 overflow-x-auto pb-2">
+      {options.map((option) => {
+        const voteCount = option.voters.length
+        const isPast = option.startsAt < now
+        const isLeading = voteCount > 0 && voteCount === mostVotes
+        const share = totalVoters === 0 ? 0 : voteCount / totalVoters
+
+        return (
+          <li
+            key={option.id}
+            className={cn(
+              "flex w-24 shrink-0 flex-col items-center gap-2",
+              isPast && "opacity-50",
+            )}
+          >
+            <span className="text-xs font-semibold tabular-nums">
+              {voteCount}
+            </span>
+
+            {/* The bar fills from the bottom, so voting visibly raises it. */}
+            <div
+              aria-hidden="true"
+              className="bg-muted relative h-24 w-8 overflow-hidden rounded-full"
+            >
+              <div
+                className={cn(
+                  "absolute inset-x-0 bottom-0 transition-[height] duration-500 ease-out motion-reduce:transition-none",
+                  isLeading ? "bg-primary" : "bg-primary/40",
+                )}
+                style={{ height: `${Math.round(share * 100)}%` }}
+              />
+            </div>
+
+            <time
+              dateTime={option.startsAt.toISOString()}
+              className="text-center text-[11px] leading-tight"
+            >
+              {format.dateTime(option.startsAt, {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone,
+              })}
+            </time>
+
+            {canVote && !isPast && (
+              <form action={toggleDateVoteAction}>
+                <input type="hidden" name="dateOptionId" value={option.id} />
+                <Button
+                  type="submit"
+                  size="icon"
+                  variant={option.votedByViewer ? "success" : "outline"}
+                  className={cn(ROUND_BUTTON, "size-9")}
+                  aria-label={
+                    option.votedByViewer
+                      ? translateEvents("datePollVoted")
+                      : translateEvents("datePollVote")
+                  }
+                >
+                  {option.votedByViewer ? (
+                    <CheckIcon className="size-4" />
+                  ) : (
+                    <PlusIcon className="size-4" />
+                  )}
+                </Button>
+              </form>
+            )}
+
+            {canChooseDate && !isPast && (
+              <form action={chooseEventDateAction}>
+                <input type="hidden" name="eventId" value={eventId} />
+                <input type="hidden" name="dateOptionId" value={option.id} />
+                <Button
+                  type="submit"
+                  size="icon"
+                  variant="secondary"
+                  className={cn(ROUND_BUTTON, "size-8")}
+                  title={translateEvents("datePollChoose")}
+                  aria-label={translateEvents("datePollChoose")}
+                >
+                  <ChooseDateIcon className="size-4" />
+                </Button>
+              </form>
+            )}
+
+            {option.voters.length > 0 && (
+              <div className="flex justify-center">
+                {option.voters.slice(0, 4).map((voter) => (
+                  <MemberAvatar
+                    key={voter.memberId}
+                    fullName={voter.fullName}
+                    avatarUrl={voter.avatarUrl}
+                    className="ring-card -ml-2 size-5 text-[9px] ring-2 first:ml-0"
+                  />
+                ))}
+              </div>
+            )}
+          </li>
+        )
+      })}
+    </ul>
+  )
+
+  // Beside the facts it is an aside, so it takes its own width and skips the section's
+  // top margin, which would otherwise push it below the facts it is meant to sit level
+  // with.
+  if (beside) {
+    return (
+      <section className="space-y-4 lg:max-w-[38rem] lg:shrink">
+        <SectionHeading>{translateEvents("datePollTitle")}</SectionHeading>
+        {hint}
+        {bars}
+      </section>
+    )
+  }
+
   return (
     <PageSection heading={translateEvents("datePollTitle")}>
-      <p className="text-muted-foreground text-sm">
-        {isClosed
-          ? translateEvents("datePollClosed")
-          : translateEvents("datePollHint")}
-      </p>
-
-      {/* Side by side and scrollable, so a poll with eight dates is still one glance
-          rather than eight rows of scrolling. */}
-      <ul className="flex gap-3 overflow-x-auto pb-2">
-        {options.map((option) => {
-          const voteCount = option.voters.length
-          const isPast = option.startsAt < now
-          const isLeading = voteCount > 0 && voteCount === mostVotes
-          const share = totalVoters === 0 ? 0 : voteCount / totalVoters
-
-          return (
-            <li
-              key={option.id}
-              className={cn(
-                "flex w-24 shrink-0 flex-col items-center gap-2",
-                isPast && "opacity-50",
-              )}
-            >
-              <span className="text-xs font-semibold tabular-nums">
-                {voteCount}
-              </span>
-
-              {/* The bar fills from the bottom, so voting visibly raises it. */}
-              <div
-                aria-hidden="true"
-                className="bg-muted relative h-24 w-8 overflow-hidden rounded-full"
-              >
-                <div
-                  className={cn(
-                    "absolute inset-x-0 bottom-0 transition-[height] duration-500 ease-out motion-reduce:transition-none",
-                    isLeading ? "bg-primary" : "bg-primary/40",
-                  )}
-                  style={{ height: `${Math.round(share * 100)}%` }}
-                />
-              </div>
-
-              <time
-                dateTime={option.startsAt.toISOString()}
-                className="text-center text-[11px] leading-tight"
-              >
-                {format.dateTime(option.startsAt, {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "short",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  timeZone,
-                })}
-              </time>
-
-              {canVote && !isPast && (
-                <form action={toggleDateVoteAction}>
-                  <input type="hidden" name="dateOptionId" value={option.id} />
-                  <Button
-                    type="submit"
-                    size="icon"
-                    variant={option.votedByViewer ? "success" : "outline"}
-                    className={cn(ROUND_BUTTON, "size-9")}
-                    aria-label={
-                      option.votedByViewer
-                        ? translateEvents("datePollVoted")
-                        : translateEvents("datePollVote")
-                    }
-                  >
-                    {option.votedByViewer ? (
-                      <CheckIcon className="size-4" />
-                    ) : (
-                      <PlusIcon className="size-4" />
-                    )}
-                  </Button>
-                </form>
-              )}
-
-              {canChooseDate && !isPast && (
-                <form action={chooseEventDateAction}>
-                  <input type="hidden" name="eventId" value={eventId} />
-                  <input type="hidden" name="dateOptionId" value={option.id} />
-                  <Button
-                    type="submit"
-                    size="icon"
-                    variant="secondary"
-                    className={cn(ROUND_BUTTON, "size-8")}
-                    title={translateEvents("datePollChoose")}
-                    aria-label={translateEvents("datePollChoose")}
-                  >
-                    <ChooseDateIcon className="size-4" />
-                  </Button>
-                </form>
-              )}
-
-              {option.voters.length > 0 && (
-                <div className="flex justify-center">
-                  {option.voters.slice(0, 4).map((voter) => (
-                    <MemberAvatar
-                      key={voter.memberId}
-                      fullName={voter.fullName}
-                      avatarUrl={voter.avatarUrl}
-                      className="ring-card -ml-2 size-5 text-[9px] ring-2 first:ml-0"
-                    />
-                  ))}
-                </div>
-              )}
-            </li>
-          )
-        })}
-      </ul>
+      {hint}
+      {bars}
     </PageSection>
   )
 }

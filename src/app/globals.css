@@ -59,13 +59,13 @@
    Every colour in the app resolves to one of these. Changing the association's
    look is changing this block, not chasing classes through components.
 
-   One hue, cyan at 197. --primary is #94f0f1 in both themes, and it fills: buttons,
+   One hue, mint at 168. --primary is #79f1c6 in both themes, and it fills: buttons,
    badges, today on the calendar. Its foreground is near black, since white on it is
-   1.3:1.
+   1.4:1.
 
    --primary-ink is the same colour used as text, an icon or a border on a page
-   background. In dark mode it is #94f0f1 too; in light mode it darkens, because pale
-   cyan on a white page is 1.3:1 and unreadable.
+   background. In dark mode it is #79f1c6 too; in light mode it darkens to #007757,
+   because pale mint on a white page is 1.3:1 and unreadable.
 
    Accent, secondary and the neutrals are all that hue at other lightnesses, so nothing
    on a page is an unrelated family.
@@ -77,30 +77,31 @@
    lightness changes the contrast against text. */
 
 :root {
-  --background: oklch(0.99 0.003 197);
-  --foreground: oklch(0.21 0.017 200);
+  --background: oklch(0.99 0.003 168);
+  --foreground: oklch(0.21 0.017 171);
 
   --card: oklch(1 0 0);
   --card-foreground: var(--foreground);
   --popover: oklch(1 0 0);
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.898 0.088 197);
-  --primary-foreground: oklch(0.21 0.03 197);
+  --primary: oklch(0.876 0.125 168);
+  --primary-foreground: oklch(0.21 0.03 168);
 
-  /* Primary as text, an icon or a border on a page background. #94f0f1 fills
+  /* Primary as text, an icon or a border on a page background. #79f1c6 fills
      beautifully but disappears as ink on white, so light mode darkens it. */
-  --primary-ink: oklch(0.5 0.085 197);
+  --primary-ink: oklch(0.5 0.11 168);
 
-  /* Warm sand, so a secondary button reads as quieter rather than colder. */
-  --secondary: oklch(0.94 0.02 197);
-  --secondary-foreground: oklch(0.32 0.03 197);
+  /* The same mint, nearly drained of it, so a secondary button reads as quieter
+     rather than as a second colour. */
+  --secondary: oklch(0.94 0.02 168);
+  --secondary-foreground: oklch(0.32 0.03 168);
 
-  --muted: oklch(0.96 0.006 197);
-  --muted-foreground: oklch(0.51 0.019 200);
+  --muted: oklch(0.96 0.006 168);
+  --muted-foreground: oklch(0.51 0.019 171);
 
-  --accent: oklch(0.74 0.088 197);
-  --accent-foreground: oklch(0.24 0.035 197);
+  --accent: oklch(0.74 0.088 168);
+  --accent-foreground: oklch(0.24 0.035 168);
 
   --destructive: oklch(0.58 0.21 25);
 
@@ -117,19 +118,19 @@
   --rsvp-interested: oklch(0.68 0.13 70);
   --rsvp-not-going: oklch(0.62 0.16 22);
 
-  --border: oklch(0.9 0.008 197);
-  --input: oklch(0.89 0.009 197);
-  --ring: oklch(0.5 0.085 197);
+  --border: oklch(0.9 0.008 168);
+  --input: oklch(0.89 0.009 168);
+  --ring: oklch(0.5 0.11 168);
 
-  --chart-1: oklch(0.4 0.07 197);
-  --chart-2: oklch(0.5 0.085 197);
-  --chart-3: oklch(0.62 0.088 197);
-  --chart-4: oklch(0.74 0.088 197);
-  --chart-5: oklch(0.86 0.08 197);
+  --chart-1: oklch(0.4 0.07 168);
+  --chart-2: oklch(0.5 0.085 168);
+  --chart-3: oklch(0.62 0.088 168);
+  --chart-4: oklch(0.74 0.088 168);
+  --chart-5: oklch(0.86 0.08 168);
 
   --radius: 0.5rem;
 
-  --sidebar: oklch(0.98 0.005 197);
+  --sidebar: oklch(0.98 0.005 168);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
@@ -140,9 +141,9 @@
 
   /* The suggestion ribbon. Same teal, light to dark, so it reads as a ribbon by its
      shape rather than by being a colour from somewhere else. */
-  --suggestion-from: oklch(0.5 0.085 197);
-  --suggestion-to: oklch(0.7 0.088 197);
-  --suggestion-foreground: oklch(0.99 0.004 197);
+  --suggestion-from: oklch(0.5 0.11 168);
+  --suggestion-to: oklch(0.7 0.088 168);
+  --suggestion-foreground: oklch(0.99 0.004 168);
 
   /* Density. Kept as tokens so "make the forms tighter" is one edit. */
   --control-height: 2rem;
@@ -150,28 +151,28 @@
 }
 
 .dark {
-  --background: oklch(0.18 0.012 200);
-  --foreground: oklch(0.95 0.005 197);
+  --background: oklch(0.18 0.012 171);
+  --foreground: oklch(0.95 0.005 168);
 
-  --card: oklch(0.22 0.014 200);
+  --card: oklch(0.22 0.014 171);
   --card-foreground: var(--foreground);
-  --popover: oklch(0.22 0.014 200);
+  --popover: oklch(0.22 0.014 171);
   --popover-foreground: var(--foreground);
 
-  /* Lifted well above the light-mode teal: the same value on a dark ground reads
+  /* Lifted well above the light-mode mint: the same value on a dark ground reads
      as almost black. */
-  --primary: oklch(0.898 0.088 197);
-  --primary-foreground: oklch(0.19 0.028 197);
-  --primary-ink: oklch(0.898 0.088 197);
+  --primary: oklch(0.876 0.125 168);
+  --primary-foreground: oklch(0.19 0.028 168);
+  --primary-ink: oklch(0.876 0.125 168);
 
-  --secondary: oklch(0.31 0.022 197);
-  --secondary-foreground: oklch(0.93 0.014 197);
+  --secondary: oklch(0.31 0.022 168);
+  --secondary-foreground: oklch(0.93 0.014 168);
 
-  --muted: oklch(0.26 0.012 200);
-  --muted-foreground: oklch(0.69 0.016 197);
+  --muted: oklch(0.26 0.012 171);
+  --muted-foreground: oklch(0.69 0.016 168);
 
-  --accent: oklch(0.62 0.08 197);
-  --accent-foreground: oklch(0.97 0.01 197);
+  --accent: oklch(0.62 0.08 168);
+  --accent-foreground: oklch(0.97 0.01 168);
 
   --destructive: oklch(0.68 0.18 25);
   --notification: #f52055;
@@ -184,21 +185,21 @@
   --rsvp-interested: oklch(0.8 0.13 70);
   --rsvp-not-going: oklch(0.74 0.16 22);
 
-  --border: oklch(0.31 0.013 200);
-  --input: oklch(0.34 0.014 200);
-  --ring: oklch(0.898 0.088 197);
+  --border: oklch(0.31 0.013 171);
+  --input: oklch(0.34 0.014 171);
+  --ring: oklch(0.876 0.125 168);
 
-  --chart-1: oklch(0.44 0.065 197);
-  --chart-2: oklch(0.56 0.078 197);
-  --chart-3: oklch(0.68 0.085 197);
-  --chart-4: oklch(0.8 0.088 197);
-  --chart-5: oklch(0.898 0.088 197);
+  --chart-1: oklch(0.44 0.065 168);
+  --chart-2: oklch(0.56 0.078 168);
+  --chart-3: oklch(0.68 0.085 168);
+  --chart-4: oklch(0.8 0.088 168);
+  --chart-5: oklch(0.876 0.125 168);
 
-  --suggestion-from: oklch(0.898 0.088 197);
-  --suggestion-to: oklch(0.66 0.082 197);
-  --suggestion-foreground: oklch(0.16 0.025 197);
+  --suggestion-from: oklch(0.876 0.125 168);
+  --suggestion-to: oklch(0.66 0.082 168);
+  --suggestion-foreground: oklch(0.16 0.025 168);
 
-  --sidebar: oklch(0.21 0.013 200);
+  --sidebar: oklch(0.21 0.013 171);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);

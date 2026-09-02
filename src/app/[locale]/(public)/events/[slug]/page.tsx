@@ -39,6 +39,7 @@ import {
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { findBadge } from "@/features/members/badges"
+import { cn } from "@/lib/utils"
 import { getViewer } from "@/lib/auth"
 import {
   EditIcon,
@@ -139,6 +140,25 @@ export default async function EventPage({
   // title on, so the page falls back to the same heading every other page uses.
   const heroImage = event.imageUrl
 
+  const MOST_BARS_BESIDE_THE_FACTS = 6
+  const pollFitsBeside =
+    event.startsAt === null &&
+    dateOptions.length > 0 &&
+    dateOptions.length <= MOST_BARS_BESIDE_THE_FACTS
+
+  const datePoll = (
+    <EventDatePoll
+      eventId={event.id}
+      timeZone={event.timeZone}
+      options={dateOptions}
+      chosenStartsAt={event.startsAt}
+      canVote={canRespondToEvent(viewer, event)}
+      canChooseDate={canEditEvent(viewer, event)}
+      locale={locale}
+      beside={pollFitsBeside}
+    />
+  )
+
   const rsvp = canRespondToEvent(viewer, event) ? (
     <EventRsvp eventId={event.id} myResponse={myResponse} />
   ) : (
@@ -191,92 +211,93 @@ export default async function EventPage({
           rsvp
         )}
 
-        <EventDatePoll
-          eventId={event.id}
-          timeZone={event.timeZone}
-          options={dateOptions}
-          chosenStartsAt={event.startsAt}
-          canVote={canRespondToEvent(viewer, event)}
-          canChooseDate={canEditEvent(viewer, event)}
-          locale={locale}
-        />
+        {!pollFitsBeside && datePoll}
 
-        <div className="mt-6">
-          <FactList>
-            <Fact label={translateEvents("fieldStartsAt")}>
-              {event.startsAt ? (
-                <>
-                  <time dateTime={event.startsAt.toISOString()}>
-                    {format.dateTime(event.startsAt, {
+        <div
+          className={cn(
+            "mt-6",
+            pollFitsBeside && "flex flex-col gap-6 lg:flex-row lg:items-start",
+          )}
+        >
+          <div className={cn(pollFitsBeside && "min-w-0 lg:flex-1")}>
+            <FactList>
+              <Fact label={translateEvents("fieldStartsAt")}>
+                {event.startsAt ? (
+                  <>
+                    <time dateTime={event.startsAt.toISOString()}>
+                      {format.dateTime(event.startsAt, {
+                        dateStyle: "full",
+                        timeStyle: "short",
+                        timeZone: event.timeZone,
+                      })}
+                    </time>
+                    {/* Named so a reader in Copenhagen knows which city's clock this is. */}
+                    <span className="text-muted-foreground">
+                      {" "}
+                      ({event.timeZone.replace("_", " ")})
+                    </span>
+                  </>
+                ) : (
+                  <span className="italic">
+                    {translateEvents("dateNotDecided")}
+                  </span>
+                )}
+              </Fact>
+
+              {event.endsAt && (
+                <Fact label={translateEvents("fieldEndsAt")}>
+                  <time dateTime={event.endsAt.toISOString()}>
+                    {format.dateTime(event.endsAt, {
                       dateStyle: "full",
                       timeStyle: "short",
                       timeZone: event.timeZone,
                     })}
                   </time>
-                  {/* Named so a reader in Copenhagen knows which city's clock this is. */}
-                  <span className="text-muted-foreground">
-                    {" "}
-                    ({event.timeZone.replace("_", " ")})
-                  </span>
-                </>
-              ) : (
-                <span className="italic">
-                  {translateEvents("dateNotDecided")}
-                </span>
-              )}
-            </Fact>
-
-            {event.endsAt && (
-              <Fact label={translateEvents("fieldEndsAt")}>
-                <time dateTime={event.endsAt.toISOString()}>
-                  {format.dateTime(event.endsAt, {
-                    dateStyle: "full",
-                    timeStyle: "short",
-                    timeZone: event.timeZone,
-                  })}
-                </time>
-              </Fact>
-            )}
-
-            {event.isOnline ? (
-              <Fact label={translateEvents("fieldLocation")}>
-                <span className="flex items-center gap-2">
-                  <OnlineIcon className="text-muted-foreground size-4" />
-                  {translateEvents("locationOnline")}
-                </span>
-              </Fact>
-            ) : (
-              event.location && (
-                <Fact label={translateEvents("fieldLocation")}>
-                  {event.location}
                 </Fact>
-              )
-            )}
+              )}
 
-            {host && (
-              <Fact label={translateEvents("host")}>
-                <MemberLink member={host} size="sm" />
+              {event.isOnline ? (
+                <Fact label={translateEvents("fieldLocation")}>
+                  <span className="flex items-center gap-2">
+                    <OnlineIcon className="text-muted-foreground size-4" />
+                    {translateEvents("locationOnline")}
+                  </span>
+                </Fact>
+              ) : (
+                event.location && (
+                  <Fact label={translateEvents("fieldLocation")}>
+                    {event.location}
+                  </Fact>
+                )
+              )}
+
+              {host && (
+                <Fact label={translateEvents("host")}>
+                  <MemberLink member={host} size="sm" />
+                </Fact>
+              )}
+
+              <Fact label={translateEvents("fieldVisibility")}>
+                {translateEvents(EVENT_VISIBILITY_LABEL_KEY[event.visibility])}
               </Fact>
-            )}
 
-            <Fact label={translateEvents("fieldVisibility")}>
-              {translateEvents(EVENT_VISIBILITY_LABEL_KEY[event.visibility])}
-            </Fact>
+              <Fact label={translateEvents("fieldPrice")}>
+                {event.priceMinorUnits === null
+                  ? translateEvents("free")
+                  : `${(event.priceMinorUnits / 100).toFixed(2)} ${event.priceCurrency}`}
+              </Fact>
 
-            <Fact label={translateEvents("fieldPrice")}>
-              {event.priceMinorUnits === null
-                ? translateEvents("free")
-                : `${(event.priceMinorUnits / 100).toFixed(2)} ${event.priceCurrency}`}
-            </Fact>
+              <Fact label={translateEvents("fieldMaxAttendees")}>
+                {spotsLeft === null
+                  ? translateEvents("unlimited")
+                  : spotsLeft > 0
+                    ? translateEvents("spotsLeft", { count: spotsLeft })
+                    : translateEvents("full")}
+              </Fact>
+            </FactList>
+          </div>
 
-            <Fact label={translateEvents("fieldMaxAttendees")}>
-              {spotsLeft === null
-                ? translateEvents("unlimited")
-                : spotsLeft > 0
-                  ? translateEvents("spotsLeft", { count: spotsLeft })
-                  : translateEvents("full")}
-            </Fact>
-          </FactList>
+          {pollFitsBeside && datePoll}
         </div>
 
         {!event.isOnline && event.location && (
