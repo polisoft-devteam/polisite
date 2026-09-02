@@ -29,6 +29,7 @@ export {
   EnvelopeSlashFill as NotAttendingIcon,
   Cake2Fill as BirthdayCakeIcon,
   Floppy2 as SaveIcon,
+  BalloonHeart as PublishEventIcon,
   Sun as LightThemeIcon,
   Moon as DarkThemeIcon,
   Translate as LanguageIcon,

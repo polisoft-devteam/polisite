@@ -12,12 +12,7 @@
 import { Fragment, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import {
-  CheckIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  SaveIcon,
-} from "@/lib/icons"
+import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 export type WizardStep = {
@@ -29,12 +24,16 @@ export type WizardStep = {
 export function Wizard({
   steps,
   submitLabel,
+  submitIcon,
   backLabel,
   nextLabel,
   stepLabel,
 }: {
   steps: WizardStep[]
   submitLabel: string
+  /** Sits on the submit button. Saving an edit and publishing a new thing are not the
+      same act, so the caller says which this is. */
+  submitIcon: React.ReactNode
   backLabel: string
   nextLabel: string
   /** e.g. "Steg" — shown with the number in the sidebar. */
@@ -227,7 +226,7 @@ export function Wizard({
               whole reason the event used to create itself here. */}
           {isLastStep ? (
             <Button key="submit" type="submit" size="lg">
-              <SaveIcon className="size-4" />
+              {submitIcon}
               {submitLabel}
             </Button>
           ) : (

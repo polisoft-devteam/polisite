@@ -22,6 +22,7 @@ import { EventLocationField } from "@/components/EventLocationField"
 import { FormField, FormSelect } from "@/components/FormField"
 import { ImageDropZone } from "@/components/ImageDropZone"
 import { Wizard, type WizardStep } from "@/components/Wizard"
+import { PublishEventIcon, SaveIcon } from "@/lib/icons"
 import {
   Accordion,
   AccordionContent,
@@ -358,6 +359,14 @@ export async function EventForm({
       <Wizard
         steps={steps}
         submitLabel={submitLabel}
+        // Publishing a new event is a small celebration; saving an edit is filing.
+        submitIcon={
+          event ? (
+            <SaveIcon className="size-4" />
+          ) : (
+            <PublishEventIcon className="size-4" />
+          )
+        }
         backLabel={translateEvents("wizardBack")}
         nextLabel={translateEvents("wizardNext")}
         stepLabel={translateEvents("wizardStep")}
