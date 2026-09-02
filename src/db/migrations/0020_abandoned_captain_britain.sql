@@ -1,0 +1,1 @@
+ALTER TABLE "members" ADD COLUMN "displayed_badge" text;

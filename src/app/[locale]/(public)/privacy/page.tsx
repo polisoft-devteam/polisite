@@ -4,7 +4,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { SectionHeading } from "@/components/SectionHeading"
-import { ASSOCIATION_CONTACT_EMAIL, ASSOCIATION_NAME } from "@/lib/association"
+import {
+  ASSOCIATION_CONTACT_EMAIL,
+  ASSOCIATION_CONTACT_NAME,
+  ASSOCIATION_NAME,
+} from "@/lib/association"
 
 export async function generateMetadata({
   params,
@@ -41,7 +45,7 @@ export default async function PrivacyPage({
           <p>
             {translatePrivacy("controllerBody", {
               associationName: ASSOCIATION_NAME,
-              contactEmail: ASSOCIATION_CONTACT_EMAIL,
+              contactName: ASSOCIATION_CONTACT_NAME,
             })}
           </p>
         </PolicySection>

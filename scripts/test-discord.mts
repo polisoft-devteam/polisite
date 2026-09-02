@@ -47,6 +47,7 @@ const sampleEvent: Event = {
   extraLinkUrl: null,
   visibility: "members",
   createdByMemberId: "00000000-0000-0000-0000-000000000000",
+  cancelledAt: null,
   discordAnnouncedAt: null,
   discordMessageId: null,
   createdAt: new Date(),

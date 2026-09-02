@@ -21,6 +21,7 @@ import { MemberAvatar } from "@/components/MemberAvatar"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
 import { SignOutIcon } from "@/lib/icons"
+import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
 import { countUnseenActivity } from "@/features/notifications/queries"
 import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
@@ -34,8 +35,8 @@ export async function AuthMenu() {
     return <SignInButton />
   }
 
-  const displayName =
-    viewer.member?.nickname ?? viewer.member?.fullName ?? viewer.email
+  const displayName = viewerDisplayName(viewer)
+  const avatarUrl = viewerAvatarUrl(viewer)
 
   const unseenCount = await countUnseenActivity(viewer)
 
@@ -43,8 +44,8 @@ export async function AuthMenu() {
     <>
       <span className="relative flex">
         <MemberAvatar
-          fullName={viewer.member?.fullName ?? viewer.email}
-          avatarUrl={viewer.member?.avatarUrl ?? null}
+          fullName={displayName}
+          avatarUrl={avatarUrl}
           className="size-7 text-xs"
         />
 
@@ -85,7 +86,9 @@ export async function AuthMenu() {
         </span>
       )}
 
-      <form action={signOut}>
+      {/* Below md this lives at the foot of the mobile menu instead, where a long email
+          and a sign out button were fighting for the same few pixels. */}
+      <form action={signOut} className="hidden md:block">
         <Button
           type="submit"
           variant="ghost"

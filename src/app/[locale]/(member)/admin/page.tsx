@@ -12,6 +12,7 @@ import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { Button } from "@/components/ui/button"
 import { MemberAvatar } from "@/components/MemberAvatar"
+import { MemberBadgeAdmin } from "@/components/MemberBadgeAdmin"
 import { Badge } from "@/components/ui/badge"
 import {
   approveMembership,
@@ -21,6 +22,7 @@ import {
 } from "@/features/members/admin-actions"
 import {
   findAllMembersWithRoles,
+  findBadgesByMember,
   findPendingMembershipRequests,
 } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
@@ -44,10 +46,11 @@ export default async function AdminPage({
   const translateAdmin = await getTranslations("Admin")
   const format = await getFormatter({ locale })
 
-  const [viewer, requests, allMembers] = await Promise.all([
+  const [viewer, requests, allMembers, badgesByMember] = await Promise.all([
     getViewer(),
     findPendingMembershipRequests(),
     findAllMembersWithRoles(),
+    findBadgesByMember(),
   ])
 
   return (
@@ -116,70 +119,79 @@ export default async function AdminPage({
             const isViewer = member.id === viewer?.member?.id
 
             return (
-              <li
-                key={member.id}
-                className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div className="flex min-w-0 items-center gap-3">
-                  <MemberAvatar
-                    fullName={member.fullName}
-                    avatarUrl={member.avatarUrl}
-                    className="size-8 text-xs"
-                  />
-                  <div className="min-w-0">
-                    <p className="truncate font-medium">{member.fullName}</p>
-                    <p className="text-muted-foreground truncate text-sm">
-                      {member.email}
-                    </p>
+              <li key={member.id} className="p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <MemberAvatar
+                      fullName={member.fullName}
+                      avatarUrl={member.avatarUrl}
+                      className="size-8 text-xs"
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{member.fullName}</p>
+                      <p className="text-muted-foreground truncate text-sm">
+                        {member.email}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex shrink-0 items-center gap-2">
-                  {member.roles.includes("admin") && (
-                    <Badge variant="secondary">
-                      {translateAdmin("roleAdmin")}
-                    </Badge>
-                  )}
+                  <div className="flex shrink-0 items-center gap-2">
+                    {member.roles.includes("admin") && (
+                      <Badge variant="secondary">
+                        {translateAdmin("roleAdmin")}
+                      </Badge>
+                    )}
 
-                  {member.status === "active" ? (
-                    <>
-                      {!canDeactivate ? (
-                        <span className="text-muted-foreground text-xs">
-                          {isViewer
-                            ? translateAdmin("thatsYou")
-                            : translateAdmin("adminProtected")}
-                        </span>
-                      ) : (
-                        <form action={deactivateMember}>
+                    {member.status === "active" ? (
+                      <>
+                        {!canDeactivate ? (
+                          <span className="text-muted-foreground text-xs">
+                            {isViewer
+                              ? translateAdmin("thatsYou")
+                              : translateAdmin("adminProtected")}
+                          </span>
+                        ) : (
+                          <form action={deactivateMember}>
+                            <input
+                              type="hidden"
+                              name="memberId"
+                              value={member.id}
+                            />
+                            <Button type="submit" variant="outline" size="sm">
+                              {translateAdmin("deactivate")}
+                            </Button>
+                          </form>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <Badge variant="outline">
+                          {translateAdmin("statusInactive")}
+                        </Badge>
+                        <form action={reactivateMember}>
                           <input
                             type="hidden"
                             name="memberId"
                             value={member.id}
                           />
                           <Button type="submit" variant="outline" size="sm">
-                            {translateAdmin("deactivate")}
+                            {translateAdmin("reactivate")}
                           </Button>
                         </form>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <Badge variant="outline">
-                        {translateAdmin("statusInactive")}
-                      </Badge>
-                      <form action={reactivateMember}>
-                        <input
-                          type="hidden"
-                          name="memberId"
-                          value={member.id}
-                        />
-                        <Button type="submit" variant="outline" size="sm">
-                          {translateAdmin("reactivate")}
-                        </Button>
-                      </form>
-                    </>
-                  )}
+                      </>
+                    )}
+                  </div>
                 </div>
+
+                {/* Only for a member who is actually in: a patch on someone who has not
+                    been let in yet says nothing. */}
+                {member.status === "active" && (
+                  <MemberBadgeAdmin
+                    memberId={member.id}
+                    officialTitle={member.officialTitle}
+                    badges={badgesByMember.get(member.id) ?? []}
+                  />
+                )}
               </li>
             )
           })}

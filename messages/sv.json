@@ -8,7 +8,8 @@
     "calendar": "Kalender",
     "about": "Om oss",
     "menu": "Meny",
-    "archive": "Öppet arkiv"
+    "archive": "Öppet arkiv",
+    "close": "Stäng"
   },
   "Home": {
     "title": "Välkommen",
@@ -20,16 +21,18 @@
     "newEvent": "Nytt evenemang",
     "visitorNote": "Du ser de publika evenemangen. Medlemmar ser även föreningens egna.",
     "requestMembership": "Ansök om medlemskap",
-    "membershipPending": "Medlemskap granskas"
+    "membershipPending": "Medlemskap granskas",
+    "heroSignIn": "Logga in",
+    "heroRequestMembership": "Ansök",
+    "heroCreateEvent": "Skapa event"
   },
   "About": {
     "title": "Om oss",
     "motto": "Vi har tre ledord här på Poligroup: Glädje, lojalitet, hjärta. Vi lever alltid efter detta!",
-    "origin": "Poli grundades informellt 2017 av ett gäng goa studenter på Malmö Universitet. Namnet Poli kommer av PoliSoft, som från början var namnet på det första projektet gruppen skapade tillsammans, som även satte grunden till vad som skulle komma att bli gruppen som vi känner den idag.",
-    "growth": "Med hjälp av vår Head of Recruitment, Adam Inge Mellahnamn Hermansson, har gruppen sedan vuxit stadigt. Från början långsamt, med en av gruppens numera mest stadiga pelare, Petter \"Pidde\" Månsson, som har gått från att vara Adams mystiska roomie till en ovärderlig grundpelare.",
-    "arrivals": "Inte långt efter detta gjorde ett gäng goa gubbar och andra fuck boys sitt inträde, såsom Jacob \"Faheem\" Bergqvist och Jonathan (kärt barn har för många namn) Earnest. Tätnande efterföljande har oförglömliga karaktärer såsom Richard Lejonhjärta Azar, Martin och många, många fler.",
-    "guests": "Special shoutout till våra mer inaktiva gästande medlemmar, såsom den oförtröttliga Ivar, Frans och Simon.",
-    "bond": "Vår kärlek till datamaskinen i alla dess former, shorts, spel, musik, konst samt skapandet av dessa medier genom diverse programmering med mera binder oss samman. Men vår resa har bara börjat.",
+    "origin": "Poli grundades informellt 2017 av Adam, Felix, Nils, John och Victor på Malmö Universitet. Namnet Poli kommer av PoliSoft, som från början var namnet på ett politiskt satirprojekt som blev så pass lyckat att samtliga efterföljande projekt fick sitt namn efter Poli.",
+    "growth": "Med hjälp av vår Head of Recruitment, Adam Inge Mellahnamn Hermansson, har gruppen sedan vuxit stadigt. Från början långsamt, med en av gruppens numera mest ovärderliga medlemmar, Petter \"Pidde\" Månsson, som har gått från att vara Adams mystiska kål och broccoli roomie till en ovärderlig grundpelare.",
+    "arrivals": "Inte långt efter detta gjorde ett gäng goa gubbar, tidigare yrkeskriminella och andra fuck boys sitt inträde, såsom Jacob \"Faheem\" Bergqvist och Jonathan (kärt barn har för många namn) Earnest. Tätt efterföljande har oförglömliga karaktärer såsom Richard Lejonhjärta Azar, Martin och många, många fler.",
+    "bond": "Vi binds samman av vår kärlek till datamaskinen i alla dess former, shorts, spel, musik, konst samt skapandet av dessa medier genom diverse programmering med mera. Men vår resa har bara börjat.",
     "membershipTitle": "Medlemskap",
     "membershipBody": "Logga in med Google och skicka en förfrågan. En admin släpper in dig, och först då ser du föreningens egna evenemang, medlemmar och önskelistor. Innan dess ser du samma sida som en besökare.",
     "timeline": {
@@ -140,7 +143,7 @@
     "previousMonth": "Föregående månad",
     "nextMonth": "Nästa månad",
     "fieldImage": "Bild",
-    "fieldImageHint": "Frivilligt. Skalas ner automatiskt.",
+    "fieldImageHint": "Skalas ner automatiskt.",
     "cancel": "Avbryt",
     "close": "Stäng",
     "dateNotDecided": "Datum ej bestämt",
@@ -157,8 +160,9 @@
     "fieldDatePollHint": "Lägg till datum så medlemmar kan rösta på vilka de kan.",
     "addDateOption": "Lägg till datum",
     "removeDateOption": "Ta bort datum",
+    "detailsTitle": "Detaljer",
     "datePollTitle": "Rösta på datum",
-    "datePollHint": "Rösta på alla datum du kan. Du kan välja flera.",
+    "datePollHint": "Rösta på alla datum du kan. Välj flera, alla du kan wagoo!",
     "datePollClosed": "Röstningen är stängd. Alla datum har passerat.",
     "datePollVote": "Jag kan",
     "datePollVoted": "Jag kan ✓",
@@ -190,7 +194,12 @@
     "fieldIsOnline": "Sker online",
     "fieldIsOnlineHint": "Ingen adress behövs, eventet hålls i Discord.",
     "fieldLocationPlaceholder": "Gatuadress eller plats",
-    "locationOnline": "Online (Discord)"
+    "locationOnline": "Online (Discord)",
+    "host": "Värd",
+    "cancelEvent": "Ställ in eventet",
+    "cancelEventConfirm": "Eventet ställs in och alla i Poli får en pingning i Discord. Sidan finns kvar, men märkt som inställd. Det går inte att ångra.",
+    "cancelEventConfirmAction": "Ja, ställ in och pinga Poli",
+    "cancelled": "Inställt"
   },
   "Calendar": {
     "title": "Kalender",
@@ -217,9 +226,6 @@
     "fullName": "Namn",
     "nickname": "Smeknamn",
     "officialTitle": "Titel",
-    "officialTitlePlaceholder": "Sekreterare, ordförande …",
-    "funTitle": "Rolig titel",
-    "funTitlePlaceholder": "Grillmästare …",
     "bio": "Om mig",
     "save": "Spara",
     "upcomingTitle": "Evenemang jag ska på",
@@ -231,15 +237,24 @@
     "joinedAssociationAt": "Medlem sedan",
     "birthday": "Födelsedag",
     "avatar": "Profilbild",
-    "avatarHint": "Frivilligt. Skalas ner automatiskt.",
+    "avatarHint": "Skalas ner automatiskt.",
     "githubUrl": "GitHub",
-    "githubUrlHint": "Frivilligt. Visas som en ikon i medlemslistan."
+    "githubUrlHint": "Frivilligt. Visas som en ikon i medlemslistan.",
+    "officialTitleHint": "Ges av en admin. Du kan se vilka som finns, men inte välja själv.",
+    "officialTitleNone": "Ingen titel",
+    "officialTitleSeeAll": "Se alla titlar",
+    "birthdayHint": "Frivilligt. Visas i kalendern och ger en grattis i Discord.",
+    "displayedBadge": "Utmärkelse att visa",
+    "displayedBadgeNone": "Ingen",
+    "displayedBadgeHint": "Visas under ditt namn i deltagarlistor.",
+    "dropImage": "Dra hit en bild, eller klicka för att välja",
+    "dropImageHint": "JPEG, PNG, WebP eller AVIF. Skalas ner automatiskt."
   },
   "Privacy": {
     "title": "Integritetspolicy",
     "lastUpdated": "Senast uppdaterad 19 augusti 2026",
     "controllerTitle": "Vem ansvarar för uppgifterna",
-    "controllerBody": "{associationName} är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, hör av dig till {contactEmail}.",
+    "controllerBody": "{associationName} är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, hör av dig till {contactName}.",
     "dataTitle": "Vad vi sparar",
     "dataItems": [
       "Namn, e-postadress och profilbild från ditt Google-konto när du loggar in.",
@@ -285,7 +300,13 @@
     "statusInactive": "Inaktiv",
     "roleAdmin": "Admin",
     "thatsYou": "Det är du",
-    "adminProtected": "Kan inte inaktiveras"
+    "adminProtected": "Kan inte inaktiveras",
+    "badgesTitle": "Utmärkelser och titlar",
+    "awardBadge": "Tilldela",
+    "removeBadge": "Ta bort",
+    "setTitle": "Sätt titel",
+    "titleLabel": "Titel",
+    "editProfile": "Redigera profil"
   },
   "Archive": {
     "title": "Öppet arkiv",
@@ -346,5 +367,39 @@
     "signUp": "{who} har loggat in för första gången",
     "eventResponse": "{who} svarade på {what}",
     "newEvent": "{who} skapade {what}"
+  },
+  "Titles": {
+    "president": "President",
+    "secretary": "Sekreterare",
+    "legalCounsel": "Föreningens juridiska ombud",
+    "photographer": "Fotograf",
+    "peopleAndCulture": "People and culture",
+    "animalsAndVape": "Djur & vape ansvarig",
+    "safety": "Säkerhetsansvarig"
+  },
+  "Badges": {
+    "title": "Utmärkelser",
+    "empty": "Inga utmärkelser än.",
+    "awardedAt": "Tilldelad",
+    "poli": {
+      "title": "Poli",
+      "description": "Medlem i föreningen. Alla har den här."
+    },
+    "yearsOfService": {
+      "title": "Trotjänare",
+      "description": "År av trogen tjänst i föreningens namn."
+    },
+    "traveller": {
+      "title": "Resenär",
+      "description": "Har följt med på en av föreningens resor."
+    },
+    "sportsman": {
+      "title": "Idrottsman",
+      "description": "Har gjort en insats på plan eller i hallen."
+    },
+    "gifter": {
+      "title": "Givmild",
+      "description": "Har fixat något från någon annans önskelista."
+    }
   }
 }

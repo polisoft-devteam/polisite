@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache"
 
 import { postMembershipRequestToDiscord } from "@/features/members/discord"
+import { memberNameFrom } from "@/features/members/display-name"
 import { recordMembershipPrompt } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
@@ -21,7 +22,10 @@ async function answerMembershipPrompt(response: "requested" | "dismissed") {
   const isFirstAnswer = await recordMembershipPrompt({
     authUserId: viewer.authUserId,
     email: viewer.email,
-    fullName: viewer.member?.fullName ?? null,
+    // What Google told us, or the part before the @: this is the only chance to
+    // capture it, and it becomes their name when an admin approves them.
+    fullName: memberNameFrom(viewer.googleName, viewer.email),
+    avatarUrl: viewer.googleAvatarUrl,
     response,
   })
 

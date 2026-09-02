@@ -1,26 +1,34 @@
-// The date poll: one bar per candidate date, filled in proportion to how many can make it,
-// with the faces of who voted for what.
+// The date poll: a bar per candidate date, side by side, growing with the votes, and a
+// round button under each one to add or remove yours.
 //
 // The percentage is of everyone who voted in this poll, not of the whole association — you
 // can vote for several dates, so the numbers would otherwise never add up to anything
 // meaningful.
+//
+// It disappears entirely once a date is picked: the poll exists to reach that decision,
+// and once it is made the answer is the date at the top of the page.
 //
 // Voting closes once every option is in the past. Derived from the dates rather than
 // stored, so there's no job to run and no stale flag.
 
 import { getFormatter, getTranslations } from "next-intl/server"
 
-import { StackedList, StackedListItem } from "@/components/ItemList"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { PageSection } from "@/components/PageSection"
+import { SectionHeading } from "@/components/SectionHeading"
 import { Button } from "@/components/ui/button"
 import {
   chooseEventDateAction,
   toggleDateVoteAction,
 } from "@/features/events/actions"
 import type { DateOptionWithVotes } from "@/features/events/queries"
-import { CheckIcon } from "@/lib/icons"
+import { CheckIcon, ChooseDateIcon, PlusIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
+
+// An icon button carries no label, so it has to answer "can I press this?" by itself: it
+// lifts and deepens its border under the pointer.
+const ROUND_BUTTON =
+  "cursor-pointer rounded-full transition-transform hover:-translate-y-0.5 hover:scale-110 motion-reduce:transform-none"
 
 export async function EventDatePoll({
   eventId,
@@ -30,20 +38,23 @@ export async function EventDatePoll({
   canVote,
   canChooseDate,
   locale,
+  beside = false,
 }: {
   eventId: string
   timeZone: string
   options: DateOptionWithVotes[]
-  /** The event's actual date, so the winning option can be marked. */
+  /** The event's actual date. Once there is one, the poll has done its job. */
   chosenStartsAt: Date | null
   canVote: boolean
   canChooseDate: boolean
   locale: string
+  /** Sharing a row with the event's facts rather than owning one. */
+  beside?: boolean
 }) {
   const translateEvents = await getTranslations("Events")
   const format = await getFormatter({ locale })
 
-  if (options.length === 0) return null
+  if (options.length === 0 || chosenStartsAt !== null) return null
 
   const now = new Date()
   const isClosed = options.every((option) => option.startsAt < now)
@@ -55,126 +66,140 @@ export async function EventDatePoll({
 
   const mostVotes = Math.max(...options.map((option) => option.voters.length))
 
+  const hint = (
+    <p className="text-muted-foreground text-sm">
+      {isClosed
+        ? translateEvents("datePollClosed")
+        : translateEvents("datePollHint")}
+    </p>
+  )
+
+  // Side by side and scrollable, so a poll with eight dates is still one glance rather
+  // than eight rows of scrolling.
+  const bars = (
+    <ul className="flex gap-3 overflow-x-auto pb-2">
+      {options.map((option) => {
+        const voteCount = option.voters.length
+        const isPast = option.startsAt < now
+        const isLeading = voteCount > 0 && voteCount === mostVotes
+        const share = totalVoters === 0 ? 0 : voteCount / totalVoters
+
+        return (
+          <li
+            key={option.id}
+            className={cn(
+              "flex w-24 shrink-0 flex-col items-center gap-2",
+              isPast && "opacity-50",
+            )}
+          >
+            <span className="text-xs font-semibold tabular-nums">
+              {voteCount}
+            </span>
+
+            {/* The bar fills from the bottom, so voting visibly raises it. */}
+            <div
+              aria-hidden="true"
+              className="bg-muted relative h-24 w-8 overflow-hidden rounded-full"
+            >
+              <div
+                className={cn(
+                  "absolute inset-x-0 bottom-0 transition-[height] duration-500 ease-out motion-reduce:transition-none",
+                  isLeading ? "bg-primary" : "bg-primary/40",
+                )}
+                style={{ height: `${Math.round(share * 100)}%` }}
+              />
+            </div>
+
+            <time
+              dateTime={option.startsAt.toISOString()}
+              className="text-center text-[11px] leading-tight"
+            >
+              {format.dateTime(option.startsAt, {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone,
+              })}
+            </time>
+
+            {canVote && !isPast && (
+              <form action={toggleDateVoteAction}>
+                <input type="hidden" name="dateOptionId" value={option.id} />
+                <Button
+                  type="submit"
+                  size="icon"
+                  variant={option.votedByViewer ? "success" : "outline"}
+                  className={cn(ROUND_BUTTON, "size-9")}
+                  aria-label={
+                    option.votedByViewer
+                      ? translateEvents("datePollVoted")
+                      : translateEvents("datePollVote")
+                  }
+                >
+                  {option.votedByViewer ? (
+                    <CheckIcon className="size-4" />
+                  ) : (
+                    <PlusIcon className="size-4" />
+                  )}
+                </Button>
+              </form>
+            )}
+
+            {canChooseDate && !isPast && (
+              <form action={chooseEventDateAction}>
+                <input type="hidden" name="eventId" value={eventId} />
+                <input type="hidden" name="dateOptionId" value={option.id} />
+                <Button
+                  type="submit"
+                  size="icon"
+                  variant="secondary"
+                  className={cn(ROUND_BUTTON, "size-8")}
+                  title={translateEvents("datePollChoose")}
+                  aria-label={translateEvents("datePollChoose")}
+                >
+                  <ChooseDateIcon className="size-4" />
+                </Button>
+              </form>
+            )}
+
+            {option.voters.length > 0 && (
+              <div className="flex justify-center">
+                {option.voters.slice(0, 4).map((voter) => (
+                  <MemberAvatar
+                    key={voter.memberId}
+                    fullName={voter.fullName}
+                    avatarUrl={voter.avatarUrl}
+                    className="ring-card -ml-2 size-5 text-[9px] ring-2 first:ml-0"
+                  />
+                ))}
+              </div>
+            )}
+          </li>
+        )
+      })}
+    </ul>
+  )
+
+  // Beside the facts it is the same card as the facts, opening with the same heading at
+  // the same height, so the two read as one row rather than as a box with something
+  // floating next to it. The section's top margin would push it out of line, so it is a
+  // plain section here.
+  if (beside) {
+    return (
+      <section className="bg-card space-y-4 rounded-lg border p-4 lg:max-w-[38rem] lg:shrink">
+        <SectionHeading>{translateEvents("datePollTitle")}</SectionHeading>
+        {hint}
+        {bars}
+      </section>
+    )
+  }
+
   return (
     <PageSection heading={translateEvents("datePollTitle")}>
-      <p className="text-muted-foreground text-sm">
-        {isClosed
-          ? translateEvents("datePollClosed")
-          : translateEvents("datePollHint")}
-      </p>
-
-      <StackedList>
-        {options.map((option) => {
-          const voteCount = option.voters.length
-          const isChosen =
-            chosenStartsAt !== null &&
-            option.startsAt.getTime() === chosenStartsAt.getTime()
-          const isPast = option.startsAt < now
-          const isLeading = voteCount > 0 && voteCount === mostVotes
-
-          const share = totalVoters === 0 ? 0 : voteCount / totalVoters
-
-          return (
-            <StackedListItem
-              key={option.id}
-              className={cn(
-                "border-border bg-card relative overflow-hidden rounded-lg border p-4",
-                isPast && "opacity-60",
-                isChosen && "border-primary-ink",
-              )}
-            >
-              {/* The bar is the background of the row, so the text sits on top of it. */}
-              <div
-                aria-hidden="true"
-                className={cn(
-                  "absolute inset-y-0 left-0 transition-[width]",
-                  isLeading ? "bg-primary/15" : "bg-muted",
-                )}
-                style={{ width: `${Math.round(share * 100)}%` }}
-              />
-
-              <div className="relative flex flex-wrap items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="flex items-center gap-2 font-medium">
-                    {isChosen && (
-                      <CheckIcon className="text-primary-ink size-4 shrink-0" />
-                    )}
-                    <time dateTime={option.startsAt.toISOString()}>
-                      {format.dateTime(option.startsAt, {
-                        weekday: "short",
-                        day: "numeric",
-                        month: "short",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        timeZone,
-                      })}
-                    </time>
-                  </p>
-
-                  <p className="text-muted-foreground mt-0.5 text-sm">
-                    <span className="tabular-nums">
-                      {Math.round(share * 100)}%
-                    </span>
-                    {" · "}
-                    {translateEvents("datePollVotes", { count: voteCount })}
-                    {isLeading && !isChosen && (
-                      <> · {translateEvents("datePollLeading")}</>
-                    )}
-                  </p>
-
-                  {option.voters.length > 0 && (
-                    <div className="mt-2 flex">
-                      {option.voters.map((voter) => (
-                        <MemberAvatar
-                          key={voter.memberId}
-                          fullName={voter.fullName}
-                          avatarUrl={voter.avatarUrl}
-                          className="ring-card -ml-2 size-6 text-[10px] ring-2 first:ml-0"
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex shrink-0 gap-2">
-                  {canVote && !isPast && (
-                    <form action={toggleDateVoteAction}>
-                      <input
-                        type="hidden"
-                        name="dateOptionId"
-                        value={option.id}
-                      />
-                      <Button
-                        type="submit"
-                        size="sm"
-                        variant={option.votedByViewer ? "default" : "outline"}
-                      >
-                        {option.votedByViewer
-                          ? translateEvents("datePollVoted")
-                          : translateEvents("datePollVote")}
-                      </Button>
-                    </form>
-                  )}
-
-                  {canChooseDate && !isChosen && !isPast && (
-                    <form action={chooseEventDateAction}>
-                      <input type="hidden" name="eventId" value={eventId} />
-                      <input
-                        type="hidden"
-                        name="dateOptionId"
-                        value={option.id}
-                      />
-                      <Button type="submit" size="sm" variant="secondary">
-                        {translateEvents("datePollChoose")}
-                      </Button>
-                    </form>
-                  )}
-                </div>
-              </div>
-            </StackedListItem>
-          )
-        })}
-      </StackedList>
+      {hint}
+      {bars}
     </PageSection>
   )
 }

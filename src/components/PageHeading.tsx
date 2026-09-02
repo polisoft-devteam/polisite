@@ -6,7 +6,8 @@ export function PageHeading({
   eyebrow,
   actions,
 }: {
-  title: string
+  /** A node rather than a string, so part of a title can be coloured. */
+  title: React.ReactNode
   /** Small label above the title — a category, a status. */
   eyebrow?: string
   actions?: React.ReactNode

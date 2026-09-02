@@ -5,6 +5,7 @@
 
 import { NextResponse } from "next/server"
 
+import { fillMemberGapsFromGoogle } from "@/features/members/queries"
 import { routing } from "@/i18n/routing"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 
@@ -25,10 +26,23 @@ export async function GET(request: Request) {
     const supabase = await createSupabaseServerClient()
     const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
-    // Nothing is written to our database here. Signing in makes someone a Google user,
-    // not a member — we store nothing about guests. An admin creates the members row
-    // with `pnpm member <email>`.
+    // Signing in makes someone a Google user, not a member: nothing is stored about a
+    // guest. For someone who is already a member, this is the one moment Google's name
+    // and picture are in hand, so any gaps in their row get filled from it.
     if (!error && data.user?.email) {
+      const metadata = data.user.user_metadata ?? {}
+
+      await fillMemberGapsFromGoogle(data.user.id, {
+        name:
+          (metadata.full_name as string | undefined) ??
+          (metadata.name as string | undefined) ??
+          null,
+        avatarUrl:
+          (metadata.avatar_url as string | undefined) ??
+          (metadata.picture as string | undefined) ??
+          null,
+      })
+
       return NextResponse.redirect(`${origin}${safeReturnTo}`)
     }
   }

@@ -10,7 +10,15 @@ import { GoogleIcon } from "@/lib/icons"
 import { usePathname } from "@/i18n/navigation"
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 
-export function SignInButton() {
+export function SignInButton({
+  className,
+  children,
+}: {
+  /** Extra classes, for the hero where the same button is simply larger. */
+  className?: string
+  /** A different label. The Google mark is always shown. */
+  children?: React.ReactNode
+} = {}) {
   const translateAuth = useTranslations("Auth")
   const currentLocale = useLocale()
   // Already stripped of the /sv or /en prefix by next-intl.
@@ -35,9 +43,13 @@ export function SignInButton() {
 
   // The logo says which provider, so the label does not have to.
   return (
-    <Button size="sm" onClick={startGoogleSignIn}>
-      <GoogleIcon className="size-4" />
-      {translateAuth("signIn")}
+    <Button
+      size={className ? "default" : "sm"}
+      onClick={startGoogleSignIn}
+      className={className}
+    >
+      <GoogleIcon className={className ? "size-5" : "size-4"} />
+      {children ?? translateAuth("signIn")}
     </Button>
   )
 }

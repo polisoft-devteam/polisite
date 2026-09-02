@@ -10,13 +10,13 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 import { BackLink } from "@/components/BackLink"
 import { ExternalLink } from "@/components/ExternalLink"
 import { MemberAvatar } from "@/components/MemberAvatar"
+import { MemberBadges } from "@/components/MemberBadges"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { Wishlist } from "@/components/Wishlist"
-import {
-  findMemberById,
-  findWishlistForMember,
-} from "@/features/wishlist/queries"
+import { findBadgesForMember, findMemberById } from "@/features/members/queries"
+import { isMemberTitle } from "@/features/members/titles"
+import { findWishlistForMember } from "@/features/wishlist/queries"
 import { getViewer } from "@/lib/auth"
 import { GithubIcon } from "@/lib/icons"
 
@@ -36,6 +36,7 @@ export default async function MemberPage({
   setRequestLocale(locale)
 
   const translateMembers = await getTranslations("Members")
+  const translateTitles = await getTranslations("Titles")
   const viewer = await getViewer()
   const member = await findMemberById(memberId)
 
@@ -44,7 +45,10 @@ export default async function MemberPage({
   const viewerMemberId = viewer?.member?.id ?? null
   const isOwnList = viewerMemberId === member.id
 
-  const entries = await findWishlistForMember(member.id, viewerMemberId)
+  const [entries, badges] = await Promise.all([
+    findWishlistForMember(member.id, viewerMemberId),
+    findBadgesForMember(member.id),
+  ])
 
   return (
     <PageContainer>
@@ -60,7 +64,11 @@ export default async function MemberPage({
         <div className="min-w-0">
           <PageHeading
             title={member.nickname ?? member.fullName}
-            eyebrow={member.officialTitle ?? member.funTitle ?? undefined}
+            eyebrow={
+              member.officialTitle && isMemberTitle(member.officialTitle)
+                ? translateTitles(member.officialTitle)
+                : undefined
+            }
           />
         </div>
       </div>
@@ -75,6 +83,8 @@ export default async function MemberPage({
           </ExternalLink>
         </div>
       )}
+
+      <MemberBadges badges={badges} locale={locale} />
 
       <Wishlist entries={entries} isOwnList={isOwnList} />
     </PageContainer>

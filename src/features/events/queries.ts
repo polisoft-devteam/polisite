@@ -13,6 +13,7 @@ import {
   eq,
   gte,
   inArray,
+  isNotNull,
   isNull,
   lt,
   sql,
@@ -20,6 +21,7 @@ import {
 
 import { db } from "@/db"
 import { buildEventSlug, toUniqueSlug } from "@/lib/slug"
+import { DEFAULT_EVENT_TIME_ZONE } from "@/lib/time"
 import {
   eventAttendees,
   eventDateOptions,
@@ -405,7 +407,10 @@ export type Attendee = {
   memberId: string
   fullName: string
   nickname: string | null
+  email: string
   avatarUrl: string | null
+  /** The badge they chose to show, if any; a key from BADGES. */
+  displayedBadge: string | null
   response: AttendanceResponse
 }
 
@@ -417,7 +422,9 @@ export async function findAttendeesForEvent(
       memberId: members.id,
       fullName: members.fullName,
       nickname: members.nickname,
+      email: members.email,
       avatarUrl: members.avatarUrl,
+      displayedBadge: members.displayedBadge,
       response: eventAttendees.response,
     })
     .from(eventAttendees)
@@ -444,7 +451,9 @@ export async function findGoingAttendeesByEvent(
       memberId: members.id,
       fullName: members.fullName,
       nickname: members.nickname,
+      email: members.email,
       avatarUrl: members.avatarUrl,
+      displayedBadge: members.displayedBadge,
       response: eventAttendees.response,
     })
     .from(eventAttendees)
@@ -656,4 +665,79 @@ export async function setEventDateFromOption(
       updatedAt: new Date(),
     })
     .where(eq(events.id, eventId))
+}
+
+/**
+ * How many events fall in each month of a year, keyed "YYYY-MM".
+ *
+ * Counted in SQL rather than by fetching a year of events and grouping here, and grouped
+ * in the association's timezone so an event at 23:00 on the last of the month does not
+ * count against the next one.
+ *
+ * The zone is written into the SQL rather than bound as a parameter: Postgres cannot infer
+ * the type of a parameter in that position and refuses the query. It is a constant in this
+ * file, never anything a request supplied.
+ */
+export async function findEventCountsByMonth(
+  allowedVisibilities: EventVisibility[],
+  year: number,
+): Promise<Map<string, number>> {
+  if (allowedVisibilities.length === 0) return new Map()
+
+  const localStart = sql.raw(
+    `"events"."starts_at" at time zone '${DEFAULT_EVENT_TIME_ZONE}'`,
+  )
+
+  const rows = await db
+    .select({
+      month: sql<string>`to_char(${localStart}, 'YYYY-MM')`.as("month"),
+      total: count(),
+    })
+    .from(events)
+    .where(
+      and(
+        inArray(events.visibility, allowedVisibilities),
+        isNotNull(events.startsAt),
+        sql`extract(year from ${localStart}) = ${year}`,
+      ),
+    )
+    .groupBy(sql`to_char(${localStart}, 'YYYY-MM')`)
+
+  return new Map(rows.map((row) => [row.month, Number(row.total)]))
+}
+
+/** Who made the event, for the host line on its page. */
+export async function findEventHost(event: Event): Promise<{
+  id: string
+  fullName: string
+  nickname: string | null
+  email: string
+  avatarUrl: string | null
+} | null> {
+  if (!event.createdByMemberId) return null
+
+  const [host] = await db
+    .select({
+      id: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+      email: members.email,
+      avatarUrl: members.avatarUrl,
+    })
+    .from(members)
+    .where(eq(members.id, event.createdByMemberId))
+    .limit(1)
+
+  return host ?? null
+}
+
+/** Calls an event off without removing it. Returns false if it was already called off. */
+export async function cancelEvent(eventId: string): Promise<boolean> {
+  const [cancelled] = await db
+    .update(events)
+    .set({ cancelledAt: new Date(), updatedAt: new Date() })
+    .where(and(eq(events.id, eventId), isNull(events.cancelledAt)))
+    .returning()
+
+  return Boolean(cancelled)
 }

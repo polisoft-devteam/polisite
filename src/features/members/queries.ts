@@ -1,9 +1,11 @@
 // Database access for members. Per CLAUDE.md this is one of the only places allowed to
 // import src/db — pages and components call these functions instead.
 
-import { and, eq, isNull, sql } from "drizzle-orm"
+import { and, asc, eq, isNotNull, isNull, or, sql } from "drizzle-orm"
 
 import { db } from "@/db"
+import type { MemberBadge } from "@/db/schema"
+import { memberNameFrom } from "@/features/members/display-name"
 import {
   memberRoles,
   members,
@@ -11,6 +13,7 @@ import {
   type Member,
   type MembershipPrompt,
   type Role,
+  memberBadges,
 } from "@/db/schema"
 
 export async function findMemberByAuthUserId(
@@ -28,10 +31,10 @@ export async function findMemberByAuthUserId(
 export type EditableProfileFields = {
   fullName: string
   nickname: string | null
-  officialTitle: string | null
-  funTitle: string | null
   bio: string | null
   githubUrl: string | null
+  birthday: string | null
+  displayedBadge: string | null
   /** Omitted when no new photo was uploaded, so the existing one is kept. */
   avatarUrl?: string
 }
@@ -79,6 +82,7 @@ export async function recordMembershipPrompt(prompt: {
   authUserId: string
   email: string
   fullName: string | null
+  avatarUrl: string | null
   response: MembershipPrompt["response"]
 }): Promise<boolean> {
   const inserted = await db
@@ -169,7 +173,10 @@ export async function approveMembershipRequest(
     .values({
       authUserId,
       email: request.email,
-      fullName: request.fullName ?? request.email,
+      fullName: memberNameFrom(request.fullName, request.email),
+      // Google's picture, captured with the request. Without it every new member starts
+      // as initials on a grey circle.
+      avatarUrl: request.avatarUrl,
       status: "active",
       joinedAssociationAt: new Date(),
     })
@@ -224,4 +231,213 @@ export async function setMemberStatus(
     .update(members)
     .set({ status, updatedAt: new Date() })
     .where(eq(members.id, memberId))
+}
+
+// --- Badges and titles ---------------------------------------------------------
+
+export async function findBadgesForMember(
+  memberId: string,
+): Promise<MemberBadge[]> {
+  return db
+    .select()
+    .from(memberBadges)
+    .where(eq(memberBadges.memberId, memberId))
+    .orderBy(asc(memberBadges.awardedAt))
+}
+
+/** Every member's badges in one query, for the admin page. */
+export async function findBadgesByMember(): Promise<
+  Map<string, MemberBadge[]>
+> {
+  const rows = await db.select().from(memberBadges)
+
+  const byMember = new Map<string, MemberBadge[]>()
+  for (const row of rows) {
+    byMember.set(row.memberId, [...(byMember.get(row.memberId) ?? []), row])
+  }
+
+  return byMember
+}
+
+export async function awardBadge(award: {
+  memberId: string
+  badge: string
+  awardedByMemberId: string
+}): Promise<void> {
+  // Awarding twice is the same row, so this is idempotent.
+  await db.insert(memberBadges).values(award).onConflictDoNothing()
+}
+
+export async function removeBadge(
+  memberId: string,
+  badge: string,
+): Promise<void> {
+  await db
+    .delete(memberBadges)
+    .where(
+      and(eq(memberBadges.memberId, memberId), eq(memberBadges.badge, badge)),
+    )
+}
+
+/** Null clears the office. Validated against MEMBER_TITLES by the action. */
+export async function setMemberTitle(
+  memberId: string,
+  officialTitle: string | null,
+): Promise<void> {
+  await db
+    .update(members)
+    .set({ officialTitle, updatedAt: new Date() })
+    .where(eq(members.id, memberId))
+}
+
+/**
+ * Fills in what Google knows and we do not, on every sign-in.
+ *
+ * Only gaps: a name is replaced when it is still the address or the part before it, never
+ * when the member has chosen one, and a picture only when there is none. Existing members
+ * predate the capture at request time, so this is what backfills them.
+ */
+export async function fillMemberGapsFromGoogle(
+  authUserId: string,
+  google: { name: string | null; avatarUrl: string | null },
+): Promise<Member | null> {
+  const [member] = await db
+    .select()
+    .from(members)
+    .where(eq(members.authUserId, authUserId))
+    .limit(1)
+
+  if (!member) return null
+
+  const hasChosenName =
+    member.fullName !== member.email &&
+    member.fullName !== member.email.split("@")[0]
+
+  const fullName =
+    !hasChosenName && google.name?.trim() ? google.name.trim() : undefined
+  const avatarUrl =
+    member.avatarUrl === null && google.avatarUrl ? google.avatarUrl : undefined
+
+  if (fullName === undefined && avatarUrl === undefined) return null
+
+  const [updated] = await db
+    .update(members)
+    .set({
+      ...(fullName === undefined ? {} : { fullName }),
+      ...(avatarUrl === undefined ? {} : { avatarUrl }),
+      updatedAt: new Date(),
+    })
+    .where(eq(members.id, member.id))
+    .returning()
+
+  return updated ?? null
+}
+
+// --- Birthdays -----------------------------------------------------------------
+
+export type BirthdayMember = {
+  id: string
+  fullName: string
+  nickname: string | null
+  email: string
+}
+
+/**
+ * Active members whose birthday falls on this month and day and who have not been
+ * greeted yet this year.
+ *
+ * The month and day are compared in SQL against the stored date, so a birthday never
+ * drifts across a timezone. The year guard is what makes the sweep safe to run twice.
+ */
+export async function findMembersToGreet(
+  month: number,
+  day: number,
+  year: number,
+): Promise<BirthdayMember[]> {
+  return db
+    .select({
+      id: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+      email: members.email,
+    })
+    .from(members)
+    .where(
+      and(
+        eq(members.status, "active"),
+        sql`extract(month from ${members.birthday}) = ${month}`,
+        sql`extract(day from ${members.birthday}) = ${day}`,
+        or(
+          isNull(members.lastBirthdayGreetingYear),
+          sql`${members.lastBirthdayGreetingYear} < ${year}`,
+        ),
+      ),
+    )
+}
+
+export async function markBirthdayGreeted(
+  memberId: string,
+  year: number,
+): Promise<void> {
+  await db
+    .update(members)
+    .set({ lastBirthdayGreetingYear: year })
+    .where(eq(members.id, memberId))
+}
+
+/** Everyone with a birthday, for the calendar. */
+export async function findMembersWithBirthdays(): Promise<
+  {
+    id: string
+    fullName: string
+    nickname: string | null
+    email: string
+    avatarUrl: string | null
+    birthday: string
+  }[]
+> {
+  const rows = await db
+    .select({
+      id: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+      email: members.email,
+      avatarUrl: members.avatarUrl,
+      birthday: members.birthday,
+    })
+    .from(members)
+    .where(and(eq(members.status, "active"), isNotNull(members.birthday)))
+
+  return rows.filter(
+    (row): row is (typeof rows)[number] & { birthday: string } =>
+      row.birthday !== null,
+  )
+}
+
+// --- The directory -------------------------------------------------------------
+
+/** The members page: everyone active, for the directory table. */
+export async function findActiveMembersForDirectory() {
+  return db
+    .select({
+      id: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+      email: members.email,
+      avatarUrl: members.avatarUrl,
+      githubUrl: members.githubUrl,
+    })
+    .from(members)
+    .where(eq(members.status, "active"))
+    .orderBy(asc(members.fullName))
+}
+
+export async function findMemberById(memberId: string) {
+  const [member] = await db
+    .select()
+    .from(members)
+    .where(and(eq(members.id, memberId), eq(members.status, "active")))
+    .limit(1)
+
+  return member ?? null
 }

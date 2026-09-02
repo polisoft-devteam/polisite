@@ -7,6 +7,16 @@ const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
   : undefined
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      // A photo is posted through a server action, and the default cap is 1 MB, which a
+      // phone photo passes before it reaches lib/storage.ts to be resized. Kept a little
+      // above the 12 MB that storage refuses outright, so the rejection comes from us
+      // with a message rather than from the framework with a stack trace.
+      bodySizeLimit: "14mb",
+    },
+  },
+
   // Files under public/ are served by the CDN and otherwise left out of the server
   // bundle, so any page that reads the folder rather than a hardcoded path finds it empty
   // in production. The front page's hero does that. Kept wide, covering every route and

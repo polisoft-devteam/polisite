@@ -7,6 +7,7 @@ import { postEventToDiscord } from "@/features/events/discord"
 import {
   addGuest,
   countGuestsBroughtBy,
+  cancelEvent,
   createEvent,
   deleteEvent,
   findAttendanceResponse,
@@ -116,7 +117,8 @@ export async function createEventAction(formData: FormData) {
   }
 
   revalidatePath("/", "layout")
-  redirect({ href: `/events/${event.slug}`, locale })
+  // The flag is what the event page celebrates on arrival; see CelebrateOnMount.
+  redirect({ href: `/events/${event.slug}?created=1`, locale })
 }
 
 export async function updateEventAction(formData: FormData) {
@@ -204,6 +206,40 @@ export async function deleteEventAction(formData: FormData) {
 
   revalidatePath("/", "layout")
   redirect({ href: "/events", locale: await getLocale() })
+}
+
+/**
+ * Calls an event off and tells the channel.
+ *
+ * Not a delete: people answered it, and the page stays so anyone following an old link
+ * learns it is off rather than meeting a not-found. Whoever may edit it may call it off,
+ * which is its creator or an admin.
+ */
+export async function cancelEventAction(formData: FormData) {
+  const viewer = await getViewer()
+  const eventId = String(formData.get("eventId") ?? "")
+
+  const existing = await findEventById(
+    eventId,
+    visibleEventVisibilitiesFor(viewer),
+  )
+
+  if (!existing || !canEditEvent(viewer, existing)) {
+    throw new Error("Not allowed to cancel this event")
+  }
+
+  // Only announce if this call is the one that cancelled it, so a double submit cannot
+  // ping the channel twice.
+  if (await cancelEvent(eventId)) {
+    await postEventToDiscord({
+      event: { ...existing, cancelledAt: new Date() },
+      locale: await getLocale(),
+      leadText: "Inställt!",
+    })
+  }
+
+  revalidatePath("/", "layout")
+  redirect({ href: `/events/${existing.slug}`, locale: await getLocale() })
 }
 
 export async function setAttendanceAction(formData: FormData) {

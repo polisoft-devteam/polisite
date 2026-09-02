@@ -9,6 +9,7 @@ import { useState } from "react"
 
 import { FormSelect } from "@/components/FormField"
 import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils"
 
 export type ExplainedOption = {
   value: string
@@ -29,10 +30,6 @@ export function ExplainedSelectField({
 }) {
   const [selected, setSelected] = useState(defaultValue)
 
-  const explanation = options.find(
-    (option) => option.value === selected,
-  )?.explanation
-
   return (
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
@@ -50,11 +47,24 @@ export function ExplainedSelectField({
         ))}
       </FormSelect>
 
-      {explanation && (
-        <p className="text-muted-foreground bg-muted/50 rounded-md px-3 py-2 text-xs">
-          {explanation}
-        </p>
-      )}
+      {/* Every explanation sits in the same grid cell, so the box is always as tall as
+          the longest of them and choosing a different option cannot move anything below
+          it. A minimum height only helps until an explanation is longer than the
+          minimum, which is how this still jumped. */}
+      <div className="text-muted-foreground bg-muted/50 grid rounded-md px-3 py-2 text-xs">
+        {options.map((option) => (
+          <p
+            key={option.value}
+            aria-hidden={option.value !== selected}
+            className={cn(
+              "col-start-1 row-start-1 transition-opacity duration-200 motion-reduce:transition-none",
+              option.value === selected ? "opacity-100" : "opacity-0",
+            )}
+          >
+            {option.explanation}
+          </p>
+        ))}
+      </div>
     </div>
   )
 }

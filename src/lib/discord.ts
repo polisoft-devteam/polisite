@@ -34,6 +34,19 @@ type PostOptions = {
   embeds?: DiscordEmbed[]
 }
 
+/**
+ * A kill switch for testing against the real association's Discord, which is the only
+ * Discord there is: setting DISCORD_PAUSED=1 in .env.local stops every post while leaving
+ * the rest of the flow, and the message it would have sent, exactly as they are.
+ *
+ * An environment variable rather than a flag in the code, because .env.local is not
+ * committed and never reaches Vercel. There is nothing to remember to turn back on, and no
+ * way for a testing session to silence production by accident.
+ */
+function isDiscordPaused(): boolean {
+  return process.env.DISCORD_PAUSED === "1"
+}
+
 export function isDiscordConfigured(): boolean {
   return Boolean(process.env.DISCORD_GENERAL_CHANNEL_WEBHOOK_URL)
 }
@@ -50,6 +63,12 @@ export async function postToDiscord({
   mentionUserIds = [],
   embeds,
 }: PostOptions): Promise<string | null> {
+  if (isDiscordPaused()) {
+    // Said out loud, so a paused run is never mistaken for a working one.
+    console.warn(`[discord] paused, not posting to #${channel}: ${content}`)
+    return null
+  }
+
   const webhookUrl = webhookUrlFor(channel)
   if (!webhookUrl) return null
 

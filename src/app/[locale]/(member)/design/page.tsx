@@ -37,6 +37,8 @@ import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { HoverRevealLabel } from "@/components/HoverRevealLabel"
+import { ImageDropZone } from "@/components/ImageDropZone"
+import { MemberBadges } from "@/components/MemberBadges"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import {
@@ -56,6 +58,7 @@ import {
   WishlistIcon,
 } from "@/lib/icons"
 import { readHeroImages } from "@/lib/site-images"
+import { BADGES } from "@/features/members/badges"
 import { WELCOME_LETTER } from "@/lib/welcome-letter"
 
 export const metadata: Metadata = { title: "Design" }
@@ -206,6 +209,14 @@ export default async function DesignPage({
       </PageSection>
 
       <PageSection heading="Knappar">
+        {/* success and info join the set; everything but ghost and link sweeps on
+            hover, and icon-only buttons opt out. */}
+        <div className="mb-4 flex flex-wrap gap-2">
+          <Button variant="success">Klart</Button>
+          <Button variant="info">Info</Button>
+          <Button variant="destructive">Ta bort</Button>
+        </div>
+
         <div className="space-y-4">
           {BUTTON_VARIANTS.map((variant) => (
             <div key={variant} className="flex flex-wrap items-center gap-2">
@@ -315,6 +326,29 @@ export default async function DesignPage({
             />
           </Button>
         </div>
+      </PageSection>
+
+      <PageSection heading="Bilduppladdning">
+        <div className="max-w-sm">
+          <ImageDropZone
+            id="design-drop"
+            name="design-drop"
+            label="Dra hit en bild, eller klicka för att välja"
+            hint="JPEG, PNG, WebP eller AVIF. Skalas ner automatiskt."
+          />
+        </div>
+      </PageSection>
+
+      <PageSection heading="Utmärkelser">
+        <MemberBadges
+          badges={BADGES.slice(0, 3).map((badge, index) => ({
+            memberId: "design",
+            badge: badge.key,
+            awardedAt: new Date(2026, index * 3, 1),
+            awardedByMemberId: null,
+          }))}
+          locale={locale}
+        />
       </PageSection>
 
       <PageSection heading="Notiser">
@@ -479,7 +513,15 @@ export default async function DesignPage({
         <SectionHeading>Bara medlemmar</SectionHeading>
         <AttendeeAvatars attendees={SAMPLE_ATTENDEES} />
 
+        <SectionHeading>Förslagsnotis, på sidan</SectionHeading>
         <SuggestionCallout />
+
+        <SectionHeading>Förslagsnotis, på ett foto</SectionHeading>
+        {/* On its own dark ground, because in the app it sits over the hero photograph. */}
+        <div className="mt-2 rounded-lg bg-neutral-800 p-4">
+          <SuggestionCallout onPhoto />
+        </div>
+
         <BackLink href="/design">Tillbaka</BackLink>
       </PageSection>
 

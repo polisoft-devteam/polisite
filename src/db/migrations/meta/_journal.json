@@ -127,6 +127,34 @@
       "when": 1788268773597,
       "tag": "0017_aberrant_saracen",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1788357564740,
+      "tag": "0018_classy_mindworm",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1788358999384,
+      "tag": "0019_nervous_vivisector",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1788361480472,
+      "tag": "0020_abandoned_captain_britain",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1788368035853,
+      "tag": "0021_watery_shaman",
+      "breakpoints": true
     }
   ]
 }

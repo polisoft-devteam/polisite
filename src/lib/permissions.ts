@@ -15,6 +15,9 @@ import type {
 export type Viewer = {
   authUserId: string
   email: string
+  /** From the Google account, before they have a member row of their own. */
+  googleName: string | null
+  googleAvatarUrl: string | null
   /** Null for a signed-in guest — a Google account with no membership. */
   member: Member | null
   roles: Role[]
@@ -110,6 +113,11 @@ export function canBringGuests(
   myResponse: AttendanceResponse | null,
 ): boolean {
   if (!canRespondToEvent(viewer, event)) return false
+
+  // Whoever made the event keeps the guest list whatever its visibility, and without
+  // having to answer for themselves first: they are counting heads, not bringing a date.
+  if (canEditEvent(viewer, event)) return true
+
   if (event.visibility === "members") return false
 
   return myResponse === "going"
@@ -156,4 +164,16 @@ export function canClaimWish(
 /** Members can see each other. A guest sees no one. */
 export function canViewMemberDirectory(viewer: Viewer | null): boolean {
   return isActiveMember(viewer)
+}
+
+// --- Badges and titles ---------------------------------------------------------
+
+/**
+ * Only an admin awards a badge or sets an office.
+ *
+ * Both are display labels and grant nothing, but they are statements the association
+ * makes about a member, so they are not for the member to make about themselves.
+ */
+export function canAwardBadges(viewer: Viewer | null): boolean {
+  return isAdmin(viewer)
 }

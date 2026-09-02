@@ -74,9 +74,17 @@ Vercel builds from the repo; the parts it cannot work out on its own:
 3. **Promote yourself**: `pnpm member <your email> --status active --role admin`. First
    sign-in only creates a guest, and a site with no admin has nobody who can let anyone in.
 4. **Check the cron is registered** in Vercel after the first deploy. It comes from
-   `vercel.json`, one run a day, which is all the Hobby plan allows: reminders go out in a
-   single morning sweep rather than at an exact hour before the event. That file takes no
-   comments and Vercel rejects any key it does not recognise, so the reasoning lives here.
+   `vercel.json`, one run a day, which is all the Hobby plan allows, so event reminders
+   and birthday greetings share it: reminders go out in a single morning sweep rather than
+   at an exact hour before the event.
+
+   The schedule is `0 6 * * *`, and Vercel crons run in **UTC**, so it lands at 08:00 in
+   Stockholm during summer time and 07:00 in winter. No single daily UTC schedule can hit
+   08:00 all year, and 06:00 is the one that is right for the seven months Sweden is on
+   CEST. Two crons, one per season, would need the Pro plan.
+
+   That file takes no comments and Vercel rejects any key it does not recognise, so the
+   reasoning lives here.
 
 Creating the events that are already planned, without waking Discord: untick **Announce on
 Discord** _and_ leave the reminders unticked. Every Discord post mentions the member role,

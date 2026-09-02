@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest"
 import type { Event, Member, Role } from "@/db/schema"
 import {
   canBringGuests,
+  canAwardBadges,
   canClaimWish,
   canCreateEvent,
   canDeactivateMember,
@@ -30,13 +31,14 @@ function buildMember(overrides: Partial<Member> = {}): Member {
     avatarUrl: null,
     nickname: null,
     officialTitle: null,
-    funTitle: null,
     bio: null,
     githubUrl: null,
     birthday: null,
     status: "active",
     joinedAssociationAt: new Date("2026-01-01"),
     notificationsSeenAt: null,
+    lastBirthdayGreetingYear: null,
+    displayedBadge: null,
     createdAt: new Date("2026-01-01"),
     updatedAt: new Date("2026-01-01"),
     ...overrides,
@@ -46,6 +48,8 @@ function buildMember(overrides: Partial<Member> = {}): Member {
 function buildViewer(member: Member | null, roles: Role[] = []): Viewer {
   return {
     authUserId: "auth-1",
+    googleName: null,
+    googleAvatarUrl: null,
     email: "member@example.com",
     member,
     roles,
@@ -73,6 +77,7 @@ function buildEvent(overrides: Partial<Event> = {}): Event {
     extraLinkUrl: null,
     visibility: "members",
     createdByMemberId: "member-1",
+    cancelledAt: null,
     discordAnnouncedAt: null,
     discordMessageId: null,
     createdAt: new Date("2026-01-01"),
@@ -231,7 +236,8 @@ describe("creating and responding", () => {
 })
 
 describe("canBringGuests", () => {
-  const goingMember = buildViewer(buildMember())
+  // Someone who did not make the event: the creator has looser rules, tested below.
+  const goingMember = buildViewer(buildMember({ id: "someone-else" }))
 
   it("lets a member going to a public event bring someone", () => {
     const event = buildEvent({ visibility: "public" })
@@ -265,6 +271,26 @@ describe("canBringGuests", () => {
     const inactive = buildViewer(buildMember({ status: "inactive" }))
     const event = buildEvent({ visibility: "public" })
     expect(canBringGuests(inactive, event, "going")).toBe(false)
+  })
+
+  it("lets whoever made the event keep its guest list regardless", () => {
+    // Counting heads on your own event is not the same as bringing a date to someone
+    // else's, so neither the visibility nor your own answer stands in the way.
+    const event = buildEvent({ visibility: "members" })
+    const creator = buildViewer(buildMember({ id: event.createdByMemberId! }))
+
+    expect(canBringGuests(creator, event, null)).toBe(true)
+    expect(canBringGuests(creator, event, "not_going")).toBe(true)
+  })
+
+  it("lets an admin keep it too", () => {
+    const event = buildEvent({ visibility: "members" })
+    const admin = buildViewer(buildMember({ id: "an-admin" }), [
+      "member",
+      "admin",
+    ])
+
+    expect(canBringGuests(admin, event, null)).toBe(true)
   })
 })
 
@@ -320,5 +346,16 @@ describe("member directory", () => {
       canViewMemberDirectory(buildViewer(buildMember({ status: "inactive" }))),
     ).toBe(false)
     expect(canViewMemberDirectory(null)).toBe(false)
+  })
+})
+
+describe("awarding badges and offices", () => {
+  it("is for admins only", () => {
+    const admin = buildViewer(buildMember(), ["member", "admin"])
+    const member = buildViewer(buildMember(), ["member"])
+
+    expect(canAwardBadges(admin)).toBe(true)
+    expect(canAwardBadges(member)).toBe(false)
+    expect(canAwardBadges(null)).toBe(false)
   })
 })

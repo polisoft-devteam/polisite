@@ -8,7 +8,7 @@
 import { and, asc, eq, inArray } from "drizzle-orm"
 
 import { db } from "@/db"
-import { members, wishlistClaims, wishlistItems } from "@/db/schema"
+import { wishlistClaims, wishlistItems } from "@/db/schema"
 import type { WishlistItem } from "@/db/schema"
 
 export type WishlistEntry = {
@@ -68,31 +68,6 @@ export async function findWishlistForMember(
       ),
     }
   })
-}
-
-/** The members page: everyone active, for the directory table. */
-export async function findActiveMembersForDirectory() {
-  return db
-    .select({
-      id: members.id,
-      fullName: members.fullName,
-      nickname: members.nickname,
-      avatarUrl: members.avatarUrl,
-      githubUrl: members.githubUrl,
-    })
-    .from(members)
-    .where(eq(members.status, "active"))
-    .orderBy(asc(members.fullName))
-}
-
-export async function findMemberById(memberId: string) {
-  const [member] = await db
-    .select()
-    .from(members)
-    .where(and(eq(members.id, memberId), eq(members.status, "active")))
-    .limit(1)
-
-  return member ?? null
 }
 
 export async function addWishlistItem(item: {

@@ -54,7 +54,7 @@ export function ImageStack({
           key={`${image}-${index}`}
           className={cn(
             positions[index],
-            "ring-background origin-center rounded-lg shadow-lg ring-4 transition-[transform,z-index] duration-300 ease-out",
+            "ring-background origin-center rounded-lg shadow-lg ring-4 transition-transform duration-700 ease-out will-change-transform motion-reduce:transition-none",
             // Raised above its neighbours while hovered, and nudged up as it grows.
             "hover:z-20 hover:-translate-y-2 hover:scale-110 hover:rotate-0",
             isPile ? (index === 0 ? "z-10" : "z-0") : CASCADE_LAYERS[index],

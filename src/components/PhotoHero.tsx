@@ -30,15 +30,21 @@ function crossfadeKeyframes(photoCount: number) {
 
 export function PhotoHero({
   images,
+  focalPoint,
   eyebrow,
   title,
+  note,
   tagline,
   children,
 }: {
   images: string[]
+  /** Passed through to the photographs; see SiteImage. */
+  focalPoint?: "center" | "upper" | "top" | "lower" | "bottom"
   /** Small label above the title, a category or a status. */
   eyebrow?: string
   title: string
+  /** A status that belongs with the name, such as an event still being only a suggestion. */
+  note?: React.ReactNode
   tagline?: string
   /** Sits under the tagline, for a call to action. */
   children?: React.ReactNode
@@ -73,6 +79,7 @@ export function PhotoHero({
               src={image}
               alt=""
               rounded=""
+              focalPoint={focalPoint}
               priority={index === 0}
               className="size-full"
               sizes="100vw"
@@ -86,7 +93,7 @@ export function PhotoHero({
           className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-black/10"
         />
 
-        <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-5xl px-4 pb-10 sm:pb-24">
+        <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-6xl px-4 pb-10 sm:pb-24 2xl:max-w-7xl">
           {eyebrow && (
             <p className="text-xs tracking-wide text-white/80 uppercase drop-shadow">
               {eyebrow}
@@ -96,6 +103,8 @@ export function PhotoHero({
           <h1 className="font-heading text-4xl font-extrabold tracking-tight text-balance text-white drop-shadow-lg sm:text-6xl">
             {title}
           </h1>
+
+          {note}
 
           {tagline && (
             <p className="mt-3 max-w-xl text-sm text-white/85 drop-shadow sm:text-base">

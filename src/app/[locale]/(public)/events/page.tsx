@@ -13,7 +13,8 @@ import {
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { PlusIcon } from "@/lib/icons"
+import { HoverSwapIcon } from "@/components/HoverSwapIcon"
+import { EnvelopeIcon, NewEventIcon } from "@/lib/icons"
 import { canCreateEvent, visibleEventVisibilitiesFor } from "@/lib/permissions"
 
 export async function generateMetadata({
@@ -71,7 +72,11 @@ export default async function EventsPage({
                 <Link href="/events/new" transitionTypes={["nav-forward"]} />
               }
             >
-              <PlusIcon className="size-4" />
+              <HoverSwapIcon
+                Idle={EnvelopeIcon}
+                Hover={NewEventIcon}
+                className="size-4"
+              />
               {translateEvents("newEvent")}
             </Button>
           )

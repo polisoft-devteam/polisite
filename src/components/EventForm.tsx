@@ -6,6 +6,11 @@
 //
 // Nothing is written until the final submit — the form is one POST, so stepping through it
 // has no effect and no Discord message goes out early.
+//
+// Nothing is remembered between visits either. Every step stays mounted and merely hidden,
+// and so does the Advanced panel, so the values survive stepping back and forth on their
+// own. Leaving the page is meant to lose them: a form that reopens holding the last event
+// you created is worse than one that starts empty.
 
 import { getTranslations } from "next-intl/server"
 
@@ -15,7 +20,9 @@ import { ExplainedSelectField } from "@/components/ExplainedSelectField"
 import { EventCategoryField } from "@/components/EventCategoryField"
 import { EventLocationField } from "@/components/EventLocationField"
 import { FormField, FormSelect } from "@/components/FormField"
+import { ImageDropZone } from "@/components/ImageDropZone"
 import { Wizard, type WizardStep } from "@/components/Wizard"
+import { PublishEventIcon, SaveIcon } from "@/lib/icons"
 import {
   Accordion,
   AccordionContent,
@@ -119,19 +126,13 @@ export async function EventForm({
             />
           </FormField>
 
-          <FormField
+          <ImageDropZone
+            id="image"
+            name="image"
             label={translateEvents("fieldImage")}
-            htmlFor="image"
             hint={translateEvents("fieldImageHint")}
-          >
-            <Input
-              id="image"
-              name="image"
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/avif"
-              className="cursor-pointer"
-            />
-          </FormField>
+            currentImageUrl={event?.imageUrl}
+          />
 
           <FormField
             label={translateEvents("fieldEventUrl")}
@@ -245,7 +246,10 @@ export async function EventForm({
               <AccordionTrigger className="px-4 hover:no-underline">
                 {translateEvents("advancedTitle")}
               </AccordionTrigger>
-              <AccordionContent className="px-4">
+              {/* Kept mounted, so the fields inside survive being collapsed. Without it
+                  the panel unmounts them: anything set here was forgotten on reopening,
+                  and worse, was not submitted at all if the section was closed. */}
+              <AccordionContent keepMounted className="px-4">
                 <p className="text-muted-foreground mb-4 text-xs">
                   {translateEvents("advancedHint")}
                 </p>
@@ -355,6 +359,14 @@ export async function EventForm({
       <Wizard
         steps={steps}
         submitLabel={submitLabel}
+        // Publishing a new event is a small celebration; saving an edit is filing.
+        submitIcon={
+          event ? (
+            <SaveIcon className="size-4" />
+          ) : (
+            <PublishEventIcon className="size-4" />
+          )
+        }
         backLabel={translateEvents("wizardBack")}
         nextLabel={translateEvents("wizardNext")}
         stepLabel={translateEvents("wizardStep")}

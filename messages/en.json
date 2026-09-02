@@ -8,7 +8,8 @@
     "calendar": "Calendar",
     "about": "About",
     "menu": "Menu",
-    "archive": "Open archive"
+    "archive": "Open archive",
+    "close": "Close"
   },
   "Home": {
     "title": "Welcome",
@@ -20,16 +21,18 @@
     "newEvent": "New event",
     "visitorNote": "You're seeing the public events. Members also see the association's own.",
     "requestMembership": "Request membership",
-    "membershipPending": "Membership under review"
+    "membershipPending": "Membership under review",
+    "heroSignIn": "Sign in",
+    "heroRequestMembership": "Apply",
+    "heroCreateEvent": "Create an event"
   },
   "About": {
     "title": "About us",
     "motto": "We have three guiding words here at Poligroup: joy, loyalty, heart. We live by them, always!",
-    "origin": "Poli was informally founded in 2017 by a good bunch of students at Malmö University. The name Poli comes from PoliSoft, originally the name of the first project the group built together, which also laid the foundation for what would become the group as we know it today.",
-    "growth": "With the help of our Head of Recruitment, Adam Inge Middlename Hermansson, the group has grown steadily ever since. Slowly at first, with one of its now sturdiest pillars, Petter \"Pidde\" Månsson, who went from being Adam's mysterious roommate to an invaluable cornerstone.",
-    "arrivals": "Not long after, a good bunch of lads and assorted fuck boys made their entrance, such as Jacob \"Faheem\" Bergqvist and Jonathan (a dear child has too many names) Earnest. Thickening the ranks after them came unforgettable characters like Richard the Lionheart Azar, Martin, and many, many more.",
-    "guests": "Special shoutout to our more inactive guest members, such as the tireless Ivar, Frans and Simon.",
-    "bond": "Our love for the computing machine in all its forms, shorts, games, music, art, and the making of all that through programming and the rest, is what binds us together. But our journey has only just begun.",
+    "origin": "Poli was informally founded in 2017 by Adam, Felix, Nils, John and Victor at Malmö University. The name Poli comes from PoliSoft, originally the name of a political satire project that went over so well that every project after it was named after Poli.",
+    "growth": "With the help of our Head of Recruitment, Adam Inge Middlename Hermansson, the group has grown steadily ever since. Slowly at first, with one of the group's now most invaluable members, Petter \"Pidde\" Månsson, who went from being Adam's mysterious cabbage and broccoli roommate to an invaluable cornerstone.",
+    "arrivals": "Not long after, a good bunch of lads, some former career criminals and assorted fuck boys made their entrance, such as Jacob \"Faheem\" Bergqvist and Jonathan (a dear child has too many names) Earnest. Close behind them came unforgettable characters like Richard the Lionheart Azar, Martin, and many, many more.",
+    "bond": "What binds us together is our love for the computing machine in all its forms, shorts, games, music, art, and the making of all that through programming and the rest. But our journey has only just begun.",
     "membershipTitle": "Membership",
     "membershipBody": "Sign in with Google and send a request. An admin lets you in, and only then do you see the association's own events, members and wishlists. Until then you see the same page a visitor does.",
     "timeline": {
@@ -140,7 +143,7 @@
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
     "fieldImage": "Image",
-    "fieldImageHint": "Optional. Resized automatically.",
+    "fieldImageHint": "Resized automatically.",
     "cancel": "Cancel",
     "close": "Close",
     "dateNotDecided": "Date not decided",
@@ -157,8 +160,9 @@
     "fieldDatePollHint": "Add dates so members can vote for the ones they can make.",
     "addDateOption": "Add date",
     "removeDateOption": "Remove date",
+    "detailsTitle": "Details",
     "datePollTitle": "Vote on dates",
-    "datePollHint": "Vote for every date you can make. You can pick several.",
+    "datePollHint": "Vote for every date you can make. Pick as many as you can wagoo!",
     "datePollClosed": "Voting is closed. Every date has passed.",
     "datePollVote": "I can make it",
     "datePollVoted": "I can make it ✓",
@@ -190,7 +194,12 @@
     "fieldIsOnline": "Happens online",
     "fieldIsOnlineHint": "No address needed, the event is held on Discord.",
     "fieldLocationPlaceholder": "Street address or place",
-    "locationOnline": "Online (Discord)"
+    "locationOnline": "Online (Discord)",
+    "host": "Host",
+    "cancelEvent": "Cancel the event",
+    "cancelEventConfirm": "The event is called off and everyone in Poli is pinged on Discord. The page stays, marked as cancelled. This cannot be undone.",
+    "cancelEventConfirmAction": "Yes, cancel it and ping Poli",
+    "cancelled": "Cancelled"
   },
   "Calendar": {
     "title": "Calendar",
@@ -217,9 +226,6 @@
     "fullName": "Name",
     "nickname": "Nickname",
     "officialTitle": "Title",
-    "officialTitlePlaceholder": "Secretary, chairperson …",
-    "funTitle": "Fun title",
-    "funTitlePlaceholder": "Grill master …",
     "bio": "About me",
     "save": "Save",
     "upcomingTitle": "Events I am attending",
@@ -231,15 +237,24 @@
     "joinedAssociationAt": "Member since",
     "birthday": "Birthday",
     "avatar": "Profile picture",
-    "avatarHint": "Optional. Resized automatically.",
+    "avatarHint": "Resized automatically.",
     "githubUrl": "GitHub",
-    "githubUrlHint": "Optional. Shown as an icon in the members list."
+    "githubUrlHint": "Optional. Shown as an icon in the members list.",
+    "officialTitleHint": "Given by an admin. You can see what exists, but not pick one.",
+    "officialTitleNone": "No title",
+    "officialTitleSeeAll": "See every office",
+    "birthdayHint": "Optional. Shows in the calendar and gets you a greeting on Discord.",
+    "displayedBadge": "Badge on show",
+    "displayedBadgeNone": "None",
+    "displayedBadgeHint": "Shown under your name in attendee lists.",
+    "dropImage": "Drop a photo here, or click to choose",
+    "dropImageHint": "JPEG, PNG, WebP or AVIF. Resized automatically."
   },
   "Privacy": {
     "title": "Privacy policy",
     "lastUpdated": "Last updated 19 August 2026",
     "controllerTitle": "Who is responsible",
-    "controllerBody": "{associationName} is the data controller for the information on this site. If you have questions, contact us at {contactEmail}.",
+    "controllerBody": "{associationName} is the controller of the data on this site. If you have questions, get in touch with {contactName}.",
     "dataTitle": "What we store",
     "dataItems": [
       "Name, email address and profile picture from your Google account when you sign in.",
@@ -285,7 +300,13 @@
     "statusInactive": "Inactive",
     "roleAdmin": "Admin",
     "thatsYou": "That's you",
-    "adminProtected": "Cannot be deactivated"
+    "adminProtected": "Cannot be deactivated",
+    "badgesTitle": "Badges and titles",
+    "awardBadge": "Award",
+    "removeBadge": "Remove",
+    "setTitle": "Set title",
+    "titleLabel": "Title",
+    "editProfile": "Edit profile"
   },
   "Archive": {
     "title": "Open archive",
@@ -346,5 +367,39 @@
     "signUp": "{who} signed in for the first time",
     "eventResponse": "{who} replied to {what}",
     "newEvent": "{who} created {what}"
+  },
+  "Titles": {
+    "president": "President",
+    "secretary": "Sekreterare",
+    "legalCounsel": "Föreningens juridiska ombud",
+    "photographer": "Fotograf",
+    "peopleAndCulture": "People and culture",
+    "animalsAndVape": "Djur & vape ansvarig",
+    "safety": "Säkerhetsansvarig"
+  },
+  "Badges": {
+    "title": "Badges",
+    "empty": "No badges yet.",
+    "awardedAt": "Awarded",
+    "poli": {
+      "title": "Poli",
+      "description": "A member of the association. Everyone has this one."
+    },
+    "yearsOfService": {
+      "title": "Long service",
+      "description": "Years of loyal service in the association's name."
+    },
+    "traveller": {
+      "title": "Traveller",
+      "description": "Came along on one of the association's trips."
+    },
+    "sportsman": {
+      "title": "Sportsman",
+      "description": "Put in a shift on the pitch or in the hall."
+    },
+    "gifter": {
+      "title": "Generous",
+      "description": "Sorted something off someone else's wishlist."
+    }
   }
 }
