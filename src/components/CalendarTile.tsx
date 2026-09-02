@@ -16,14 +16,17 @@ export function CalendarTile({
   href,
   imageUrl,
   lead,
+  icon,
   title,
   tone = "event",
 }: {
   /** Omitted for a birthday, which has nowhere to go. */
   href?: string
   imageUrl: string | null
-  /** The time, or a cake. Sits before the title. */
+  /** The time, for an event. Sits before the title. */
   lead?: string
+  /** Shown instead of a lead, for a birthday. */
+  icon?: React.ReactNode
   title: string
   tone?: "event" | "birthday"
 }) {
@@ -60,6 +63,9 @@ export function CalendarTile({
           imageUrl ? "font-medium text-white drop-shadow" : "text-foreground",
         )}
       >
+        {icon ? (
+          <span className="mr-1 inline-block align-[-1px]">{icon}</span>
+        ) : null}
         {lead ? `${lead} ` : null}
         {title}
       </span>

@@ -12,10 +12,12 @@ import { Confetti } from "@/components/Confetti"
 import { Button } from "@/components/ui/button"
 
 export function CelebrateGoing({
+  icon,
   label,
   className,
   isSelected,
 }: {
+  icon?: React.ReactNode
   label: string
   className?: string
   isSelected: boolean
@@ -35,6 +37,7 @@ export function CelebrateGoing({
           if (!isSelected) setSeed(Date.now())
         }}
       >
+        {icon}
         {label}
       </Button>
 

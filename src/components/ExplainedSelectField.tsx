@@ -50,11 +50,11 @@ export function ExplainedSelectField({
         ))}
       </FormSelect>
 
-      {explanation && (
-        <p className="text-muted-foreground bg-muted/50 rounded-md px-3 py-2 text-xs">
-          {explanation}
-        </p>
-      )}
+      {/* A fixed floor, because the explanations are different lengths and the fields
+          below were shifting a few pixels every time the choice changed. */}
+      <p className="text-muted-foreground bg-muted/50 flex min-h-10 items-center rounded-md px-3 py-2 text-xs">
+        {explanation}
+      </p>
     </div>
   )
 }

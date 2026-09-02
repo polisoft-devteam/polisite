@@ -12,7 +12,12 @@
 import { Fragment, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { CheckIcon } from "@/lib/icons"
+import {
+  CheckIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  SaveIcon,
+} from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 export type WizardStep = {
@@ -179,17 +184,20 @@ export function Wizard({
               variant="outline"
               onClick={() => setCurrentStep((step) => step - 1)}
             >
+              <ChevronLeftIcon className="size-4" />
               {backLabel}
             </Button>
           )}
 
           {isLastStep ? (
             <Button type="submit" size="lg">
+              <SaveIcon className="size-4" />
               {submitLabel}
             </Button>
           ) : (
             <Button type="button" onClick={goToNextStep}>
               {nextLabel}
+              <ChevronRightIcon className="size-4" />
             </Button>
           )}
         </div>

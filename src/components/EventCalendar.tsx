@@ -13,7 +13,11 @@ import { CalendarTile } from "@/components/CalendarTile"
 import { Button } from "@/components/ui/button"
 import type { Event } from "@/db/schema"
 import { Link } from "@/i18n/navigation"
-import { ChevronLeftIcon, ChevronRightIcon } from "@/lib/icons"
+import {
+  BirthdayCakeIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@/lib/icons"
 import {
   addMonthsUtc,
   buildMonthGridDays,
@@ -225,7 +229,7 @@ export async function EventCalendar({
                     <li key={`birthday-${birthday.id}`}>
                       <CalendarTile
                         imageUrl={birthday.avatarUrl}
-                        lead="🎂"
+                        icon={<BirthdayCakeIcon className="size-3" />}
                         title={birthday.name}
                         tone="birthday"
                       />

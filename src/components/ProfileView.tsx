@@ -41,7 +41,7 @@ export async function ProfileView({
 
   return (
     <>
-      <div className="flex items-start gap-4">
+      <div className="flex items-center gap-4">
         <MemberAvatar
           fullName={member.fullName}
           avatarUrl={member.avatarUrl}
@@ -72,7 +72,6 @@ export async function ProfileView({
           <Button
             nativeButton={false}
             render={<Link href="/settings" transitionTypes={["nav-forward"]} />}
-            variant="ghost"
             size="sm"
             aria-label={translateProfile("settings")}
           >
