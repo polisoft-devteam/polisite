@@ -23,6 +23,7 @@ export {
   Gear as SettingsIcon,
   Pencil as EditIcon,
   PlusLg as PlusIcon,
+  PersonPlusFill as NewEventIcon,
   Sun as LightThemeIcon,
   Moon as DarkThemeIcon,
   Translate as LanguageIcon,

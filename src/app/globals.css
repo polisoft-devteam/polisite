@@ -637,93 +637,41 @@ a[href] {
   }
 }
 
-/* --- Hero action --------------------------------------------------------------
-   The one big button on the front page. Vigge sits at the left, and on hover he
-   grows and crosses to the right while the label slides out and a second one
-   arrives from the left behind him.
+/* --- Wordmark ----------------------------------------------------------------
+   "Poli" stays put; the rest flips through the list in Wordmark.tsx.
 
-   Its own rule rather than the shared sweep: this is the only place on the site
-   that is meant to look like this, and two labels crossing in opposite
-   directions is a set of related transitions, not a handful of utilities. */
+   The words share one grid cell, so the slot is as wide as the longest of them and the
+   header never reflows mid-animation. Delays and the keyframes themselves are generated
+   in Wordmark.tsx, because both depend on how many words are in the list. */
 
-.hero-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  position: relative;
-  overflow: hidden;
-  padding: 0.85rem 1.6rem;
-  border: 2px solid var(--foreground);
-  border-radius: 999px;
-  background: var(--primary);
-  color: var(--primary-foreground);
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 500ms ease;
+.wordmark-slot {
+  display: inline-grid;
+  vertical-align: baseline;
+  perspective: 400px;
 }
 
-.hero-action:active {
-  transform: scale(0.94);
-  transition: all 100ms ease;
+.wordmark-word {
+  grid-area: 1 / 1;
+  text-align: left;
+  /* Only the first is visible without the animation — see the reduced-motion case. */
+  opacity: 0;
 }
 
-.hero-action:hover,
-.hero-action:focus-visible {
-  background: color-mix(in oklch, var(--primary), var(--foreground) 8%);
+.wordmark-word:first-child {
+  opacity: 1;
 }
 
-.hero-action-knight {
-  display: block;
-  flex-shrink: 0;
-  z-index: 2;
-  transition: transform 500ms ease;
-}
-
-.hero-action:hover .hero-action-knight,
-.hero-action:focus-visible .hero-action-knight {
-  transform: scale(2.2) translateX(45%);
-}
-
-.hero-action-label {
-  z-index: 2;
-  transition: transform 500ms ease;
-  transition-delay: 300ms;
-}
-
-.hero-action:hover .hero-action-label,
-.hero-action:focus-visible .hero-action-label {
-  transform: translateX(200%);
-}
-
-.hero-action-hover-label {
-  position: absolute;
-  left: 1.6rem;
-  z-index: 2;
-  transform: translateX(-150%);
-  transition: transform 500ms ease;
-  white-space: nowrap;
-}
-
-.hero-action:hover .hero-action-hover-label,
-.hero-action:focus-visible .hero-action-hover-label {
-  transform: translateX(0);
-  transition-delay: 300ms;
-}
-
-/* Nothing crosses anywhere: both labels would overlap, so the second is dropped. */
-@media (prefers-reduced-motion: reduce) {
-  .hero-action,
-  .hero-action-knight,
-  .hero-action-label,
-  .hero-action-hover-label {
-    transition: none;
+@media not (prefers-reduced-motion: reduce) {
+  .wordmark-word {
+    opacity: 0;
+    transform-origin: center bottom;
+    animation-name: wordmark-flip;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
+    animation-iteration-count: infinite;
   }
 
-  .hero-action-hover-label {
-    display: none;
+  /* Overridden by the animation, so the static fallback doesn't linger. */
+  .wordmark-word:first-child {
+    opacity: 0;
   }
 }

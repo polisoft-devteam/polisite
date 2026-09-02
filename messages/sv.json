@@ -23,11 +23,8 @@
     "requestMembership": "Ansök om medlemskap",
     "membershipPending": "Medlemskap granskas",
     "heroSignIn": "Logga in",
-    "heroSignInHover": "med Google!",
     "heroRequestMembership": "Ansök",
-    "heroRequestMembershipHover": "om medlemskap!",
-    "heroCreateEvent": "Skapa",
-    "heroCreateEventHover": "ett event!"
+    "heroCreateEvent": "Skapa"
   },
   "About": {
     "title": "Om oss",

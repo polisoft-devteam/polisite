@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { findUpcomingEvents } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { ChevronRightIcon, PlusIcon } from "@/lib/icons"
+import { ChevronRightIcon, NewEventIcon } from "@/lib/icons"
 import {
   canCreateEvent,
   isActiveMember,
@@ -70,7 +70,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 <Link href="/events/new" transitionTypes={["nav-forward"]} />
               }
             >
-              <PlusIcon className="size-4" />
+              <NewEventIcon className="size-4" />
               {translateHome("newEvent")}
             </Button>
           )}

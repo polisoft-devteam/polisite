@@ -14,8 +14,9 @@ export function SignInButton({
   className,
   children,
 }: {
-  /** Set to take over the styling entirely, as the hero's own button does. */
+  /** Extra classes, for the hero where the same button is simply larger. */
   className?: string
+  /** A different label. The Google mark is always shown. */
   children?: React.ReactNode
 } = {}) {
   const translateAuth = useTranslations("Auth")
@@ -40,21 +41,15 @@ export function SignInButton({
     })
   }
 
-  // Given children, the caller is providing the whole face of the button, so none of the
-  // header's styling applies; see the hero's action button.
-  if (children) {
-    return (
-      <button type="button" onClick={startGoogleSignIn} className={className}>
-        {children}
-      </button>
-    )
-  }
-
   // The logo says which provider, so the label does not have to.
   return (
-    <Button size="sm" onClick={startGoogleSignIn}>
-      <GoogleIcon className="size-4" />
-      {translateAuth("signIn")}
+    <Button
+      size={className ? "default" : "sm"}
+      onClick={startGoogleSignIn}
+      className={className}
+    >
+      <GoogleIcon className={className ? "size-5" : "size-4"} />
+      {children ?? translateAuth("signIn")}
     </Button>
   )
 }

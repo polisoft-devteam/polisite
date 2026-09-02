@@ -23,11 +23,8 @@
     "requestMembership": "Request membership",
     "membershipPending": "Membership under review",
     "heroSignIn": "Sign in",
-    "heroSignInHover": "with Google!",
     "heroRequestMembership": "Apply",
-    "heroRequestMembershipHover": "for membership!",
-    "heroCreateEvent": "Create",
-    "heroCreateEventHover": "an event!"
+    "heroCreateEvent": "Create"
   },
   "About": {
     "title": "About us",
