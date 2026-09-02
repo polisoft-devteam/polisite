@@ -570,12 +570,25 @@ a[href] {
   transition: width 450ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-[data-slot="button"][data-sweep="true"]:hover::before,
+/* Only where a pointer can actually leave again. On a touch screen :hover sticks
+   after a tap, so a swept button stayed filled for good and looked like it had
+   no frame at all. Focus still sweeps everywhere, which is the keyboard case. */
+@media (hover: hover) {
+  [data-slot="button"][data-sweep="true"]:hover::before {
+    width: 160%;
+  }
+
+  [data-slot="button"][data-sweep="true"]:hover {
+    color: var(--button-accent-foreground, var(--primary-foreground));
+    border-color: var(--button-accent, var(--primary));
+    box-shadow: 0 6px 16px -8px var(--button-accent, var(--primary));
+  }
+}
+
 [data-slot="button"][data-sweep="true"]:focus-visible::before {
   width: 160%;
 }
 
-[data-slot="button"][data-sweep="true"]:hover,
 [data-slot="button"][data-sweep="true"]:focus-visible {
   color: var(--button-accent-foreground, var(--primary-foreground));
   border-color: var(--button-accent, var(--primary));
