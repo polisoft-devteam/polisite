@@ -67,7 +67,7 @@ export default async function ArchivePage({
         />
       ) : null}
 
-      <PageContainer>
+      <PageContainer belowHero>
         {archiveImages.length === 0 && (
           <>
             <PageHeading title={translateArchive("title")} />

@@ -40,7 +40,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
       {/* Full bleed, so it sits outside the container every other page lines up with. */}
       <SiteHero />
 
-      <PageContainer>
+      <PageContainer belowHero>
         <p className="text-muted-foreground max-w-2xl">
           {translateHome("intro")}
         </p>

@@ -143,7 +143,7 @@ export default async function EventPage({
         />
       )}
 
-      <PageContainer>
+      <PageContainer belowHero={heroImage !== null}>
         <div className="flex items-center justify-between gap-4">
           <BackLink href="/events">{translateEvents("back")}</BackLink>
           {heroImage && editButton}
