@@ -37,6 +37,7 @@ import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { HoverRevealLabel } from "@/components/HoverRevealLabel"
+import { ImageDropZone } from "@/components/ImageDropZone"
 import { MemberBadges } from "@/components/MemberBadges"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
@@ -324,6 +325,17 @@ export default async function DesignPage({
               label="En ganska lång etikett"
             />
           </Button>
+        </div>
+      </PageSection>
+
+      <PageSection heading="Bilduppladdning">
+        <div className="max-w-sm">
+          <ImageDropZone
+            id="design-drop"
+            name="design-drop"
+            label="Dra hit en bild, eller klicka för att välja"
+            hint="JPEG, PNG, WebP eller AVIF. Skalas ner automatiskt."
+          />
         </div>
       </PageSection>
 

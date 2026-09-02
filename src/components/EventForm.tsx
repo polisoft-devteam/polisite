@@ -15,6 +15,7 @@ import { ExplainedSelectField } from "@/components/ExplainedSelectField"
 import { EventCategoryField } from "@/components/EventCategoryField"
 import { EventLocationField } from "@/components/EventLocationField"
 import { FormField, FormSelect } from "@/components/FormField"
+import { ImageDropZone } from "@/components/ImageDropZone"
 import { Wizard, type WizardStep } from "@/components/Wizard"
 import {
   Accordion,
@@ -119,19 +120,13 @@ export async function EventForm({
             />
           </FormField>
 
-          <FormField
+          <ImageDropZone
+            id="image"
+            name="image"
             label={translateEvents("fieldImage")}
-            htmlFor="image"
             hint={translateEvents("fieldImageHint")}
-          >
-            <Input
-              id="image"
-              name="image"
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/avif"
-              className="cursor-pointer"
-            />
-          </FormField>
+            currentImageUrl={event?.imageUrl}
+          />
 
           <FormField
             label={translateEvents("fieldEventUrl")}

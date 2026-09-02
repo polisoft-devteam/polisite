@@ -241,7 +241,9 @@
     "birthdayHint": "Optional. Shows in the calendar and gets you a greeting on Discord.",
     "displayedBadge": "Badge on show",
     "displayedBadgeNone": "None",
-    "displayedBadgeHint": "Shown under your name in attendee lists."
+    "displayedBadgeHint": "Shown under your name in attendee lists.",
+    "dropImage": "Drop a photo here, or click to choose",
+    "dropImageHint": "JPEG, PNG, WebP or AVIF. Resized automatically."
   },
   "Privacy": {
     "title": "Privacy policy",

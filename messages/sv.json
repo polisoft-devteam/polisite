@@ -241,7 +241,9 @@
     "birthdayHint": "Frivilligt. Visas i kalendern och ger en grattis i Discord.",
     "displayedBadge": "Utmärkelse att visa",
     "displayedBadgeNone": "Ingen",
-    "displayedBadgeHint": "Visas under ditt namn i deltagarlistor."
+    "displayedBadgeHint": "Visas under ditt namn i deltagarlistor.",
+    "dropImage": "Dra hit en bild, eller klicka för att välja",
+    "dropImageHint": "JPEG, PNG, WebP eller AVIF. Skalas ner automatiskt."
   },
   "Privacy": {
     "title": "Integritetspolicy",

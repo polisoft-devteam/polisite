@@ -10,6 +10,7 @@
 import { getTranslations } from "next-intl/server"
 
 import { FormField, FormSelect } from "@/components/FormField"
+import { ImageDropZone } from "@/components/ImageDropZone"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -35,19 +36,14 @@ export async function ProfileFields({
           className="size-24 text-2xl"
         />
 
-        <FormField
-          label={translateProfile("avatar")}
-          htmlFor="avatar"
-          hint={translateProfile("avatarHint")}
-        >
-          <Input
+        <div className="min-w-0 flex-1">
+          <ImageDropZone
             id="avatar"
             name="avatar"
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/avif"
-            className="cursor-pointer"
+            label={translateProfile("dropImage")}
+            hint={translateProfile("dropImageHint")}
           />
-        </FormField>
+        </div>
       </div>
 
       <FormField label={translateProfile("fullName")} htmlFor="fullName">
