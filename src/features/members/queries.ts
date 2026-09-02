@@ -1,9 +1,10 @@
 // Database access for members. Per CLAUDE.md this is one of the only places allowed to
 // import src/db — pages and components call these functions instead.
 
-import { and, eq, isNull, sql } from "drizzle-orm"
+import { and, asc, eq, isNull, sql } from "drizzle-orm"
 
 import { db } from "@/db"
+import type { MemberBadge } from "@/db/schema"
 import { memberNameFrom } from "@/features/members/display-name"
 import {
   memberRoles,
@@ -12,6 +13,7 @@ import {
   type Member,
   type MembershipPrompt,
   type Role,
+  memberBadges,
 } from "@/db/schema"
 
 export async function findMemberByAuthUserId(
@@ -29,8 +31,6 @@ export async function findMemberByAuthUserId(
 export type EditableProfileFields = {
   fullName: string
   nickname: string | null
-  officialTitle: string | null
-  funTitle: string | null
   bio: string | null
   githubUrl: string | null
   /** Omitted when no new photo was uploaded, so the existing one is kept. */
@@ -80,6 +80,7 @@ export async function recordMembershipPrompt(prompt: {
   authUserId: string
   email: string
   fullName: string | null
+  avatarUrl: string | null
   response: MembershipPrompt["response"]
 }): Promise<boolean> {
   const inserted = await db
@@ -171,6 +172,9 @@ export async function approveMembershipRequest(
       authUserId,
       email: request.email,
       fullName: memberNameFrom(request.fullName, request.email),
+      // Google's picture, captured with the request. Without it every new member starts
+      // as initials on a grey circle.
+      avatarUrl: request.avatarUrl,
       status: "active",
       joinedAssociationAt: new Date(),
     })
@@ -224,5 +228,62 @@ export async function setMemberStatus(
   await db
     .update(members)
     .set({ status, updatedAt: new Date() })
+    .where(eq(members.id, memberId))
+}
+
+// --- Badges and titles ---------------------------------------------------------
+
+export async function findBadgesForMember(
+  memberId: string,
+): Promise<MemberBadge[]> {
+  return db
+    .select()
+    .from(memberBadges)
+    .where(eq(memberBadges.memberId, memberId))
+    .orderBy(asc(memberBadges.awardedAt))
+}
+
+/** Every member's badges in one query, for the admin page. */
+export async function findBadgesByMember(): Promise<
+  Map<string, MemberBadge[]>
+> {
+  const rows = await db.select().from(memberBadges)
+
+  const byMember = new Map<string, MemberBadge[]>()
+  for (const row of rows) {
+    byMember.set(row.memberId, [...(byMember.get(row.memberId) ?? []), row])
+  }
+
+  return byMember
+}
+
+export async function awardBadge(award: {
+  memberId: string
+  badge: string
+  awardedByMemberId: string
+}): Promise<void> {
+  // Awarding twice is the same row, so this is idempotent.
+  await db.insert(memberBadges).values(award).onConflictDoNothing()
+}
+
+export async function removeBadge(
+  memberId: string,
+  badge: string,
+): Promise<void> {
+  await db
+    .delete(memberBadges)
+    .where(
+      and(eq(memberBadges.memberId, memberId), eq(memberBadges.badge, badge)),
+    )
+}
+
+/** Null clears the office. Validated against MEMBER_TITLES by the action. */
+export async function setMemberTitle(
+  memberId: string,
+  officialTitle: string | null,
+): Promise<void> {
+  await db
+    .update(members)
+    .set({ officialTitle, updatedAt: new Date() })
     .where(eq(members.id, memberId))
 }

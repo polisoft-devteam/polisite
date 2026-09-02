@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
-import { FormField } from "@/components/FormField"
+import { FormField, FormSelect } from "@/components/FormField"
+import { MEMBER_TITLES } from "@/features/members/titles"
 import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
@@ -31,6 +32,7 @@ export default async function SettingsPage({
   setRequestLocale(locale)
 
   const translateProfile = await getTranslations("Profile")
+  const translateTitles = await getTranslations("Titles")
   const translateSettings = await getTranslations("Settings")
 
   const viewer = await getViewer()
@@ -51,7 +53,7 @@ export default async function SettingsPage({
           <MemberAvatar
             fullName={member.fullName}
             avatarUrl={member.avatarUrl}
-            className="size-14"
+            className="size-24 text-2xl"
           />
           <FormField
             label={translateProfile("avatar")}
@@ -86,27 +88,26 @@ export default async function SettingsPage({
           />
         </FormField>
 
+        {/* Disabled rather than absent: an office is handed out by an admin, and seeing
+            the list of them is half the point of having them. A disabled control also
+            posts nothing, so the action cannot be tricked into setting one. */}
         <FormField
           label={translateProfile("officialTitle")}
           htmlFor="officialTitle"
+          hint={translateProfile("officialTitleHint")}
         >
-          <Input
+          <FormSelect
             id="officialTitle"
-            name="officialTitle"
+            disabled
             defaultValue={member.officialTitle ?? ""}
-            maxLength={60}
-            placeholder={translateProfile("officialTitlePlaceholder")}
-          />
-        </FormField>
-
-        <FormField label={translateProfile("funTitle")} htmlFor="funTitle">
-          <Input
-            id="funTitle"
-            name="funTitle"
-            defaultValue={member.funTitle ?? ""}
-            maxLength={60}
-            placeholder={translateProfile("funTitlePlaceholder")}
-          />
+          >
+            <option value="">{translateProfile("officialTitleNone")}</option>
+            {MEMBER_TITLES.map((title) => (
+              <option key={title} value={title}>
+                {translateTitles(title)}
+              </option>
+            ))}
+          </FormSelect>
         </FormField>
 
         <FormField

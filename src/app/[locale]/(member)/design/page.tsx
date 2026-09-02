@@ -37,6 +37,7 @@ import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { HoverRevealLabel } from "@/components/HoverRevealLabel"
+import { MemberBadges } from "@/components/MemberBadges"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import {
@@ -56,6 +57,7 @@ import {
   WishlistIcon,
 } from "@/lib/icons"
 import { readHeroImages } from "@/lib/site-images"
+import { BADGES } from "@/features/members/badges"
 import { WELCOME_LETTER } from "@/lib/welcome-letter"
 
 export const metadata: Metadata = { title: "Design" }
@@ -315,6 +317,18 @@ export default async function DesignPage({
             />
           </Button>
         </div>
+      </PageSection>
+
+      <PageSection heading="Utmärkelser">
+        <MemberBadges
+          badges={BADGES.slice(0, 3).map((badge, index) => ({
+            memberId: "design",
+            badge: badge.key,
+            awardedAt: new Date(2026, index * 3, 1),
+            awardedByMemberId: null,
+          }))}
+          locale={locale}
+        />
       </PageSection>
 
       <PageSection heading="Notiser">

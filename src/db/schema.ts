@@ -41,9 +41,10 @@ export const members = pgTable("members", {
 
   nickname: text("nickname"),
 
-  // Display labels only — these grant nothing. Permissions live in memberRoles.
+  // A display label only, and it grants nothing: permissions live in memberRoles. Given
+  // by an admin rather than chosen, and the list of allowed values lives in
+  // features/members/titles.ts so adding one needs no migration.
   officialTitle: text("official_title"),
-  funTitle: text("fun_title"),
 
   bio: text("bio"),
 
@@ -87,6 +88,7 @@ export const membershipPrompts = pgTable("membership_prompts", {
   authUserId: uuid("auth_user_id").primaryKey(),
   email: text("email").notNull(),
   fullName: text("full_name"),
+  avatarUrl: text("avatar_url"),
   response: membershipPromptResponseEnum("response").notNull(),
   respondedAt: timestamp("responded_at", { withTimezone: true })
     .notNull()
@@ -303,6 +305,38 @@ export const eventGuests = pgTable("event_guests", {
   addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
 }).enableRLS()
 
+// --- Badges --------------------------------------------------------------------
+//
+// Scout patches: an admin hands one out, and it shows on the member's profile. Which
+// badges exist is defined in features/members/badges.ts rather than here, because a badge
+// is a name, an icon and a sentence of copy, none of which the database needs to know and
+// all of which would otherwise need a migration to add. This table only records who has
+// what.
+
+export const memberBadges = pgTable(
+  "member_badges",
+  {
+    memberId: uuid("member_id")
+      .notNull()
+      .references(() => members.id, { onDelete: "cascade" }),
+
+    /** A key from BADGES. Text rather than an enum so a new badge needs no migration. */
+    badge: text("badge").notNull(),
+
+    awardedAt: timestamp("awarded_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+
+    /** Who handed it out. Kept so it is answerable, not shown anywhere. */
+    awardedByMemberId: uuid("awarded_by_member_id").references(
+      () => members.id,
+      { onDelete: "set null" },
+    ),
+  },
+  // One of each per member; awarding twice is the same row.
+  (table) => [primaryKey({ columns: [table.memberId, table.badge] })],
+).enableRLS()
+
 // --- Wishlist ------------------------------------------------------------------
 //
 // A member lists things they want; everyone else can claim one, or join a claim someone
@@ -369,3 +403,4 @@ export type EventAttendee = typeof eventAttendees.$inferSelect
 export type EventGuest = typeof eventGuests.$inferSelect
 export type WishlistItem = typeof wishlistItems.$inferSelect
 export type WishlistClaim = typeof wishlistClaims.$inferSelect
+export type MemberBadge = typeof memberBadges.$inferSelect

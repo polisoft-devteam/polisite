@@ -25,6 +25,7 @@ async function answerMembershipPrompt(response: "requested" | "dismissed") {
     // What Google told us, or the part before the @: this is the only chance to
     // capture it, and it becomes their name when an admin approves them.
     fullName: memberNameFrom(viewer.googleName, viewer.email),
+    avatarUrl: viewer.googleAvatarUrl,
     response,
   })
 

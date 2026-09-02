@@ -13,6 +13,7 @@ import { MemberAvatar } from "@/components/MemberAvatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import type { Event, Member } from "@/db/schema"
+import { isMemberTitle } from "@/features/members/titles"
 import { Link } from "@/i18n/navigation"
 import { SettingsIcon } from "@/lib/icons"
 
@@ -35,6 +36,7 @@ export async function ProfileView({
   notifications,
 }: ProfileViewProps) {
   const translateProfile = await getTranslations("Profile")
+  const translateTitles = await getTranslations("Titles")
   const format = await getFormatter({ locale })
 
   return (
@@ -57,14 +59,13 @@ export async function ProfileView({
             </p>
           )}
 
-          <div className="mt-2 flex flex-wrap gap-2">
-            {member.officialTitle && (
-              <Badge variant="secondary">{member.officialTitle}</Badge>
-            )}
-            {member.funTitle && (
-              <Badge variant="outline">{member.funTitle}</Badge>
-            )}
-          </div>
+          {member.officialTitle && isMemberTitle(member.officialTitle) && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Badge variant="secondary">
+                {translateTitles(member.officialTitle)}
+              </Badge>
+            </div>
+          )}
         </div>
 
         {isOwnProfile && (

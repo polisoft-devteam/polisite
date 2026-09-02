@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest"
 import type { Event, Member, Role } from "@/db/schema"
 import {
   canBringGuests,
+  canAwardBadges,
   canClaimWish,
   canCreateEvent,
   canDeactivateMember,
@@ -30,7 +31,6 @@ function buildMember(overrides: Partial<Member> = {}): Member {
     avatarUrl: null,
     nickname: null,
     officialTitle: null,
-    funTitle: null,
     bio: null,
     githubUrl: null,
     birthday: null,
@@ -322,5 +322,16 @@ describe("member directory", () => {
       canViewMemberDirectory(buildViewer(buildMember({ status: "inactive" }))),
     ).toBe(false)
     expect(canViewMemberDirectory(null)).toBe(false)
+  })
+})
+
+describe("awarding badges and offices", () => {
+  it("is for admins only", () => {
+    const admin = buildViewer(buildMember(), ["member", "admin"])
+    const member = buildViewer(buildMember(), ["member"])
+
+    expect(canAwardBadges(admin)).toBe(true)
+    expect(canAwardBadges(member)).toBe(false)
+    expect(canAwardBadges(null)).toBe(false)
   })
 })

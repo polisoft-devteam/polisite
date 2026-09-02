@@ -160,3 +160,15 @@ export function canClaimWish(
 export function canViewMemberDirectory(viewer: Viewer | null): boolean {
   return isActiveMember(viewer)
 }
+
+// --- Badges and titles ---------------------------------------------------------
+
+/**
+ * Only an admin awards a badge or sets an office.
+ *
+ * Both are display labels and grant nothing, but they are statements the association
+ * makes about a member, so they are not for the member to make about themselves.
+ */
+export function canAwardBadges(viewer: Viewer | null): boolean {
+  return isAdmin(viewer)
+}

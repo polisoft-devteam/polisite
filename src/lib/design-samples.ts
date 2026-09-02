@@ -42,7 +42,6 @@ export function buildSampleMember(overrides: Partial<Member> = {}): Member {
     avatarUrl: null,
     nickname: "Assi",
     officialTitle: "Sekreterare",
-    funTitle: "Bastuansvarig",
     bio: "Gillar långa vandringar och korta möten.",
     githubUrl: "https://github.com/polisoft-devteam",
     birthday: "1991-04-17",

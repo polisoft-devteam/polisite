@@ -218,9 +218,6 @@
     "fullName": "Name",
     "nickname": "Nickname",
     "officialTitle": "Title",
-    "officialTitlePlaceholder": "Secretary, chairperson …",
-    "funTitle": "Fun title",
-    "funTitlePlaceholder": "Grill master …",
     "bio": "About me",
     "save": "Save",
     "upcomingTitle": "Events I am attending",
@@ -234,7 +231,9 @@
     "avatar": "Profile picture",
     "avatarHint": "Optional. Resized automatically.",
     "githubUrl": "GitHub",
-    "githubUrlHint": "Optional. Shown as an icon in the members list."
+    "githubUrlHint": "Optional. Shown as an icon in the members list.",
+    "officialTitleHint": "Given by an admin. You can see what exists, but not pick one.",
+    "officialTitleNone": "No title"
   },
   "Privacy": {
     "title": "Privacy policy",
@@ -286,7 +285,12 @@
     "statusInactive": "Inactive",
     "roleAdmin": "Admin",
     "thatsYou": "That's you",
-    "adminProtected": "Cannot be deactivated"
+    "adminProtected": "Cannot be deactivated",
+    "badgesTitle": "Badges and titles",
+    "awardBadge": "Award",
+    "removeBadge": "Remove",
+    "setTitle": "Set title",
+    "titleLabel": "Title"
   },
   "Archive": {
     "title": "Open archive",
@@ -347,5 +351,39 @@
     "signUp": "{who} signed in for the first time",
     "eventResponse": "{who} replied to {what}",
     "newEvent": "{who} created {what}"
+  },
+  "Titles": {
+    "president": "President",
+    "secretary": "Sekreterare",
+    "legalCounsel": "Föreningens juridiska ombud",
+    "photographer": "Fotograf",
+    "peopleAndCulture": "People and culture",
+    "animalsAndVape": "Djur & vape ansvarig",
+    "safety": "Säkerhetsansvarig"
+  },
+  "Badges": {
+    "title": "Badges",
+    "empty": "No badges yet.",
+    "awardedAt": "Awarded",
+    "poli": {
+      "title": "Poli",
+      "description": "A member of the association. Everyone has this one."
+    },
+    "yearsOfService": {
+      "title": "Long service",
+      "description": "Years of loyal service in the association's name."
+    },
+    "traveller": {
+      "title": "Traveller",
+      "description": "Came along on one of the association's trips."
+    },
+    "sportsman": {
+      "title": "Sportsman",
+      "description": "Put in a shift on the pitch or in the hall."
+    },
+    "gifter": {
+      "title": "Generous",
+      "description": "Sorted something off someone else's wishlist."
+    }
   }
 }

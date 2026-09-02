@@ -15,8 +15,6 @@ import { deleteImageIfOurs, uploadImage } from "@/lib/storage"
 const profileSchema = z.object({
   fullName: z.string().trim().min(1).max(120),
   nickname: z.string().trim().max(60),
-  officialTitle: z.string().trim().max(60),
-  funTitle: z.string().trim().max(60),
   bio: z.string().trim().max(2000),
 
   // A URL or nothing. An empty string is the usual case and must not fail validation.
@@ -39,8 +37,6 @@ export async function updateMyProfile(formData: FormData) {
   const parsed = profileSchema.safeParse({
     fullName: formData.get("fullName") ?? "",
     nickname: formData.get("nickname") ?? "",
-    officialTitle: formData.get("officialTitle") ?? "",
-    funTitle: formData.get("funTitle") ?? "",
     bio: formData.get("bio") ?? "",
     githubUrl: formData.get("githubUrl") ?? "",
   })
@@ -55,8 +51,6 @@ export async function updateMyProfile(formData: FormData) {
   await updateMemberProfile(viewer.member.id, {
     fullName: parsed.data.fullName,
     nickname: emptyToNull(parsed.data.nickname),
-    officialTitle: emptyToNull(parsed.data.officialTitle),
-    funTitle: emptyToNull(parsed.data.funTitle),
     bio: emptyToNull(parsed.data.bio),
     githubUrl: emptyToNull(parsed.data.githubUrl),
     ...(uploadedAvatarUrl ? { avatarUrl: uploadedAvatarUrl } : {}),

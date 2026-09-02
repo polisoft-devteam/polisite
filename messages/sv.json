@@ -218,9 +218,6 @@
     "fullName": "Namn",
     "nickname": "Smeknamn",
     "officialTitle": "Titel",
-    "officialTitlePlaceholder": "Sekreterare, ordförande …",
-    "funTitle": "Rolig titel",
-    "funTitlePlaceholder": "Grillmästare …",
     "bio": "Om mig",
     "save": "Spara",
     "upcomingTitle": "Evenemang jag ska på",
@@ -234,7 +231,9 @@
     "avatar": "Profilbild",
     "avatarHint": "Frivilligt. Skalas ner automatiskt.",
     "githubUrl": "GitHub",
-    "githubUrlHint": "Frivilligt. Visas som en ikon i medlemslistan."
+    "githubUrlHint": "Frivilligt. Visas som en ikon i medlemslistan.",
+    "officialTitleHint": "Ges av en admin. Du kan se vilka som finns, men inte välja själv.",
+    "officialTitleNone": "Ingen titel"
   },
   "Privacy": {
     "title": "Integritetspolicy",
@@ -286,7 +285,12 @@
     "statusInactive": "Inaktiv",
     "roleAdmin": "Admin",
     "thatsYou": "Det är du",
-    "adminProtected": "Kan inte inaktiveras"
+    "adminProtected": "Kan inte inaktiveras",
+    "badgesTitle": "Utmärkelser och titlar",
+    "awardBadge": "Tilldela",
+    "removeBadge": "Ta bort",
+    "setTitle": "Sätt titel",
+    "titleLabel": "Titel"
   },
   "Archive": {
     "title": "Öppet arkiv",
@@ -347,5 +351,39 @@
     "signUp": "{who} har loggat in för första gången",
     "eventResponse": "{who} svarade på {what}",
     "newEvent": "{who} skapade {what}"
+  },
+  "Titles": {
+    "president": "President",
+    "secretary": "Sekreterare",
+    "legalCounsel": "Föreningens juridiska ombud",
+    "photographer": "Fotograf",
+    "peopleAndCulture": "People and culture",
+    "animalsAndVape": "Djur & vape ansvarig",
+    "safety": "Säkerhetsansvarig"
+  },
+  "Badges": {
+    "title": "Utmärkelser",
+    "empty": "Inga utmärkelser än.",
+    "awardedAt": "Tilldelad",
+    "poli": {
+      "title": "Poli",
+      "description": "Medlem i föreningen. Alla har den här."
+    },
+    "yearsOfService": {
+      "title": "Trotjänare",
+      "description": "År av trogen tjänst i föreningens namn."
+    },
+    "traveller": {
+      "title": "Resenär",
+      "description": "Har följt med på en av föreningens resor."
+    },
+    "sportsman": {
+      "title": "Idrottsman",
+      "description": "Har gjort en insats på plan eller i hallen."
+    },
+    "gifter": {
+      "title": "Givmild",
+      "description": "Har fixat något från någon annans önskelista."
+    }
   }
 }
