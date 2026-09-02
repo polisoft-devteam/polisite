@@ -18,7 +18,7 @@ import { PageSubNav, type SubNavItem } from "@/components/PageSubNav"
 import { Badge } from "@/components/ui/badge"
 import { readAboutImages } from "@/lib/site-images"
 import { getViewer } from "@/lib/auth"
-import { ASSOCIATION_FULL_NAME } from "@/lib/association"
+import { ASSOCIATION_NAME } from "@/lib/association"
 import { canViewMemberDirectory, isAdmin } from "@/lib/permissions"
 
 export async function generateMetadata({
@@ -57,7 +57,14 @@ export default async function AboutPage({
 
   return (
     <PageContainer>
-      <PageHeading title={ASSOCIATION_FULL_NAME} />
+      <PageHeading
+        title={
+          <>
+            {ASSOCIATION_NAME}
+            <span className="text-primary-ink">History</span>
+          </>
+        }
+      />
 
       <PageSubNav items={sections} />
 

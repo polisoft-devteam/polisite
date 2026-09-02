@@ -10,7 +10,14 @@ import { GoogleIcon } from "@/lib/icons"
 import { usePathname } from "@/i18n/navigation"
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 
-export function SignInButton() {
+export function SignInButton({
+  className,
+  children,
+}: {
+  /** Set to take over the styling entirely, as the hero's own button does. */
+  className?: string
+  children?: React.ReactNode
+} = {}) {
   const translateAuth = useTranslations("Auth")
   const currentLocale = useLocale()
   // Already stripped of the /sv or /en prefix by next-intl.
@@ -31,6 +38,16 @@ export function SignInButton() {
         redirectTo: `${window.location.origin}/auth/callback?returnTo=${encodeURIComponent(returnTo)}`,
       },
     })
+  }
+
+  // Given children, the caller is providing the whole face of the button, so none of the
+  // header's styling applies; see the hero's action button.
+  if (children) {
+    return (
+      <button type="button" onClick={startGoogleSignIn} className={className}>
+        {children}
+      </button>
+    )
   }
 
   // The logo says which provider, so the label does not have to.

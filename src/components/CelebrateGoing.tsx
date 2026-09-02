@@ -10,7 +10,6 @@ import { useState } from "react"
 
 import { Confetti } from "@/components/Confetti"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 
 export function CelebrateGoing({
   label,
@@ -29,7 +28,7 @@ export function CelebrateGoing({
         type="submit"
         variant="outline"
         size="sm"
-        className={cn("water-fill", className)}
+        className={className}
         // Optimistic on purpose: the form is posting either way, and waiting for the
         // round trip would put the confetti after the page had already changed.
         onClick={() => {

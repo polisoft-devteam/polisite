@@ -8,9 +8,8 @@
 
 import { getTranslations } from "next-intl/server"
 
+import { HeroActionButton } from "@/components/HeroActionButton"
 import { PhotoHero } from "@/components/PhotoHero"
-import { Button } from "@/components/ui/button"
-import { requestMembership } from "@/features/members/membership-prompt-actions"
 import { findMembershipPrompt } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 import { ASSOCIATION_NAME } from "@/lib/association"
@@ -35,22 +34,16 @@ export async function SiteHero() {
         associationName: ASSOCIATION_NAME,
       })}
     >
-      {/* Turned down: no button, because the unique key means asking twice records
-          nothing, and a button that writes nothing is worse than none. */}
-      {canAsk && !prompt?.deniedAt ? (
-        prompt?.response === "requested" ? (
-          // inline-flex, so the pill is as wide as its words. A p is a block and the
-          // background ran the full width of the hero.
-          <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm text-white ring-1 ring-white/30 backdrop-blur-sm">
-            <PendingIcon aria-hidden="true" className="size-3.5" />
-            {translateHome("membershipPending")}
-          </p>
-        ) : (
-          <form action={requestMembership}>
-            <Button type="submit">{translateHome("requestMembership")}</Button>
-          </form>
-        )
-      ) : null}
+      {/* Asks for whatever you can actually do next; see HeroActionButton. Someone who
+          has already applied gets the pending pill instead of a button. */}
+      {canAsk && prompt?.response === "requested" && !prompt.deniedAt ? (
+        <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm text-white ring-1 ring-white/30 backdrop-blur-sm">
+          <PendingIcon aria-hidden="true" className="size-3.5" />
+          {translateHome("membershipPending")}
+        </p>
+      ) : (
+        <HeroActionButton />
+      )}
     </PhotoHero>
   )
 }

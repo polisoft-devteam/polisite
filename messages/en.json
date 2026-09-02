@@ -21,14 +21,20 @@
     "newEvent": "New event",
     "visitorNote": "You're seeing the public events. Members also see the association's own.",
     "requestMembership": "Request membership",
-    "membershipPending": "Membership under review"
+    "membershipPending": "Membership under review",
+    "heroSignIn": "Sign in",
+    "heroSignInHover": "with Google!",
+    "heroRequestMembership": "Apply",
+    "heroRequestMembershipHover": "for membership!",
+    "heroCreateEvent": "Create",
+    "heroCreateEventHover": "an event!"
   },
   "About": {
     "title": "About us",
     "motto": "We have three guiding words here at Poligroup: joy, loyalty, heart. We live by them, always!",
     "origin": "Poli was informally founded in 2017 by Adam, Felix, Nils, John and Victor at Malmö University. The name Poli comes from PoliSoft, originally the name of a political satire project that went over so well that every project after it was named after Poli.",
-    "growth": "With the help of our Head of Recruitment, Adam Inge Middlename Hermansson, the group has grown steadily ever since. Slowly at first, with one of its now sturdiest pillars, Petter \"Pidde\" Månsson, who went from being Adam's mysterious cabbage and broccoli roommate to an invaluable cornerstone.",
-    "arrivals": "Not long after, a good bunch of lads, some former career criminals and assorted fuck boys made their entrance, such as Jacob \"Faheem\" Bergqvist and Jonathan (a dear child has too many names) Earnest. Thickening the ranks after them came unforgettable characters like Richard the Lionheart Azar, Martin, and many, many more.",
+    "growth": "With the help of our Head of Recruitment, Adam Inge Middlename Hermansson, the group has grown steadily ever since. Slowly at first, with one of the group's now most invaluable members, Petter \"Pidde\" Månsson, who went from being Adam's mysterious cabbage and broccoli roommate to an invaluable cornerstone.",
+    "arrivals": "Not long after, a good bunch of lads, some former career criminals and assorted fuck boys made their entrance, such as Jacob \"Faheem\" Bergqvist and Jonathan (a dear child has too many names) Earnest. Close behind them came unforgettable characters like Richard the Lionheart Azar, Martin, and many, many more.",
     "bond": "What binds us together is our love for the computing machine in all its forms, shorts, games, music, art, and the making of all that through programming and the rest. But our journey has only just begun.",
     "membershipTitle": "Membership",
     "membershipBody": "Sign in with Google and send a request. An admin lets you in, and only then do you see the association's own events, members and wishlists. Until then you see the same page a visitor does.",

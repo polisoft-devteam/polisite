@@ -208,6 +208,14 @@ export default async function DesignPage({
       </PageSection>
 
       <PageSection heading="Knappar">
+        {/* success and info join the set; everything but ghost and link sweeps on
+            hover, and icon-only buttons opt out. */}
+        <div className="mb-4 flex flex-wrap gap-2">
+          <Button variant="success">Klart</Button>
+          <Button variant="info">Info</Button>
+          <Button variant="destructive">Ta bort</Button>
+        </div>
+
         <div className="space-y-4">
           {BUTTON_VARIANTS.map((variant) => (
             <div key={variant} className="flex flex-wrap items-center gap-2">

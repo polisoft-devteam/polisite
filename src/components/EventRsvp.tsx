@@ -60,8 +60,6 @@ export async function EventRsvp({
               variant="outline"
               size="sm"
               className={cn(
-                // Floods with the primary colour on hover; see globals.css.
-                "water-fill",
                 myResponse === response && SELECTED_RESPONSE_STYLE[response],
               )}
             >
