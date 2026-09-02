@@ -37,6 +37,7 @@ function buildMember(overrides: Partial<Member> = {}): Member {
     status: "active",
     joinedAssociationAt: new Date("2026-01-01"),
     notificationsSeenAt: null,
+    lastBirthdayGreetingYear: null,
     createdAt: new Date("2026-01-01"),
     updatedAt: new Date("2026-01-01"),
     ...overrides,

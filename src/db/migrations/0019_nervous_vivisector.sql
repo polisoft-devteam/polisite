@@ -1,0 +1,1 @@
+ALTER TABLE "members" ADD COLUMN "last_birthday_greeting_year" integer;

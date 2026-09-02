@@ -53,6 +53,10 @@ export const members = pgTable("members", {
   // Date, not timestamp: a birthday must not shift a day across timezones.
   birthday: date("birthday"),
 
+  // The year we last wished them happy birthday, so the daily sweep cannot greet the same
+  // person twice if it runs again. Cheaper than a table of greetings for one line a year.
+  lastBirthdayGreetingYear: integer("last_birthday_greeting_year"),
+
   // Inactive by default so an accidental insert grants nothing.
   status: memberStatusEnum("status").notNull().default("inactive"),
 

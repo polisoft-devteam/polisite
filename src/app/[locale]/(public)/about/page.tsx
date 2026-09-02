@@ -74,7 +74,6 @@ export default async function AboutPage({
               <p>{translateAbout("origin")}</p>
               <p>{translateAbout("growth")}</p>
               <p>{translateAbout("arrivals")}</p>
-              <p>{translateAbout("guests")}</p>
               <p>{translateAbout("bond")}</p>
             </div>
           </div>

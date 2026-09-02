@@ -1,7 +1,7 @@
 // Database access for members. Per CLAUDE.md this is one of the only places allowed to
 // import src/db — pages and components call these functions instead.
 
-import { and, asc, eq, isNull, sql } from "drizzle-orm"
+import { and, asc, eq, isNotNull, isNull, or, sql } from "drizzle-orm"
 
 import { db } from "@/db"
 import type { MemberBadge } from "@/db/schema"
@@ -326,4 +326,81 @@ export async function fillMemberGapsFromGoogle(
       updatedAt: new Date(),
     })
     .where(eq(members.id, member.id))
+}
+
+// --- Birthdays -----------------------------------------------------------------
+
+export type BirthdayMember = {
+  id: string
+  fullName: string
+  nickname: string | null
+}
+
+/**
+ * Active members whose birthday falls on this month and day and who have not been
+ * greeted yet this year.
+ *
+ * The month and day are compared in SQL against the stored date, so a birthday never
+ * drifts across a timezone. The year guard is what makes the sweep safe to run twice.
+ */
+export async function findMembersToGreet(
+  month: number,
+  day: number,
+  year: number,
+): Promise<BirthdayMember[]> {
+  return db
+    .select({
+      id: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+    })
+    .from(members)
+    .where(
+      and(
+        eq(members.status, "active"),
+        sql`extract(month from ${members.birthday}) = ${month}`,
+        sql`extract(day from ${members.birthday}) = ${day}`,
+        or(
+          isNull(members.lastBirthdayGreetingYear),
+          sql`${members.lastBirthdayGreetingYear} < ${year}`,
+        ),
+      ),
+    )
+}
+
+export async function markBirthdayGreeted(
+  memberId: string,
+  year: number,
+): Promise<void> {
+  await db
+    .update(members)
+    .set({ lastBirthdayGreetingYear: year })
+    .where(eq(members.id, memberId))
+}
+
+/** Everyone with a birthday, for the calendar. */
+export async function findMembersWithBirthdays(): Promise<
+  {
+    id: string
+    fullName: string
+    nickname: string | null
+    avatarUrl: string | null
+    birthday: string
+  }[]
+> {
+  const rows = await db
+    .select({
+      id: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+      avatarUrl: members.avatarUrl,
+      birthday: members.birthday,
+    })
+    .from(members)
+    .where(and(eq(members.status, "active"), isNotNull(members.birthday)))
+
+  return rows.filter(
+    (row): row is (typeof rows)[number] & { birthday: string } =>
+      row.birthday !== null,
+  )
 }

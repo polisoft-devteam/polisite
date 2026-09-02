@@ -1,4 +1,5 @@
-// Posts due event reminders to Discord. Called by Vercel Cron once a day.
+// Posts due event reminders and birthday greetings to Discord. Called by Vercel Cron once
+// a day, which is all the Hobby plan allows, so both share the one run.
 //
 // Idempotent: each reminder is a row keyed on (event, offset) and is marked sent, so
 // running this twice in one day posts nothing twice.
@@ -10,8 +11,13 @@ import {
   findUnsentRemindersForUpcomingEvents,
   markReminderSent,
 } from "@/features/events/queries"
+import { postBirthdayToDiscord } from "@/features/members/discord"
+import {
+  findMembersToGreet,
+  markBirthdayGreeted,
+} from "@/features/members/queries"
 import { routing } from "@/i18n/routing"
-import { reminderDueAt } from "@/lib/time"
+import { DEFAULT_EVENT_TIME_ZONE, reminderDueAt } from "@/lib/time"
 
 function isAuthorised(request: Request): boolean {
   const cronSecret = process.env.CRON_SECRET
@@ -20,6 +26,31 @@ function isAuthorised(request: Request): boolean {
   if (!cronSecret) return false
 
   return request.headers.get("authorization") === `Bearer ${cronSecret}`
+}
+
+/**
+ * Wishes everyone with a birthday today a happy one, in a single message.
+ *
+ * The year is written back per member before the message is sent, so a second run in the
+ * same day greets nobody twice even though the greeting itself is one post.
+ */
+async function greetBirthdays(
+  year: number,
+  month: number,
+  day: number,
+): Promise<number> {
+  const celebrating = await findMembersToGreet(month, day, year)
+  if (celebrating.length === 0) return 0
+
+  await postBirthdayToDiscord(
+    celebrating.map((member) => member.nickname ?? member.fullName),
+  )
+
+  for (const member of celebrating) {
+    await markBirthdayGreeted(member.id, year)
+  }
+
+  return celebrating.length
 }
 
 export async function GET(request: Request) {
@@ -54,10 +85,22 @@ export async function GET(request: Request) {
     }
   }
 
+  // Today in Stockholm, not in UTC: at 06:00 UTC the two agree, but reading the date in
+  // UTC would greet a day early for anyone whose birthday starts at midnight local.
+  const today = new Date(
+    now.toLocaleString("en-CA", { timeZone: DEFAULT_EVENT_TIME_ZONE }),
+  )
+  const greeted = await greetBirthdays(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    today.getDate(),
+  )
+
   return NextResponse.json({
     checked: pending.length,
     due: due.length,
     sent: sent.length,
+    greeted,
     events: sent,
   })
 }
