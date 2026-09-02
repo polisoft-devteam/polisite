@@ -18,6 +18,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { useTranslations } from "next-intl"
 import { useState } from "react"
 
+import { signOut } from "@/app/auth/actions"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -27,7 +28,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Link, usePathname } from "@/i18n/navigation"
-import { CloseIcon } from "@/lib/icons"
+import { CloseIcon, SignOutIcon } from "@/lib/icons"
 import {
   isCurrentNavigationLink,
   mainNavigationLinks,
@@ -72,7 +73,14 @@ function MenuBars({ isOpen }: { isOpen: boolean }) {
 const drawerLink =
   "rounded-lg px-3 py-3 text-base transition-colors hover:bg-muted"
 
-export function MobileNav({ showAdminLink }: { showAdminLink: boolean }) {
+export function MobileNav({
+  showAdminLink,
+  showSignOut,
+}: {
+  showAdminLink: boolean
+  showSignOut: boolean
+}) {
+  const translateAuth = useTranslations("Auth")
   const translateNav = useTranslations("Nav")
   const translateAdmin = useTranslations("Admin")
   const currentPathname = usePathname()
@@ -160,6 +168,21 @@ export function MobileNav({ showAdminLink }: { showAdminLink: boolean }) {
                 {translateAdmin("nav")}
               </Link>
             </>
+          )}
+
+          {/* Pushed to the foot of the panel: it is the one thing here you do not want to
+              hit while reaching for a link. */}
+          {showSignOut && (
+            <form action={signOut} className="mt-auto pt-4">
+              <Button
+                type="submit"
+                variant="outline"
+                className="w-full cursor-pointer"
+              >
+                <SignOutIcon className="size-4" />
+                {translateAuth("signOut")}
+              </Button>
+            </form>
           )}
         </DialogPrimitive.Popup>
       </DialogPortal>

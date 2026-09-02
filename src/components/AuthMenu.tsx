@@ -85,7 +85,9 @@ export async function AuthMenu() {
         </span>
       )}
 
-      <form action={signOut}>
+      {/* Below md this lives at the foot of the mobile menu instead, where a long email
+          and a sign out button were fighting for the same few pixels. */}
+      <form action={signOut} className="hidden md:block">
         <Button
           type="submit"
           variant="ghost"

@@ -14,6 +14,7 @@ import { canManageMembers } from "@/lib/permissions"
 export async function SiteHeader() {
   const viewer = await getViewer()
   const showAdminLink = canManageMembers(viewer)
+  const showSignOut = viewer !== null
 
   return (
     <header
@@ -21,7 +22,7 @@ export async function SiteHeader() {
       style={{ viewTransitionName: "site-header" }}
       className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur"
     >
-      <div className="mx-auto flex h-14 w-full max-w-6xl 2xl:max-w-7xl items-center gap-1 px-4 sm:gap-2">
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-1 px-4 sm:gap-2 2xl:max-w-7xl">
         <Link href="/" transitionTypes={["nav-back"]} className="mr-1 sm:mr-2">
           <Wordmark />
         </Link>
@@ -33,7 +34,10 @@ export async function SiteHeader() {
           <ThemeToggle />
           <AuthMenu />
           <div className="md:hidden">
-            <MobileNav showAdminLink={showAdminLink} />
+            <MobileNav
+              showAdminLink={showAdminLink}
+              showSignOut={showSignOut}
+            />
           </div>
         </div>
       </div>
