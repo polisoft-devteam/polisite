@@ -9,7 +9,7 @@
 
 "use client"
 
-import { useState } from "react"
+import { Fragment, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { CheckIcon } from "@/lib/icons"
@@ -86,40 +86,63 @@ export function Wizard({
           circles each carrying two lines of text does not fit a phone, and scrolling a
           progress indicator sideways hides the very thing it is meant to show. */}
       <div className="shrink-0 lg:w-56">
-        <ol className="flex gap-2 lg:flex-col lg:gap-1">
+        <ol className="flex items-center gap-2 lg:flex-col lg:items-stretch lg:gap-0">
           {steps.map((step, index) => {
             const isCurrent = index === currentStep
             const isComplete = index < currentStep
 
             return (
-              <li key={step.label} className="lg:w-full">
-                <button
-                  type="button"
-                  // Only steps already passed are safe to jump back to; jumping forward
-                  // would skip the validation on the way.
-                  disabled={!isComplete && !isCurrent}
-                  onClick={() => setCurrentStep(index)}
-                  className={cn(
-                    "flex w-full items-center gap-3 rounded-md p-2 text-left text-sm transition-colors lg:px-3",
-                    isCurrent && "bg-muted font-medium",
-                    !isCurrent && isComplete && "hover:bg-muted/50",
-                    !isCurrent && !isComplete && "text-muted-foreground",
-                  )}
-                >
-                  <span
+              <Fragment key={step.label}>
+                <li className="lg:w-full">
+                  <button
+                    type="button"
+                    // Only steps already passed are safe to jump back to; jumping forward
+                    // would skip the validation on the way.
+                    disabled={!isComplete && !isCurrent}
+                    onClick={() => setCurrentStep(index)}
                     className={cn(
-                      "flex size-6 shrink-0 items-center justify-center rounded-full border text-xs",
-                      isCurrent &&
-                        "border-primary bg-primary text-primary-foreground",
-                      isComplete && "border-primary-ink text-primary-ink",
+                      "flex w-full items-center gap-3 rounded-md p-2 text-left text-sm transition-colors lg:px-3",
+                      isCurrent && "bg-muted font-medium",
+                      !isCurrent && isComplete && "hover:bg-muted/50",
+                      !isCurrent && !isComplete && "text-muted-foreground",
                     )}
                   >
-                    {isComplete ? <CheckIcon className="size-3" /> : index + 1}
-                  </span>
+                    <span
+                      className={cn(
+                        "flex size-6 shrink-0 items-center justify-center rounded-full border text-xs",
+                        isCurrent &&
+                          "border-primary bg-primary text-primary-foreground",
+                        isComplete && "border-primary-ink text-primary-ink",
+                      )}
+                    >
+                      {isComplete ? (
+                        <CheckIcon className="size-3" />
+                      ) : (
+                        index + 1
+                      )}
+                    </span>
 
-                  <span className="hidden min-w-0 lg:block">{step.label}</span>
-                </button>
-              </li>
+                    <span className="hidden min-w-0 lg:block">
+                      {step.label}
+                    </span>
+                  </button>
+                </li>
+
+                {/* The run between two steps, filled once you are past the one before it.
+                  Horizontal on a phone and vertical from lg, which is why the border
+                  moves from the top edge to the left one rather than the box rotating. */}
+                {index < steps.length - 1 && (
+                  <li
+                    aria-hidden="true"
+                    className={cn(
+                      "border-dotted",
+                      "w-5 border-t-2",
+                      "lg:ml-6 lg:h-4 lg:w-0 lg:border-t-0 lg:border-l-2",
+                      isComplete ? "border-primary-ink" : "border-border",
+                    )}
+                  />
+                )}
+              </Fragment>
             )
           })}
         </ol>
