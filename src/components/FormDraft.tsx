@@ -10,10 +10,17 @@
 //
 // Values only, never files: a file input cannot be filled from script, and a photo has no
 // business sitting in storage.
+//
+// A submitted form is not a draft. Submitting marks the draft rather than deleting it,
+// and the mark is cashed in on the next visit: the draft goes, and the form is reset in
+// case the browser put the old values back on its own. Marking rather than deleting is
+// what saves the work when the server rejects a submit, since that leaves you on the same
+// page with everything still typed in and no redirect to tell us apart from success.
 
 "use client"
 
 import { useEffect, useRef } from "react"
+import { useFormStatus } from "react-dom"
 
 /** Fields whose value is either meaningless to restore or impossible to. */
 function isRestorable(
@@ -32,6 +39,21 @@ function isRestorable(
 
 export function FormDraft({ storageKey }: { storageKey: string }) {
   const anchorRef = useRef<HTMLSpanElement>(null)
+  const { pending } = useFormStatus()
+
+  const submittedKey = `${storageKey}:submitted`
+
+  // React's own signal that the action has been handed the form, which the submit event is
+  // not: a wizard step, a stray Enter and a real save all look alike from the DOM.
+  useEffect(() => {
+    if (!pending) return
+
+    try {
+      sessionStorage.setItem(submittedKey, "1")
+    } catch {
+      // Losing the mark costs a stale draft, not the submit.
+    }
+  }, [pending, submittedKey])
 
   useEffect(() => {
     const form = anchorRef.current?.closest("form")
@@ -61,22 +83,30 @@ export function FormDraft({ storageKey }: { storageKey: string }) {
     }
 
     try {
-      const saved = sessionStorage.getItem(storageKey)
+      if (sessionStorage.getItem(submittedKey)) {
+        sessionStorage.removeItem(submittedKey)
+        sessionStorage.removeItem(storageKey)
+        // Nothing to restore, and the browser may have refilled the fields by itself on a
+        // back navigation, so put them back to the defaults the server rendered.
+        form.reset()
+      } else {
+        const saved = sessionStorage.getItem(storageKey)
 
-      if (saved) {
-        const draft = JSON.parse(saved) as Record<string, string | boolean>
+        if (saved) {
+          const draft = JSON.parse(saved) as Record<string, string | boolean>
 
-        for (const field of fields()) {
-          const value = draft[field.name]
-          if (value === undefined) continue
+          for (const field of fields()) {
+            const value = draft[field.name]
+            if (value === undefined) continue
 
-          if (
-            field instanceof HTMLInputElement &&
-            (field.type === "checkbox" || field.type === "radio")
-          ) {
-            field.checked = Boolean(value)
-          } else if (typeof value === "string") {
-            field.value = value
+            if (
+              field instanceof HTMLInputElement &&
+              (field.type === "checkbox" || field.type === "radio")
+            ) {
+              field.checked = Boolean(value)
+            } else if (typeof value === "string") {
+              field.value = value
+            }
           }
         }
       }
@@ -89,6 +119,9 @@ export function FormDraft({ storageKey }: { storageKey: string }) {
     // must keep the value it had rather than be dropped from the draft.
     function save() {
       try {
+        // Typing again after a rejected submit makes this a draft once more.
+        sessionStorage.removeItem(submittedKey)
+
         const existing = JSON.parse(
           sessionStorage.getItem(storageKey) ?? "{}",
         ) as Record<string, string | boolean>
@@ -102,22 +135,14 @@ export function FormDraft({ storageKey }: { storageKey: string }) {
       }
     }
 
-    function clear() {
-      try {
-        sessionStorage.removeItem(storageKey)
-      } catch {}
-    }
-
     form.addEventListener("input", save)
     form.addEventListener("change", save)
-    form.addEventListener("submit", clear)
 
     return () => {
       form.removeEventListener("input", save)
       form.removeEventListener("change", save)
-      form.removeEventListener("submit", clear)
     }
-  }, [storageKey])
+  }, [storageKey, submittedKey])
 
   return <span ref={anchorRef} hidden />
 }
