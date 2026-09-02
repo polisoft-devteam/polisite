@@ -7,10 +7,15 @@ import Image from "next/image"
 
 import { cn } from "@/lib/utils"
 
+// Named for the part of the photo you keep, not for the direction it appears to move:
+// showing the bottom of a photo looks like sliding the photo up, and the two readings
+// point opposite ways.
 const FOCAL_POINTS = {
   center: "object-center",
   upper: "object-[center_25%]",
   top: "object-top",
+  lower: "object-[center_75%]",
+  bottom: "object-bottom",
 } as const
 
 export function SiteImage({

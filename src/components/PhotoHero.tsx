@@ -38,7 +38,7 @@ export function PhotoHero({
 }: {
   images: string[]
   /** Passed through to the photographs; see SiteImage. */
-  focalPoint?: "center" | "upper" | "top"
+  focalPoint?: "center" | "upper" | "top" | "lower" | "bottom"
   /** Small label above the title, a category or a status. */
   eyebrow?: string
   title: string
