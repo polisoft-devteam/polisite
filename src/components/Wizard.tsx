@@ -53,6 +53,13 @@ export function Wizard({
    * while telling screen readers the same thing.
    */
   function goToNextStep(event: React.MouseEvent<HTMLButtonElement>) {
+    // Advancing to the last step turns this very button into the submit button, and the
+    // browser decides what a click does only after the handler has run — by which point it
+    // is looking at a submit button inside a form. That is what posted the event on the way
+    // to the last step. Refusing the click's default action settles it whatever the button
+    // has become.
+    event.preventDefault()
+
     const panel = event.currentTarget
       .closest("form")
       ?.querySelector<HTMLElement>(`[data-wizard-panel="${currentStep}"]`)
@@ -215,13 +222,16 @@ export function Wizard({
             </Button>
           )}
 
+          {/* Keyed apart so React swaps the element rather than rewriting the one under
+              the pointer: a button that changes from "next" to "submit" mid-click is the
+              whole reason the event used to create itself here. */}
           {isLastStep ? (
-            <Button type="submit" size="lg">
+            <Button key="submit" type="submit" size="lg">
               <SaveIcon className="size-4" />
               {submitLabel}
             </Button>
           ) : (
-            <Button type="button" onClick={goToNextStep}>
+            <Button key="next" type="button" onClick={goToNextStep}>
               {nextLabel}
               <ChevronRightIcon className="size-4" />
             </Button>
