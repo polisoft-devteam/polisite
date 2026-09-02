@@ -41,6 +41,11 @@ export function readHeroImages(): Promise<string[]> {
   return readImagesIn("hero")
 }
 
+/** The one photograph behind the archive's heading. */
+export function readArchiveImages(): Promise<string[]> {
+  return readImagesIn("archive")
+}
+
 /** The pile of photographs beside the About page's history. */
 export function readAboutImages(): Promise<string[]> {
   return readImagesIn("about")
