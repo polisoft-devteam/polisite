@@ -21,7 +21,7 @@ import { MemberAvatar } from "@/components/MemberAvatar"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
 import { SignOutIcon } from "@/lib/icons"
-import { memberNameFrom } from "@/features/members/display-name"
+import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
 import { countUnseenActivity } from "@/features/notifications/queries"
 import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
@@ -35,16 +35,8 @@ export async function AuthMenu() {
     return <SignInButton />
   }
 
-  // A guest has no member row to read, and nothing was ever written for them: we store
-  // nothing about someone who has not been let in. So their name and picture come
-  // straight from the Google account for as long as that is all they are.
-  const displayName =
-    viewer.member?.nickname ??
-    viewer.member?.fullName ??
-    viewer.googleName ??
-    memberNameFrom(viewer.googleName, viewer.email)
-
-  const avatarUrl = viewer.member?.avatarUrl ?? viewer.googleAvatarUrl
+  const displayName = viewerDisplayName(viewer)
+  const avatarUrl = viewerAvatarUrl(viewer)
 
   const unseenCount = await countUnseenActivity(viewer)
 

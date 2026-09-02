@@ -13,6 +13,7 @@ import {
 import { findBadgesForMember } from "@/features/members/queries"
 import { findActivityFor } from "@/features/notifications/queries"
 import { findWishlistForMember } from "@/features/wishlist/queries"
+import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
 import { getViewer } from "@/lib/auth"
 
 export async function generateMetadata({
@@ -51,7 +52,13 @@ export default async function ProfilePage({
   return (
     <PageContainer>
       <ProfileView
-        member={member}
+        member={{
+          ...member,
+          // Falls back to Google's, so the profile matches the header rather than showing
+          // initials next to your own face.
+          fullName: viewerDisplayName(viewer!),
+          avatarUrl: viewerAvatarUrl(viewer!),
+        }}
         upcomingEvents={upcomingEvents}
         pastEvents={pastEvents}
         isOwnProfile

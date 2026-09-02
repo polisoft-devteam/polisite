@@ -15,12 +15,10 @@ export function CelebrateGoing({
   icon,
   label,
   className,
-  isSelected,
 }: {
   icon?: React.ReactNode
   label: string
   className?: string
-  isSelected: boolean
 }) {
   const [seed, setSeed] = useState<number | null>(null)
 
@@ -33,9 +31,8 @@ export function CelebrateGoing({
         className={className}
         // Optimistic on purpose: the form is posting either way, and waiting for the
         // round trip would put the confetti after the page had already changed.
-        onClick={() => {
-          if (!isSelected) setSeed(Date.now())
-        }}
+        // Every time, not only the first: answering again is still worth the paper.
+        onClick={() => setSeed(Date.now())}
       >
         {icon}
         {label}

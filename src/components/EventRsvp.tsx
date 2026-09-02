@@ -67,7 +67,6 @@ export async function EventRsvp({
               <CelebrateGoing
                 icon={<Icon className="size-4" />}
                 label={translateEvents(ATTENDANCE_RESPONSE_LABEL_KEY[response])}
-                isSelected={myResponse === response}
                 className={cn(
                   myResponse === response && SELECTED_RESPONSE_STYLE[response],
                 )}

@@ -23,11 +23,11 @@ import { canCreateEvent, isActiveMember } from "@/lib/permissions"
 
 // Bigger than anything else on the site, but a hero is not a billboard.
 //
-// White frame and label rather than the palette's: this one sits on a photograph, where
-// the primary cyan on a transparent fill has nothing to read against. The sweep still
-// fills with the primary colour, so it is the same button, dressed for where it stands.
+// Filled rather than framed: it stands on a photograph, where a transparent button has
+// nothing to read against. Full width on a phone so the whole thing is the tap target
+// rather than the words in the middle of it.
 const HERO_BUTTON =
-  "h-11 gap-2 border-white/80 px-6 text-base text-white [--button-accent-foreground:var(--color-primary-foreground)]"
+  "h-12 w-full gap-2 border-primary bg-primary px-7 text-base text-primary-foreground sm:w-auto [--button-accent:var(--color-primary-ink)]"
 
 export async function HeroActionButton() {
   const translateHome = await getTranslations("Home")

@@ -14,6 +14,7 @@ import { EventReminderField } from "@/components/EventReminderField"
 import { ExplainedSelectField } from "@/components/ExplainedSelectField"
 import { EventCategoryField } from "@/components/EventCategoryField"
 import { EventLocationField } from "@/components/EventLocationField"
+import { FormDraft } from "@/components/FormDraft"
 import { FormField, FormSelect } from "@/components/FormField"
 import { ImageDropZone } from "@/components/ImageDropZone"
 import { Wizard, type WizardStep } from "@/components/Wizard"
@@ -345,6 +346,9 @@ export async function EventForm({
 
   return (
     <form action={action}>
+      {/* Keeps what has been typed across steps and navigations; see FormDraft. */}
+      <FormDraft storageKey={`event-form:${event?.id ?? "new"}`} />
+
       {event && <input type="hidden" name="eventId" value={event.id} />}
 
       <Wizard
