@@ -7,12 +7,19 @@ import Image from "next/image"
 
 import { cn } from "@/lib/utils"
 
+const FOCAL_POINTS = {
+  center: "object-center",
+  upper: "object-[center_25%]",
+  top: "object-top",
+} as const
+
 export function SiteImage({
   src,
   alt,
   className,
   sizes = "100vw",
   priority = false,
+  focalPoint = "center",
   rounded = "rounded-lg",
 }: {
   src: string
@@ -24,6 +31,12 @@ export function SiteImage({
   sizes?: string
   /** Set on the one image above the fold; it skips lazy loading. */
   priority?: boolean
+  /**
+   * Which part of the photo to keep when the frame crops it. A portrait photo in a wide
+   * frame loses its top and bottom to the default centre crop, which is usually where the
+   * subject is.
+   */
+  focalPoint?: keyof typeof FOCAL_POINTS
   rounded?: string
 }) {
   return (
@@ -44,7 +57,7 @@ export function SiteImage({
         fill
         sizes={sizes}
         priority={priority}
-        className="object-cover"
+        className={cn("object-cover", FOCAL_POINTS[focalPoint])}
       />
     </span>
   )

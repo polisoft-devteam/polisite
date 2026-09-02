@@ -62,6 +62,8 @@ export default async function ArchivePage({
       {archiveImages.length > 0 ? (
         <PhotoHero
           images={archiveImages}
+          // A portrait photo: centred, the crop cuts off what it is a photo of.
+          focalPoint="top"
           title={translateArchive("title")}
           tagline={translateArchive("intro")}
         />
