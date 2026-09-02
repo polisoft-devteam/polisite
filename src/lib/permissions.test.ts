@@ -46,6 +46,8 @@ function buildMember(overrides: Partial<Member> = {}): Member {
 function buildViewer(member: Member | null, roles: Role[] = []): Viewer {
   return {
     authUserId: "auth-1",
+    googleName: null,
+    googleAvatarUrl: null,
     email: "member@example.com",
     member,
     roles,

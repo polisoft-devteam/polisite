@@ -15,6 +15,9 @@ import type {
 export type Viewer = {
   authUserId: string
   email: string
+  /** From the Google account, before they have a member row of their own. */
+  googleName: string | null
+  googleAvatarUrl: string | null
   /** Null for a signed-in guest — a Google account with no membership. */
   member: Member | null
   roles: Role[]

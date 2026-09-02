@@ -4,6 +4,7 @@
 import { and, eq, isNull, sql } from "drizzle-orm"
 
 import { db } from "@/db"
+import { memberNameFrom } from "@/features/members/display-name"
 import {
   memberRoles,
   members,
@@ -169,7 +170,7 @@ export async function approveMembershipRequest(
     .values({
       authUserId,
       email: request.email,
-      fullName: request.fullName ?? request.email,
+      fullName: memberNameFrom(request.fullName, request.email),
       status: "active",
       joinedAssociationAt: new Date(),
     })

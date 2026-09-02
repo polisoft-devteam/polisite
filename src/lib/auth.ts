@@ -30,9 +30,21 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
 
   const member = await findMemberByAuthUserId(user.id)
 
+  // Google puts these in user_metadata under either key depending on the account. They
+  // were being discarded, which is why a new member ended up named after their address.
+  const metadata = user.user_metadata ?? {}
+
   return {
     authUserId: user.id,
     email: user.email,
+    googleName:
+      (metadata.full_name as string | undefined) ??
+      (metadata.name as string | undefined) ??
+      null,
+    googleAvatarUrl:
+      (metadata.avatar_url as string | undefined) ??
+      (metadata.picture as string | undefined) ??
+      null,
     member,
     roles: member ? await findRolesForMember(member.id) : [],
   }
