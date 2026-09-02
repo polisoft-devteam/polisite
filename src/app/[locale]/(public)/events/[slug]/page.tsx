@@ -187,6 +187,16 @@ export default async function EventPage({
           rsvp
         )}
 
+        <EventDatePoll
+          eventId={event.id}
+          timeZone={event.timeZone}
+          options={dateOptions}
+          chosenStartsAt={event.startsAt}
+          canVote={canRespondToEvent(viewer, event)}
+          canChooseDate={canEditEvent(viewer, event)}
+          locale={locale}
+        />
+
         <div className="mt-6">
           <FactList>
             <Fact label={translateEvents("fieldStartsAt")}>
@@ -295,16 +305,6 @@ export default async function EventPage({
             )}
           </div>
         )}
-
-        <EventDatePoll
-          eventId={event.id}
-          timeZone={event.timeZone}
-          options={dateOptions}
-          chosenStartsAt={event.startsAt}
-          canVote={canRespondToEvent(viewer, event)}
-          canChooseDate={canEditEvent(viewer, event)}
-          locale={locale}
-        />
 
         <PageSection heading={translateEvents("attendees")}>
           <AttendeeAvatars attendees={goingAttendees} guests={guests} />

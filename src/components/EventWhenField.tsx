@@ -13,6 +13,7 @@ import { FormField } from "@/components/FormField"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { CloseIcon, PlusIcon } from "@/lib/icons"
+import { cn } from "@/lib/utils"
 
 type EventWhenFieldProps = {
   startsAtLabel: string
@@ -27,6 +28,11 @@ type EventWhenFieldProps = {
   defaultEndsAt: string
   defaultDateOptions: string[]
 }
+
+// A date field opens a picker when clicked, so it is a control rather than a text box and
+// should say so on hover.
+const DATE_INPUT =
+  "cursor-pointer transition-colors hover:border-primary hover:bg-primary/5"
 
 export function EventWhenField({
   startsAtLabel,
@@ -71,6 +77,7 @@ export function EventWhenField({
             id="startsAtWallTime"
             name="startsAtWallTime"
             type="datetime-local"
+            className={DATE_INPUT}
             value={startsAt}
             // Either a date or a poll is required, so this is only optional once the
             // poll has something in it. Cross-field rules can't be expressed in HTML.
@@ -89,6 +96,7 @@ export function EventWhenField({
             id="endsAtWallTime"
             name="endsAtWallTime"
             type="datetime-local"
+            className={DATE_INPUT}
             value={endsAt}
             disabled={hasPollDates}
             onChange={(event) => setEndsAt(event.target.value)}
@@ -119,7 +127,7 @@ export function EventWhenField({
                 onChange={(event) =>
                   setPollRowValue(row.id, event.target.value)
                 }
-                className="flex-1"
+                className={cn(DATE_INPUT, "flex-1")}
               />
               <Button
                 type="button"
