@@ -6,6 +6,7 @@
 
 import { getTranslations } from "next-intl/server"
 
+import { CelebrateGoing } from "@/components/CelebrateGoing"
 import { Button } from "@/components/ui/button"
 import { attendanceResponseEnum, type AttendanceResponse } from "@/db/schema"
 import { ATTENDANCE_RESPONSE_LABEL_KEY } from "@/features/events/labels"
@@ -44,16 +45,29 @@ export async function EventRsvp({
         <form key={response} action={setAttendanceAction}>
           <input type="hidden" name="eventId" value={eventId} />
           <input type="hidden" name="response" value={response} />
-          <Button
-            type="submit"
-            variant="outline"
-            size="sm"
-            className={cn(
-              myResponse === response && SELECTED_RESPONSE_STYLE[response],
-            )}
-          >
-            {translateEvents(ATTENDANCE_RESPONSE_LABEL_KEY[response])}
-          </Button>
+          {/* Only "going" is worth paper; the other two answers post plainly. */}
+          {response === "going" ? (
+            <CelebrateGoing
+              label={translateEvents(ATTENDANCE_RESPONSE_LABEL_KEY[response])}
+              isSelected={myResponse === response}
+              className={cn(
+                myResponse === response && SELECTED_RESPONSE_STYLE[response],
+              )}
+            />
+          ) : (
+            <Button
+              type="submit"
+              variant="outline"
+              size="sm"
+              className={cn(
+                // Floods with the primary colour on hover; see globals.css.
+                "water-fill",
+                myResponse === response && SELECTED_RESPONSE_STYLE[response],
+              )}
+            >
+              {translateEvents(ATTENDANCE_RESPONSE_LABEL_KEY[response])}
+            </Button>
+          )}
         </form>
       ))}
     </div>

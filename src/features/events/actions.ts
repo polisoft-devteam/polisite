@@ -116,7 +116,8 @@ export async function createEventAction(formData: FormData) {
   }
 
   revalidatePath("/", "layout")
-  redirect({ href: `/events/${event.slug}`, locale })
+  // The flag is what the event page celebrates on arrival; see CelebrateOnMount.
+  redirect({ href: `/events/${event.slug}?created=1`, locale })
 }
 
 export async function updateEventAction(formData: FormData) {

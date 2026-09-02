@@ -17,6 +17,7 @@ import { ExternalLink } from "@/components/ExternalLink"
 import { Fact, FactList } from "@/components/FactList"
 import { ItemList } from "@/components/ItemList"
 import { BackLink } from "@/components/BackLink"
+import { CelebrateOnMount } from "@/components/CelebrateOnMount"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
@@ -65,8 +66,11 @@ export async function generateMetadata({
 
 export default async function EventPage({
   params,
+  searchParams,
 }: PageProps<"/[locale]/events/[slug]">) {
   const { locale, slug } = await params
+  // Set by the redirect after creating one, so the page it lands on celebrates once.
+  const { created } = await searchParams
   setRequestLocale(locale)
 
   const translateEvents = await getTranslations("Events")
@@ -135,6 +139,8 @@ export default async function EventPage({
 
   return (
     <>
+      {created && <CelebrateOnMount seed={event.createdAt.getTime()} />}
+
       {heroImage && (
         <PhotoHero
           images={[heroImage]}

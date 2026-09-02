@@ -287,3 +287,43 @@ export async function setMemberTitle(
     .set({ officialTitle, updatedAt: new Date() })
     .where(eq(members.id, memberId))
 }
+
+/**
+ * Fills in what Google knows and we do not, on every sign-in.
+ *
+ * Only gaps: a name is replaced when it is still the address or the part before it, never
+ * when the member has chosen one, and a picture only when there is none. Existing members
+ * predate the capture at request time, so this is what backfills them.
+ */
+export async function fillMemberGapsFromGoogle(
+  authUserId: string,
+  google: { name: string | null; avatarUrl: string | null },
+): Promise<void> {
+  const [member] = await db
+    .select()
+    .from(members)
+    .where(eq(members.authUserId, authUserId))
+    .limit(1)
+
+  if (!member) return
+
+  const hasChosenName =
+    member.fullName !== member.email &&
+    member.fullName !== member.email.split("@")[0]
+
+  const fullName =
+    !hasChosenName && google.name?.trim() ? google.name.trim() : undefined
+  const avatarUrl =
+    member.avatarUrl === null && google.avatarUrl ? google.avatarUrl : undefined
+
+  if (fullName === undefined && avatarUrl === undefined) return
+
+  await db
+    .update(members)
+    .set({
+      ...(fullName === undefined ? {} : { fullName }),
+      ...(avatarUrl === undefined ? {} : { avatarUrl }),
+      updatedAt: new Date(),
+    })
+    .where(eq(members.id, member.id))
+}

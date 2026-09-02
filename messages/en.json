@@ -233,7 +233,8 @@
     "githubUrl": "GitHub",
     "githubUrlHint": "Optional. Shown as an icon in the members list.",
     "officialTitleHint": "Given by an admin. You can see what exists, but not pick one.",
-    "officialTitleNone": "No title"
+    "officialTitleNone": "No title",
+    "officialTitleSeeAll": "See every office"
   },
   "Privacy": {
     "title": "Privacy policy",

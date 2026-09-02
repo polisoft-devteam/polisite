@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
-import { FormField, FormSelect } from "@/components/FormField"
-import { MEMBER_TITLES } from "@/features/members/titles"
+import { FormField } from "@/components/FormField"
+import { Badge } from "@/components/ui/badge"
+import { MEMBER_TITLES, isMemberTitle } from "@/features/members/titles"
 import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
@@ -88,27 +89,39 @@ export default async function SettingsPage({
           />
         </FormField>
 
-        {/* Disabled rather than absent: an office is handed out by an admin, and seeing
-            the list of them is half the point of having them. A disabled control also
-            posts nothing, so the action cannot be tricked into setting one. */}
-        <FormField
-          label={translateProfile("officialTitle")}
-          htmlFor="officialTitle"
-          hint={translateProfile("officialTitleHint")}
-        >
-          <FormSelect
-            id="officialTitle"
-            disabled
-            defaultValue={member.officialTitle ?? ""}
-          >
-            <option value="">{translateProfile("officialTitleNone")}</option>
-            {MEMBER_TITLES.map((title) => (
-              <option key={title} value={title}>
-                {translateTitles(title)}
-              </option>
-            ))}
-          </FormSelect>
-        </FormField>
+        {/* Read-only rather than a disabled dropdown: a disabled select cannot be
+            opened at all, so the list it was meant to show was unreachable. The offices
+            are listed in a disclosure instead, which opens without being a control. */}
+        <div className="space-y-2">
+          <p className="text-sm font-medium">
+            {translateProfile("officialTitle")}
+          </p>
+
+          {member.officialTitle && isMemberTitle(member.officialTitle) ? (
+            <Badge variant="secondary">
+              {translateTitles(member.officialTitle)}
+            </Badge>
+          ) : (
+            <p className="text-muted-foreground text-sm">
+              {translateProfile("officialTitleNone")}
+            </p>
+          )}
+
+          <details className="text-muted-foreground text-xs">
+            <summary className="cursor-pointer">
+              {translateProfile("officialTitleSeeAll")}
+            </summary>
+            <ul className="mt-2 list-inside list-disc space-y-1">
+              {MEMBER_TITLES.map((title) => (
+                <li key={title}>{translateTitles(title)}</li>
+              ))}
+            </ul>
+          </details>
+
+          <p className="text-muted-foreground text-xs">
+            {translateProfile("officialTitleHint")}
+          </p>
+        </div>
 
         <FormField
           label={translateProfile("githubUrl")}

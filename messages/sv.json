@@ -233,7 +233,8 @@
     "githubUrl": "GitHub",
     "githubUrlHint": "Frivilligt. Visas som en ikon i medlemslistan.",
     "officialTitleHint": "Ges av en admin. Du kan se vilka som finns, men inte välja själv.",
-    "officialTitleNone": "Ingen titel"
+    "officialTitleNone": "Ingen titel",
+    "officialTitleSeeAll": "Se alla titlar"
   },
   "Privacy": {
     "title": "Integritetspolicy",
