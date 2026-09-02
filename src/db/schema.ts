@@ -201,6 +201,10 @@ export const events = pgTable("events", {
     .references(() => members.id),
 
   // Set once the announcement is posted, so it can't be sent twice.
+  // Set rather than deleted: an event people answered is part of the association's
+  // history, and "it was called off" is different information from "it never existed".
+  cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
+
   discordAnnouncedAt: timestamp("discord_announced_at", { withTimezone: true }),
   // Lets a later edit update that message instead of posting a correction.
   discordMessageId: text("discord_message_id"),

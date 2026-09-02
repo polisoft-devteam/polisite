@@ -79,6 +79,11 @@ export async function EventCard({
             {translateEvents(EVENT_CATEGORY_LABEL_KEY[event.category])}
           </p>
           <h3 className="font-heading mt-1 text-xl leading-tight font-extrabold text-balance text-white">
+            {event.cancelledAt && (
+              <span className="bg-destructive/90 mr-2 rounded px-1.5 py-0.5 align-middle text-[0.625rem] font-semibold tracking-wide text-white uppercase">
+                {translateEvents("cancelled")}
+              </span>
+            )}
             {event.title}
           </h3>
         </div>

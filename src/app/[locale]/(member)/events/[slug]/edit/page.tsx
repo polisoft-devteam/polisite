@@ -4,10 +4,15 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventForm } from "@/components/EventForm"
 import { Modal, ModalClose } from "@/components/Modal"
+import { NotAttendingIcon } from "@/lib/icons"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
-import { deleteEventAction, updateEventAction } from "@/features/events/actions"
+import {
+  cancelEventAction,
+  deleteEventAction,
+  updateEventAction,
+} from "@/features/events/actions"
 import {
   findDateOptionsForEvent,
   findEventBySlug,
@@ -64,7 +69,38 @@ export default async function EditEventPage({
         )}
       />
 
-      <div className="mt-12 border-t pt-6">
+      <div className="mt-12 flex flex-wrap gap-2 border-t pt-6">
+        {/* Calling it off is not deleting it: the page stays, so anyone following an old
+            link learns it is off rather than meeting a not-found. Already cancelled, and
+            there is nothing left to announce. */}
+        {!event.cancelledAt && (
+          <Modal
+            trigger={
+              <Button variant="outline" size="sm">
+                <NotAttendingIcon className="size-4" />
+                {translateEvents("cancelEvent")}
+              </Button>
+            }
+            title={translateEvents("cancelEvent")}
+            description={translateEvents("cancelEventConfirm")}
+            closeLabel={translateEvents("close")}
+            footer={
+              <>
+                <ModalClose render={<Button variant="outline" size="sm" />}>
+                  {translateEvents("cancel")}
+                </ModalClose>
+
+                <form action={cancelEventAction}>
+                  <input type="hidden" name="eventId" value={event.id} />
+                  <Button type="submit" variant="destructive" size="sm">
+                    {translateEvents("cancelEventConfirmAction")}
+                  </Button>
+                </form>
+              </>
+            }
+          />
+        )}
+
         <Modal
           trigger={
             <Button variant="destructive" size="sm">

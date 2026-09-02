@@ -25,6 +25,7 @@ export function buildSampleEvent(overrides: Partial<Event> = {}): Event {
     extraLinkUrl: null,
     visibility: "members_and_friends",
     createdByMemberId: "sample-member",
+    cancelledAt: null,
     discordAnnouncedAt: null,
     discordMessageId: null,
     createdAt: new Date("2026-01-01"),

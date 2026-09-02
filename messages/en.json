@@ -194,7 +194,11 @@
     "fieldIsOnlineHint": "No address needed, the event is held on Discord.",
     "fieldLocationPlaceholder": "Street address or place",
     "locationOnline": "Online (Discord)",
-    "host": "Host"
+    "host": "Host",
+    "cancelEvent": "Cancel the event",
+    "cancelEventConfirm": "The event is called off and everyone in Poli is pinged on Discord. The page stays, marked as cancelled. This cannot be undone.",
+    "cancelEventConfirmAction": "Yes, cancel it and ping Poli",
+    "cancelled": "Cancelled"
   },
   "Calendar": {
     "title": "Calendar",

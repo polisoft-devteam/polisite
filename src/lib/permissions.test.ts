@@ -77,6 +77,7 @@ function buildEvent(overrides: Partial<Event> = {}): Event {
     extraLinkUrl: null,
     visibility: "members",
     createdByMemberId: "member-1",
+    cancelledAt: null,
     discordAnnouncedAt: null,
     discordMessageId: null,
     createdAt: new Date("2026-01-01"),

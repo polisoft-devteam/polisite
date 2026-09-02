@@ -730,3 +730,14 @@ export async function findEventHost(event: Event): Promise<{
 
   return host ?? null
 }
+
+/** Calls an event off without removing it. Returns false if it was already called off. */
+export async function cancelEvent(eventId: string): Promise<boolean> {
+  const [cancelled] = await db
+    .update(events)
+    .set({ cancelledAt: new Date(), updatedAt: new Date() })
+    .where(and(eq(events.id, eventId), isNull(events.cancelledAt)))
+    .returning()
+
+  return Boolean(cancelled)
+}

@@ -194,7 +194,11 @@
     "fieldIsOnlineHint": "Ingen adress behövs, eventet hålls i Discord.",
     "fieldLocationPlaceholder": "Gatuadress eller plats",
     "locationOnline": "Online (Discord)",
-    "host": "Värd"
+    "host": "Värd",
+    "cancelEvent": "Ställ in eventet",
+    "cancelEventConfirm": "Eventet ställs in och alla i Poli får en pingning i Discord. Sidan finns kvar, men märkt som inställd. Det går inte att ångra.",
+    "cancelEventConfirmAction": "Ja, ställ in och pinga Poli",
+    "cancelled": "Inställt"
   },
   "Calendar": {
     "title": "Kalender",

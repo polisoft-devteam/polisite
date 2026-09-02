@@ -40,7 +40,12 @@ import {
 import { Link } from "@/i18n/navigation"
 import { findBadge } from "@/features/members/badges"
 import { getViewer } from "@/lib/auth"
-import { EditIcon, ExternalLinkIcon, OnlineIcon } from "@/lib/icons"
+import {
+  EditIcon,
+  ExternalLinkIcon,
+  NotAttendingIcon,
+  OnlineIcon,
+} from "@/lib/icons"
 import {
   canBringGuests,
   canEditEvent,
@@ -170,8 +175,17 @@ export default async function EventPage({
           </div>
         )}
 
-        {/* Answering is the point of opening this page, so it comes before the detail. */}
-        {rsvp}
+        {/* Said before anything else: someone opening an old link needs to know before
+            they read the time and place. */}
+        {event.cancelledAt ? (
+          <p className="border-destructive/40 bg-destructive/10 text-destructive mt-6 flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-medium">
+            <NotAttendingIcon className="size-4" />
+            {translateEvents("cancelled")}
+          </p>
+        ) : (
+          /* Answering is the point of opening this page, so it comes before the detail. */
+          rsvp
+        )}
 
         <div className="mt-6">
           <FactList>
