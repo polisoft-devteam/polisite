@@ -228,6 +228,7 @@ export async function EventCalendar({
                   (birthday) => (
                     <li key={`birthday-${birthday.id}`}>
                       <CalendarTile
+                        href={`/members/${birthday.id}`}
                         imageUrl={birthday.avatarUrl}
                         icon={<BirthdayCakeIcon className="size-3" />}
                         title={birthday.name}

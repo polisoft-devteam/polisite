@@ -18,7 +18,8 @@ import { requestMembership } from "@/features/members/membership-prompt-actions"
 import { findMembershipPrompt } from "@/features/members/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { GoogleIcon, NewEventIcon } from "@/lib/icons"
+import { HoverSwapIcon } from "@/components/HoverSwapIcon"
+import { EnvelopeIcon, NewEventIcon } from "@/lib/icons"
 import { canCreateEvent, isActiveMember } from "@/lib/permissions"
 
 // Bigger than anything else on the site, but a hero is not a billboard.
@@ -48,7 +49,7 @@ export async function HeroActionButton() {
         className={HERO_BUTTON}
         render={<Link href="/events/new" transitionTypes={["nav-forward"]} />}
       >
-        <NewEventIcon className="size-5" />
+        <HoverSwapIcon Idle={EnvelopeIcon} Hover={NewEventIcon} />
         {translateHome("heroCreateEvent")}
       </Button>
     )
@@ -61,7 +62,7 @@ export async function HeroActionButton() {
   return (
     <form action={requestMembership}>
       <Button type="submit" className={HERO_BUTTON}>
-        <GoogleIcon className="size-5" />
+        <HoverSwapIcon Idle={EnvelopeIcon} Hover={NewEventIcon} />
         {translateHome("heroRequestMembership")}
       </Button>
     </form>

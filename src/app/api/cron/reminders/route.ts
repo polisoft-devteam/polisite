@@ -12,6 +12,7 @@ import {
   markReminderSent,
 } from "@/features/events/queries"
 import { postBirthdayToDiscord } from "@/features/members/discord"
+import { memberDisplayName } from "@/features/members/identity"
 import {
   findMembersToGreet,
   markBirthdayGreeted,
@@ -42,9 +43,7 @@ async function greetBirthdays(
   const celebrating = await findMembersToGreet(month, day, year)
   if (celebrating.length === 0) return 0
 
-  await postBirthdayToDiscord(
-    celebrating.map((member) => member.nickname ?? member.fullName),
-  )
+  await postBirthdayToDiscord(celebrating.map(memberDisplayName))
 
   for (const member of celebrating) {
     await markBirthdayGreeted(member.id, year)

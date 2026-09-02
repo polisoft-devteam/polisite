@@ -6,6 +6,7 @@ import {
   findEventCountsByMonth,
   findEventsInRange,
 } from "@/features/events/queries"
+import { memberDisplayName } from "@/features/members/identity"
 import { findMembersWithBirthdays } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 import { addMonthsUtc, parseMonthParam } from "@/lib/calendar"
@@ -54,7 +55,7 @@ export default async function CalendarPage({
 
   const birthdays = birthdayMembers.map((member) => ({
     id: member.id,
-    name: member.nickname ?? member.fullName,
+    name: memberDisplayName(member),
     avatarUrl: member.avatarUrl,
     birthday: member.birthday,
   }))

@@ -336,6 +336,7 @@ export type BirthdayMember = {
   id: string
   fullName: string
   nickname: string | null
+  email: string
 }
 
 /**
@@ -355,6 +356,7 @@ export async function findMembersToGreet(
       id: members.id,
       fullName: members.fullName,
       nickname: members.nickname,
+      email: members.email,
     })
     .from(members)
     .where(
@@ -386,6 +388,7 @@ export async function findMembersWithBirthdays(): Promise<
     id: string
     fullName: string
     nickname: string | null
+    email: string
     avatarUrl: string | null
     birthday: string
   }[]
@@ -395,6 +398,7 @@ export async function findMembersWithBirthdays(): Promise<
       id: members.id,
       fullName: members.fullName,
       nickname: members.nickname,
+      email: members.email,
       avatarUrl: members.avatarUrl,
       birthday: members.birthday,
     })
@@ -416,6 +420,7 @@ export async function findActiveMembersForDirectory() {
       id: members.id,
       fullName: members.fullName,
       nickname: members.nickname,
+      email: members.email,
       avatarUrl: members.avatarUrl,
       githubUrl: members.githubUrl,
     })

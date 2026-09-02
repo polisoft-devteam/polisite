@@ -16,6 +16,24 @@ function isPlaceholderName(fullName: string, email: string): boolean {
   return fullName === email || fullName === email.split("@")[0]
 }
 
+/**
+ * What to call any member, from their row alone.
+ *
+ * Used wherever someone other than the viewer is shown, where there is no Google session
+ * to fall back to. A row that still holds only the address becomes the part before the @,
+ * which is a name of sorts, rather than the whole address, which is not.
+ */
+export function memberDisplayName(member: {
+  nickname: string | null
+  fullName: string
+  email: string
+}): string {
+  if (member.nickname) return member.nickname
+  if (!isPlaceholderName(member.fullName, member.email)) return member.fullName
+
+  return memberNameFrom(null, member.email)
+}
+
 export function viewerDisplayName(viewer: Viewer): string {
   const member = viewer.member
 

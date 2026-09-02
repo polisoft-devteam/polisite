@@ -10,6 +10,7 @@ import { getTranslations } from "next-intl/server"
 
 import { ItemList } from "@/components/ItemList"
 import { MemberAvatar } from "@/components/MemberAvatar"
+import { memberDisplayName } from "@/features/members/identity"
 import { findActiveMembersForDirectory } from "@/features/members/queries"
 import { Link } from "@/i18n/navigation"
 import { GithubIcon, WishlistIcon } from "@/lib/icons"
@@ -35,7 +36,7 @@ export async function MembersTable() {
               avatarUrl={member.avatarUrl}
             />
             <span className="truncate text-sm font-medium">
-              {member.nickname ?? member.fullName}
+              {memberDisplayName(member)}
             </span>
           </Link>
 

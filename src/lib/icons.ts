@@ -24,6 +24,7 @@ export {
   Pencil as EditIcon,
   PlusLg as PlusIcon,
   EnvelopePaperHeartFill as NewEventIcon,
+  EnvelopeFill as EnvelopeIcon,
   EnvelopeCheckFill as AttendingIcon,
   EnvelopeSlashFill as NotAttendingIcon,
   Cake2Fill as BirthdayCakeIcon,
