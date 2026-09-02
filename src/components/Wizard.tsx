@@ -85,8 +85,34 @@ export function Wizard({
     setCurrentStep((step) => Math.min(step + 1, steps.length - 1))
   }
 
+  /**
+   * Enter in a field means "I am done with this field", never "create the event".
+   *
+   * A form with a submit button submits when Enter is pressed in any single-line input.
+   * The submit button only exists on the last step, which is why this bit there and only
+   * there: a price typed into Advanced and confirmed with Enter created the event on the
+   * spot, with every default still in place — including the Discord ping.
+   */
+  function blockImplicitSubmit(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "Enter") return
+
+    const field = event.target
+    // A textarea needs Enter for new lines, and a focused button needs it to be pressed.
+    if (
+      field instanceof HTMLTextAreaElement ||
+      field instanceof HTMLButtonElement
+    ) {
+      return
+    }
+
+    event.preventDefault()
+  }
+
   return (
-    <div className="mt-8 flex flex-col gap-8 lg:flex-row-reverse lg:items-start">
+    <div
+      className="mt-8 flex flex-col gap-8 lg:flex-row-reverse lg:items-start"
+      onKeyDown={blockImplicitSubmit}
+    >
       {/* Below lg the labels come off the buttons and appear once, underneath: three
           circles each carrying two lines of text does not fit a phone, and scrolling a
           progress indicator sideways hides the very thing it is meant to show. */}

@@ -20,10 +20,20 @@ export async function SuggestionCallout({
 
   return (
     <div className={cn("flex gap-2", onPhoto ? "mt-3 drop-shadow" : "mt-4")}>
-      <SuggestionIcon className="text-notification mt-0.5 size-4 shrink-0" />
+      <SuggestionIcon
+        className={cn(
+          "mt-0.5 size-4 shrink-0",
+          onPhoto ? "text-suggestion-on-photo" : "text-suggestion-ink",
+        )}
+      />
 
       <div>
-        <p className="text-notification font-heading text-sm font-semibold">
+        <p
+          className={cn(
+            "font-heading text-sm font-semibold",
+            onPhoto ? "text-suggestion-on-photo" : "text-suggestion-ink",
+          )}
+        >
           {translateEvents("suggestionCalloutTitle")}
         </p>
         <p

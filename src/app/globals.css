@@ -28,6 +28,8 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-notification: var(--notification);
+  --color-suggestion-ink: var(--suggestion-ink);
+  --color-suggestion-on-photo: var(--suggestion-on-photo);
   --color-success: var(--success);
   --color-info: var(--info);
   --color-rsvp-going: var(--rsvp-going);
@@ -109,6 +111,13 @@
      part of the palette, and it has to carry against either background. */
   --notification: #f52055;
 
+  /* A suggestion is provisional, not a problem, so it is warm rather than the alarm red
+     of a notification. Darkened for light mode like any other ink on a white page. */
+  --suggestion-ink: oklch(0.55 0.13 70);
+
+  /* The hero's foot is dark under either theme, so this one does not follow the theme. */
+  --suggestion-on-photo: oklch(0.85 0.12 75);
+
   /* Answering an invitation, by meaning rather than by hue. Muted on purpose: three
      saturated buttons in a row would shout louder than anything else on the page. */
   --success: oklch(0.55 0.14 155);
@@ -176,6 +185,8 @@
 
   --destructive: oklch(0.68 0.18 25);
   --notification: #f52055;
+  --suggestion-ink: oklch(0.8 0.13 70);
+  --suggestion-on-photo: oklch(0.85 0.12 75);
 
   /* Lifted for dark, where the light values sink into the background. */
   --success: oklch(0.72 0.15 155);
