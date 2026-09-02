@@ -9,8 +9,7 @@
 import { getTranslations } from "next-intl/server"
 
 import { ItemList } from "@/components/ItemList"
-import { MemberAvatar } from "@/components/MemberAvatar"
-import { memberDisplayName } from "@/features/members/identity"
+import { MemberLink } from "@/components/MemberLink"
 import { findActiveMembersForDirectory } from "@/features/members/queries"
 import { Link } from "@/i18n/navigation"
 import { GithubIcon, WishlistIcon } from "@/lib/icons"
@@ -26,19 +25,7 @@ export async function MembersTable() {
           key={member.id}
           className="flex items-center justify-between gap-4 p-3"
         >
-          <Link
-            href={`/members/${member.id}`}
-            transitionTypes={["nav-forward"]}
-            className="flex min-w-0 items-center gap-3"
-          >
-            <MemberAvatar
-              fullName={member.fullName}
-              avatarUrl={member.avatarUrl}
-            />
-            <span className="truncate text-sm font-medium">
-              {memberDisplayName(member)}
-            </span>
-          </Link>
+          <MemberLink member={member} />
 
           <div className="text-muted-foreground flex shrink-0 items-center gap-1">
             {member.githubUrl && (

@@ -300,14 +300,14 @@ export async function setMemberTitle(
 export async function fillMemberGapsFromGoogle(
   authUserId: string,
   google: { name: string | null; avatarUrl: string | null },
-): Promise<void> {
+): Promise<Member | null> {
   const [member] = await db
     .select()
     .from(members)
     .where(eq(members.authUserId, authUserId))
     .limit(1)
 
-  if (!member) return
+  if (!member) return null
 
   const hasChosenName =
     member.fullName !== member.email &&
@@ -318,9 +318,9 @@ export async function fillMemberGapsFromGoogle(
   const avatarUrl =
     member.avatarUrl === null && google.avatarUrl ? google.avatarUrl : undefined
 
-  if (fullName === undefined && avatarUrl === undefined) return
+  if (fullName === undefined && avatarUrl === undefined) return null
 
-  await db
+  const [updated] = await db
     .update(members)
     .set({
       ...(fullName === undefined ? {} : { fullName }),
@@ -328,6 +328,9 @@ export async function fillMemberGapsFromGoogle(
       updatedAt: new Date(),
     })
     .where(eq(members.id, member.id))
+    .returning()
+
+  return updated ?? null
 }
 
 // --- Birthdays -----------------------------------------------------------------

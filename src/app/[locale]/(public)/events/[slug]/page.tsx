@@ -11,7 +11,7 @@ import { AttendeeAvatars } from "@/components/AttendeeAvatars"
 import { EventDatePoll } from "@/components/EventDatePoll"
 import { EventGuests } from "@/components/EventGuests"
 import { EventMap } from "@/components/EventMap"
-import { MemberAvatar } from "@/components/MemberAvatar"
+import { MemberLink } from "@/components/MemberLink"
 import { EventRsvp } from "@/components/EventRsvp"
 import { EmptyState } from "@/components/EmptyState"
 import { ExternalLink } from "@/components/ExternalLink"
@@ -227,14 +227,7 @@ export default async function EventPage({
 
             {host && (
               <Fact label={translateEvents("host")}>
-                <span className="flex items-center gap-2">
-                  <MemberAvatar
-                    fullName={host.fullName}
-                    avatarUrl={host.avatarUrl}
-                    className="size-5 text-[0.625rem]"
-                  />
-                  {host.nickname ?? host.fullName}
-                </span>
+                <MemberLink member={host} size="sm" />
               </Fact>
             )}
 

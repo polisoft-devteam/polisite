@@ -407,6 +407,7 @@ export type Attendee = {
   memberId: string
   fullName: string
   nickname: string | null
+  email: string
   avatarUrl: string | null
   /** The badge they chose to show, if any; a key from BADGES. */
   displayedBadge: string | null
@@ -421,6 +422,7 @@ export async function findAttendeesForEvent(
       memberId: members.id,
       fullName: members.fullName,
       nickname: members.nickname,
+      email: members.email,
       avatarUrl: members.avatarUrl,
       displayedBadge: members.displayedBadge,
       response: eventAttendees.response,
@@ -449,6 +451,7 @@ export async function findGoingAttendeesByEvent(
       memberId: members.id,
       fullName: members.fullName,
       nickname: members.nickname,
+      email: members.email,
       avatarUrl: members.avatarUrl,
       displayedBadge: members.displayedBadge,
       response: eventAttendees.response,
@@ -708,6 +711,7 @@ export async function findEventHost(event: Event): Promise<{
   id: string
   fullName: string
   nickname: string | null
+  email: string
   avatarUrl: string | null
 } | null> {
   if (!event.createdByMemberId) return null
@@ -717,6 +721,7 @@ export async function findEventHost(event: Event): Promise<{
       id: members.id,
       fullName: members.fullName,
       nickname: members.nickname,
+      email: members.email,
       avatarUrl: members.avatarUrl,
     })
     .from(members)

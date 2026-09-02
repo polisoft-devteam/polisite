@@ -24,11 +24,9 @@ import { canCreateEvent, isActiveMember } from "@/lib/permissions"
 
 // Bigger than anything else on the site, but a hero is not a billboard.
 //
-// Filled rather than framed: it stands on a photograph, where a transparent button has
-// nothing to read against. Full width on a phone so the whole thing is the tap target
-// rather than the words in the middle of it.
-const HERO_BUTTON =
-  "h-12 w-full gap-2 border-primary bg-primary px-7 text-base text-primary-foreground sm:w-auto [--button-accent:var(--color-primary-ink)]"
+// The site's own button, only larger. Full width on a phone so the whole thing is the tap
+// target rather than the words in the middle of it.
+const HERO_BUTTON = "h-12 w-full gap-2 px-7 text-base sm:w-auto"
 
 export async function HeroActionButton() {
   const translateHome = await getTranslations("Home")

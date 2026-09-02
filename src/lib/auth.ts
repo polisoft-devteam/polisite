@@ -4,6 +4,7 @@
 import { cache } from "react"
 
 import {
+  fillMemberGapsFromGoogle,
   findMemberByAuthUserId,
   findRolesForMember,
 } from "@/features/members/queries"
@@ -34,18 +35,32 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   // were being discarded, which is why a new member ended up named after their address.
   const metadata = user.user_metadata ?? {}
 
+  const googleName =
+    (metadata.full_name as string | undefined) ??
+    (metadata.name as string | undefined) ??
+    null
+  const googleAvatarUrl =
+    (metadata.avatar_url as string | undefined) ??
+    (metadata.picture as string | undefined) ??
+    null
+
+  // Written here as well as on sign-in, because a member row created before any of this
+  // existed would otherwise wait for its owner to sign out and back in, and everyone else
+  // would keep seeing them as an address with no face. Only fills gaps, so it writes at
+  // most until there are none, then never again.
+  const filled = member
+    ? await fillMemberGapsFromGoogle(user.id, {
+        name: googleName,
+        avatarUrl: googleAvatarUrl,
+      })
+    : null
+
   return {
     authUserId: user.id,
     email: user.email,
-    googleName:
-      (metadata.full_name as string | undefined) ??
-      (metadata.name as string | undefined) ??
-      null,
-    googleAvatarUrl:
-      (metadata.avatar_url as string | undefined) ??
-      (metadata.picture as string | undefined) ??
-      null,
-    member,
+    googleName,
+    googleAvatarUrl,
+    member: filled ?? member,
     roles: member ? await findRolesForMember(member.id) : [],
   }
 })
