@@ -8,7 +8,8 @@
     "calendar": "Calendar",
     "about": "About",
     "menu": "Menu",
-    "archive": "Open archive"
+    "archive": "Open archive",
+    "close": "Close"
   },
   "Home": {
     "title": "Welcome",
