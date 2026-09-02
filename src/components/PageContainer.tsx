@@ -34,7 +34,9 @@ export function PageContainer({
       <div
         className={cn(
           "mx-auto w-full max-w-6xl px-4 pb-12 2xl:max-w-7xl",
-          belowHero ? "pt-4" : "pt-12",
+          // None at all: the wave is already a run of page-coloured background, so any
+          // padding on top of it reads as a second gap.
+          belowHero ? "pt-0" : "pt-12",
         )}
       >
         {children}
