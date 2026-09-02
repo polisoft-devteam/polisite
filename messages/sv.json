@@ -253,7 +253,7 @@
     "title": "Integritetspolicy",
     "lastUpdated": "Senast uppdaterad 19 augusti 2026",
     "controllerTitle": "Vem ansvarar för uppgifterna",
-    "controllerBody": "{associationName} är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, hör av dig till {contactEmail}.",
+    "controllerBody": "{associationName} är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, hör av dig till {contactName}.",
     "dataTitle": "Vad vi sparar",
     "dataItems": [
       "Namn, e-postadress och profilbild från ditt Google-konto när du loggar in.",

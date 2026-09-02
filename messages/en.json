@@ -253,7 +253,7 @@
     "title": "Privacy policy",
     "lastUpdated": "Last updated 19 August 2026",
     "controllerTitle": "Who is responsible",
-    "controllerBody": "{associationName} is the data controller for the information on this site. If you have questions, contact us at {contactEmail}.",
+    "controllerBody": "{associationName} is the controller of the data on this site. If you have questions, get in touch with {contactName}.",
     "dataTitle": "What we store",
     "dataItems": [
       "Name, email address and profile picture from your Google account when you sign in.",
