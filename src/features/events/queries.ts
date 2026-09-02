@@ -13,6 +13,7 @@ import {
   eq,
   gte,
   inArray,
+  isNotNull,
   isNull,
   lt,
   sql,
@@ -20,6 +21,7 @@ import {
 
 import { db } from "@/db"
 import { buildEventSlug, toUniqueSlug } from "@/lib/slug"
+import { DEFAULT_EVENT_TIME_ZONE } from "@/lib/time"
 import {
   eventAttendees,
   eventDateOptions,
@@ -656,4 +658,43 @@ export async function setEventDateFromOption(
       updatedAt: new Date(),
     })
     .where(eq(events.id, eventId))
+}
+
+/**
+ * How many events fall in each month of a year, keyed "YYYY-MM".
+ *
+ * Counted in SQL rather than by fetching a year of events and grouping here, and grouped
+ * in the association's timezone so an event at 23:00 on the last of the month does not
+ * count against the next one.
+ *
+ * The zone is written into the SQL rather than bound as a parameter: Postgres cannot infer
+ * the type of a parameter in that position and refuses the query. It is a constant in this
+ * file, never anything a request supplied.
+ */
+export async function findEventCountsByMonth(
+  allowedVisibilities: EventVisibility[],
+  year: number,
+): Promise<Map<string, number>> {
+  if (allowedVisibilities.length === 0) return new Map()
+
+  const localStart = sql.raw(
+    `"events"."starts_at" at time zone '${DEFAULT_EVENT_TIME_ZONE}'`,
+  )
+
+  const rows = await db
+    .select({
+      month: sql<string>`to_char(${localStart}, 'YYYY-MM')`.as("month"),
+      total: count(),
+    })
+    .from(events)
+    .where(
+      and(
+        inArray(events.visibility, allowedVisibilities),
+        isNotNull(events.startsAt),
+        sql`extract(year from ${localStart}) = ${year}`,
+      ),
+    )
+    .groupBy(sql`to_char(${localStart}, 'YYYY-MM')`)
+
+  return new Map(rows.map((row) => [row.month, Number(row.total)]))
 }

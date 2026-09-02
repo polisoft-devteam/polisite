@@ -113,6 +113,11 @@ export function canBringGuests(
   myResponse: AttendanceResponse | null,
 ): boolean {
   if (!canRespondToEvent(viewer, event)) return false
+
+  // Whoever made the event keeps the guest list whatever its visibility, and without
+  // having to answer for themselves first: they are counting heads, not bringing a date.
+  if (canEditEvent(viewer, event)) return true
+
   if (event.visibility === "members") return false
 
   return myResponse === "going"

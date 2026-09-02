@@ -234,7 +234,8 @@ describe("creating and responding", () => {
 })
 
 describe("canBringGuests", () => {
-  const goingMember = buildViewer(buildMember())
+  // Someone who did not make the event: the creator has looser rules, tested below.
+  const goingMember = buildViewer(buildMember({ id: "someone-else" }))
 
   it("lets a member going to a public event bring someone", () => {
     const event = buildEvent({ visibility: "public" })
@@ -268,6 +269,26 @@ describe("canBringGuests", () => {
     const inactive = buildViewer(buildMember({ status: "inactive" }))
     const event = buildEvent({ visibility: "public" })
     expect(canBringGuests(inactive, event, "going")).toBe(false)
+  })
+
+  it("lets whoever made the event keep its guest list regardless", () => {
+    // Counting heads on your own event is not the same as bringing a date to someone
+    // else's, so neither the visibility nor your own answer stands in the way.
+    const event = buildEvent({ visibility: "members" })
+    const creator = buildViewer(buildMember({ id: event.createdByMemberId! }))
+
+    expect(canBringGuests(creator, event, null)).toBe(true)
+    expect(canBringGuests(creator, event, "not_going")).toBe(true)
+  })
+
+  it("lets an admin keep it too", () => {
+    const event = buildEvent({ visibility: "members" })
+    const admin = buildViewer(buildMember({ id: "an-admin" }), [
+      "member",
+      "admin",
+    ])
+
+    expect(canBringGuests(admin, event, null)).toBe(true)
   })
 })
 
