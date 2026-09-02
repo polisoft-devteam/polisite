@@ -3,7 +3,6 @@ import { notFound } from "next/navigation"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventForm } from "@/components/EventForm"
-import { BackLink } from "@/components/BackLink"
 import { Modal, ModalClose } from "@/components/Modal"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
@@ -51,8 +50,6 @@ export default async function EditEventPage({
 
   return (
     <PageContainer>
-      <BackLink href={`/events/${event.slug}`}>{event.title}</BackLink>
-
       <div className="mt-4">
         <PageHeading title={translateEvents("editTitle")} />
       </div>

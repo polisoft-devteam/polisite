@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { EventForm } from "@/components/EventForm"
-import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { createEventAction } from "@/features/events/actions"
@@ -29,8 +28,6 @@ export default async function NewEventPage({
 
   return (
     <PageContainer>
-      <BackLink href="/events">{translateEvents("back")}</BackLink>
-
       <div className="mt-4">
         <PageHeading title={translateEvents("createTitle")} />
       </div>
