@@ -106,11 +106,14 @@ export function MobileNav({
       </DialogTrigger>
 
       <DialogPortal>
-        <DialogOverlay />
+        {/* Above the header, which is also z-50 and sits in its own compositing layer
+            because of its backdrop blur. At the same level the header's buttons stayed
+            clickable through the dimmed area instead of the press closing the panel. */}
+        <DialogOverlay className="z-60" />
 
         <DialogPrimitive.Popup
           data-slot="nav-drawer"
-          className="bg-popover text-popover-foreground ring-foreground/10 data-open:animate-in data-open:slide-in-from-right data-closed:animate-out data-closed:slide-out-to-right fixed inset-y-0 right-0 z-50 flex w-72 max-w-[85vw] flex-col gap-1 p-4 ring-1 duration-300 outline-none"
+          className="bg-popover text-popover-foreground ring-foreground/10 data-open:animate-in data-open:slide-in-from-right data-closed:animate-out data-closed:slide-out-to-right fixed inset-y-0 right-0 z-60 flex w-72 max-w-[85vw] flex-col gap-1 p-4 ring-1 duration-300 outline-none"
         >
           <div className="mb-2 flex items-center justify-between">
             <DialogTitle className="text-muted-foreground text-xs tracking-wide uppercase">
