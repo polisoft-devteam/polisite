@@ -49,7 +49,15 @@ export default async function SettingsPage({
       </div>
 
       <form action={updateMyProfile} className="mt-8 max-w-lg space-y-6">
-        <ProfileFields member={member} badges={badges} />
+        {/* Keyed on the row's own timestamp: saving revalidates this page, and an
+            uncontrolled input whose defaultValue changes under it warns rather than
+            updating. Remounting sets the new defaults once, which is also what you want
+            to see after a save. */}
+        <ProfileFields
+          key={member.updatedAt.toISOString()}
+          member={member}
+          badges={badges}
+        />
 
         {/* Read-only rather than a control: an office is handed out by an admin, and a
             disabled dropdown cannot even be opened to see the list. */}

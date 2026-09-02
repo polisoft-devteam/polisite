@@ -62,7 +62,15 @@ export default async function AdminMemberPage({
       >
         <input type="hidden" name="memberId" value={member.id} />
 
-        <ProfileFields member={member} badges={badges} />
+        {/* Keyed on the row's own timestamp: saving revalidates this page, and an
+            uncontrolled input whose defaultValue changes under it warns rather than
+            updating. Remounting sets the new defaults once, which is also what you want
+            to see after a save. */}
+        <ProfileFields
+          key={member.updatedAt.toISOString()}
+          member={member}
+          badges={badges}
+        />
 
         <Button type="submit" size="lg">
           {translateProfile("save")}
