@@ -33,6 +33,7 @@ export type EditableProfileFields = {
   nickname: string | null
   bio: string | null
   githubUrl: string | null
+  birthday: string | null
   /** Omitted when no new photo was uploaded, so the existing one is kept. */
   avatarUrl?: string
 }
@@ -403,4 +404,31 @@ export async function findMembersWithBirthdays(): Promise<
     (row): row is (typeof rows)[number] & { birthday: string } =>
       row.birthday !== null,
   )
+}
+
+// --- The directory -------------------------------------------------------------
+
+/** The members page: everyone active, for the directory table. */
+export async function findActiveMembersForDirectory() {
+  return db
+    .select({
+      id: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+      avatarUrl: members.avatarUrl,
+      githubUrl: members.githubUrl,
+    })
+    .from(members)
+    .where(eq(members.status, "active"))
+    .orderBy(asc(members.fullName))
+}
+
+export async function findMemberById(memberId: string) {
+  const [member] = await db
+    .select()
+    .from(members)
+    .where(and(eq(members.id, memberId), eq(members.status, "active")))
+    .limit(1)
+
+  return member ?? null
 }

@@ -233,7 +233,8 @@
     "githubUrlHint": "Optional. Shown as an icon in the members list.",
     "officialTitleHint": "Given by an admin. You can see what exists, but not pick one.",
     "officialTitleNone": "No title",
-    "officialTitleSeeAll": "See every office"
+    "officialTitleSeeAll": "See every office",
+    "birthdayHint": "Optional. Shows in the calendar and gets you a greeting on Discord."
   },
   "Privacy": {
     "title": "Privacy policy",
@@ -290,7 +291,8 @@
     "awardBadge": "Award",
     "removeBadge": "Remove",
     "setTitle": "Set title",
-    "titleLabel": "Title"
+    "titleLabel": "Title",
+    "editProfile": "Edit profile"
   },
   "Archive": {
     "title": "Open archive",

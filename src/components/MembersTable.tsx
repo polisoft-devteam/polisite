@@ -10,7 +10,7 @@ import { getTranslations } from "next-intl/server"
 
 import { ItemList } from "@/components/ItemList"
 import { MemberAvatar } from "@/components/MemberAvatar"
-import { findActiveMembersForDirectory } from "@/features/wishlist/queries"
+import { findActiveMembersForDirectory } from "@/features/members/queries"
 import { Link } from "@/i18n/navigation"
 import { GithubIcon, WishlistIcon } from "@/lib/icons"
 

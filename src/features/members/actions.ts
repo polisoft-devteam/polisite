@@ -4,10 +4,10 @@ import { revalidatePath } from "next/cache"
 import { getLocale } from "next-intl/server"
 import { z } from "zod"
 
-import { updateMemberProfile } from "@/features/members/queries"
+import { findMemberById, updateMemberProfile } from "@/features/members/queries"
 import { redirect } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { isActiveMember } from "@/lib/permissions"
+import { canManageMembers, isActiveMember } from "@/lib/permissions"
 import { deleteImageIfOurs, uploadImage } from "@/lib/storage"
 
 // Validated on the server because this is the boundary. Anything the browser sends is
@@ -19,11 +19,70 @@ const profileSchema = z.object({
 
   // A URL or nothing. An empty string is the usual case and must not fail validation.
   githubUrl: z.union([z.literal(""), z.string().trim().url().max(300)]),
+
+  // yyyy-mm-dd from a date input, or nothing. Stored as a date, never a timestamp, so it
+  // cannot shift a day across timezones.
+  birthday: z.union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)]),
 })
 
 /** Empty inputs come through as "" — store null so the database has one kind of blank. */
 function emptyToNull(value: string): string | null {
   return value.length === 0 ? null : value
+}
+
+async function saveProfile(memberId: string, formData: FormData) {
+  const parsed = profileSchema.safeParse({
+    fullName: formData.get("fullName") ?? "",
+    nickname: formData.get("nickname") ?? "",
+    bio: formData.get("bio") ?? "",
+    birthday: formData.get("birthday") ?? "",
+    githubUrl: formData.get("githubUrl") ?? "",
+  })
+
+  if (!parsed.success) return null
+
+  const uploadedAvatarUrl = await uploadImage(
+    "avatars",
+    formData.get("avatar") as File | null,
+  )
+
+  await updateMemberProfile(memberId, {
+    fullName: parsed.data.fullName,
+    nickname: emptyToNull(parsed.data.nickname),
+    bio: emptyToNull(parsed.data.bio),
+    birthday: emptyToNull(parsed.data.birthday),
+    githubUrl: emptyToNull(parsed.data.githubUrl),
+    ...(uploadedAvatarUrl ? { avatarUrl: uploadedAvatarUrl } : {}),
+  })
+
+  return uploadedAvatarUrl
+}
+
+/**
+ * An admin editing someone else's profile: the same fields and the same validation, so a
+ * member cannot end up with something they are unable to correct themselves.
+ */
+export async function updateMemberProfileAsAdmin(formData: FormData) {
+  const viewer = await getViewer()
+
+  if (!canManageMembers(viewer)) {
+    throw new Error("Not an admin")
+  }
+
+  const memberId = String(formData.get("memberId") ?? "")
+  if (!/^[0-9a-f-]{36}$/.test(memberId)) return
+
+  const target = await findMemberById(memberId)
+  if (!target) return
+
+  const uploadedAvatarUrl = await saveProfile(memberId, formData)
+
+  if (uploadedAvatarUrl) {
+    await deleteImageIfOurs("avatars", target.avatarUrl)
+  }
+
+  revalidatePath("/admin")
+  revalidatePath("/members/[memberId]", "page")
 }
 
 export async function updateMyProfile(formData: FormData) {
@@ -38,6 +97,7 @@ export async function updateMyProfile(formData: FormData) {
     fullName: formData.get("fullName") ?? "",
     nickname: formData.get("nickname") ?? "",
     bio: formData.get("bio") ?? "",
+    birthday: formData.get("birthday") ?? "",
     githubUrl: formData.get("githubUrl") ?? "",
   })
 
@@ -52,6 +112,7 @@ export async function updateMyProfile(formData: FormData) {
     fullName: parsed.data.fullName,
     nickname: emptyToNull(parsed.data.nickname),
     bio: emptyToNull(parsed.data.bio),
+    birthday: emptyToNull(parsed.data.birthday),
     githubUrl: emptyToNull(parsed.data.githubUrl),
     ...(uploadedAvatarUrl ? { avatarUrl: uploadedAvatarUrl } : {}),
   })

@@ -1,16 +1,13 @@
 import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
-import { FormField } from "@/components/FormField"
+import { ProfileFields } from "@/components/ProfileFields"
 import { Badge } from "@/components/ui/badge"
 import { MEMBER_TITLES, isMemberTitle } from "@/features/members/titles"
 import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
-import { MemberAvatar } from "@/components/MemberAvatar"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { updateMyProfile } from "@/features/members/actions"
 import { getViewer } from "@/lib/auth"
 
@@ -50,48 +47,10 @@ export default async function SettingsPage({
       </div>
 
       <form action={updateMyProfile} className="mt-8 max-w-lg space-y-6">
-        <div className="flex items-center gap-4">
-          <MemberAvatar
-            fullName={member.fullName}
-            avatarUrl={member.avatarUrl}
-            className="size-24 text-2xl"
-          />
-          <FormField
-            label={translateProfile("avatar")}
-            htmlFor="avatar"
-            hint={translateProfile("avatarHint")}
-          >
-            <Input
-              id="avatar"
-              name="avatar"
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/avif"
-              className="cursor-pointer"
-            />
-          </FormField>
-        </div>
-        <FormField label={translateProfile("fullName")} htmlFor="fullName">
-          <Input
-            id="fullName"
-            name="fullName"
-            defaultValue={member.fullName}
-            required
-            maxLength={120}
-          />
-        </FormField>
+        <ProfileFields member={member} />
 
-        <FormField label={translateProfile("nickname")} htmlFor="nickname">
-          <Input
-            id="nickname"
-            name="nickname"
-            defaultValue={member.nickname ?? ""}
-            maxLength={60}
-          />
-        </FormField>
-
-        {/* Read-only rather than a disabled dropdown: a disabled select cannot be
-            opened at all, so the list it was meant to show was unreachable. The offices
-            are listed in a disclosure instead, which opens without being a control. */}
+        {/* Read-only rather than a control: an office is handed out by an admin, and a
+            disabled dropdown cannot even be opened to see the list. */}
         <div className="space-y-2">
           <p className="text-sm font-medium">
             {translateProfile("officialTitle")}
@@ -122,31 +81,6 @@ export default async function SettingsPage({
             {translateProfile("officialTitleHint")}
           </p>
         </div>
-
-        <FormField
-          label={translateProfile("githubUrl")}
-          htmlFor="githubUrl"
-          hint={translateProfile("githubUrlHint")}
-        >
-          <Input
-            id="githubUrl"
-            name="githubUrl"
-            type="url"
-            placeholder="https://github.com/"
-            defaultValue={member.githubUrl ?? ""}
-            maxLength={300}
-          />
-        </FormField>
-
-        <FormField label={translateProfile("bio")} htmlFor="bio">
-          <Textarea
-            id="bio"
-            name="bio"
-            defaultValue={member.bio ?? ""}
-            rows={4}
-            maxLength={2000}
-          />
-        </FormField>
 
         <Button type="submit" size="lg">
           {translateProfile("save")}

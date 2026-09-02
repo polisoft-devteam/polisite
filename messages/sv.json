@@ -233,7 +233,8 @@
     "githubUrlHint": "Frivilligt. Visas som en ikon i medlemslistan.",
     "officialTitleHint": "Ges av en admin. Du kan se vilka som finns, men inte välja själv.",
     "officialTitleNone": "Ingen titel",
-    "officialTitleSeeAll": "Se alla titlar"
+    "officialTitleSeeAll": "Se alla titlar",
+    "birthdayHint": "Frivilligt. Visas i kalendern och ger en grattis i Discord."
   },
   "Privacy": {
     "title": "Integritetspolicy",
@@ -290,7 +291,8 @@
     "awardBadge": "Tilldela",
     "removeBadge": "Ta bort",
     "setTitle": "Sätt titel",
-    "titleLabel": "Titel"
+    "titleLabel": "Titel",
+    "editProfile": "Redigera profil"
   },
   "Archive": {
     "title": "Öppet arkiv",

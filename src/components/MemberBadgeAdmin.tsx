@@ -16,7 +16,8 @@ import {
 } from "@/features/members/badge-actions"
 import { BADGES } from "@/features/members/badges"
 import { MEMBER_TITLES } from "@/features/members/titles"
-import { CloseIcon, PlusIcon } from "@/lib/icons"
+import { Link } from "@/i18n/navigation"
+import { CloseIcon, EditIcon, PlusIcon } from "@/lib/icons"
 
 export async function MemberBadgeAdmin({
   memberId,
@@ -63,6 +64,21 @@ export async function MemberBadgeAdmin({
       </form>
 
       <div className="flex flex-wrap items-center gap-2">
+        <Button
+          nativeButton={false}
+          variant="ghost"
+          size="sm"
+          render={
+            <Link
+              href={`/admin/members/${memberId}`}
+              transitionTypes={["nav-forward"]}
+            />
+          }
+        >
+          <EditIcon className="size-3" />
+          {translateAdmin("editProfile")}
+        </Button>
+
         {badges.map((badge) => (
           <form key={badge.badge} action={removeBadgeAction}>
             <input type="hidden" name="memberId" value={memberId} />

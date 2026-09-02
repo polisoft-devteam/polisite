@@ -14,12 +14,9 @@ import { MemberBadges } from "@/components/MemberBadges"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { Wishlist } from "@/components/Wishlist"
-import { findBadgesForMember } from "@/features/members/queries"
+import { findBadgesForMember, findMemberById } from "@/features/members/queries"
 import { isMemberTitle } from "@/features/members/titles"
-import {
-  findMemberById,
-  findWishlistForMember,
-} from "@/features/wishlist/queries"
+import { findWishlistForMember } from "@/features/wishlist/queries"
 import { getViewer } from "@/lib/auth"
 import { GithubIcon } from "@/lib/icons"
 
