@@ -14,7 +14,7 @@ const FOCAL_POINTS = {
   center: "object-center",
   upper: "object-[center_25%]",
   top: "object-top",
-  lower: "object-[center_75%]",
+  lower: "object-[center_65%]",
   bottom: "object-bottom",
 } as const
 
