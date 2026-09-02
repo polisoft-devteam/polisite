@@ -21,8 +21,13 @@ import {
   toggleDateVoteAction,
 } from "@/features/events/actions"
 import type { DateOptionWithVotes } from "@/features/events/queries"
-import { CheckIcon, PlusIcon } from "@/lib/icons"
+import { CheckIcon, ChooseDateIcon, PlusIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
+
+// An icon button carries no label, so it has to answer "can I press this?" by itself: it
+// lifts and deepens its border under the pointer.
+const ROUND_BUTTON =
+  "cursor-pointer rounded-full transition-transform hover:-translate-y-0.5 hover:scale-110 motion-reduce:transform-none"
 
 export async function EventDatePoll({
   eventId,
@@ -121,7 +126,7 @@ export async function EventDatePoll({
                     type="submit"
                     size="icon"
                     variant={option.votedByViewer ? "success" : "outline"}
-                    className="size-9 rounded-full"
+                    className={cn(ROUND_BUTTON, "size-9")}
                     aria-label={
                       option.votedByViewer
                         ? translateEvents("datePollVoted")
@@ -137,6 +142,23 @@ export async function EventDatePoll({
                 </form>
               )}
 
+              {canChooseDate && !isPast && (
+                <form action={chooseEventDateAction}>
+                  <input type="hidden" name="eventId" value={eventId} />
+                  <input type="hidden" name="dateOptionId" value={option.id} />
+                  <Button
+                    type="submit"
+                    size="icon"
+                    variant="secondary"
+                    className={cn(ROUND_BUTTON, "size-8")}
+                    title={translateEvents("datePollChoose")}
+                    aria-label={translateEvents("datePollChoose")}
+                  >
+                    <ChooseDateIcon className="size-4" />
+                  </Button>
+                </form>
+              )}
+
               {option.voters.length > 0 && (
                 <div className="flex justify-center">
                   {option.voters.slice(0, 4).map((voter) => (
@@ -148,16 +170,6 @@ export async function EventDatePoll({
                     />
                   ))}
                 </div>
-              )}
-
-              {canChooseDate && !isPast && (
-                <form action={chooseEventDateAction}>
-                  <input type="hidden" name="eventId" value={eventId} />
-                  <input type="hidden" name="dateOptionId" value={option.id} />
-                  <Button type="submit" size="xs" variant="secondary">
-                    {translateEvents("datePollChoose")}
-                  </Button>
-                </form>
               )}
             </li>
           )

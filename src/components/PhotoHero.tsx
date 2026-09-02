@@ -33,6 +33,7 @@ export function PhotoHero({
   focalPoint,
   eyebrow,
   title,
+  note,
   tagline,
   children,
 }: {
@@ -42,6 +43,8 @@ export function PhotoHero({
   /** Small label above the title, a category or a status. */
   eyebrow?: string
   title: string
+  /** A status that belongs with the name, such as an event still being only a suggestion. */
+  note?: React.ReactNode
   tagline?: string
   /** Sits under the tagline, for a call to action. */
   children?: React.ReactNode
@@ -100,6 +103,8 @@ export function PhotoHero({
           <h1 className="font-heading text-4xl font-extrabold tracking-tight text-balance text-white drop-shadow-lg sm:text-6xl">
             {title}
           </h1>
+
+          {note}
 
           {tagline && (
             <p className="mt-3 max-w-xl text-sm text-white/85 drop-shadow sm:text-base">

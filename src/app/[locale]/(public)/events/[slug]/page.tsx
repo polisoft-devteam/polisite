@@ -156,6 +156,9 @@ export default async function EventPage({
           images={[heroImage]}
           eyebrow={categoryLabel}
           title={event.title}
+          note={
+            event.kind === "suggestion" ? <SuggestionCallout onPhoto /> : null
+          }
         />
       )}
 
@@ -172,6 +175,7 @@ export default async function EventPage({
               title={event.title}
               actions={editButton}
             />
+            {event.kind === "suggestion" && <SuggestionCallout />}
           </div>
         )}
 
@@ -280,8 +284,6 @@ export default async function EventPage({
             <EventMap location={event.location} />
           </div>
         )}
-
-        {event.kind === "suggestion" && <SuggestionCallout />}
 
         {event.description && (
           <p className="mt-6 max-w-2xl text-sm whitespace-pre-line">

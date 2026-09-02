@@ -513,7 +513,15 @@ export default async function DesignPage({
         <SectionHeading>Bara medlemmar</SectionHeading>
         <AttendeeAvatars attendees={SAMPLE_ATTENDEES} />
 
+        <SectionHeading>Förslagsnotis, på sidan</SectionHeading>
         <SuggestionCallout />
+
+        <SectionHeading>Förslagsnotis, på ett foto</SectionHeading>
+        {/* On its own dark ground, because in the app it sits over the hero photograph. */}
+        <div className="mt-2 rounded-lg bg-neutral-800 p-4">
+          <SuggestionCallout onPhoto />
+        </div>
+
         <BackLink href="/design">Tillbaka</BackLink>
       </PageSection>
 

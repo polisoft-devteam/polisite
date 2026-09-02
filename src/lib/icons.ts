@@ -47,6 +47,8 @@ export {
   BoxArrowRight as SignOutIcon,
   HeartFill as HeartIcon,
   HourglassSplit as PendingIcon,
+  LightbulbFill as SuggestionIcon,
+  CalendarCheckFill as ChooseDateIcon,
   // Event categories
   MusicNoteBeamed as MusicIcon,
   Balloon as PartyIcon,
