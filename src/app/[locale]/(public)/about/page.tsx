@@ -62,7 +62,7 @@ export default async function AboutPage({
       <PageSubNav items={sections} />
 
       <PageSection id="about-us">
-        {/* The pile sits to the right of the history from md up, and above it on a phone,
+        {/* The pile sits to the right of the history from md up, and under it on a phone,
             where a column narrow enough for both would leave neither readable. */}
         <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_14rem] md:items-start">
           <div>
@@ -79,8 +79,10 @@ export default async function AboutPage({
             </div>
           </div>
 
+          {/* On a phone the pile follows the history rather than leading it, and stays
+              small: a full width one pushed the text off the first screen. */}
           {aboutImages.length > 0 && (
-            <div className="order-first md:order-none">
+            <div className="max-w-40 md:max-w-none">
               <ImageStack images={aboutImages} layout="cascade" />
             </div>
           )}
