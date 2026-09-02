@@ -26,6 +26,14 @@ const CONFETTI_COLOURS = [
   "var(--rsvp-interested)",
 ]
 
+// The browser reserialises an inline style, rounding a number to six significant digits and
+// dropping trailing zeros, so a full-precision value renders one way on the server and
+// another in the client's own style object, and hydration reports a mismatch. Rounding to
+// the canonical form first makes the two agree, and no one can see the lost decimals.
+function cssNumber(value: number, decimals: number): string {
+  return String(Number(value.toFixed(decimals)))
+}
+
 /** A pure 0..1 from three numbers: the fractional part of a large sine. */
 function scatter(index: number, seed: number, salt: number): number {
   const value = Math.sin((index + 1) * salt + (seed % 1000)) * 10000
@@ -71,13 +79,13 @@ export function Confetti({
             key={index}
             className="confetti-piece"
             style={{
-              left: `${left}%`,
+              left: `${cssNumber(left, 2)}%`,
               backgroundColor:
                 CONFETTI_COLOURS[index % CONFETTI_COLOURS.length],
-              animationDelay: `${delay}s`,
-              animationDuration: `${duration}s`,
-              ["--confetti-drift" as string]: `${drift.toFixed(1)}vw`,
-              ["--confetti-spin" as string]: `${spin.toFixed(0)}deg`,
+              animationDelay: `${cssNumber(delay, 3)}s`,
+              animationDuration: `${cssNumber(duration, 3)}s`,
+              ["--confetti-drift" as string]: `${cssNumber(drift, 1)}vw`,
+              ["--confetti-spin" as string]: `${cssNumber(spin, 0)}deg`,
             }}
           />
         )
