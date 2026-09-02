@@ -241,7 +241,10 @@ export async function EventForm({
               <AccordionTrigger className="px-4 hover:no-underline">
                 {translateEvents("advancedTitle")}
               </AccordionTrigger>
-              <AccordionContent className="px-4">
+              {/* Kept mounted, so the fields inside survive being collapsed. Without it
+                  the panel unmounts them: anything set here was forgotten on reopening,
+                  and worse, was not submitted at all if the section was closed. */}
+              <AccordionContent keepMounted className="px-4">
                 <p className="text-muted-foreground mb-4 text-xs">
                   {translateEvents("advancedHint")}
                 </p>

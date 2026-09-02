@@ -84,9 +84,19 @@ export function FormDraft({ storageKey }: { storageKey: string }) {
       // A corrupt or unavailable store is not worth failing a page over.
     }
 
+    // Merged into whatever is already stored rather than replacing it. A field that is
+    // not in the DOM right now, because a section is collapsed or a step is elsewhere,
+    // must keep the value it had rather than be dropped from the draft.
     function save() {
       try {
-        sessionStorage.setItem(storageKey, JSON.stringify(read()))
+        const existing = JSON.parse(
+          sessionStorage.getItem(storageKey) ?? "{}",
+        ) as Record<string, string | boolean>
+
+        sessionStorage.setItem(
+          storageKey,
+          JSON.stringify({ ...existing, ...read() }),
+        )
       } catch {
         // Private browsing, a full quota: losing the draft beats losing the form.
       }
