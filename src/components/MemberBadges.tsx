@@ -11,6 +11,10 @@
 // On your own profile the ones you have not earned are shown too, greyed, because a badge
 // nobody can see is not something to aim for. On someone else's only what they hold is
 // shown: a list of what a friend has failed to do is not a thing this site should render.
+//
+// Small and unframed, ten to a row on a laptop, because the whole set wants to be taken in
+// at a glance rather than read one card at a time. At that size the description and the
+// date do not fit, so they move into the tooltip rather than being dropped.
 
 import { getFormatter, getTranslations } from "next-intl/server"
 
@@ -75,13 +79,20 @@ export async function MemberBadges({
             const { key, Icon } = definition
             const image = artwork.get(key)
             const isEarned = awardedAt !== null
+            const name = badgeTitle(translateBadges(`${key}.title`), tier)
+
+            const earnedOn = awardedAt
+              ? format.dateTime(awardedAt, { year: "numeric", month: "long" })
+              : translateBadges("notEarned")
 
             return (
               <li
                 key={key}
+                // Everything the card used to spell out, for a pointer or a long press.
+                title={`${name} — ${translateBadges(`${key}.description`)} (${earnedOn})`}
                 className={cn(
-                  "border-border bg-card flex w-40 flex-col items-center gap-2 rounded-lg border p-4 text-center",
-                  !isEarned && "opacity-45 grayscale",
+                  "flex w-24 flex-col items-center gap-1.5 text-center",
+                  !isEarned && "opacity-40 grayscale",
                 )}
               >
                 {image ? (
@@ -89,38 +100,18 @@ export async function MemberBadges({
                     src={image}
                     alt=""
                     rounded="rounded-full"
-                    className="size-12"
-                    sizes="48px"
+                    className="size-14"
+                    sizes="56px"
                   />
                 ) : (
-                  <span className="bg-primary/15 text-primary-ink flex size-12 items-center justify-center rounded-full">
-                    <Icon className="size-6" />
+                  <span className="bg-primary/15 text-primary-ink flex size-14 items-center justify-center rounded-full">
+                    <Icon className="size-7" />
                   </span>
                 )}
 
-                <span className="text-sm font-medium">
-                  {badgeTitle(translateBadges(`${key}.title`), tier)}
+                <span className="text-[11px] leading-tight font-medium">
+                  {name}
                 </span>
-
-                <span className="text-muted-foreground text-xs">
-                  {translateBadges(`${key}.description`)}
-                </span>
-
-                {awardedAt ? (
-                  <time
-                    dateTime={awardedAt.toISOString()}
-                    className="text-muted-foreground text-[0.625rem] tracking-wide uppercase"
-                  >
-                    {format.dateTime(awardedAt, {
-                      year: "numeric",
-                      month: "short",
-                    })}
-                  </time>
-                ) : (
-                  <span className="text-muted-foreground text-[0.625rem] tracking-wide uppercase">
-                    {translateBadges("notEarned")}
-                  </span>
-                )}
               </li>
             )
           })}
