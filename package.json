@@ -18,7 +18,8 @@
     "storage:setup": "tsx --env-file=.env.local scripts/setup-storage.mts",
     "images:optimize": "tsx scripts/optimize-images.mts",
     "member:reset": "tsx --env-file=.env.local scripts/reset-member.mts",
-    "events:seed": "tsx --env-file=.env.local scripts/seed-events.mts"
+    "events:seed": "tsx --env-file=.env.local scripts/seed-events.mts",
+    "seed:archive": "tsx --env-file=.env.local scripts/seed-archive.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

@@ -330,7 +330,21 @@
     "membersOnlyTitle": "Bara för medlemmar",
     "membersOnlyBody": "Logga in som medlem för att öppna det här.",
     "membersOnlyHint": "Bara för medlemmar",
-    "membersOnlyClose": "Stäng"
+    "membersOnlyClose": "Stäng",
+    "addTitle": "Lägg till i arkivet",
+    "addLabel": "Namn",
+    "addUrl": "Länk",
+    "addUrlHint": "Klistra in en länk till ett Google-album, en YouTube-film, en Spotify-lista eller vad som helst annat.",
+    "addDetected": "Ser ut som: {kind}",
+    "addNotAUrl": "Det där är ingen webbadress.",
+    "addGroup": "Var hör det hemma?",
+    "addSubmit": "Lägg till",
+    "remove": "Ta bort",
+    "resourcesTitle": "Övriga resurser",
+    "kind_album": "fotoalbum",
+    "kind_film": "film",
+    "kind_playlist": "spellista",
+    "kind_resource": "länk"
   },
   "Links": {
     "title": "Föreningens länkar",

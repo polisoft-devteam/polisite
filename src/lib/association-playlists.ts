@@ -1,3 +1,6 @@
+// Kept as the seed's source, not the page's: the playlists live in archive_links now and
+// are read from there. See scripts/seed-archive.mts.
+//
 // Spotify playlists the association keeps.
 //
 // Only the playlist id is stored. The embed is loaded on click rather than with the page,

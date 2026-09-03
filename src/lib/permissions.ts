@@ -166,6 +166,25 @@ export function canViewMemberDirectory(viewer: Viewer | null): boolean {
   return isActiveMember(viewer)
 }
 
+// --- The open archive ----------------------------------------------------------
+
+/**
+ * Any member may add to the archive. It is the association's own scrapbook, and asking an
+ * admin to paste a link on your behalf would mean it stopped being kept.
+ */
+export function canAddArchiveLink(viewer: Viewer | null): boolean {
+  return isActiveMember(viewer)
+}
+
+/** Whoever put it there can take it away again, and an admin can tidy up after anyone. */
+export function canRemoveArchiveLink(
+  viewer: Viewer | null,
+  link: { addedByMemberId: string | null },
+): boolean {
+  if (!isActiveMember(viewer)) return false
+  return link.addedByMemberId === viewer!.member!.id || isAdmin(viewer)
+}
+
 // --- Badges and titles ---------------------------------------------------------
 
 /**

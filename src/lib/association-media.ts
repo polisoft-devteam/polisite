@@ -1,3 +1,6 @@
+// Kept as the seed's source, not the page's: the films live in archive_links now and are
+// read from there. See scripts/seed-archive.mts.
+//
 // Films and other things the association has made.
 //
 // Hosted on YouTube rather than in Supabase Storage: the free tier is 1 GB in total, and

@@ -1,3 +1,6 @@
+// Kept as the seed's source, not the page's: the albums live in archive_links now and
+// are read from there. See scripts/seed-archive.mts.
+//
 // Shared photo albums.
 //
 // Everything but the label is read off the album's own page. The URL has to be the one

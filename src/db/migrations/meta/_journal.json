@@ -169,6 +169,13 @@
       "when": 1788436623112,
       "tag": "0023_round_lifeguard",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1788463255476,
+      "tag": "0024_needy_sleepwalker",
+      "breakpoints": true
     }
   ]
 }

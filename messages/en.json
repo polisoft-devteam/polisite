@@ -330,7 +330,21 @@
     "membersOnlyTitle": "Members only",
     "membersOnlyBody": "Sign in as a member to open this.",
     "membersOnlyHint": "Members only",
-    "membersOnlyClose": "Close"
+    "membersOnlyClose": "Close",
+    "addTitle": "Add to the archive",
+    "addLabel": "Name",
+    "addUrl": "Link",
+    "addUrlHint": "Paste a link to a Google album, a YouTube film, a Spotify playlist or anything else.",
+    "addDetected": "Looks like: {kind}",
+    "addNotAUrl": "That is not a web address.",
+    "addGroup": "Where does it belong?",
+    "addSubmit": "Add",
+    "remove": "Remove",
+    "resourcesTitle": "Other resources",
+    "kind_album": "photo album",
+    "kind_film": "film",
+    "kind_playlist": "playlist",
+    "kind_resource": "link"
   },
   "Links": {
     "title": "Association links",
