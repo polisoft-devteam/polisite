@@ -14,6 +14,7 @@ import { useState } from "react"
 import { useTranslations } from "next-intl"
 
 import { FormField, FormSelect } from "@/components/FormField"
+import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { detectArchiveLink } from "@/features/archive/detect"
@@ -51,10 +52,11 @@ export function ArchiveLinkForm({
         <input type="hidden" name="archiveLinkId" value={archiveLinkId} />
       )}
 
-      {/* Side by side from sm, with the link given the wider half: a Google share URL is
-          long enough that a narrow box hides its own end. Items start, so the two labels
-          line up even though only one of them carries a hint underneath. */}
-      <div className="grid items-start gap-4 sm:grid-cols-[2fr_3fr]">
+      {/* One row from sm, which is to say everything but a phone. The link gets the
+          widest share: a Google share URL is long enough that a narrow box hides its own
+          end. Items start, so the button stays level with the inputs rather than being
+          dragged down by the hint that sits under one of them. */}
+      <div className="grid items-start gap-4 sm:grid-cols-[2fr_3fr_auto]">
         <FormField
           label={translateArchive("addLabel")}
           htmlFor={`${idPrefix}-label`}
@@ -91,6 +93,24 @@ export function ArchiveLinkForm({
             onChange={(event) => setUrl(event.target.value)}
           />
         </FormField>
+
+        <div className="space-y-2">
+          {/* An empty label rather than a guessed margin: it is the element the fields
+              beside it use, so the button cannot drift out of line if a label ever changes
+              size. Gone on a phone, where there is no row to line up with. */}
+          <Label aria-hidden className="hidden sm:invisible sm:block">
+            &nbsp;
+          </Label>
+
+          <Button type="submit" disabled={!canSubmit} className="w-full">
+            {canSubmit ? (
+              <AddToArchiveIcon className="size-4" />
+            ) : (
+              <NotYetIcon className="size-4" />
+            )}
+            {submitLabel}
+          </Button>
+        </div>
       </div>
 
       {/* Only an album is in one of two runs. Everything else has nowhere to put this. */}
@@ -109,15 +129,6 @@ export function ArchiveLinkForm({
           </FormSelect>
         </FormField>
       )}
-
-      <Button type="submit" disabled={!canSubmit}>
-        {canSubmit ? (
-          <AddToArchiveIcon className="size-4" />
-        ) : (
-          <NotYetIcon className="size-4" />
-        )}
-        {submitLabel}
-      </Button>
     </form>
   )
 }
