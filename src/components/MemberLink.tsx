@@ -38,7 +38,7 @@ export function MemberLink({
       ? "size-10"
       : size === "sm"
         ? "size-6 text-[0.625rem]"
-        : "size-8 text-xs"
+        : "size-7 text-xs"
 
   return (
     <Link

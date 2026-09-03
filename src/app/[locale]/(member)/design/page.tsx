@@ -538,7 +538,6 @@ export default async function DesignPage({
           member={buildSampleMember()}
           upcomingEvents={[buildSampleEvent()]}
           pastEvents={[]}
-          isOwnProfile={false}
           locale={locale}
         />
       </PageSection>
