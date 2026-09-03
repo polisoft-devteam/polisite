@@ -307,7 +307,8 @@
     "removeBadge": "Ta bort",
     "setTitle": "Sätt titel",
     "titleLabel": "Titel",
-    "editProfile": "Redigera profil"
+    "editProfile": "Redigera profil",
+    "badgeEarned": "Intjänad automatiskt"
   },
   "Archive": {
     "title": "Öppet arkiv",
@@ -387,20 +388,28 @@
       "description": "Medlem i föreningen. Alla har den här."
     },
     "yearsOfService": {
-      "title": "Trotjänare",
-      "description": "År av trogen tjänst i föreningens namn."
+      "title": "Years of Service",
+      "description": "Ett steg för varje år i föreningen, upp till tjugo."
     },
     "traveller": {
-      "title": "Resenär",
-      "description": "Har följt med på en av föreningens resor."
+      "title": "Traveller",
+      "description": "Har varit på plats på minst tre evenemang på riktigt."
     },
     "sportsman": {
-      "title": "Idrottsman",
+      "title": "Professional Athlete",
       "description": "Har gjort en insats på plan eller i hallen."
     },
     "gifter": {
-      "title": "Givmild",
+      "title": "Karl Bertil Johnsson",
       "description": "Har fixat något från någon annans önskelista."
+    },
+    "organiser": {
+      "title": "Organiser",
+      "description": "Har dragit ihop ett evenemang."
+    },
+    "attendee": {
+      "title": "Attendee",
+      "description": "Har varit med på ett evenemang."
     }
   }
 }

@@ -1,12 +1,25 @@
 // Database access for members. Per CLAUDE.md this is one of the only places allowed to
 // import src/db — pages and components call these functions instead.
 
-import { and, asc, eq, isNotNull, isNull, or, sql } from "drizzle-orm"
+import {
+  and,
+  asc,
+  count,
+  eq,
+  isNotNull,
+  isNull,
+  lt,
+  or,
+  sql,
+} from "drizzle-orm"
 
 import { db } from "@/db"
 import type { MemberBadge } from "@/db/schema"
 import { memberNameFrom } from "@/features/members/display-name"
+import type { BadgeFacts } from "@/features/members/badge-rules"
 import {
+  eventAttendees,
+  events,
   memberRoles,
   members,
   membershipPrompts,
@@ -257,6 +270,99 @@ export async function findBadgesByMember(): Promise<
   }
 
   return byMember
+}
+
+/**
+ * Everything the automatic badges are worked out from, in one round trip per member.
+ *
+ * "Attended" means the event has already happened and they said they were coming, not that
+ * they answered a future invitation. A promise is not a memory.
+ */
+export async function findBadgeFactsFor(
+  memberId: string,
+  now: Date,
+): Promise<BadgeFacts | null> {
+  const [member] = await db
+    .select({
+      status: members.status,
+      joinedAssociationAt: members.joinedAssociationAt,
+    })
+    .from(members)
+    .where(eq(members.id, memberId))
+    .limit(1)
+
+  if (!member) return null
+
+  const [[created], [attended], [inPerson]] = await Promise.all([
+    db
+      .select({ total: count() })
+      .from(events)
+      .where(eq(events.createdByMemberId, memberId)),
+
+    db
+      .select({ total: count() })
+      .from(eventAttendees)
+      .innerJoin(events, eq(events.id, eventAttendees.eventId))
+      .where(
+        and(
+          eq(eventAttendees.memberId, memberId),
+          eq(eventAttendees.response, "going"),
+          isNull(events.cancelledAt),
+          lt(events.startsAt, now),
+        ),
+      ),
+
+    db
+      .select({ total: count() })
+      .from(eventAttendees)
+      .innerJoin(events, eq(events.id, eventAttendees.eventId))
+      .where(
+        and(
+          eq(eventAttendees.memberId, memberId),
+          eq(eventAttendees.response, "going"),
+          eq(events.isOnline, false),
+          isNotNull(events.location),
+          isNull(events.cancelledAt),
+          lt(events.startsAt, now),
+        ),
+      ),
+  ])
+
+  return {
+    isActiveMember: member.status === "active",
+    joinedAssociationAt: member.joinedAssociationAt,
+    eventsCreated: created?.total ?? 0,
+    pastEventsAttended: attended?.total ?? 0,
+    pastInPersonEventsAttended: inPerson?.total ?? 0,
+  }
+}
+
+/**
+ * Gives a badge, or raises it to a higher rung. Never lowers one and never takes one back:
+ * a patch that disappears off a profile is worse than one that flatters.
+ */
+export async function awardOrRaiseBadge(award: {
+  memberId: string
+  badge: string
+  tier: number | null
+}): Promise<void> {
+  await db
+    .insert(memberBadges)
+    .values(award)
+    .onConflictDoUpdate({
+      target: [memberBadges.memberId, memberBadges.badge],
+      set: { tier: award.tier },
+      where: sql`${memberBadges.tier} is null or ${memberBadges.tier} < ${award.tier}`,
+    })
+}
+
+export async function findActiveMemberIds(): Promise<string[]> {
+  const rows = await db
+    .select({ id: members.id })
+    .from(members)
+    .where(eq(members.status, "active"))
+
+  return rows.map((row) => row.id)
 }
 
 export async function awardBadge(award: {

@@ -65,6 +65,7 @@ export const SAMPLE_ATTENDEES: Attendee[] = [
     email: "sample@example.com",
     avatarUrl: null,
     displayedBadge: "poli",
+    displayedBadgeTier: null,
     response: "going",
   },
   {
@@ -74,6 +75,7 @@ export const SAMPLE_ATTENDEES: Attendee[] = [
     email: "sample@example.com",
     avatarUrl: null,
     displayedBadge: "poli",
+    displayedBadgeTier: null,
     response: "going",
   },
   {
@@ -83,6 +85,7 @@ export const SAMPLE_ATTENDEES: Attendee[] = [
     email: "sample@example.com",
     avatarUrl: null,
     displayedBadge: "poli",
+    displayedBadgeTier: null,
     response: "going",
   },
 ]

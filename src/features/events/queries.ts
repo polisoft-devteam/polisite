@@ -29,6 +29,7 @@ import {
   eventGuests,
   eventReminders,
   events,
+  memberBadges,
   members,
   type AttendanceResponse,
   type Event,
@@ -411,26 +412,39 @@ export type Attendee = {
   avatarUrl: string | null
   /** The badge they chose to show, if any; a key from BADGES. */
   displayedBadge: string | null
+  /** The rung of the badge they wear, so the list can say "Years of Service: XII". */
+  displayedBadgeTier: number | null
   response: AttendanceResponse
 }
 
 export async function findAttendeesForEvent(
   eventId: string,
 ): Promise<Attendee[]> {
-  return db
-    .select({
-      memberId: members.id,
-      fullName: members.fullName,
-      nickname: members.nickname,
-      email: members.email,
-      avatarUrl: members.avatarUrl,
-      displayedBadge: members.displayedBadge,
-      response: eventAttendees.response,
-    })
-    .from(eventAttendees)
-    .innerJoin(members, eq(members.id, eventAttendees.memberId))
-    .where(eq(eventAttendees.eventId, eventId))
-    .orderBy(asc(members.fullName))
+  return (
+    db
+      .select({
+        memberId: members.id,
+        fullName: members.fullName,
+        nickname: members.nickname,
+        email: members.email,
+        avatarUrl: members.avatarUrl,
+        displayedBadge: members.displayedBadge,
+        displayedBadgeTier: memberBadges.tier,
+        response: eventAttendees.response,
+      })
+      .from(eventAttendees)
+      .innerJoin(members, eq(members.id, eventAttendees.memberId))
+      // Left, so someone wearing nothing is still in the list.
+      .leftJoin(
+        memberBadges,
+        and(
+          eq(memberBadges.memberId, members.id),
+          eq(memberBadges.badge, members.displayedBadge),
+        ),
+      )
+      .where(eq(eventAttendees.eventId, eventId))
+      .orderBy(asc(members.fullName))
+  )
 }
 
 /**
@@ -454,10 +468,18 @@ export async function findGoingAttendeesByEvent(
       email: members.email,
       avatarUrl: members.avatarUrl,
       displayedBadge: members.displayedBadge,
+      displayedBadgeTier: memberBadges.tier,
       response: eventAttendees.response,
     })
     .from(eventAttendees)
     .innerJoin(members, eq(members.id, eventAttendees.memberId))
+    .leftJoin(
+      memberBadges,
+      and(
+        eq(memberBadges.memberId, members.id),
+        eq(memberBadges.badge, members.displayedBadge),
+      ),
+    )
     .where(
       and(
         inArray(eventAttendees.eventId, eventIds),

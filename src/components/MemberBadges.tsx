@@ -9,7 +9,7 @@ import { getFormatter, getTranslations } from "next-intl/server"
 import { EmptyState } from "@/components/EmptyState"
 import { PageSection } from "@/components/PageSection"
 import type { MemberBadge } from "@/db/schema"
-import { findBadge } from "@/features/members/badges"
+import { badgeTitle, findBadge } from "@/features/members/badges"
 
 export async function MemberBadges({
   badges,
@@ -32,7 +32,7 @@ export async function MemberBadges({
         <EmptyState>{translateBadges("empty")}</EmptyState>
       ) : (
         <ul className="flex flex-wrap gap-3">
-          {awarded.map(({ badge, awardedAt, definition }) => {
+          {awarded.map(({ badge, tier, awardedAt, definition }) => {
             const { Icon } = definition
 
             return (
@@ -45,7 +45,7 @@ export async function MemberBadges({
                 </span>
 
                 <span className="text-sm font-medium">
-                  {translateBadges(`${badge}.title`)}
+                  {badgeTitle(translateBadges(`${badge}.title`), tier)}
                 </span>
 
                 <span className="text-muted-foreground text-xs">

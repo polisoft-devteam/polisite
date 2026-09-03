@@ -39,7 +39,7 @@ import {
   findGuestsForEvent,
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
-import { findBadge } from "@/features/members/badges"
+import { badgeTitle, findBadge } from "@/features/members/badges"
 import { cn } from "@/lib/utils"
 import { getViewer } from "@/lib/auth"
 import {
@@ -361,8 +361,11 @@ export default async function EventPage({
                       {attendee.displayedBadge &&
                         findBadge(attendee.displayedBadge) && (
                           <span className="text-muted-foreground block text-xs">
-                            {translateBadges(
-                              `${attendee.displayedBadge}.title`,
+                            {badgeTitle(
+                              translateBadges(
+                                `${attendee.displayedBadge}.title`,
+                              ),
+                              attendee.displayedBadgeTier,
                             )}
                           </span>
                         )}

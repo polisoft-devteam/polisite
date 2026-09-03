@@ -1,0 +1,1 @@
+ALTER TABLE "member_badges" ADD COLUMN "tier" integer;

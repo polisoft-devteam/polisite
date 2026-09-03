@@ -344,6 +344,7 @@ export default async function DesignPage({
           badges={BADGES.slice(0, 3).map((badge, index) => ({
             memberId: "design",
             badge: badge.key,
+            tier: badge.maxTier ? index + 1 : null,
             awardedAt: new Date(2026, index * 3, 1),
             awardedByMemberId: null,
           }))}

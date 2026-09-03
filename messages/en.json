@@ -307,7 +307,8 @@
     "removeBadge": "Remove",
     "setTitle": "Set title",
     "titleLabel": "Title",
-    "editProfile": "Edit profile"
+    "editProfile": "Edit profile",
+    "badgeEarned": "Earned automatically"
   },
   "Archive": {
     "title": "Open archive",
@@ -387,20 +388,28 @@
       "description": "A member of the association. Everyone has this one."
     },
     "yearsOfService": {
-      "title": "Long service",
-      "description": "Years of loyal service in the association's name."
+      "title": "Years of Service",
+      "description": "One rung for every year in the association, up to twenty."
     },
     "traveller": {
       "title": "Traveller",
-      "description": "Came along on one of the association's trips."
+      "description": "Was there in person at three events or more."
     },
     "sportsman": {
-      "title": "Sportsman",
-      "description": "Put in a shift on the pitch or in the hall."
+      "title": "Professional Athlete",
+      "description": "Turned out on the pitch or in the hall."
     },
     "gifter": {
-      "title": "Generous",
-      "description": "Sorted something off someone else's wishlist."
+      "title": "Karl Bertil Johnsson",
+      "description": "Got something off somebody else's wishlist."
+    },
+    "organiser": {
+      "title": "Organiser",
+      "description": "Put on an event."
+    },
+    "attendee": {
+      "title": "Attendee",
+      "description": "Turned up to an event."
     }
   }
 }
