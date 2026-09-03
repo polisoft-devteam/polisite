@@ -287,7 +287,8 @@
     "cookiesTitle": "Cookies",
     "cookiesBody": "We use a single necessary cookie, to keep you signed in. No analytics, no tracking, no ads. Pages with embedded content such as maps, Spotify and YouTube load it from those services, and their terms apply to that.",
     "contactTitle": "Contact",
-    "contactBody": "Write to {contactEmail} and we will help you."
+    "contactBody": "Write to {contactEmail} and we will help you.",
+    "controllerBodyVacant": "{associationName} is the controller of the data on this site. If you have questions, write to us at the address further down."
   },
   "Settings": {
     "title": "Settings",

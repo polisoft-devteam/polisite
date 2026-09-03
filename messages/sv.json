@@ -287,7 +287,8 @@
     "cookiesTitle": "Kakor",
     "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser. Sidor med inbäddat innehåll som kartor, Spotify och YouTube laddar det från respektive tjänst, och då gäller deras villkor.",
     "contactTitle": "Kontakt",
-    "contactBody": "Skriv till {contactEmail} så hjälper vi dig."
+    "contactBody": "Skriv till {contactEmail} så hjälper vi dig.",
+    "controllerBodyVacant": "{associationName} är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, skriv till oss på adressen längre ner."
   },
   "Settings": {
     "title": "Inställningar",

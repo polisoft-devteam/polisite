@@ -385,6 +385,27 @@ export async function removeBadge(
     )
 }
 
+/**
+ * Whoever currently holds an office, or null if it is vacant.
+ *
+ * The point of asking rather than writing a name down: an office outlives the person in
+ * it, and a name in the source is one nobody remembers to change when they step down.
+ */
+export async function findMemberHoldingTitle(title: string) {
+  const [member] = await db
+    .select({
+      id: members.id,
+      fullName: members.fullName,
+      nickname: members.nickname,
+      email: members.email,
+    })
+    .from(members)
+    .where(and(eq(members.status, "active"), eq(members.officialTitle, title)))
+    .limit(1)
+
+  return member ?? null
+}
+
 /** Null clears the office. Validated against MEMBER_TITLES by the action. */
 export async function setMemberTitle(
   memberId: string,
