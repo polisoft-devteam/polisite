@@ -21,31 +21,6 @@ export async function postMembershipRequestToDiscord(): Promise<void> {
 }
 
 /**
- * Tells the admin that the nightly run did not finish its job.
- *
- * One message for the whole run, never one per member: a database that is down fails for
- * everyone, and ten identical alarms are read as noise and muted. Carries a count and a
- * pointer to the logs, no member data, same as the request nudge above.
- */
-export async function postCronFailureToDiscord(job: {
-  name: string
-  failed: number
-  of: number
-}): Promise<void> {
-  const adminUserId = process.env.DISCORD_ADMIN_USER_ID
-
-  await postToDiscord({
-    channel: "bot",
-    content: [
-      `${mentionUser(adminUserId)}Nattjobbet "${job.name}" klarade inte allt:`,
-      `${job.failed} av ${job.of} misslyckades.`,
-      "Sök efter [badges] i loggen på Vercel för felet självt.",
-    ].join(" "),
-    mentionUserIds: adminUserId ? [adminUserId] : [],
-  })
-}
-
-/**
  * Happy birthday, in the general channel, mentioning the member role so it lands as a
  * notification rather than as another line nobody reads.
  */
