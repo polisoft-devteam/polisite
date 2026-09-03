@@ -14,7 +14,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 
 import {
-  AddToArchiveIcon,
   GamingIcon,
   HeartIcon,
   MembersIcon,
@@ -22,6 +21,7 @@ import {
   PartyIcon,
   PhotosIcon,
   PlayIcon,
+  PlusIcon,
   DriveIcon,
   PendingIcon,
   type IconComponent,
@@ -43,7 +43,7 @@ const SUB_NAV_ICON: Record<string, IconComponent> = {
   gaming: GamingIcon,
   music: MusicIcon,
   resources: DriveIcon,
-  add: AddToArchiveIcon,
+  add: PlusIcon,
 }
 
 export type SubNavItem = {
