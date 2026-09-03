@@ -504,13 +504,40 @@ a[href] {
 }
 
 /* --- Large screens -----------------------------------------------------------
-   Everything is sized in rem, spacing included, so nudging the root size scales
-   the whole site rather than only its text. A 2560px monitor was showing the
-   same physical size as a laptop, with far more empty margin. */
+   Everything is sized in rem, spacing included, and so are the container widths,
+   so nudging the root size scales the whole site rather than only its text: type,
+   padding, control heights and the column all grow together, and a line keeps the
+   same number of words in it.
 
-@media (min-width: 1536px) {
+   A ladder rather than one step, because a 2560px monitor and a 1440px laptop are
+   not the same room. One step at 1536px still left a big screen looking like a
+   laptop viewed from further away.
+
+   Breakpoints are in px on purpose. A media query reads rem against the browser's
+   initial 16px, not against what is set here, but writing px says so out loud
+   rather than leaving the next reader to work out whether this feeds itself. */
+
+@media (min-width: 1400px) {
   html {
     font-size: 17px;
+  }
+}
+
+@media (min-width: 1600px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1920px) {
+  html {
+    font-size: 19px;
+  }
+}
+
+@media (min-width: 2400px) {
+  html {
+    font-size: 20px;
   }
 }
 
