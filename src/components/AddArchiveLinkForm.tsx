@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { addArchiveLinkAction } from "@/features/archive/actions"
 import { detectArchiveLink } from "@/features/archive/detect"
-import { PlusIcon } from "@/lib/icons"
+import { AddToArchiveIcon, NotYetIcon } from "@/lib/icons"
 
 export function AddArchiveLinkForm() {
   const translateArchive = useTranslations("Archive")
@@ -24,6 +24,7 @@ export function AddArchiveLinkForm() {
 
   const trimmed = url.trim()
   const detected = trimmed ? detectArchiveLink(trimmed) : null
+  const canSubmit = detected !== null
 
   return (
     <form action={addArchiveLinkAction} className="mt-4 max-w-xl space-y-4">
@@ -65,8 +66,14 @@ export function AddArchiveLinkForm() {
         </FormField>
       )}
 
-      <Button type="submit" disabled={detected === null}>
-        <PlusIcon className="size-4" />
+      {/* The icon carries the same answer as the disabled state, so the button says why
+          it cannot be pressed rather than only that it cannot. */}
+      <Button type="submit" disabled={!canSubmit}>
+        {canSubmit ? (
+          <AddToArchiveIcon className="size-4" />
+        ) : (
+          <NotYetIcon className="size-4" />
+        )}
         {translateArchive("addSubmit")}
       </Button>
     </form>

@@ -72,6 +72,9 @@ export default async function ArchivePage({
     ...(isMember && resources.length > 0
       ? [{ id: "resources", label: translateArchive("resourcesTitle") }]
       : []),
+    // Last, and only for a member: the form is theirs and it sits at the foot of the page,
+    // which is a long scroll to find without something pointing at it.
+    ...(isMember ? [{ id: "add", label: translateArchive("addTitle") }] : []),
   ]
 
   return (
