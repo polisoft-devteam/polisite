@@ -50,3 +50,14 @@ export function readArchiveImages(): Promise<string[]> {
 export function readAboutImages(): Promise<string[]> {
   return readImagesIn("about")
 }
+
+/**
+ * Badge artwork, keyed by the badge it belongs to: badges/traveller.webp is the Traveller
+ * badge's picture. The filename is the whole connection — nothing to register, no id to
+ * keep in step, and a badge with no file simply falls back to its icon.
+ */
+export async function readBadgeImages(): Promise<Map<string, string>> {
+  const images = await readImagesIn("badges")
+
+  return new Map(images.map((image) => [path.basename(image, ".webp"), image]))
+}

@@ -126,6 +126,14 @@ const BUTTON_VARIANTS = [
 
 const BUTTON_SIZES = ["xs", "sm", "default", "lg"] as const
 
+const SAMPLE_BADGES = BADGES.slice(0, 3).map((badge, index) => ({
+  memberId: "design",
+  badge: badge.key,
+  tier: badge.maxTier ? index + 1 : null,
+  awardedAt: new Date(2026, index * 3, 1),
+  awardedByMemberId: null,
+}))
+
 export default async function DesignPage({
   params,
 }: PageProps<"/[locale]/design">) {
@@ -340,16 +348,11 @@ export default async function DesignPage({
       </PageSection>
 
       <PageSection heading="Utmärkelser">
-        <MemberBadges
-          badges={BADGES.slice(0, 3).map((badge, index) => ({
-            memberId: "design",
-            badge: badge.key,
-            tier: badge.maxTier ? index + 1 : null,
-            awardedAt: new Date(2026, index * 3, 1),
-            awardedByMemberId: null,
-          }))}
-          locale={locale}
-        />
+        <SectionHeading>Någon annans profil, bara det de tagit</SectionHeading>
+        <MemberBadges badges={SAMPLE_BADGES} locale={locale} />
+
+        <SectionHeading>Egen profil, resten grå</SectionHeading>
+        <MemberBadges badges={SAMPLE_BADGES} locale={locale} showUnearned />
       </PageSection>
 
       <PageSection heading="Notiser">

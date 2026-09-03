@@ -410,6 +410,7 @@
     "attendee": {
       "title": "Attendee",
       "description": "Har varit med på ett evenemang."
-    }
+    },
+    "notEarned": "Inte tagen än"
   }
 }
