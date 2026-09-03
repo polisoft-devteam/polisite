@@ -148,6 +148,7 @@ export const eventCategoryEnum = pgEnum("event_category", [
   "trip",
   "hike",
   "sport",
+  "gaming",
   "food",
   "board_meeting",
   "birthday",
@@ -335,11 +336,15 @@ export const memberBadges = pgTable(
     /** A key from BADGES. Text rather than an enum so a new badge needs no migration. */
     badge: text("badge").notNull(),
 
+    /** Which rung of a badge that counts up, such as Years of Service. Null if it has
+        no rungs. Raised in place, so a member holds one row, at their highest. */
+    tier: integer("tier"),
+
     awardedAt: timestamp("awarded_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
 
-    /** Who handed it out. Kept so it is answerable, not shown anywhere. */
+    /** Who handed it out. Null when it was earned rather than given. */
     awardedByMemberId: uuid("awarded_by_member_id").references(
       () => members.id,
       { onDelete: "set null" },

@@ -38,7 +38,10 @@ import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { HoverRevealLabel } from "@/components/HoverRevealLabel"
 import { ImageDropZone } from "@/components/ImageDropZone"
+import { BadgeShelf } from "@/components/BadgeShelf"
 import { MemberBadges } from "@/components/MemberBadges"
+import { MembershipActions } from "@/components/MembershipActions"
+import { MembersOnlyNotice } from "@/components/MembersOnlyNotice"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import {
@@ -125,6 +128,14 @@ const BUTTON_VARIANTS = [
 ] as const
 
 const BUTTON_SIZES = ["xs", "sm", "default", "lg"] as const
+
+const SAMPLE_BADGES = BADGES.slice(0, 3).map((badge, index) => ({
+  memberId: "00000000-0000-4000-8000-000000000002",
+  badge: badge.key,
+  tier: badge.maxTier ? index + 1 : null,
+  awardedAt: new Date(2026, index * 3, 1),
+  awardedByMemberId: null,
+}))
 
 export default async function DesignPage({
   params,
@@ -339,16 +350,40 @@ export default async function DesignPage({
         </div>
       </PageSection>
 
+      <PageSection heading="Bara för medlemmar">
+        {/* What someone following an event link from Discord meets. Both states here,
+            because reaching either for real means signing out or demoting an account. */}
+        <SectionHeading>Utloggad</SectionHeading>
+        <MembersOnlyNotice state="signedOut" />
+
+        <SectionHeading>Inloggad, har inte ansökt</SectionHeading>
+        <MembersOnlyNotice state="canApply" />
+
+        <SectionHeading>Ansökt, väntar på admin</SectionHeading>
+        <MembersOnlyNotice state="pending" />
+
+        <SectionHeading>Nekad, inget att trycka på</SectionHeading>
+        <MembersOnlyNotice state="denied" />
+
+        <SectionHeading>
+          Knapparna för sig, som de sitter på Om oss
+        </SectionHeading>
+        <div className="flex flex-wrap items-center gap-2">
+          <MembershipActions state="signedOut" />
+          <MembershipActions state="canApply" />
+          <MembershipActions state="pending" />
+        </div>
+      </PageSection>
+
       <PageSection heading="Utmärkelser">
-        <MemberBadges
-          badges={BADGES.slice(0, 3).map((badge, index) => ({
-            memberId: "design",
-            badge: badge.key,
-            awardedAt: new Date(2026, index * 3, 1),
-            awardedByMemberId: null,
-          }))}
-          locale={locale}
-        />
+        <SectionHeading>Någon annans profil, bara det de tagit</SectionHeading>
+        <MemberBadges badges={SAMPLE_BADGES} locale={locale} />
+
+        <SectionHeading>Egen profil, resten grå</SectionHeading>
+        <MemberBadges badges={SAMPLE_BADGES} locale={locale} isOwnProfile />
+
+        <SectionHeading>Hyllan som katalog, allt i färg</SectionHeading>
+        <BadgeShelf locale={locale} mode="catalogue" />
       </PageSection>
 
       <PageSection heading="Notiser">
@@ -530,7 +565,6 @@ export default async function DesignPage({
           member={buildSampleMember()}
           upcomingEvents={[buildSampleEvent()]}
           pastEvents={[]}
-          isOwnProfile={false}
           locale={locale}
         />
       </PageSection>

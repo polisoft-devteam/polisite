@@ -1,70 +1,56 @@
-// A member's patches.
+// The badge section on a profile: the heading, a line or two saying what these are and how
+// they arrive, then the shelf itself.
 //
-// The database stores a key; the icon and the copy come from features/members/badges.ts
-// and the message files. A key with no definition is skipped rather than rendered blank,
-// so removing a badge from the list does not break the profiles that were given it.
+// The shelf is BadgeShelf, shared with the page that lists every badge. This is only the
+// framing a profile needs around it.
 
-import { getFormatter, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 
-import { EmptyState } from "@/components/EmptyState"
+import { BadgeShelf } from "@/components/BadgeShelf"
 import { PageSection } from "@/components/PageSection"
+import { Button } from "@/components/ui/button"
 import type { MemberBadge } from "@/db/schema"
-import { findBadge } from "@/features/members/badges"
+import { Link } from "@/i18n/navigation"
+import { ChevronRightIcon } from "@/lib/icons"
 
 export async function MemberBadges({
   badges,
   locale,
+  isOwnProfile = false,
 }: {
   badges: MemberBadge[]
   locale: string
+  /** Their own, where what is still to come is worth seeing and worth explaining. */
+  isOwnProfile?: boolean
 }) {
   const translateBadges = await getTranslations("Badges")
-  const format = await getFormatter({ locale })
-
-  const awarded = badges.flatMap((badge) => {
-    const definition = findBadge(badge.badge)
-    return definition ? [{ ...badge, definition }] : []
-  })
 
   return (
     <PageSection id="badges" heading={translateBadges("title")}>
-      {awarded.length === 0 ? (
-        <EmptyState>{translateBadges("empty")}</EmptyState>
-      ) : (
-        <ul className="flex flex-wrap gap-3">
-          {awarded.map(({ badge, awardedAt, definition }) => {
-            const { Icon } = definition
+      {/* Only on your own. On someone else's, instructions for earning badges are
+          instructions for the wrong person. */}
+      {isOwnProfile && (
+        <p className="text-muted-foreground max-w-prose text-sm">
+          {translateBadges("intro")}
+        </p>
+      )}
 
-            return (
-              <li
-                key={badge}
-                className="border-border bg-card flex w-40 flex-col items-center gap-2 rounded-lg border p-4 text-center"
-              >
-                <span className="bg-primary/15 text-primary-ink flex size-12 items-center justify-center rounded-full">
-                  <Icon className="size-6" />
-                </span>
+      <BadgeShelf
+        badges={badges}
+        locale={locale}
+        mode={isOwnProfile ? "all" : "held"}
+      />
 
-                <span className="text-sm font-medium">
-                  {translateBadges(`${badge}.title`)}
-                </span>
-
-                <span className="text-muted-foreground text-xs">
-                  {translateBadges(`${badge}.description`)}
-                </span>
-
-                <time
-                  dateTime={awardedAt.toISOString()}
-                  className="text-muted-foreground text-[0.625rem] tracking-wide uppercase"
-                >
-                  {format.dateTime(awardedAt, {
-                    year: "numeric",
-                    month: "short",
-                  })}
-                </time>
-              </li>
-            )
-          })}
-        </ul>
+      {isOwnProfile && (
+        <Button
+          nativeButton={false}
+          variant="ghost"
+          size="sm"
+          render={<Link href="/badges" transitionTypes={["nav-forward"]} />}
+        >
+          {translateBadges("seeAll")}
+          <ChevronRightIcon className="size-3" />
+        </Button>
       )}
     </PageSection>
   )

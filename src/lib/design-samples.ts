@@ -1,12 +1,17 @@
 // Stand-in data for /design, so components that normally need the database can be shown
 // there. Nothing here is ever written — it exists to be rendered and looked at.
+//
+// The ids are real uuids, even though nothing looks them up. A component given a sample
+// event may still go and ask the database who is coming, and Postgres refuses a uuid
+// column an id shaped like "sample-event" rather than politely finding nothing. Version 4,
+// all zeroes but the last digit, so one is never mistaken for a row that matters.
 
 import type { Attendee, EventGuestWithInviter } from "@/features/events/queries"
 import type { Event, Member } from "@/db/schema"
 
 export function buildSampleEvent(overrides: Partial<Event> = {}): Event {
   return {
-    id: "sample-event",
+    id: "00000000-0000-4000-8000-000000000001",
     title: "Bastufestival i Hälsingland",
     description: "Två dagar bastu, bad och alldeles för mycket korv.",
     slug: "sample-event",
@@ -36,7 +41,7 @@ export function buildSampleEvent(overrides: Partial<Event> = {}): Event {
 
 export function buildSampleMember(overrides: Partial<Member> = {}): Member {
   return {
-    id: "sample-member",
+    id: "00000000-0000-4000-8000-000000000002",
     authUserId: null,
     email: "medlem@example.com",
     fullName: "Astrid Lindqvist",
@@ -59,45 +64,48 @@ export function buildSampleMember(overrides: Partial<Member> = {}): Member {
 
 export const SAMPLE_ATTENDEES: Attendee[] = [
   {
-    memberId: "m1",
+    memberId: "00000000-0000-4000-8000-000000000011",
     fullName: "Astrid Lindqvist",
     nickname: "Assi",
     email: "sample@example.com",
     avatarUrl: null,
     displayedBadge: "poli",
+    displayedBadgeTier: null,
     response: "going",
   },
   {
-    memberId: "m2",
+    memberId: "00000000-0000-4000-8000-000000000012",
     fullName: "Bengt Karlsson",
     nickname: null,
     email: "sample@example.com",
     avatarUrl: null,
     displayedBadge: "poli",
+    displayedBadgeTier: null,
     response: "going",
   },
   {
-    memberId: "m3",
+    memberId: "00000000-0000-4000-8000-000000000013",
     fullName: "Cecilia Ohlsson",
     nickname: null,
     email: "sample@example.com",
     avatarUrl: null,
     displayedBadge: "poli",
+    displayedBadgeTier: null,
     response: "going",
   },
 ]
 
 export const SAMPLE_GUESTS: EventGuestWithInviter[] = [
   {
-    id: "g1",
+    id: "00000000-0000-4000-8000-000000000021",
     name: "Doris Almqvist",
-    invitedByMemberId: "m1",
+    invitedByMemberId: "00000000-0000-4000-8000-000000000011",
     invitedByName: "Astrid Lindqvist",
   },
   {
-    id: "g2",
+    id: "00000000-0000-4000-8000-000000000022",
     name: "Erik Sund",
-    invitedByMemberId: "m2",
+    invitedByMemberId: "00000000-0000-4000-8000-000000000012",
     invitedByName: "Bengt Karlsson",
   },
 ]

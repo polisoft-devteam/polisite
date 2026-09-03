@@ -20,6 +20,7 @@ const CATEGORY_EMOJI: Record<Event["category"], string> = {
   trip: "✈️",
   hike: "🥾",
   sport: "🏅",
+  gaming: "🎮",
   food: "🍽️",
   board_meeting: "📋",
   birthday: "🎂",

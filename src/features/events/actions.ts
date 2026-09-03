@@ -30,6 +30,7 @@ import {
   toMinorUnits,
 } from "@/features/events/schemas"
 import { redirect } from "@/i18n/navigation"
+import { syncAutomaticBadges } from "@/features/members/badge-sync"
 import { getViewer } from "@/lib/auth"
 import {
   canBringGuests,
@@ -96,6 +97,9 @@ export async function createEventAction(formData: FormData) {
 
   // Whoever arranges it is coming, so don't make them click that separately.
   await setAttendance(event.id, viewer!.member!.id, "going")
+
+  // Earned this second, so it is on their profile by the time they look.
+  await syncAutomaticBadges(viewer!.member!.id)
 
   const locale = await getLocale()
 
@@ -265,6 +269,10 @@ export async function setAttendanceAction(formData: FormData) {
     viewer!.member!.id,
     response as (typeof attendanceResponseEnum.enumValues)[number],
   )
+
+  // Answering a future event earns nothing yet; the nightly run picks it up once the
+  // event is behind us. Saying yes to one already past counts straight away.
+  await syncAutomaticBadges(viewer!.member!.id)
 
   revalidatePath("/", "layout")
 }

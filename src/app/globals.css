@@ -711,3 +711,38 @@ a[href] {
     opacity: 0;
   }
 }
+
+/* A badge turns over under the pointer: the artwork on the front, what it takes to earn on
+   the back, in the same footprint so nothing on the shelf moves.
+   Gated on a real pointer: on a touch screen :hover sticks after a tap, so the last badge
+   touched would have stayed face down. */
+.badge-flip {
+  perspective: 500px;
+}
+
+.badge-faces {
+  transform-style: preserve-3d;
+  transition: transform 400ms ease;
+}
+
+.badge-front,
+.badge-back {
+  backface-visibility: hidden;
+}
+
+.badge-back {
+  transform: rotateY(180deg);
+}
+
+@media (hover: hover) {
+  .badge:hover .badge-faces {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Still turns over, just without the turning. */
+@media (prefers-reduced-motion: reduce) {
+  .badge-faces {
+    transition: none;
+  }
+}

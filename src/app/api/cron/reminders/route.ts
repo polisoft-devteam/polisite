@@ -11,6 +11,7 @@ import {
   findUnsentRemindersForUpcomingEvents,
   markReminderSent,
 } from "@/features/events/queries"
+import { syncAutomaticBadgesForEveryone } from "@/features/members/badge-sync"
 import { postBirthdayToDiscord } from "@/features/members/discord"
 import { memberDisplayName } from "@/features/members/identity"
 import {
@@ -95,7 +96,11 @@ export async function GET(request: Request) {
     today.getDate(),
   )
 
+  // Last, so a failure here cannot cost anyone a reminder or a birthday greeting.
+  const badgesCheckedFor = await syncAutomaticBadgesForEveryone(now)
+
   return NextResponse.json({
+    badgesCheckedFor,
     checked: pending.length,
     due: due.length,
     sent: sent.length,

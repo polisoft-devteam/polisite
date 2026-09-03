@@ -1,5 +1,9 @@
-// Read-only profile. The same layout is used for your own profile and anyone else's —
-// only the settings link differs.
+// A member's profile. The same component whoever is looking and whoever is looked at: your
+// own and everyone else's are this, so the two cannot drift into looking like different
+// pages, which is what they had done.
+//
+// What differs is one slot. The page decides whether the reader may change anything and
+// hands in the button, because who may edit is a permission question and this is a view.
 //
 // The header is deliberately not PageHeading: an avatar, a nickname and badges around the
 // title is a composite specific to profiles, and folding it in would turn PageHeading
@@ -11,18 +15,18 @@ import { EventList } from "@/components/EventList"
 import { Fact, FactList } from "@/components/FactList"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import type { Event, Member } from "@/db/schema"
+import { ExternalLink } from "@/components/ExternalLink"
 import { isMemberTitle } from "@/features/members/titles"
-import { Link } from "@/i18n/navigation"
-import { SettingsIcon } from "@/lib/icons"
+import { GithubIcon } from "@/lib/icons"
 
 type ProfileViewProps = {
   member: Member
   upcomingEvents: Event[]
   pastEvents: Event[]
-  isOwnProfile: boolean
   locale: string
+  /** Settings, edit, nothing at all. The page knows who may; this only makes room. */
+  action?: React.ReactNode
   /** Rendered between the facts and the events, where the profile's own news belongs. */
   notifications?: React.ReactNode
 }
@@ -31,11 +35,12 @@ export async function ProfileView({
   member,
   upcomingEvents,
   pastEvents,
-  isOwnProfile,
   locale,
+  action,
   notifications,
 }: ProfileViewProps) {
   const translateProfile = await getTranslations("Profile")
+  const translateMembers = await getTranslations("Members")
   const translateTitles = await getTranslations("Titles")
   const format = await getFormatter({ locale })
 
@@ -68,19 +73,7 @@ export async function ProfileView({
           )}
         </div>
 
-        {isOwnProfile && (
-          <Button
-            nativeButton={false}
-            render={<Link href="/settings" transitionTypes={["nav-forward"]} />}
-            size="sm"
-            aria-label={translateProfile("settings")}
-          >
-            <SettingsIcon className="size-4" />
-            <span className="hidden sm:inline">
-              {translateProfile("settings")}
-            </span>
-          </Button>
-        )}
+        {action}
       </div>
 
       <p className="mt-6 max-w-2xl text-sm">
@@ -90,6 +83,15 @@ export async function ProfileView({
           </span>
         )}
       </p>
+
+      {member.githubUrl && (
+        <div className="mt-4 text-sm">
+          <ExternalLink href={member.githubUrl}>
+            <GithubIcon className="size-3.5" />
+            {translateMembers("github")}
+          </ExternalLink>
+        </div>
+      )}
 
       <div className="mt-6">
         <FactList>

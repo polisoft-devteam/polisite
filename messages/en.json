@@ -112,6 +112,7 @@
     "categoryTrip": "Trip",
     "categoryHike": "Hike",
     "categorySport": "Sport",
+    "categoryGaming": "Gaming",
     "categoryFood": "Food",
     "categoryBoardMeeting": "Board meeting",
     "categoryBirthday": "Birthday",
@@ -199,7 +200,12 @@
     "cancelEvent": "Cancel the event",
     "cancelEventConfirm": "The event is called off and everyone in Poli is pinged on Discord. The page stays, marked as cancelled. This cannot be undone.",
     "cancelEventConfirmAction": "Yes, cancel it and ping Poli",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "membersOnlyTitle": "Members only",
+    "membersOnlyReadMore": "About membership",
+    "membersOnlyBody": "A fair amount is behind lock and key here, for your safety and ours. Sign in with Google and send a request. An admin lets you in, and only then do you see the association's own events, members and wishlists. Until then you see the same page as a visitor, more or less.",
+    "membersOnlyApply": "Apply for membership",
+    "membersOnlyPendingPill": "Membership pending"
   },
   "Calendar": {
     "title": "Calendar",
@@ -281,7 +287,8 @@
     "cookiesTitle": "Cookies",
     "cookiesBody": "We use a single necessary cookie, to keep you signed in. No analytics, no tracking, no ads. Pages with embedded content such as maps, Spotify and YouTube load it from those services, and their terms apply to that.",
     "contactTitle": "Contact",
-    "contactBody": "Write to {contactEmail} and we will help you."
+    "contactBody": "Write to {contactEmail} and we will help you.",
+    "controllerBodyVacant": "{associationName} is the controller of the data on this site. If you have questions, write to us at the address further down."
   },
   "Settings": {
     "title": "Settings",
@@ -306,7 +313,8 @@
     "removeBadge": "Remove",
     "setTitle": "Set title",
     "titleLabel": "Title",
-    "editProfile": "Edit profile"
+    "editProfile": "Edit profile",
+    "badgeEarned": "Earned automatically"
   },
   "Archive": {
     "title": "Open archive",
@@ -386,20 +394,33 @@
       "description": "A member of the association. Everyone has this one."
     },
     "yearsOfService": {
-      "title": "Long service",
-      "description": "Years of loyal service in the association's name."
+      "title": "Years of Service",
+      "description": "One rung for every year in the association, up to twenty."
     },
     "traveller": {
       "title": "Traveller",
-      "description": "Came along on one of the association's trips."
+      "description": "Was there in person at three events or more."
     },
     "sportsman": {
-      "title": "Sportsman",
-      "description": "Put in a shift on the pitch or in the hall."
+      "title": "Professional Athlete",
+      "description": "Turned out on the pitch or in the hall."
     },
     "gifter": {
-      "title": "Generous",
-      "description": "Sorted something off someone else's wishlist."
-    }
+      "title": "Karl Bertil Johnsson",
+      "description": "Got something off somebody else's wishlist."
+    },
+    "organiser": {
+      "title": "Organiser",
+      "description": "Put on an event."
+    },
+    "attendee": {
+      "title": "Attendee",
+      "description": "Turned up to an event."
+    },
+    "notEarned": "Not earned yet",
+    "intro": "Patches earned in the service of the association, Baddaren-style! There are any number of great ones to go after.",
+    "allTitle": "All badges",
+    "seeAll": "See all badges",
+    "backToProfile": "Back to profile"
   }
 }

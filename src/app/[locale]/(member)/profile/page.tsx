@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { PageContainer } from "@/components/PageContainer"
+import { Button } from "@/components/ui/button"
 import { MemberBadges } from "@/components/MemberBadges"
 import { NotificationList } from "@/components/NotificationList"
 import { ProfileView } from "@/components/ProfileView"
@@ -15,6 +16,8 @@ import { findActivityFor } from "@/features/notifications/queries"
 import { findWishlistForMember } from "@/features/wishlist/queries"
 import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
 import { getViewer } from "@/lib/auth"
+import { Link } from "@/i18n/navigation"
+import { SettingsIcon } from "@/lib/icons"
 
 export async function generateMetadata({
   params,
@@ -34,6 +37,7 @@ export default async function ProfilePage({
   const { locale } = await params
   setRequestLocale(locale)
 
+  const translateProfile = await getTranslations("Profile")
   const viewer = await getViewer()
 
   // The (member) layout already redirected anyone without an active membership.
@@ -61,13 +65,25 @@ export default async function ProfilePage({
         }}
         upcomingEvents={upcomingEvents}
         pastEvents={pastEvents}
-        isOwnProfile
         locale={locale}
+        action={
+          <Button
+            nativeButton={false}
+            render={<Link href="/settings" transitionTypes={["nav-forward"]} />}
+            size="sm"
+            aria-label={translateProfile("settings")}
+          >
+            <SettingsIcon className="size-4" />
+            <span className="hidden sm:inline">
+              {translateProfile("settings")}
+            </span>
+          </Button>
+        }
         // Above the events, because it is the reason you followed the badge here.
         notifications={<NotificationList activity={activity} locale={locale} />}
       />
 
-      <MemberBadges badges={badges} locale={locale} />
+      <MemberBadges badges={badges} locale={locale} isOwnProfile />
 
       <Wishlist entries={wishlist} isOwnList />
     </PageContainer>

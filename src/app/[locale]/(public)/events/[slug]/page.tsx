@@ -12,6 +12,8 @@ import { EventDatePoll } from "@/components/EventDatePoll"
 import { EventGuests } from "@/components/EventGuests"
 import { EventMap } from "@/components/EventMap"
 import { MemberLink } from "@/components/MemberLink"
+import { MembersOnlyNotice } from "@/components/MembersOnlyNotice"
+import { findMembershipState } from "@/features/members/membership-state"
 import { EventRsvp } from "@/components/EventRsvp"
 import { EmptyState } from "@/components/EmptyState"
 import { ExternalLink } from "@/components/ExternalLink"
@@ -39,7 +41,7 @@ import {
   findGuestsForEvent,
 } from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
-import { findBadge } from "@/features/members/badges"
+import { badgeTitle, findBadge } from "@/features/members/badges"
 import { cn } from "@/lib/utils"
 import { getViewer } from "@/lib/auth"
 import {
@@ -61,7 +63,9 @@ export async function generateMetadata({
 }: PageProps<"/[locale]/events/[slug]">): Promise<Metadata> {
   const { locale, slug } = await params
   const viewer = await getViewer()
-  const event = await findEventBySlug(slug, visibleEventVisibilitiesFor(viewer))
+  const event = isActiveMember(viewer)
+    ? await findEventBySlug(slug, visibleEventVisibilitiesFor(viewer))
+    : null
 
   if (!event) {
     const translateEvents = await getTranslations({
@@ -88,15 +92,25 @@ export default async function EventPage({
   const format = await getFormatter({ locale })
   const viewer = await getViewer()
 
+  // Asked before the slug is even looked up, so an event that exists and one that does not
+  // answer a non-member identically. Detail is members only whatever the event's
+  // visibility, including public and members_and_friends: those decide who sees that an
+  // event exists and who may come, not who may read the page.
+  //
+  // A notice rather than a not-found, because the link that got them here was probably
+  // ours, posted to Discord, and a dead end is no way to greet someone who followed it.
+  // Signing in from here brings them straight back.
+  if (!isActiveMember(viewer)) {
+    return (
+      <PageContainer>
+        <MembersOnlyNotice state={await findMembershipState(viewer)} />
+      </PageContainer>
+    )
+  }
+
   const event = await findEventBySlug(slug, visibleEventVisibilitiesFor(viewer))
 
-  // A forbidden event and a missing one give the same answer, so nobody can probe ids to
-  // learn which members-only events exist.
-  //
-  // Detail is members only whatever the event's visibility: a guest sees the card on the
-  // list and gets the modal, so reaching this page by typing the URL must fail the same
-  // way an unknown slug does.
-  if (!event || !isActiveMember(viewer)) notFound()
+  if (!event) notFound()
 
   const [attendees, dateOptions, guests, host] = await Promise.all([
     findAttendeesForEvent(event.id),
@@ -361,8 +375,11 @@ export default async function EventPage({
                       {attendee.displayedBadge &&
                         findBadge(attendee.displayedBadge) && (
                           <span className="text-muted-foreground block text-xs">
-                            {translateBadges(
-                              `${attendee.displayedBadge}.title`,
+                            {badgeTitle(
+                              translateBadges(
+                                `${attendee.displayedBadge}.title`,
+                              ),
+                              attendee.displayedBadgeTier,
                             )}
                           </span>
                         )}

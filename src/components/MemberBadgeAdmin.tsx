@@ -14,7 +14,11 @@ import {
   removeBadgeAction,
   setMemberTitleAction,
 } from "@/features/members/badge-actions"
-import { BADGES } from "@/features/members/badges"
+import {
+  ADMIN_AWARDED_BADGES,
+  badgeTitle,
+  findBadge,
+} from "@/features/members/badges"
 import { MEMBER_TITLES } from "@/features/members/titles"
 import { Link } from "@/i18n/navigation"
 import { CloseIcon, EditIcon, PlusIcon } from "@/lib/icons"
@@ -34,7 +38,9 @@ export async function MemberBadgeAdmin({
   const translateTitles = await getTranslations("Titles")
 
   const held = new Set(badges.map((badge) => badge.badge))
-  const available = BADGES.filter((badge) => !held.has(badge.key))
+  // Only the hand-given ones. The rest are earned, and offering them here would promise
+  // something the nightly run would just decide for itself anyway.
+  const available = ADMIN_AWARDED_BADGES.filter((badge) => !held.has(badge.key))
 
   return (
     <div className="mt-3 space-y-3 border-t pt-3">
@@ -79,21 +85,42 @@ export async function MemberBadgeAdmin({
           {translateAdmin("editProfile")}
         </Button>
 
-        {badges.map((badge) => (
-          <form key={badge.badge} action={removeBadgeAction}>
-            <input type="hidden" name="memberId" value={memberId} />
-            <input type="hidden" name="badge" value={badge.badge} />
-            <Button
-              type="submit"
-              variant="secondary"
-              size="xs"
-              title={translateAdmin("removeBadge")}
-            >
-              {translateBadges(`${badge.badge}.title`)}
-              <CloseIcon className="size-3" />
-            </Button>
-          </form>
-        ))}
+        {badges.map((badge) => {
+          const title = badgeTitle(
+            translateBadges(`${badge.badge}.title`),
+            badge.tier,
+          )
+
+          // An earned badge is shown but not offered for removal: the nightly run would
+          // hand it straight back, and a button that undoes itself is worse than none.
+          if (findBadge(badge.badge)?.awardedBy !== "admin") {
+            return (
+              <span
+                key={badge.badge}
+                className="text-muted-foreground border-border rounded-md border px-2 py-1 text-xs"
+                title={translateAdmin("badgeEarned")}
+              >
+                {title}
+              </span>
+            )
+          }
+
+          return (
+            <form key={badge.badge} action={removeBadgeAction}>
+              <input type="hidden" name="memberId" value={memberId} />
+              <input type="hidden" name="badge" value={badge.badge} />
+              <Button
+                type="submit"
+                variant="secondary"
+                size="xs"
+                title={translateAdmin("removeBadge")}
+              >
+                {title}
+                <CloseIcon className="size-3" />
+              </Button>
+            </form>
+          )
+        })}
 
         {available.length > 0 && (
           <form action={awardBadgeAction} className="flex items-center gap-2">

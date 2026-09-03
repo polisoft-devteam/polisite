@@ -112,6 +112,7 @@
     "categoryTrip": "Resa",
     "categoryHike": "Vandring",
     "categorySport": "Sport",
+    "categoryGaming": "Gaming",
     "categoryFood": "Mat",
     "categoryBoardMeeting": "Styrelsemöte",
     "categoryBirthday": "Födelsedag",
@@ -199,7 +200,12 @@
     "cancelEvent": "Ställ in eventet",
     "cancelEventConfirm": "Eventet ställs in och alla i Poli får en pingning i Discord. Sidan finns kvar, men märkt som inställd. Det går inte att ångra.",
     "cancelEventConfirmAction": "Ja, ställ in och pinga Poli",
-    "cancelled": "Inställt"
+    "cancelled": "Inställt",
+    "membersOnlyTitle": "Bara för medlemmar",
+    "membersOnlyReadMore": "Om medlemskap",
+    "membersOnlyBody": "En hel del grejer ligger bakom lås och bom här, för din och vår säkerhets skull. Logga in med Google och skicka en förfrågan. En admin släpper in dig, och först då ser du föreningens egna evenemang, medlemmar och önskelistor. Innan dess ser du samma sida som en besökare, mer eller mindre.",
+    "membersOnlyApply": "Ansök om medlemskap",
+    "membersOnlyPendingPill": "Ansökan väntar på svar"
   },
   "Calendar": {
     "title": "Kalender",
@@ -281,7 +287,8 @@
     "cookiesTitle": "Kakor",
     "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser. Sidor med inbäddat innehåll som kartor, Spotify och YouTube laddar det från respektive tjänst, och då gäller deras villkor.",
     "contactTitle": "Kontakt",
-    "contactBody": "Skriv till {contactEmail} så hjälper vi dig."
+    "contactBody": "Skriv till {contactEmail} så hjälper vi dig.",
+    "controllerBodyVacant": "{associationName} är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, skriv till oss på adressen längre ner."
   },
   "Settings": {
     "title": "Inställningar",
@@ -306,7 +313,8 @@
     "removeBadge": "Ta bort",
     "setTitle": "Sätt titel",
     "titleLabel": "Titel",
-    "editProfile": "Redigera profil"
+    "editProfile": "Redigera profil",
+    "badgeEarned": "Intjänad automatiskt"
   },
   "Archive": {
     "title": "Öppet arkiv",
@@ -386,20 +394,33 @@
       "description": "Medlem i föreningen. Alla har den här."
     },
     "yearsOfService": {
-      "title": "Trotjänare",
-      "description": "År av trogen tjänst i föreningens namn."
+      "title": "Years of Service",
+      "description": "Ett steg för varje år i föreningen, upp till tjugo."
     },
     "traveller": {
-      "title": "Resenär",
-      "description": "Har följt med på en av föreningens resor."
+      "title": "Traveller",
+      "description": "Har varit på plats på minst tre evenemang på riktigt."
     },
     "sportsman": {
-      "title": "Idrottsman",
+      "title": "Professional Athlete",
       "description": "Har gjort en insats på plan eller i hallen."
     },
     "gifter": {
-      "title": "Givmild",
+      "title": "Karl Bertil Johnsson",
       "description": "Har fixat något från någon annans önskelista."
-    }
+    },
+    "organiser": {
+      "title": "Organiser",
+      "description": "Har dragit ihop ett evenemang."
+    },
+    "attendee": {
+      "title": "Attendee",
+      "description": "Har varit med på ett evenemang."
+    },
+    "notEarned": "Inte tagen än",
+    "intro": "Märken intjänade i föreningens tjänst, Baddaren-style! Finns hur många feta som helst att tjäna in.",
+    "allTitle": "Alla utmärkelser",
+    "seeAll": "Se alla utmärkelser",
+    "backToProfile": "Till profilen"
   }
 }

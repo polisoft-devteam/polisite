@@ -3,10 +3,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
+import { memberDisplayName } from "@/features/members/identity"
+import { findMemberHoldingTitle } from "@/features/members/queries"
 import { SectionHeading } from "@/components/SectionHeading"
 import {
   ASSOCIATION_CONTACT_EMAIL,
-  ASSOCIATION_CONTACT_NAME,
+  ASSOCIATION_DATA_CONTACT_TITLE,
   ASSOCIATION_NAME,
 } from "@/lib/association"
 
@@ -33,6 +35,10 @@ export default async function PrivacyPage({
   const storedDataItems = translatePrivacy.raw("dataItems") as string[]
   const rightsItems = translatePrivacy.raw("rightsItems") as string[]
 
+  const dataContact = await findMemberHoldingTitle(
+    ASSOCIATION_DATA_CONTACT_TITLE,
+  )
+
   return (
     <PageContainer>
       <PageHeading title={translatePrivacy("title")} />
@@ -42,11 +48,18 @@ export default async function PrivacyPage({
 
       <div className="mt-10 max-w-2xl space-y-8">
         <PolicySection heading={translatePrivacy("controllerTitle")}>
+          {/* Named only if the office is actually filled. Nobody in it means the sentence
+              points at the address below instead of trailing off after "get in touch
+              with". */}
           <p>
-            {translatePrivacy("controllerBody", {
-              associationName: ASSOCIATION_NAME,
-              contactName: ASSOCIATION_CONTACT_NAME,
-            })}
+            {dataContact
+              ? translatePrivacy("controllerBody", {
+                  associationName: ASSOCIATION_NAME,
+                  contactName: memberDisplayName(dataContact),
+                })
+              : translatePrivacy("controllerBodyVacant", {
+                  associationName: ASSOCIATION_NAME,
+                })}
           </p>
         </PolicySection>
 
