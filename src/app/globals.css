@@ -711,3 +711,40 @@ a[href] {
     opacity: 0;
   }
 }
+
+/* A badge lifts and names itself under the pointer.
+   Gated on a real pointer: on a touch screen :hover sticks after a tap, so the last badge
+   touched would stay open with its card over the ones below it. */
+.badge-art {
+  transition: transform 200ms ease-out;
+}
+
+.badge-card {
+  opacity: 0;
+  transform: translate(-50%, 0.25rem);
+  transition:
+    opacity 150ms ease-out,
+    transform 150ms ease-out;
+}
+
+@media (hover: hover) {
+  .badge:hover .badge-art {
+    transform: translateY(-0.25rem) scale(1.12);
+  }
+
+  .badge:hover .badge-card {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-art,
+  .badge-card {
+    transition: none;
+  }
+
+  .badge:hover .badge-art {
+    transform: none;
+  }
+}

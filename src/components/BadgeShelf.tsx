@@ -13,8 +13,10 @@
 // Artwork comes from public/images/badges/<key>.webp, keyed by the badge's own name. A
 // badge with no file falls back to its icon, so the folder can be filled one at a time.
 //
-// At this size the description and the date have nowhere to go, so they move into the
-// tooltip rather than being thrown away.
+// At this size the description and the date have nowhere to go, so they arrive on hover
+// instead: the badge lifts and a card under it says what it is and what it takes. The card
+// is only faded out, never hidden, so a screen reader still reads it. A touch screen has no
+// hover at all, which is what the /badges page is for.
 
 import { getFormatter, getTranslations } from "next-intl/server"
 
@@ -119,33 +121,41 @@ export async function BadgeShelf({
         return (
           <li
             key={key}
-            // Everything the shelf has no room for, for a pointer or a long press.
-            title={
-              when
-                ? `${name}. ${description} (${when})`
-                : `${name}. ${description}`
-            }
             className={cn(
-              "flex w-24 flex-col items-center gap-1.5 text-center",
+              "badge relative flex w-24 flex-col items-center gap-1.5 text-center",
               !isEarned && "opacity-40 grayscale",
             )}
           >
-            {image ? (
-              <SiteImage
-                src={image}
-                alt=""
-                rounded="rounded-full"
-                className="size-14"
-                sizes="56px"
-              />
-            ) : (
-              <span className="bg-primary/15 text-primary-ink flex size-14 items-center justify-center rounded-full">
-                <Icon className="size-7" />
-              </span>
-            )}
+            <span className="badge-art">
+              {image ? (
+                <SiteImage
+                  src={image}
+                  alt=""
+                  rounded="rounded-full"
+                  className="size-14"
+                  sizes="56px"
+                />
+              ) : (
+                <span className="bg-primary/15 text-primary-ink flex size-14 items-center justify-center rounded-full">
+                  <Icon className="size-7" />
+                </span>
+              )}
+            </span>
 
             <span className="text-[11px] leading-tight font-medium">
               {name}
+            </span>
+
+            {/* Above the shelf's own stacking, so the badge beside it cannot cover it, and
+                deaf to the pointer so it cannot take a hover of its own. */}
+            <span className="badge-card border-border bg-card text-muted-foreground pointer-events-none absolute top-full left-1/2 z-20 mt-1 w-44 rounded-lg border p-3 text-left text-xs shadow-lg">
+              <span className="text-foreground block font-medium">{name}</span>
+              <span className="mt-1 block">{description}</span>
+              {when && (
+                <span className="mt-1 block text-[0.625rem] tracking-wide uppercase">
+                  {when}
+                </span>
+              )}
             </span>
           </li>
         )
