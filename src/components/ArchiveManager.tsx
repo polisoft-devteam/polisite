@@ -65,6 +65,9 @@ export async function ArchiveManager({ links }: { links: ArchiveLink[] }) {
                   <Modal
                     title={translateArchive("editTitle")}
                     closeLabel={translateArchive("membersOnlyClose")}
+                    // Wider than the default: two fields side by side and a share URL to
+                    // read need more than the four hundred pixels a dialog assumes.
+                    className="sm:max-w-2xl"
                     trigger={
                       <Button
                         variant="outline"

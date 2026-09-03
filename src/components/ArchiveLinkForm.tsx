@@ -51,42 +51,47 @@ export function ArchiveLinkForm({
         <input type="hidden" name="archiveLinkId" value={archiveLinkId} />
       )}
 
-      <FormField
-        label={translateArchive("addLabel")}
-        htmlFor={`${idPrefix}-label`}
-      >
-        <Input
-          id={`${idPrefix}-label`}
-          name="label"
-          required
-          maxLength={120}
-          defaultValue={defaultLabel}
-        />
-      </FormField>
+      {/* Side by side from sm, with the link given the wider half: a Google share URL is
+          long enough that a narrow box hides its own end. Items start, so the two labels
+          line up even though only one of them carries a hint underneath. */}
+      <div className="grid items-start gap-4 sm:grid-cols-[2fr_3fr]">
+        <FormField
+          label={translateArchive("addLabel")}
+          htmlFor={`${idPrefix}-label`}
+        >
+          <Input
+            id={`${idPrefix}-label`}
+            name="label"
+            required
+            maxLength={120}
+            defaultValue={defaultLabel}
+          />
+        </FormField>
 
-      <FormField
-        label={translateArchive("addUrl")}
-        htmlFor={`${idPrefix}-url`}
-        hint={
-          trimmed === ""
-            ? translateArchive("addUrlHint")
-            : detected
-              ? translateArchive("addDetected", {
-                  kind: translateArchive(`kind_${detected.kind}`),
-                })
-              : translateArchive("addNotAUrl")
-        }
-      >
-        <Input
-          id={`${idPrefix}-url`}
-          name="url"
-          type="url"
-          required
-          placeholder="https://"
-          value={url}
-          onChange={(event) => setUrl(event.target.value)}
-        />
-      </FormField>
+        <FormField
+          label={translateArchive("addUrl")}
+          htmlFor={`${idPrefix}-url`}
+          hint={
+            trimmed === ""
+              ? translateArchive("addUrlHint")
+              : detected
+                ? translateArchive("addDetected", {
+                    kind: translateArchive(`kind_${detected.kind}`),
+                  })
+                : translateArchive("addNotAUrl")
+          }
+        >
+          <Input
+            id={`${idPrefix}-url`}
+            name="url"
+            type="url"
+            required
+            placeholder="https://"
+            value={url}
+            onChange={(event) => setUrl(event.target.value)}
+          />
+        </FormField>
+      </div>
 
       {/* Only an album is in one of two runs. Everything else has nowhere to put this. */}
       {detected?.kind === "album" && (
