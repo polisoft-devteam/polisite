@@ -773,3 +773,34 @@ a[href] {
     transition: none;
   }
 }
+
+/* --- A members table row ------------------------------------------------------
+   The row lights up as one thing rather than the name alone, and offers the way in
+   as it does. Gated on a real pointer, like the sweep it sits on top of: on a touch
+   screen :hover sticks after a tap and the last row touched would stay lit. */
+
+.member-goto {
+  opacity: 0;
+  transform: translateX(-0.5rem);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+@media (hover: hover) {
+  .member-row:hover .member-goto {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The icons at the end are their own colour until the row fills under them. */
+  .member-row:hover .member-row-icon {
+    color: inherit;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .member-goto {
+    transition: none;
+  }
+}

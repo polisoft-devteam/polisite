@@ -62,19 +62,53 @@ export default async function ArchivePage({
   // points at a heading that was not rendered.
   const sections: SubNavItem[] = [
     ...(films.length > 0
-      ? [{ id: "films", label: translateArchive("filmsTitle") }]
+      ? [
+          {
+            id: "films",
+            icon: "films" as const,
+            label: translateArchive("filmsTitle"),
+          },
+        ]
       : []),
-    { id: "albums", label: translateArchive("albumsTitle") },
-    { id: "gaming", label: translateArchive("gamingTitle") },
+    {
+      id: "albums",
+      icon: "albums" as const,
+      label: translateArchive("albumsTitle"),
+    },
+    {
+      id: "gaming",
+      icon: "gaming" as const,
+      label: translateArchive("gamingTitle"),
+    },
     ...(playlists.length > 0
-      ? [{ id: "music", label: translateArchive("musicTitle") }]
+      ? [
+          {
+            id: "music",
+            icon: "music" as const,
+            label: translateArchive("musicTitle"),
+          },
+        ]
       : []),
     ...(isMember && resources.length > 0
-      ? [{ id: "resources", label: translateArchive("resourcesTitle") }]
+      ? [
+          {
+            id: "resources",
+            icon: "resources" as const,
+            label: translateArchive("resourcesTitle"),
+          },
+        ]
       : []),
     // Last, and only for a member: the form is theirs and it sits at the foot of the page,
     // which is a long scroll to find without something pointing at it.
-    ...(isMember ? [{ id: "add", label: translateArchive("addTitle") }] : []),
+    ...(isMember
+      ? [
+          {
+            id: "add",
+            icon: "add" as const,
+            label: translateArchive("addTitle"),
+          },
+        ]
+      : []),
   ]
 
   return (

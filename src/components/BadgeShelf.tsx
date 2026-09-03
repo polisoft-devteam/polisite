@@ -126,7 +126,7 @@ export async function BadgeShelf({
               !isEarned && "opacity-40 grayscale",
             )}
           >
-            <span className="badge-flip relative block h-16 w-24">
+            <span className="badge-flip relative block h-20 w-24">
               <span className="badge-faces absolute inset-0">
                 <span className="badge-front absolute inset-0 flex items-center justify-center">
                   {image ? (
@@ -146,10 +146,10 @@ export async function BadgeShelf({
 
                 {/* Clipped rather than allowed to grow: every tile on the shelf is the
                     same size, and a long description must not be the one that is not. */}
-                <span className="badge-back border-border bg-card text-muted-foreground absolute inset-0 flex flex-col items-center justify-center gap-0.5 overflow-hidden rounded-md border px-1 text-center text-[9px] leading-[1.15]">
+                <span className="badge-back border-border bg-card text-foreground absolute inset-0 flex flex-col items-center justify-center gap-1 overflow-hidden rounded-md border px-1.5 text-center text-[11px] leading-tight">
                   <span>{description}</span>
                   {when && (
-                    <span className="text-[8px] tracking-wide uppercase opacity-70">
+                    <span className="text-muted-foreground text-[9px] tracking-wide uppercase">
                       {when}
                     </span>
                   )}

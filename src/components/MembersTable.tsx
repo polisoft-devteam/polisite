@@ -23,7 +23,7 @@ import {
 import { isMemberTitle } from "@/features/members/titles"
 import { Link } from "@/i18n/navigation"
 import { readBadgeImages } from "@/lib/site-images"
-import { GithubIcon, WishlistIcon } from "@/lib/icons"
+import { ChevronRightIcon, GithubIcon, WishlistIcon } from "@/lib/icons"
 
 export async function MembersTable() {
   const translateMembers = await getTranslations("Members")
@@ -41,10 +41,17 @@ export async function MembersTable() {
       {members.map((member) => (
         <li
           key={member.id}
-          className="flex items-center justify-between gap-4 p-3"
+          // The whole row fills, not the name alone: it is one thing to press, and a
+          // strip that lights up under half its own width reads as a mistake.
+          // data-sweep is what globals.css keys the fill on.
+          data-slot="button"
+          data-sweep="true"
+          className="member-row flex items-center justify-between gap-3 p-3 [--button-accent-foreground:var(--color-primary-foreground)] [--button-accent:var(--color-primary)]"
         >
           <MemberLink
             member={member}
+            plain
+            className="flex-1"
             secondaryLine={
               <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
                 {member.officialTitle &&
@@ -87,7 +94,17 @@ export async function MembersTable() {
             }
           />
 
-          <div className="text-muted-foreground flex shrink-0 items-center gap-1">
+          {/* Slides in on hover, so the row says where it goes rather than only lighting
+              up. Hidden from a screen reader: the name beside it is already the link. */}
+          <span
+            aria-hidden="true"
+            className="member-goto hidden shrink-0 items-center gap-1 text-xs font-medium sm:flex"
+          >
+            {translateMembers("goToProfile")}
+            <ChevronRightIcon className="size-3" />
+          </span>
+
+          <div className="member-row-icon text-muted-foreground flex shrink-0 items-center gap-1">
             {member.githubUrl && (
               <a
                 href={member.githubUrl}

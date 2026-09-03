@@ -11,7 +11,7 @@
 import { getTranslations } from "next-intl/server"
 
 import { ArchiveLinkForm } from "@/components/ArchiveLinkForm"
-import { Modal } from "@/components/Modal"
+import { Modal, ModalClose } from "@/components/Modal"
 import { ItemList } from "@/components/ItemList"
 import { PageSection } from "@/components/PageSection"
 import { Button } from "@/components/ui/button"
@@ -89,18 +89,45 @@ export async function ArchiveManager({ links }: { links: ArchiveLink[] }) {
                   </Modal>
                 )}
 
+                {/* Asked first, and in the colour of the thing it does: removal is one
+                    click from a row of small buttons, and there is no undo behind it. */}
                 {canRemoveArchiveLink(viewer, link) && (
-                  <form action={removeArchiveLinkAction}>
-                    <input type="hidden" name="archiveLinkId" value={link.id} />
-                    <Button
-                      type="submit"
-                      variant="outline"
-                      size="xs"
-                      aria-label={translateArchive("remove")}
-                    >
-                      <CloseIcon className="size-3" />
-                    </Button>
-                  </form>
+                  <Modal
+                    title={translateArchive("removeConfirmTitle")}
+                    description={translateArchive("removeConfirmBody")}
+                    closeLabel={translateArchive("membersOnlyClose")}
+                    trigger={
+                      <Button
+                        variant="destructive"
+                        size="xs"
+                        aria-label={translateArchive("remove")}
+                      >
+                        <CloseIcon className="size-3" />
+                      </Button>
+                    }
+                    footer={
+                      <>
+                        <ModalClose
+                          render={<Button variant="outline" size="sm" />}
+                        >
+                          {translateArchive("cancel")}
+                        </ModalClose>
+
+                        <form action={removeArchiveLinkAction}>
+                          <input
+                            type="hidden"
+                            name="archiveLinkId"
+                            value={link.id}
+                          />
+                          <Button type="submit" variant="destructive" size="sm">
+                            {translateArchive("remove")}
+                          </Button>
+                        </form>
+                      </>
+                    }
+                  >
+                    <p className="text-sm font-medium">{link.label}</p>
+                  </Modal>
                 )}
               </span>
             </li>
