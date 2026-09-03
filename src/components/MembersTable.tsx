@@ -50,10 +50,11 @@ export async function MembersTable() {
         >
           <MemberLink
             member={member}
+            size="lg"
             plain
             className="flex-1"
             secondaryLine={
-              <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
                 {member.officialTitle &&
                   isMemberTitle(member.officialTitle) && (
                     <span className="text-muted-foreground text-xs">
@@ -77,16 +78,16 @@ export async function MembersTable() {
                       src={image}
                       alt={name}
                       rounded="rounded-full"
-                      className="size-4"
-                      sizes="16px"
+                      className="size-5"
+                      sizes="20px"
                     />
                   ) : (
                     <span
                       key={held.badge}
                       title={name}
-                      className="bg-primary/15 text-primary-ink flex size-4 items-center justify-center rounded-full"
+                      className="bg-primary/15 text-primary-ink flex size-5 items-center justify-center rounded-full"
                     >
-                      <definition.Icon className="size-2.5" />
+                      <definition.Icon className="size-3" />
                     </span>
                   )
                 })}

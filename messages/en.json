@@ -314,7 +314,11 @@
     "setTitle": "Set title",
     "titleLabel": "Title",
     "editProfile": "Edit profile",
-    "badgeEarned": "Earned automatically"
+    "badgeEarned": "Earned automatically",
+    "deactivateConfirmTitle": "Deactivate this member?",
+    "deactivateConfirmBody": "They see the site as a visitor again and lose the member pages. The row stays, so their name is still on past events, and you can let them back in whenever you like.",
+    "cancel": "Cancel",
+    "close": "Close"
   },
   "Archive": {
     "title": "Open archive",

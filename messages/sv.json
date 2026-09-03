@@ -314,7 +314,11 @@
     "setTitle": "Sätt titel",
     "titleLabel": "Titel",
     "editProfile": "Redigera profil",
-    "badgeEarned": "Intjänad automatiskt"
+    "badgeEarned": "Intjänad automatiskt",
+    "deactivateConfirmTitle": "Stäng av medlemmen?",
+    "deactivateConfirmBody": "De ser sidan som en besökare igen och kommer inte in i medlemssidorna. Raden ligger kvar, så deras namn står kvar på gamla evenemang, och du kan släppa in dem igen när som helst.",
+    "cancel": "Avbryt",
+    "close": "Stäng"
   },
   "Archive": {
     "title": "Öppet arkiv",

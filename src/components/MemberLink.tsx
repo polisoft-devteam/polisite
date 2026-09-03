@@ -41,7 +41,7 @@ export function MemberLink({
 }) {
   const avatarSize =
     size === "lg"
-      ? "size-10"
+      ? "size-10 text-sm"
       : size === "sm"
         ? "size-6 text-[0.625rem]"
         : "size-7 text-xs"
@@ -55,7 +55,8 @@ export function MemberLink({
       data-slot={plain ? undefined : "button"}
       data-sweep={plain ? undefined : "true"}
       className={cn(
-        "flex min-w-0 items-center gap-2",
+        "flex min-w-0 items-center",
+        size === "lg" ? "gap-3" : "gap-2",
         !plain && [
           "[--button-accent-foreground:var(--color-primary-foreground)] [--button-accent:var(--color-primary)]",
           "rounded-md px-2 py-1",
@@ -73,7 +74,9 @@ export function MemberLink({
         <span
           className={cn(
             "block truncate",
-            size === "sm" ? "text-sm" : "text-sm font-medium",
+            size === "sm" && "text-sm",
+            size === "default" && "text-sm font-medium",
+            size === "lg" && "text-base font-medium",
           )}
         >
           {memberDisplayName(member)}
