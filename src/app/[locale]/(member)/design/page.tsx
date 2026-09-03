@@ -129,7 +129,7 @@ const BUTTON_VARIANTS = [
 const BUTTON_SIZES = ["xs", "sm", "default", "lg"] as const
 
 const SAMPLE_BADGES = BADGES.slice(0, 3).map((badge, index) => ({
-  memberId: "design",
+  memberId: "00000000-0000-4000-8000-000000000002",
   badge: badge.key,
   tier: badge.maxTier ? index + 1 : null,
   awardedAt: new Date(2026, index * 3, 1),
