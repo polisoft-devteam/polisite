@@ -553,6 +553,7 @@ export async function findActiveMembersForDirectory() {
       email: members.email,
       avatarUrl: members.avatarUrl,
       githubUrl: members.githubUrl,
+      officialTitle: members.officialTitle,
     })
     .from(members)
     .where(eq(members.status, "active"))
