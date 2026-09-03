@@ -9,9 +9,9 @@
 import { getTranslations } from "next-intl/server"
 
 import { SignInButton } from "@/components/SignInButton"
+import { SiteImage } from "@/components/SiteImage"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
-import { LockIcon } from "@/lib/icons"
 
 export async function MembersOnlyNotice({
   isSignedIn,
@@ -23,9 +23,18 @@ export async function MembersOnlyNotice({
 
   return (
     <div className="mx-auto mt-16 max-w-md text-center">
-      <span className="bg-muted text-muted-foreground mx-auto flex size-12 items-center justify-center rounded-full">
-        <LockIcon className="size-5" />
-      </span>
+      {/* The knight, since somebody has to be standing at the gate. Cropped from the
+          upper part: the picture is a portrait and a circle would take his head off. */}
+      <div className="mx-auto w-fit">
+        <SiteImage
+          src="/images/misc/viggeKnight.webp"
+          alt=""
+          rounded="rounded-full"
+          focalPoint="upper"
+          className="ring-border size-28 ring-2"
+          sizes="112px"
+        />
+      </div>
 
       <h1 className="font-heading mt-4 text-2xl font-bold tracking-tight">
         {translateEvents("membersOnlyTitle")}
