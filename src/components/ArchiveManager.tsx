@@ -10,15 +10,24 @@
 
 import { getTranslations } from "next-intl/server"
 
-import { AddArchiveLinkForm } from "@/components/AddArchiveLinkForm"
+import { ArchiveLinkForm } from "@/components/ArchiveLinkForm"
+import { Modal } from "@/components/Modal"
 import { ItemList } from "@/components/ItemList"
 import { PageSection } from "@/components/PageSection"
 import { Button } from "@/components/ui/button"
 import type { ArchiveLink } from "@/db/schema"
-import { removeArchiveLinkAction } from "@/features/archive/actions"
+import {
+  addArchiveLinkAction,
+  removeArchiveLinkAction,
+  updateArchiveLinkAction,
+} from "@/features/archive/actions"
 import { getViewer } from "@/lib/auth"
-import { canAddArchiveLink, canRemoveArchiveLink } from "@/lib/permissions"
-import { CloseIcon } from "@/lib/icons"
+import {
+  canAddArchiveLink,
+  canEditArchiveLink,
+  canRemoveArchiveLink,
+} from "@/lib/permissions"
+import { CloseIcon, EditIcon } from "@/lib/icons"
 
 export async function ArchiveManager({ links }: { links: ArchiveLink[] }) {
   const viewer = await getViewer()
@@ -28,7 +37,10 @@ export async function ArchiveManager({ links }: { links: ArchiveLink[] }) {
 
   return (
     <PageSection id="add" heading={translateArchive("addTitle")}>
-      <AddArchiveLinkForm />
+      <ArchiveLinkForm
+        action={addArchiveLinkAction}
+        submitLabel={translateArchive("addSubmit")}
+      />
 
       {links.length > 0 && (
         <ItemList>
@@ -46,19 +58,48 @@ export async function ArchiveManager({ links }: { links: ArchiveLink[] }) {
                 </span>
               </span>
 
-              {canRemoveArchiveLink(viewer, link) && (
-                <form action={removeArchiveLinkAction} className="shrink-0">
-                  <input type="hidden" name="archiveLinkId" value={link.id} />
-                  <Button
-                    type="submit"
-                    variant="outline"
-                    size="xs"
-                    aria-label={translateArchive("remove")}
+              <span className="flex shrink-0 items-center gap-1">
+                {/* Correcting a mistyped link is the common case; the same people who may
+                    do that may also take the entry away. */}
+                {canEditArchiveLink(viewer, link) && (
+                  <Modal
+                    title={translateArchive("editTitle")}
+                    closeLabel={translateArchive("membersOnlyClose")}
+                    trigger={
+                      <Button
+                        variant="outline"
+                        size="xs"
+                        aria-label={translateArchive("edit")}
+                      >
+                        <EditIcon className="size-3" />
+                      </Button>
+                    }
                   >
-                    <CloseIcon className="size-3" />
-                  </Button>
-                </form>
-              )}
+                    <ArchiveLinkForm
+                      action={updateArchiveLinkAction}
+                      submitLabel={translateArchive("editSubmit")}
+                      archiveLinkId={link.id}
+                      defaultLabel={link.label}
+                      defaultUrl={link.url}
+                      defaultAlbumGroup={link.albumGroup ?? "main"}
+                    />
+                  </Modal>
+                )}
+
+                {canRemoveArchiveLink(viewer, link) && (
+                  <form action={removeArchiveLinkAction}>
+                    <input type="hidden" name="archiveLinkId" value={link.id} />
+                    <Button
+                      type="submit"
+                      variant="outline"
+                      size="xs"
+                      aria-label={translateArchive("remove")}
+                    >
+                      <CloseIcon className="size-3" />
+                    </Button>
+                  </form>
+                )}
+              </span>
             </li>
           ))}
         </ItemList>

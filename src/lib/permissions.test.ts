@@ -5,6 +5,9 @@ import { describe, expect, it } from "vitest"
 
 import type { Event, Member, Role } from "@/db/schema"
 import {
+  canAddArchiveLink,
+  canEditArchiveLink,
+  canRemoveArchiveLink,
   canBringGuests,
   canAwardBadges,
   canClaimWish,
@@ -357,5 +360,58 @@ describe("awarding badges and offices", () => {
     expect(canAwardBadges(admin)).toBe(true)
     expect(canAwardBadges(member)).toBe(false)
     expect(canAwardBadges(null)).toBe(false)
+  })
+})
+
+describe("the open archive", () => {
+  const mine = { addedByMemberId: buildMember().id }
+  const someoneElses = { addedByMemberId: "member-someone-else" }
+  // Seeded entries: nobody added them through the site.
+  const nobodys = { addedByMemberId: null }
+
+  it("lets any member add to it, and nobody else", () => {
+    expect(canAddArchiveLink(activeMember)).toBe(true)
+    expect(canAddArchiveLink(adminMember)).toBe(true)
+    expect(canAddArchiveLink(signedInGuest)).toBe(false)
+    expect(canAddArchiveLink(inactiveMember)).toBe(false)
+    expect(canAddArchiveLink(signedOutVisitor)).toBe(false)
+  })
+
+  it("lets a member change what they put there", () => {
+    expect(canEditArchiveLink(activeMember, mine)).toBe(true)
+  })
+
+  it("does not let a member change somebody else's", () => {
+    expect(canEditArchiveLink(activeMember, someoneElses)).toBe(false)
+    expect(canEditArchiveLink(activeMember, nobodys)).toBe(false)
+  })
+
+  it("lets an admin fix anyone's, including the seeded ones", () => {
+    expect(canEditArchiveLink(adminMember, someoneElses)).toBe(true)
+    expect(canEditArchiveLink(adminMember, nobodys)).toBe(true)
+  })
+
+  it("never lets a guest or a signed-out visitor touch anything", () => {
+    for (const link of [mine, someoneElses, nobodys]) {
+      expect(canEditArchiveLink(signedInGuest, link)).toBe(false)
+      expect(canEditArchiveLink(signedOutVisitor, link)).toBe(false)
+      expect(canEditArchiveLink(inactiveMember, link)).toBe(false)
+    }
+  })
+
+  it("answers removal exactly as it answers editing", () => {
+    for (const viewer of [
+      activeMember,
+      adminMember,
+      signedInGuest,
+      inactiveMember,
+      signedOutVisitor,
+    ]) {
+      for (const link of [mine, someoneElses, nobodys]) {
+        expect(canRemoveArchiveLink(viewer, link)).toBe(
+          canEditArchiveLink(viewer, link),
+        )
+      }
+    }
   })
 })

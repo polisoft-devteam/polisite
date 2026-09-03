@@ -344,7 +344,10 @@
     "kind_album": "photo album",
     "kind_film": "film",
     "kind_playlist": "playlist",
-    "kind_resource": "link"
+    "kind_resource": "link",
+    "editTitle": "Edit this entry",
+    "edit": "Edit",
+    "editSubmit": "Save changes"
   },
   "Links": {
     "title": "Association links",

@@ -344,7 +344,10 @@
     "kind_album": "fotoalbum",
     "kind_film": "film",
     "kind_playlist": "spellista",
-    "kind_resource": "länk"
+    "kind_resource": "länk",
+    "editTitle": "Ändra posten",
+    "edit": "Ändra",
+    "editSubmit": "Spara ändringar"
   },
   "Links": {
     "title": "Föreningens länkar",

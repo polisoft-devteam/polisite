@@ -47,6 +47,19 @@ export async function addArchiveLink(link: {
   await db.insert(archiveLinks).values(link)
 }
 
+export async function updateArchiveLink(
+  id: string,
+  fields: {
+    kind: ArchiveLinkKind
+    label: string
+    url: string
+    externalId: string | null
+    albumGroup: string | null
+  },
+): Promise<void> {
+  await db.update(archiveLinks).set(fields).where(eq(archiveLinks.id, id))
+}
+
 export async function findArchiveLinkById(
   id: string,
 ): Promise<ArchiveLink | null> {

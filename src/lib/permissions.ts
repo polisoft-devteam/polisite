@@ -176,13 +176,21 @@ export function canAddArchiveLink(viewer: Viewer | null): boolean {
   return isActiveMember(viewer)
 }
 
-/** Whoever put it there can take it away again, and an admin can tidy up after anyone. */
-export function canRemoveArchiveLink(
+/** Whoever put it there can change it, and an admin can fix anyone's. */
+export function canEditArchiveLink(
   viewer: Viewer | null,
   link: { addedByMemberId: string | null },
 ): boolean {
   if (!isActiveMember(viewer)) return false
   return link.addedByMemberId === viewer!.member!.id || isAdmin(viewer)
+}
+
+/** The same answer as editing: whoever may correct it may also take it away. */
+export function canRemoveArchiveLink(
+  viewer: Viewer | null,
+  link: { addedByMemberId: string | null },
+): boolean {
+  return canEditArchiveLink(viewer, link)
 }
 
 // --- Badges and titles ---------------------------------------------------------
