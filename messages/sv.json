@@ -200,7 +200,11 @@
     "cancelEvent": "Ställ in eventet",
     "cancelEventConfirm": "Eventet ställs in och alla i Poli får en pingning i Discord. Sidan finns kvar, men märkt som inställd. Det går inte att ångra.",
     "cancelEventConfirmAction": "Ja, ställ in och pinga Poli",
-    "cancelled": "Inställt"
+    "cancelled": "Inställt",
+    "membersOnlyTitle": "Bara för medlemmar",
+    "membersOnlySignedOut": "Logga in med Google för att se det här. Du kommer tillbaka hit direkt efteråt.",
+    "membersOnlyPending": "Du är inloggad, men inte insläppt än. En admin behöver godkänna dig först, sedan ser du det här.",
+    "membersOnlyReadMore": "Om medlemskap"
   },
   "Calendar": {
     "title": "Kalender",

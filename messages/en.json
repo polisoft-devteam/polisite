@@ -200,7 +200,11 @@
     "cancelEvent": "Cancel the event",
     "cancelEventConfirm": "The event is called off and everyone in Poli is pinged on Discord. The page stays, marked as cancelled. This cannot be undone.",
     "cancelEventConfirmAction": "Yes, cancel it and ping Poli",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "membersOnlyTitle": "Members only",
+    "membersOnlySignedOut": "Sign in with Google to see this. You will come straight back here afterwards.",
+    "membersOnlyPending": "You are signed in, but not let in yet. An admin has to approve you first, then you will see this.",
+    "membersOnlyReadMore": "About membership"
   },
   "Calendar": {
     "title": "Calendar",
