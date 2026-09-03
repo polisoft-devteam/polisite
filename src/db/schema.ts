@@ -148,6 +148,7 @@ export const eventCategoryEnum = pgEnum("event_category", [
   "trip",
   "hike",
   "sport",
+  "gaming",
   "food",
   "board_meeting",
   "birthday",

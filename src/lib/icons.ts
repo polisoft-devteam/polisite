@@ -56,6 +56,7 @@ export {
   Airplane as TripIcon,
   Signpost as HikeIcon,
   Trophy as SportIcon,
+  Controller as GamingIcon,
   EggFried as FoodIcon,
   ClipboardCheck as BoardMeetingIcon,
   Cake2 as BirthdayIcon,
