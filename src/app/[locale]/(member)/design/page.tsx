@@ -40,6 +40,7 @@ import { HoverRevealLabel } from "@/components/HoverRevealLabel"
 import { ImageDropZone } from "@/components/ImageDropZone"
 import { BadgeShelf } from "@/components/BadgeShelf"
 import { MemberBadges } from "@/components/MemberBadges"
+import { MembersOnlyNotice } from "@/components/MembersOnlyNotice"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import {
@@ -346,6 +347,16 @@ export default async function DesignPage({
             hint="JPEG, PNG, WebP eller AVIF. Skalas ner automatiskt."
           />
         </div>
+      </PageSection>
+
+      <PageSection heading="Bara för medlemmar">
+        {/* What someone following an event link from Discord meets. Both states here,
+            because reaching either for real means signing out or demoting an account. */}
+        <SectionHeading>Utloggad</SectionHeading>
+        <MembersOnlyNotice isSignedIn={false} />
+
+        <SectionHeading>Inloggad, men inte insläppt än</SectionHeading>
+        <MembersOnlyNotice isSignedIn />
       </PageSection>
 
       <PageSection heading="Utmärkelser">
