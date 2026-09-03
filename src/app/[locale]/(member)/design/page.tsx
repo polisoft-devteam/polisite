@@ -353,10 +353,16 @@ export default async function DesignPage({
         {/* What someone following an event link from Discord meets. Both states here,
             because reaching either for real means signing out or demoting an account. */}
         <SectionHeading>Utloggad</SectionHeading>
-        <MembersOnlyNotice isSignedIn={false} />
+        <MembersOnlyNotice state="signedOut" />
 
-        <SectionHeading>Inloggad, men inte insläppt än</SectionHeading>
-        <MembersOnlyNotice isSignedIn />
+        <SectionHeading>Inloggad, har inte ansökt</SectionHeading>
+        <MembersOnlyNotice state="canApply" />
+
+        <SectionHeading>Ansökt, väntar på admin</SectionHeading>
+        <MembersOnlyNotice state="pending" />
+
+        <SectionHeading>Nekad, inget att trycka på</SectionHeading>
+        <MembersOnlyNotice state="denied" />
       </PageSection>
 
       <PageSection heading="Utmärkelser">

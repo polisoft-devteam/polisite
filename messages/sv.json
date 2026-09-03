@@ -202,9 +202,10 @@
     "cancelEventConfirmAction": "Ja, ställ in och pinga Poli",
     "cancelled": "Inställt",
     "membersOnlyTitle": "Bara för medlemmar",
-    "membersOnlySignedOut": "Logga in med Google för att se det här. Du kommer tillbaka hit direkt efteråt.",
-    "membersOnlyPending": "Du är inloggad, men inte insläppt än. En admin behöver godkänna dig först, sedan ser du det här.",
-    "membersOnlyReadMore": "Om medlemskap"
+    "membersOnlyReadMore": "Om medlemskap",
+    "membersOnlyBody": "En hel del grejer ligger bakom lås och bom här, för din och vår säkerhets skull. Logga in med Google och skicka en förfrågan. En admin släpper in dig, och först då ser du föreningens egna evenemang, medlemmar och önskelistor. Innan dess ser du samma sida som en besökare, mer eller mindre.",
+    "membersOnlyApply": "Ansök om medlemskap",
+    "membersOnlyPendingPill": "Ansökan väntar på svar"
   },
   "Calendar": {
     "title": "Kalender",

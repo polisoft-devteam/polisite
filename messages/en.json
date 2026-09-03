@@ -202,9 +202,10 @@
     "cancelEventConfirmAction": "Yes, cancel it and ping Poli",
     "cancelled": "Cancelled",
     "membersOnlyTitle": "Members only",
-    "membersOnlySignedOut": "Sign in with Google to see this. You will come straight back here afterwards.",
-    "membersOnlyPending": "You are signed in, but not let in yet. An admin has to approve you first, then you will see this.",
-    "membersOnlyReadMore": "About membership"
+    "membersOnlyReadMore": "About membership",
+    "membersOnlyBody": "A fair amount is behind lock and key here, for your safety and ours. Sign in with Google and send a request. An admin lets you in, and only then do you see the association's own events, members and wishlists. Until then you see the same page as a visitor, more or less.",
+    "membersOnlyApply": "Apply for membership",
+    "membersOnlyPendingPill": "Membership pending"
   },
   "Calendar": {
     "title": "Calendar",

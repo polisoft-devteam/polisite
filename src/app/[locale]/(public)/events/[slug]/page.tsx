@@ -13,6 +13,7 @@ import { EventGuests } from "@/components/EventGuests"
 import { EventMap } from "@/components/EventMap"
 import { MemberLink } from "@/components/MemberLink"
 import { MembersOnlyNotice } from "@/components/MembersOnlyNotice"
+import { findMembershipState } from "@/features/members/membership-state"
 import { EventRsvp } from "@/components/EventRsvp"
 import { EmptyState } from "@/components/EmptyState"
 import { ExternalLink } from "@/components/ExternalLink"
@@ -102,7 +103,7 @@ export default async function EventPage({
   if (!isActiveMember(viewer)) {
     return (
       <PageContainer>
-        <MembersOnlyNotice isSignedIn={viewer !== null} />
+        <MembersOnlyNotice state={await findMembershipState(viewer)} />
       </PageContainer>
     )
   }
