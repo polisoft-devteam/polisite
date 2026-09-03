@@ -38,6 +38,7 @@ import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { HoverRevealLabel } from "@/components/HoverRevealLabel"
 import { ImageDropZone } from "@/components/ImageDropZone"
+import { BadgeShelf } from "@/components/BadgeShelf"
 import { MemberBadges } from "@/components/MemberBadges"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
@@ -352,7 +353,10 @@ export default async function DesignPage({
         <MemberBadges badges={SAMPLE_BADGES} locale={locale} />
 
         <SectionHeading>Egen profil, resten grå</SectionHeading>
-        <MemberBadges badges={SAMPLE_BADGES} locale={locale} showUnearned />
+        <MemberBadges badges={SAMPLE_BADGES} locale={locale} isOwnProfile />
+
+        <SectionHeading>Hyllan som katalog, allt i färg</SectionHeading>
+        <BadgeShelf locale={locale} mode="catalogue" />
       </PageSection>
 
       <PageSection heading="Notiser">

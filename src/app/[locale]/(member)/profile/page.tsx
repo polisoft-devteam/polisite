@@ -67,7 +67,7 @@ export default async function ProfilePage({
         notifications={<NotificationList activity={activity} locale={locale} />}
       />
 
-      <MemberBadges badges={badges} locale={locale} showUnearned />
+      <MemberBadges badges={badges} locale={locale} isOwnProfile />
 
       <Wishlist entries={wishlist} isOwnList />
     </PageContainer>

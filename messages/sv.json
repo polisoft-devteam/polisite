@@ -411,6 +411,10 @@
       "title": "Attendee",
       "description": "Har varit med på ett evenemang."
     },
-    "notEarned": "Inte tagen än"
+    "notEarned": "Inte tagen än",
+    "intro": "Utmärkelser är märken du får för saker du gjort i föreningen. Du ansöker inte om dem, de kommer av sig själva: har du varit på plats på tre riktiga träffar är Traveller din, och ett år som medlem ger Years of Service: I. Ett par delas ut för hand av en admin i stället.",
+    "allTitle": "Alla utmärkelser",
+    "seeAll": "Se alla utmärkelser",
+    "backToProfile": "Till profilen"
   }
 }
