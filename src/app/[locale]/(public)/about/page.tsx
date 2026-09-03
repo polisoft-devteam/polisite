@@ -13,10 +13,12 @@ import { ImageStack } from "@/components/ImageStack"
 import { MembersTable } from "@/components/MembersTable"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
+import { MembershipActions } from "@/components/MembershipActions"
 import { PageSection } from "@/components/PageSection"
 import { PageSubNav, type SubNavItem } from "@/components/PageSubNav"
 import { Badge } from "@/components/ui/badge"
 import { readAboutImages } from "@/lib/site-images"
+import { findMembershipState } from "@/features/members/membership-state"
 import { getViewer } from "@/lib/auth"
 import { ASSOCIATION_NAME } from "@/lib/association"
 import { canViewMemberDirectory, isAdmin } from "@/lib/permissions"
@@ -118,6 +120,13 @@ export default async function AboutPage({
         <p className="text-muted-foreground max-w-2xl">
           {translateAbout("membershipBody")}
         </p>
+
+        {/* This is where the locked page sends people, so it is the last place that
+            should explain how to join without offering to. Renders nothing for a member,
+            who has nothing left to ask for. */}
+        <div className="flex flex-wrap items-center gap-2">
+          <MembershipActions state={await findMembershipState(viewer)} />
+        </div>
       </PageSection>
     </PageContainer>
   )

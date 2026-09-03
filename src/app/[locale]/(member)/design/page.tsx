@@ -40,6 +40,7 @@ import { HoverRevealLabel } from "@/components/HoverRevealLabel"
 import { ImageDropZone } from "@/components/ImageDropZone"
 import { BadgeShelf } from "@/components/BadgeShelf"
 import { MemberBadges } from "@/components/MemberBadges"
+import { MembershipActions } from "@/components/MembershipActions"
 import { MembersOnlyNotice } from "@/components/MembersOnlyNotice"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
@@ -363,6 +364,15 @@ export default async function DesignPage({
 
         <SectionHeading>Nekad, inget att trycka på</SectionHeading>
         <MembersOnlyNotice state="denied" />
+
+        <SectionHeading>
+          Knapparna för sig, som de sitter på Om oss
+        </SectionHeading>
+        <div className="flex flex-wrap items-center gap-2">
+          <MembershipActions state="signedOut" />
+          <MembershipActions state="canApply" />
+          <MembershipActions state="pending" />
+        </div>
       </PageSection>
 
       <PageSection heading="Utmärkelser">

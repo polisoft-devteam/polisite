@@ -6,9 +6,11 @@
 // one that is still waiting.
 
 import { findMembershipPrompt } from "@/features/members/queries"
-import type { Viewer } from "@/lib/permissions"
+import { isActiveMember, type Viewer } from "@/lib/permissions"
 
 export type MembershipState =
+  /** Already in. There is nothing to offer them. */
+  | "member"
   /** Nobody is signed in. */
   | "signedOut"
   /** Signed in and free to ask, whether they never have or closed the letter unanswered. */
@@ -22,6 +24,10 @@ export async function findMembershipState(
   viewer: Viewer | null,
 ): Promise<MembershipState> {
   if (!viewer) return "signedOut"
+
+  // Checked before the prompt row, which outlives approval: a member who once asked still
+  // has a request on file, and reading that alone would tell them they are still waiting.
+  if (isActiveMember(viewer)) return "member"
 
   const prompt = await findMembershipPrompt(viewer.authUserId)
 

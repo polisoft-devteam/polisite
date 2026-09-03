@@ -11,14 +11,11 @@
 
 import { getTranslations } from "next-intl/server"
 
-import { SignInButton } from "@/components/SignInButton"
+import { MembershipActions } from "@/components/MembershipActions"
 import { SiteImage } from "@/components/SiteImage"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import type { MembershipState } from "@/features/members/membership-state"
-import { requestMembership } from "@/features/members/membership-prompt-actions"
 import { Link } from "@/i18n/navigation"
-import { PendingIcon } from "@/lib/icons"
 
 export async function MembersOnlyNotice({ state }: { state: MembershipState }) {
   const translateEvents = await getTranslations("Events")
@@ -47,21 +44,7 @@ export async function MembersOnlyNotice({ state }: { state: MembershipState }) {
       </p>
 
       <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-        {state === "signedOut" && <SignInButton />}
-
-        {state === "canApply" && (
-          <form action={requestMembership}>
-            <Button type="submit">{translateEvents("membersOnlyApply")}</Button>
-          </form>
-        )}
-
-        {/* Nothing to press: it is with an admin, and pressing again would write nothing. */}
-        {state === "pending" && (
-          <Badge variant="secondary">
-            <PendingIcon className="size-3" />
-            {translateEvents("membersOnlyPendingPill")}
-          </Badge>
-        )}
+        <MembershipActions state={state} />
 
         <Button
           nativeButton={false}
