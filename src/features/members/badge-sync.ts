@@ -6,7 +6,9 @@
 // into the past.
 //
 // Never throws. A badge is a decoration, and failing to hand one out must not take down
-// the thing that earned it.
+// the thing that earned it. But swallowed is not the same as unnoticed: the nightly run
+// counts what failed and says so, both in what it returns and in the admin's Discord
+// channel, because a console line in a dev server nobody is reading is not a report.
 
 import {
   earnedBadges,
@@ -25,11 +27,11 @@ async function awardAll(memberId: string, badges: EarnedBadge[]) {
   }
 }
 
-/** One member. Returns what they were found to have earned, for the cron's report. */
+/** One member. Returns what they were found to have earned, or null if it could not. */
 export async function syncAutomaticBadges(
   memberId: string,
   now = new Date(),
-): Promise<EarnedBadge[]> {
+): Promise<EarnedBadge[] | null> {
   try {
     const facts: BadgeFacts | null = await findBadgeFactsFor(memberId, now)
     if (!facts) return []
@@ -39,20 +41,41 @@ export async function syncAutomaticBadges(
 
     return earned
   } catch (error) {
-    console.error(`[badges] could not sync ${memberId}`, error)
-    return []
+    // The member id, not their name: this line ends up in a hosting provider's log.
+    console.error(
+      `[badges] sync failed for member ${memberId}. ` +
+        `The rules are in features/members/badge-rules.ts, the queries in ` +
+        `features/members/queries.ts (findBadgeFactsFor, awardOrRaiseBadge).`,
+      error,
+    )
+    return null
   }
+}
+
+export type BadgeSyncReport = {
+  checked: number
+  failed: number
+  /** The first thing that went wrong, to save reading the whole log to find out. */
+  firstError: string | null
 }
 
 /** Everyone active. One member's failure must not stop the rest, so each is its own try. */
 export async function syncAutomaticBadgesForEveryone(
   now = new Date(),
-): Promise<number> {
+): Promise<BadgeSyncReport> {
   const memberIds = await findActiveMemberIds()
 
+  let failed = 0
+  let firstError: string | null = null
+
   for (const memberId of memberIds) {
-    await syncAutomaticBadges(memberId, now)
+    const earned = await syncAutomaticBadges(memberId, now)
+
+    if (earned === null) {
+      failed += 1
+      firstError ??= `member ${memberId}`
+    }
   }
 
-  return memberIds.length
+  return { checked: memberIds.length, failed, firstError }
 }

@@ -12,7 +12,10 @@ import {
   markReminderSent,
 } from "@/features/events/queries"
 import { syncAutomaticBadgesForEveryone } from "@/features/members/badge-sync"
-import { postBirthdayToDiscord } from "@/features/members/discord"
+import {
+  postBirthdayToDiscord,
+  postCronFailureToDiscord,
+} from "@/features/members/discord"
 import { memberDisplayName } from "@/features/members/identity"
 import {
   findMembersToGreet,
@@ -97,10 +100,20 @@ export async function GET(request: Request) {
   )
 
   // Last, so a failure here cannot cost anyone a reminder or a birthday greeting.
-  const badgesCheckedFor = await syncAutomaticBadgesForEveryone(now)
+  const badges = await syncAutomaticBadgesForEveryone(now)
+
+  // Said where someone will see it. A console line in a hosting provider's log is only
+  // ever read by whoever already suspects something is wrong.
+  if (badges.failed > 0) {
+    await postCronFailureToDiscord({
+      name: "badges",
+      failed: badges.failed,
+      of: badges.checked,
+    })
+  }
 
   return NextResponse.json({
-    badgesCheckedFor,
+    badges,
     checked: pending.length,
     due: due.length,
     sent: sent.length,

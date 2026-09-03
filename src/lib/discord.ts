@@ -92,7 +92,7 @@ export async function postToDiscord({
 
     if (!response.ok) {
       console.error(
-        "Discord post failed",
+        `[discord] post to #${channel} refused`,
         response.status,
         await response.text(),
       )
@@ -102,7 +102,7 @@ export async function postToDiscord({
     const message = (await response.json()) as { id?: string }
     return message.id ?? null
   } catch (error) {
-    console.error("Discord post threw", error)
+    console.error(`[discord] post to #${channel} threw`, error)
     return null
   }
 }
