@@ -10,6 +10,7 @@ import { ItemList } from "@/components/ItemList"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
+import { Modal, ModalClose } from "@/components/Modal"
 import { Button } from "@/components/ui/button"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { MemberBadgeAdmin } from "@/components/MemberBadgeAdmin"
@@ -151,16 +152,51 @@ export default async function AdminPage({
                               : translateAdmin("adminProtected")}
                           </span>
                         ) : (
-                          <form action={deactivateMember}>
-                            <input
-                              type="hidden"
-                              name="memberId"
-                              value={member.id}
-                            />
-                            <Button type="submit" variant="outline" size="sm">
-                              {translateAdmin("deactivate")}
-                            </Button>
-                          </form>
+                          /* Asked first, and in the colour of what it does: shutting
+                             someone out of the association is not a button to brush
+                             against. The dialog says what survives it. */
+                          <Modal
+                            title={translateAdmin("deactivateConfirmTitle")}
+                            description={translateAdmin(
+                              "deactivateConfirmBody",
+                            )}
+                            closeLabel={translateAdmin("close")}
+                            trigger={
+                              <Button variant="destructive" size="sm">
+                                {translateAdmin("deactivate")}
+                              </Button>
+                            }
+                            footer={
+                              <>
+                                <ModalClose
+                                  render={
+                                    <Button variant="outline" size="sm" />
+                                  }
+                                >
+                                  {translateAdmin("cancel")}
+                                </ModalClose>
+
+                                <form action={deactivateMember}>
+                                  <input
+                                    type="hidden"
+                                    name="memberId"
+                                    value={member.id}
+                                  />
+                                  <Button
+                                    type="submit"
+                                    variant="destructive"
+                                    size="sm"
+                                  >
+                                    {translateAdmin("deactivate")}
+                                  </Button>
+                                </form>
+                              </>
+                            }
+                          >
+                            <p className="text-sm font-medium">
+                              {member.fullName}
+                            </p>
+                          </Modal>
                         )}
                       </>
                     ) : (

@@ -8,13 +8,16 @@ import { PageSection } from "@/components/PageSection"
 import { PhotoHero } from "@/components/PhotoHero"
 import { PageSubNav, type SubNavItem } from "@/components/PageSubNav"
 import { PlaylistEmbed } from "@/components/PlaylistEmbed"
+import { SoundCloudEmbed } from "@/components/SoundCloudEmbed"
 import { AssociationLinks } from "@/components/AssociationLinks"
 import { EmptyState } from "@/components/EmptyState"
 import { PageContainer } from "@/components/PageContainer"
 import { VideoEmbed } from "@/components/VideoEmbed"
-import { PHOTO_ALBUMS } from "@/lib/association-albums"
-import { ASSOCIATION_PLAYLISTS } from "@/lib/association-playlists"
-import { ASSOCIATION_FILMS } from "@/lib/association-media"
+import { ArchiveManager } from "@/components/ArchiveManager"
+import { ExternalLink } from "@/components/ExternalLink"
+import { ItemList } from "@/components/ItemList"
+import { findArchiveLinks } from "@/features/archive/queries"
+import { toFilm, toPhotoAlbum, toPlaylist } from "@/features/archive/view"
 import { getViewer } from "@/lib/auth"
 import { isActiveMember } from "@/lib/permissions"
 import { readArchiveImages } from "@/lib/site-images"
@@ -42,16 +45,74 @@ export default async function ArchivePage({
   const isMember = isActiveMember(viewer)
   const archiveImages = await readArchiveImages()
 
+  // Everything the archive holds, in one query. Members only past this point: an album
+  // shared "anyone with the link" has its URL as its permission.
+  const archive = await findArchiveLinks()
+
+  const films = archive.film.map(toFilm)
+  const mainAlbums = archive.album
+    .filter((link) => link.albumGroup !== "gaming")
+    .map(toPhotoAlbum)
+  const gamingAlbums = archive.album
+    .filter((link) => link.albumGroup === "gaming")
+    .map(toPhotoAlbum)
+  const playlists = archive.playlist.map(toPlaylist)
+  // Both sit under Music: a member looking for something to listen to does not care
+  // which service it is on.
+  const soundCloud = archive.soundcloud
+  const hasMusic = playlists.length > 0 || soundCloud.length > 0
+  const resources = archive.resource
+
   // Only the sections that actually have something in them, so the navigation never
   // points at a heading that was not rendered.
   const sections: SubNavItem[] = [
-    ...(ASSOCIATION_FILMS.length > 0
-      ? [{ id: "films", label: translateArchive("filmsTitle") }]
+    ...(films.length > 0
+      ? [
+          {
+            id: "films",
+            icon: "films" as const,
+            label: translateArchive("filmsTitle"),
+          },
+        ]
       : []),
-    { id: "albums", label: translateArchive("albumsTitle") },
-    { id: "gaming", label: translateArchive("gamingTitle") },
-    ...(ASSOCIATION_PLAYLISTS.length > 0
-      ? [{ id: "music", label: translateArchive("musicTitle") }]
+    {
+      id: "albums",
+      icon: "albums" as const,
+      label: translateArchive("albumsTitle"),
+    },
+    {
+      id: "gaming",
+      icon: "gaming" as const,
+      label: translateArchive("gamingTitle"),
+    },
+    ...(playlists.length > 0
+      ? [
+          {
+            id: "music",
+            icon: "music" as const,
+            label: translateArchive("musicTitle"),
+          },
+        ]
+      : []),
+    ...(isMember && resources.length > 0
+      ? [
+          {
+            id: "resources",
+            icon: "resources" as const,
+            label: translateArchive("resourcesTitle"),
+          },
+        ]
+      : []),
+    // Last, and only for a member: the form is theirs and it sits at the foot of the page,
+    // which is a long scroll to find without something pointing at it.
+    ...(isMember
+      ? [
+          {
+            id: "add",
+            icon: "add" as const,
+            label: translateArchive("addTitle"),
+          },
+        ]
       : []),
   ]
 
@@ -81,14 +142,14 @@ export default async function ArchivePage({
 
         <PageSubNav items={sections} />
 
-        {ASSOCIATION_FILMS.length === 0 ? (
+        {films.length === 0 ? (
           <div className="mt-8">
             <EmptyState>{translateArchive("empty")}</EmptyState>
           </div>
         ) : (
           <PageSection id="films" heading={translateArchive("filmsTitle")}>
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {ASSOCIATION_FILMS.map((film) =>
+              {films.map((film) =>
                 isMember ? (
                   <VideoEmbed
                     key={film.title}
@@ -116,32 +177,67 @@ export default async function ArchivePage({
             <AlbumGrid
               id="albums"
               heading={translateArchive("albumsTitle")}
-              albums={PHOTO_ALBUMS.filter((album) => album.group === "main")}
+              albums={mainAlbums}
               openLabel={translateArchive("openInGooglePhotos")}
               canOpen={isMember}
             />
             <AlbumGrid
               id="gaming"
               heading={translateArchive("gamingTitle")}
-              albums={PHOTO_ALBUMS.filter((album) => album.group === "gaming")}
+              albums={gamingAlbums}
               openLabel={translateArchive("openInGooglePhotos")}
               canOpen={isMember}
             />
           </>
         }
 
-        {ASSOCIATION_PLAYLISTS.length > 0 && (
+        {hasMusic && (
           <PageSection id="music" heading={translateArchive("musicTitle")}>
             <div className="grid gap-4 sm:grid-cols-2">
-              {ASSOCIATION_PLAYLISTS.map((playlist) => (
+              {playlists.map((playlist) => (
                 <PlaylistEmbed key={playlist.playlistId} playlist={playlist} />
+              ))}
+
+              {soundCloud.map((track) => (
+                <SoundCloudEmbed
+                  key={track.id}
+                  url={track.externalId ?? track.url}
+                  label={track.label}
+                />
               ))}
             </div>
           </PageSection>
         )}
 
+        {/* Members only, and each entry is a link somebody chose to share with the club. */}
+        {isMember && resources.length > 0 && (
+          <PageSection
+            id="resources"
+            heading={translateArchive("resourcesTitle")}
+          >
+            <ItemList>
+              {resources.map((resource) => (
+                <li key={resource.id} className="p-3">
+                  <ExternalLink href={resource.url}>
+                    {resource.label}
+                  </ExternalLink>
+                </li>
+              ))}
+            </ItemList>
+          </PageSection>
+        )}
+
         {/* Shared albums and Drive folder are link-is-the-password, so members only. */}
         {isActiveMember(viewer) && <AssociationLinks />}
+
+        <ArchiveManager
+          links={[
+            ...archive.album,
+            ...archive.film,
+            ...archive.playlist,
+            ...archive.resource,
+          ]}
+        />
       </PageContainer>
     </>
   )

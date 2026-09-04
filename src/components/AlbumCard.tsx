@@ -9,7 +9,7 @@
 
 import { ExternalLink } from "@/components/ExternalLink"
 import { SiteImage } from "@/components/SiteImage"
-import type { PhotoAlbum } from "@/lib/association-albums"
+import type { PhotoAlbum } from "@/features/archive/view"
 import { ExternalLinkIcon } from "@/lib/icons"
 
 export function AlbumCard({

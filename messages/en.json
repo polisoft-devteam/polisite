@@ -285,7 +285,7 @@
       "Complain to the Swedish Authority for Privacy Protection (IMY) if you think we are getting it wrong."
     ],
     "cookiesTitle": "Cookies",
-    "cookiesBody": "We use a single necessary cookie, to keep you signed in. No analytics, no tracking, no ads. Pages with embedded content such as maps, Spotify and YouTube load it from those services, and their terms apply to that.",
+    "cookiesBody": "We use a single necessary cookie, to keep you signed in. No analytics, no tracking, no ads. Pages with embedded content such as maps, Spotify, SoundCloud and YouTube load it from those services, and their terms apply to that.",
     "contactTitle": "Contact",
     "contactBody": "Write to {contactEmail} and we will help you.",
     "controllerBodyVacant": "{associationName} is the controller of the data on this site. If you have questions, write to us at the address further down."
@@ -314,7 +314,11 @@
     "setTitle": "Set title",
     "titleLabel": "Title",
     "editProfile": "Edit profile",
-    "badgeEarned": "Earned automatically"
+    "badgeEarned": "Earned automatically",
+    "deactivateConfirmTitle": "Deactivate this member?",
+    "deactivateConfirmBody": "They see the site as a visitor again and lose the member pages. The row stays, so their name is still on past events, and you can let them back in whenever you like.",
+    "cancel": "Cancel",
+    "close": "Close"
   },
   "Archive": {
     "title": "Open archive",
@@ -330,7 +334,28 @@
     "membersOnlyTitle": "Members only",
     "membersOnlyBody": "Sign in as a member to open this.",
     "membersOnlyHint": "Members only",
-    "membersOnlyClose": "Close"
+    "membersOnlyClose": "Close",
+    "addTitle": "Add to the archive",
+    "addLabel": "Name",
+    "addUrl": "Link",
+    "addUrlHint": "Paste a link to a Google album, a YouTube film, a Spotify playlist or anything else.",
+    "addDetected": "Looks like: {kind}",
+    "addNotAUrl": "That is not a web address.",
+    "addGroup": "Where does it belong?",
+    "addSubmit": "Add",
+    "remove": "Remove",
+    "resourcesTitle": "Other resources",
+    "kind_album": "photo album",
+    "kind_film": "film",
+    "kind_playlist": "playlist",
+    "kind_resource": "link",
+    "editTitle": "Edit this entry",
+    "edit": "Edit",
+    "editSubmit": "Save changes",
+    "removeConfirmTitle": "Remove from the archive?",
+    "removeConfirmBody": "The entry goes from the archive. The album, film or playlist itself is untouched and stays where it is.",
+    "cancel": "Cancel",
+    "kind_soundcloud": "SoundCloud"
   },
   "Links": {
     "title": "Association links",
@@ -351,7 +376,8 @@
     "title": "Members",
     "back": "All members",
     "github": "GitHub",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "goToProfile": "Go to profile"
   },
   "Wishlist": {
     "title": "Wishlist",

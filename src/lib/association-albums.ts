@@ -1,13 +1,11 @@
-// Shared photo albums.
+// Seed data, and nothing else. Read once by scripts/seed-archive.mts and by nothing the
+// app renders: the albums live in the archive_links table now.
 //
-// Everything but the label is read off the album's own page. The URL has to be the one
-// Google's Share button produces — the short photos.app.goo.gl form, which expands to
-// include the ?key= that lets someone open the album without already being shared in.
-// A URL copied from the address bar is missing that key and gives a 404.
+// Safe to delete along with the seed script once the table is the only copy anybody
+// needs. It is kept for the moment so a fresh database can be filled without hand
+// typing twenty three rows, but it is a snapshot of September 2026 and does not know
+// about anything added through the site since.
 //
-// Three albums have no public link yet, so they carry no cover and only open for someone
-// Google already knows. Re-share them from the app to fix that.
-
 export type AlbumGroup = "main" | "gaming"
 
 export type PhotoAlbum = {

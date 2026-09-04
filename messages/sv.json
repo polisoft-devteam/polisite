@@ -285,7 +285,7 @@
       "Klaga till Integritetsskyddsmyndigheten (IMY) om du tycker att vi gör fel."
     ],
     "cookiesTitle": "Kakor",
-    "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser. Sidor med inbäddat innehåll som kartor, Spotify och YouTube laddar det från respektive tjänst, och då gäller deras villkor.",
+    "cookiesBody": "Vi använder en enda nödvändig kaka, för att hålla dig inloggad. Ingen analys, ingen spårning, inga annonser. Sidor med inbäddat innehåll som kartor, Spotify, SoundCloud och YouTube laddar det från respektive tjänst, och då gäller deras villkor.",
     "contactTitle": "Kontakt",
     "contactBody": "Skriv till {contactEmail} så hjälper vi dig.",
     "controllerBodyVacant": "{associationName} är personuppgiftsansvarig för uppgifterna på den här webbplatsen. Har du frågor, skriv till oss på adressen längre ner."
@@ -314,7 +314,11 @@
     "setTitle": "Sätt titel",
     "titleLabel": "Titel",
     "editProfile": "Redigera profil",
-    "badgeEarned": "Intjänad automatiskt"
+    "badgeEarned": "Intjänad automatiskt",
+    "deactivateConfirmTitle": "Stäng av medlemmen?",
+    "deactivateConfirmBody": "De ser sidan som en besökare igen och kommer inte in i medlemssidorna. Raden ligger kvar, så deras namn står kvar på gamla evenemang, och du kan släppa in dem igen när som helst.",
+    "cancel": "Avbryt",
+    "close": "Stäng"
   },
   "Archive": {
     "title": "Öppet arkiv",
@@ -330,7 +334,28 @@
     "membersOnlyTitle": "Bara för medlemmar",
     "membersOnlyBody": "Logga in som medlem för att öppna det här.",
     "membersOnlyHint": "Bara för medlemmar",
-    "membersOnlyClose": "Stäng"
+    "membersOnlyClose": "Stäng",
+    "addTitle": "Lägg till i arkivet",
+    "addLabel": "Namn",
+    "addUrl": "Länk",
+    "addUrlHint": "Klistra in en länk till ett Google-album, en YouTube-film, en Spotify-lista eller vad som helst annat.",
+    "addDetected": "Ser ut som: {kind}",
+    "addNotAUrl": "Det där är ingen webbadress.",
+    "addGroup": "Var hör det hemma?",
+    "addSubmit": "Lägg till",
+    "remove": "Ta bort",
+    "resourcesTitle": "Övriga resurser",
+    "kind_album": "fotoalbum",
+    "kind_film": "film",
+    "kind_playlist": "spellista",
+    "kind_resource": "länk",
+    "editTitle": "Ändra posten",
+    "edit": "Ändra",
+    "editSubmit": "Spara ändringar",
+    "removeConfirmTitle": "Ta bort ur arkivet?",
+    "removeConfirmBody": "Posten försvinner från arkivet. Själva albumet, filmen eller listan rörs inte, den ligger kvar där den ligger.",
+    "cancel": "Avbryt",
+    "kind_soundcloud": "SoundCloud"
   },
   "Links": {
     "title": "Föreningens länkar",
@@ -351,7 +376,8 @@
     "title": "Medlemmar",
     "back": "Alla medlemmar",
     "github": "GitHub",
-    "wishlist": "Önskelista"
+    "wishlist": "Önskelista",
+    "goToProfile": "Gå till profilen"
   },
   "Wishlist": {
     "title": "Önskelista",

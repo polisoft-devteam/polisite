@@ -13,12 +13,45 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react"
 
+import {
+  GamingIcon,
+  HeartIcon,
+  MembersIcon,
+  MusicIcon,
+  PartyIcon,
+  PhotosIcon,
+  PlayIcon,
+  PlusIcon,
+  DriveIcon,
+  PendingIcon,
+  type IconComponent,
+} from "@/lib/icons"
 import { cn } from "@/lib/utils"
+
+/**
+ * Named rather than passed: only plain data crosses from a Server Component to a Client
+ * one, and a React component is not plain data. Same reason EventCategoryField imports
+ * its own.
+ */
+const SUB_NAV_ICON: Record<string, IconComponent> = {
+  about: PartyIcon,
+  members: MembersIcon,
+  timeline: PendingIcon,
+  membership: HeartIcon,
+  films: PlayIcon,
+  albums: PhotosIcon,
+  gaming: GamingIcon,
+  music: MusicIcon,
+  resources: DriveIcon,
+  add: PlusIcon,
+}
 
 export type SubNavItem = {
   /** The id of the PageSection it jumps to. */
   id: string
   label: string
+  /** A key of SUB_NAV_ICON. Left out, the item is just its label. */
+  icon?: keyof typeof SUB_NAV_ICON
 }
 
 type IndicatorPosition = { left: number; width: number }
@@ -95,6 +128,7 @@ export function PageSubNav({ items }: { items: SubNavItem[] }) {
     >
       {items.map((item) => {
         const isActive = item.id === activeId
+        const Icon = item.icon ? SUB_NAV_ICON[item.icon] : undefined
 
         return (
           <a
@@ -112,12 +146,13 @@ export function PageSubNav({ items }: { items: SubNavItem[] }) {
               history.replaceState(null, "", `#${item.id}`)
             }}
             className={cn(
-              "rounded-md px-3 py-1.5 text-sm transition-colors",
+              "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors",
               isActive
                 ? "text-foreground font-medium"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >
+            {Icon && <Icon className="size-3.5" />}
             {item.label}
           </a>
         )

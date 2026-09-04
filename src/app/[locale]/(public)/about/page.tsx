@@ -47,14 +47,34 @@ export default async function AboutPage({
   const showTimeline = isAdmin(viewer)
 
   const sections: SubNavItem[] = [
-    { id: "about-us", label: translateAbout("aboutHeading") },
+    {
+      id: "about-us",
+      icon: "about" as const,
+      label: translateAbout("aboutHeading"),
+    },
     ...(showMembers
-      ? [{ id: "members", label: translateMembers("title") }]
+      ? [
+          {
+            id: "members",
+            icon: "members" as const,
+            label: translateMembers("title"),
+          },
+        ]
       : []),
     ...(showTimeline
-      ? [{ id: "timeline", label: translateAbout("timelineHeading") }]
+      ? [
+          {
+            id: "timeline",
+            icon: "timeline" as const,
+            label: translateAbout("timelineHeading"),
+          },
+        ]
       : []),
-    { id: "membership", label: translateAbout("membershipTitle") },
+    {
+      id: "membership",
+      icon: "membership" as const,
+      label: translateAbout("membershipTitle"),
+    },
   ]
 
   return (

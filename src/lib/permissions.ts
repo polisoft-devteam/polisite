@@ -166,6 +166,33 @@ export function canViewMemberDirectory(viewer: Viewer | null): boolean {
   return isActiveMember(viewer)
 }
 
+// --- The open archive ----------------------------------------------------------
+
+/**
+ * Any member may add to the archive. It is the association's own scrapbook, and asking an
+ * admin to paste a link on your behalf would mean it stopped being kept.
+ */
+export function canAddArchiveLink(viewer: Viewer | null): boolean {
+  return isActiveMember(viewer)
+}
+
+/** Whoever put it there can change it, and an admin can fix anyone's. */
+export function canEditArchiveLink(
+  viewer: Viewer | null,
+  link: { addedByMemberId: string | null },
+): boolean {
+  if (!isActiveMember(viewer)) return false
+  return link.addedByMemberId === viewer!.member!.id || isAdmin(viewer)
+}
+
+/** The same answer as editing: whoever may correct it may also take it away. */
+export function canRemoveArchiveLink(
+  viewer: Viewer | null,
+  link: { addedByMemberId: string | null },
+): boolean {
+  return canEditArchiveLink(viewer, link)
+}
+
 // --- Badges and titles ---------------------------------------------------------
 
 /**

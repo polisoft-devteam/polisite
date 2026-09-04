@@ -1,0 +1,1 @@
+ALTER TYPE "public"."archive_link_kind" ADD VALUE 'soundcloud' BEFORE 'resource';

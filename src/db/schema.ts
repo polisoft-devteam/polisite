@@ -354,6 +354,54 @@ export const memberBadges = pgTable(
   (table) => [primaryKey({ columns: [table.memberId, table.badge] })],
 ).enableRLS()
 
+// --- The open archive ----------------------------------------------------------
+//
+// Albums, films, playlists and plain links, in one table rather than four, because they
+// differ only in what a URL turns out to be. The kind is worked out from the URL when it
+// is added; see features/archive/detect.ts.
+//
+// Members only, whatever is in here. A Google album shared "anyone with the link" has its
+// URL as its permission, so the row must never reach a guest's page.
+
+export const archiveLinkKindEnum = pgEnum("archive_link_kind", [
+  "album",
+  "film",
+  "playlist",
+  "soundcloud",
+  "resource",
+])
+
+export const archiveLinks = pgTable("archive_links", {
+  id: uuid("id").primaryKey().defaultRandom(),
+
+  kind: archiveLinkKindEnum("kind").notNull(),
+  label: text("label").notNull(),
+  url: text("url").notNull(),
+
+  /** The video or playlist id, for the kinds that embed. Null for the rest. */
+  externalId: text("external_id"),
+
+  /** Albums split into the main run and the gaming ones; null for everything else. */
+  albumGroup: text("album_group"),
+
+  /** Google's own album cover, or our thumbnail for a film. Optional throughout. */
+  coverUrl: text("cover_url"),
+
+  /** As the source reports it, so it is shown rather than formatted. */
+  caption: text("caption"),
+
+  /** Newest first within a kind, and hand-set when the order matters. */
+  sortOrder: integer("sort_order").notNull().default(0),
+
+  addedByMemberId: uuid("added_by_member_id").references(() => members.id, {
+    onDelete: "set null",
+  }),
+
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+}).enableRLS()
+
 // --- Wishlist ------------------------------------------------------------------
 //
 // A member lists things they want; everyone else can claim one, or join a claim someone
@@ -421,3 +469,6 @@ export type EventGuest = typeof eventGuests.$inferSelect
 export type WishlistItem = typeof wishlistItems.$inferSelect
 export type WishlistClaim = typeof wishlistClaims.$inferSelect
 export type MemberBadge = typeof memberBadges.$inferSelect
+
+export type ArchiveLink = typeof archiveLinks.$inferSelect
+export type ArchiveLinkKind = (typeof archiveLinkKindEnum.enumValues)[number]

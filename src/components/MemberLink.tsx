@@ -26,16 +26,22 @@ export function MemberLink({
   size = "default",
   secondaryLine,
   className,
+  plain = false,
 }: {
   member: LinkableMember
   size?: "sm" | "default" | "lg"
   /** A badge, a response, whatever belongs under the name. */
   secondaryLine?: React.ReactNode
   className?: string
+  /**
+   * Drops the fill, for a row that lights up as a whole. Two nested things reacting to
+   * the same pointer is one too many.
+   */
+  plain?: boolean
 }) {
   const avatarSize =
     size === "lg"
-      ? "size-10"
+      ? "size-10 text-sm"
       : size === "sm"
         ? "size-6 text-[0.625rem]"
         : "size-7 text-xs"
@@ -46,11 +52,15 @@ export function MemberLink({
       transitionTypes={["nav-forward"]}
       // data-sweep is what globals.css keys the fill on, so a row fills exactly as a
       // button does rather than approximating it here.
-      data-slot="button"
-      data-sweep="true"
+      data-slot={plain ? undefined : "button"}
+      data-sweep={plain ? undefined : "true"}
       className={cn(
-        "[--button-accent-foreground:var(--color-primary-foreground)] [--button-accent:var(--color-primary)]",
-        "flex min-w-0 items-center gap-2 rounded-md px-2 py-1",
+        "flex min-w-0 items-center",
+        size === "lg" ? "gap-3" : "gap-2",
+        !plain && [
+          "[--button-accent-foreground:var(--color-primary-foreground)] [--button-accent:var(--color-primary)]",
+          "rounded-md px-2 py-1",
+        ],
         className,
       )}
     >
@@ -64,7 +74,9 @@ export function MemberLink({
         <span
           className={cn(
             "block truncate",
-            size === "sm" ? "text-sm" : "text-sm font-medium",
+            size === "sm" && "text-sm",
+            size === "default" && "text-sm font-medium",
+            size === "lg" && "text-base font-medium",
           )}
         >
           {memberDisplayName(member)}

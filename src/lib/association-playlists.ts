@@ -1,11 +1,11 @@
-// Spotify playlists the association keeps.
+// Seed data, and nothing else. Read once by scripts/seed-archive.mts and by nothing the
+// app renders: the playlists live in the archive_links table now.
 //
-// Only the playlist id is stored. The embed is loaded on click rather than with the page,
-// the same as the films — a Spotify iframe reaches out to them the moment it renders.
+// Safe to delete along with the seed script once the table is the only copy anybody
+// needs. It is kept for the moment so a fresh database can be filled without hand
+// typing twenty three rows, but it is a snapshot of September 2026 and does not know
+// about anything added through the site since.
 //
-// No cover art of our own: a playlist cover is a mosaic of album artwork we don't own, so
-// the artwork is shown by Spotify's own embed, which is the sanctioned way to display it.
-
 export type Playlist = {
   /** The id from open.spotify.com/playlist/<id>. */
   playlistId: string
