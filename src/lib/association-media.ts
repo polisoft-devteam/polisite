@@ -1,14 +1,11 @@
-// Kept as the seed's source, not the page's: the films live in archive_links now and are
-// read from there. See scripts/seed-archive.mts.
+// Seed data, and nothing else. Read once by scripts/seed-archive.mts and by nothing the
+// app renders: the films live in the archive_links table now.
 //
-// Films and other things the association has made.
+// Safe to delete along with the seed script once the table is the only copy anybody
+// needs. It is kept for the moment so a fresh database can be filled without hand
+// typing twenty three rows, but it is a snapshot of September 2026 and does not know
+// about anything added through the site since.
 //
-// Hosted on YouTube rather than in Supabase Storage: the free tier is 1 GB in total, and
-// a video in the repo would be cloned and deployed forever. Unlisted, so they are reachable
-// by link and embed but not by search.
-//
-// Titles are as published — user-written content, so never translated.
-
 export type AssociationFilm = {
   /** The v= part of the YouTube URL. */
   videoId: string

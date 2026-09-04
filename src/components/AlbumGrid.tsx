@@ -4,7 +4,7 @@
 import { AlbumCard } from "@/components/AlbumCard"
 import { LockedMediaCard } from "@/components/LockedMediaCard"
 import { PageSection } from "@/components/PageSection"
-import type { PhotoAlbum } from "@/lib/association-albums"
+import type { PhotoAlbum } from "@/features/archive/view"
 
 export function AlbumGrid({
   heading,

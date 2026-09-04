@@ -1,12 +1,40 @@
-// Turns archive rows into the shapes the cards already take.
+// The shapes the archive's cards take, and how a row becomes one.
 //
-// The cards predate the table and are fine as they are, so the row is adapted to them
-// rather than four components being rewritten around a new type.
+// The cards predate the table and are fine as they are, so a row is adapted to them rather
+// than four components being rewritten around a new type.
+//
+// The types live here rather than beside the seed data they were written for. Nothing the
+// app renders should reach into a file that exists only to be imported once by a script.
 
 import type { ArchiveLink } from "@/db/schema"
-import type { PhotoAlbum, AlbumGroup } from "@/lib/association-albums"
-import type { AssociationFilm } from "@/lib/association-media"
-import type { Playlist } from "@/lib/association-playlists"
+
+/** Albums split into the main run and the gaming ones. */
+export type AlbumGroup = "main" | "gaming"
+
+export type PhotoAlbum = {
+  group: AlbumGroup
+  label: string
+  /** The full share URL, including ?key= where the album has one. */
+  url: string
+  /** Google's own cover. The size suffix is ours; it serves any crop. */
+  coverUrl?: string
+  /** As Google reports it, so it stays in English. */
+  dateRange?: string
+}
+
+export type AssociationFilm = {
+  /** The v= part of the YouTube URL. */
+  videoId: string
+  title: string
+  year?: string
+  thumbnail: string
+}
+
+export type Playlist = {
+  /** The id from open.spotify.com/playlist/<id>. */
+  playlistId: string
+  label: string
+}
 
 export function toPhotoAlbum(link: ArchiveLink): PhotoAlbum {
   return {

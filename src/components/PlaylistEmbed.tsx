@@ -4,7 +4,7 @@
 // then, and a playlist is more use when you can see what is on it. The privacy page says
 // so, which is the part that has to stay true.
 
-import type { Playlist } from "@/lib/association-playlists"
+import type { Playlist } from "@/features/archive/view"
 
 export function PlaylistEmbed({ playlist }: { playlist: Playlist }) {
   return (
