@@ -21,8 +21,9 @@ import {
   findBadgesByMember,
 } from "@/features/members/queries"
 import { isMemberTitle } from "@/features/members/titles"
+import { Link } from "@/i18n/navigation"
 import { readBadgeImages } from "@/lib/site-images"
-import { ChevronRightIcon, GithubIcon } from "@/lib/icons"
+import { ChevronRightIcon, GithubIcon, WishlistIcon } from "@/lib/icons"
 
 export async function MembersTable() {
   const translateMembers = await getTranslations("Members")
@@ -116,6 +117,18 @@ export async function MembersTable() {
                 <GithubIcon className="size-4" />
               </a>
             )}
+
+            {/* Same page as the row, but aimed at their wishlist rather than the top of
+                it. Without the anchor this was a second way to one place wearing an icon
+                that promised another. */}
+            <Link
+              href={`/members/${member.id}#wishlist`}
+              transitionTypes={["nav-forward"]}
+              aria-label={translateMembers("wishlist")}
+              className="hover:text-foreground p-2"
+            >
+              <WishlistIcon className="size-4" />
+            </Link>
           </div>
         </li>
       ))}

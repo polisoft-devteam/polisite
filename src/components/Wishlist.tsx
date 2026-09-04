@@ -31,7 +31,7 @@ export async function Wishlist({
   const translateWishlist = await getTranslations("Wishlist")
 
   return (
-    <PageSection heading={translateWishlist("title")}>
+    <PageSection id="wishlist" heading={translateWishlist("title")}>
       {entries.length === 0 ? (
         <EmptyState>
           {translateWishlist(isOwnList ? "emptyOwn" : "emptyOther")}
