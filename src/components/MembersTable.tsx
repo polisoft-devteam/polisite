@@ -21,9 +21,8 @@ import {
   findBadgesByMember,
 } from "@/features/members/queries"
 import { isMemberTitle } from "@/features/members/titles"
-import { Link } from "@/i18n/navigation"
 import { readBadgeImages } from "@/lib/site-images"
-import { ChevronRightIcon, GithubIcon, WishlistIcon } from "@/lib/icons"
+import { ChevronRightIcon, GithubIcon } from "@/lib/icons"
 
 export async function MembersTable() {
   const translateMembers = await getTranslations("Members")
@@ -46,7 +45,7 @@ export async function MembersTable() {
           // data-sweep is what globals.css keys the fill on.
           data-slot="button"
           data-sweep="true"
-          className="member-row flex items-center justify-between gap-3 p-3 [--button-accent-foreground:var(--color-primary-foreground)] [--button-accent:var(--color-primary)]"
+          className="member-row flex min-h-18 items-center justify-between gap-4 px-4 py-3 [--button-accent-foreground:var(--color-primary-foreground)] [--button-accent:var(--color-primary)]"
         >
           <MemberLink
             member={member}
@@ -99,7 +98,7 @@ export async function MembersTable() {
               up. Hidden from a screen reader: the name beside it is already the link. */}
           <span
             aria-hidden="true"
-            className="member-goto hidden shrink-0 items-center gap-1 text-xs font-medium sm:flex"
+            className="member-goto hidden shrink-0 items-center gap-1 text-xs font-medium md:flex"
           >
             {translateMembers("goToProfile")}
             <ChevronRightIcon className="size-3" />
@@ -117,15 +116,6 @@ export async function MembersTable() {
                 <GithubIcon className="size-4" />
               </a>
             )}
-
-            <Link
-              href={`/members/${member.id}`}
-              transitionTypes={["nav-forward"]}
-              aria-label={translateMembers("wishlist")}
-              className="hover:text-foreground p-2"
-            >
-              <WishlistIcon className="size-4" />
-            </Link>
           </div>
         </li>
       ))}
