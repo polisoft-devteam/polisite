@@ -9,6 +9,8 @@ import { EmptyState } from "@/components/EmptyState"
 import { ItemList } from "@/components/ItemList"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
+import { Link } from "@/i18n/navigation"
+import { DesignIcon } from "@/lib/icons"
 import { PageSection } from "@/components/PageSection"
 import { Modal, ModalClose } from "@/components/Modal"
 import { Button } from "@/components/ui/button"
@@ -56,7 +58,22 @@ export default async function AdminPage({
 
   return (
     <PageContainer>
-      <PageHeading title={translateAdmin("title")} />
+      <PageHeading
+        title={translateAdmin("title")}
+        // Every component in every state, and the palette lab. Reachable from the only
+        // page an admin already opens, rather than remembered as a URL.
+        actions={
+          <Button
+            nativeButton={false}
+            variant="outline"
+            size="sm"
+            render={<Link href="/design" transitionTypes={["nav-forward"]} />}
+          >
+            <DesignIcon className="size-4" />
+            {translateAdmin("designPage")}
+          </Button>
+        }
+      />
 
       <PageSection heading={translateAdmin("requestsTitle")}>
         {requests.length === 0 ? (

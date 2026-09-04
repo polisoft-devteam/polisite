@@ -318,7 +318,8 @@
     "deactivateConfirmTitle": "Stäng av medlemmen?",
     "deactivateConfirmBody": "De ser sidan som en besökare igen och kommer inte in i medlemssidorna. Raden ligger kvar, så deras namn står kvar på gamla evenemang, och du kan släppa in dem igen när som helst.",
     "cancel": "Avbryt",
-    "close": "Stäng"
+    "close": "Stäng",
+    "designPage": "Designsidan"
   },
   "Archive": {
     "title": "Öppet arkiv",

@@ -42,6 +42,7 @@ export {
   BellFill as NotificationIcon,
   PeopleFill as MembersIcon,
   Images as PhotosIcon,
+  Palette as DesignIcon,
   Camera2 as AddToArchiveIcon,
   SlashCircle as NotYetIcon,
   FolderFill as DriveIcon,
