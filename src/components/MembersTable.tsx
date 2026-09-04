@@ -73,19 +73,23 @@ export async function MembersTable() {
                   )
 
                   return image ? (
-                    <SiteImage
+                    <span
                       key={held.badge}
-                      src={image}
-                      alt={name}
-                      rounded="rounded-full"
-                      className="size-5"
-                      sizes="20px"
-                    />
+                      className="brand-fill block size-5 shrink-0 rounded-full p-[1.5px]"
+                    >
+                      <SiteImage
+                        src={image}
+                        alt={name}
+                        rounded="rounded-full"
+                        className="size-full"
+                        sizes="20px"
+                      />
+                    </span>
                   ) : (
                     <span
                       key={held.badge}
                       title={name}
-                      className="bg-primary/15 text-primary-ink flex size-5 items-center justify-center rounded-full"
+                      className="brand-fill text-primary-foreground flex size-5 shrink-0 items-center justify-center rounded-full"
                     >
                       <definition.Icon className="size-3" />
                     </span>

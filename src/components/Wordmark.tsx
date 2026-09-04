@@ -61,16 +61,17 @@ export function Wordmark() {
     <span className="font-heading text-base font-extrabold tracking-tight sm:text-lg lg:text-3xl xl:text-4xl">
       <style>{wordmarkKeyframes}</style>
 
-      {/* Only the name carries the gradient. Clipping the whole wordmark to text put the
-          clip around the flipping words, which are rotated in 3D, and the two fought:
-          the suffix ended up drawn inside the name. */}
-      <span className="brand-text">{ASSOCIATION_NAME}</span>
+      {/* The name stays plain text; only the word that flips carries the gradient.
+          The clip is on each flipping word rather than on anything above them: put it on
+          an ancestor and it fights their 3D rotation, which drew the suffix inside the
+          name. */}
+      <span className="text-foreground">{ASSOCIATION_NAME}</span>
 
       <span aria-hidden="true" className="wordmark-slot text-primary-ink">
         {WORDMARK_SUFFIXES.map((suffix, index) => (
           <span
             key={suffix}
-            className="wordmark-word"
+            className="wordmark-word brand-text"
             style={{
               animationDuration: `${CYCLE_SECONDS}s`,
               animationDelay: `${index * SECONDS_PER_WORD}s`,

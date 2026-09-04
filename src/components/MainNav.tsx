@@ -103,7 +103,7 @@ export function MainNav({ showAdminLink }: { showAdminLink: boolean }) {
       {indicator && (
         <span
           aria-hidden="true"
-          className="bg-primary-ink absolute bottom-0.5 h-0.5 rounded-full transition-[left,width] duration-300 ease-out motion-reduce:transition-none"
+          className="brand-fill-ink absolute bottom-0.5 h-0.5 rounded-full transition-[left,width] duration-300 ease-out motion-reduce:transition-none"
           style={{ left: indicator.left, width: indicator.width }}
         />
       )}

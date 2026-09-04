@@ -129,16 +129,21 @@ export async function BadgeShelf({
             <span className="badge-flip relative block h-20 w-24">
               <span className="badge-faces absolute inset-0">
                 <span className="badge-front absolute inset-0 flex items-center justify-center">
+                  {/* The brand runs round the artwork, and fills the circle when a badge
+                      has none. An unearned one is greyed by the tile above, so the ring
+                      goes grey with it and needs no rule of its own. */}
                   {image ? (
-                    <SiteImage
-                      src={image}
-                      alt=""
-                      rounded="rounded-full"
-                      className="size-14"
-                      sizes="56px"
-                    />
+                    <span className="brand-fill flex size-14 items-center justify-center rounded-full p-[3px]">
+                      <SiteImage
+                        src={image}
+                        alt=""
+                        rounded="rounded-full"
+                        className="size-full"
+                        sizes="56px"
+                      />
+                    </span>
                   ) : (
-                    <span className="bg-primary/15 text-primary-ink flex size-14 items-center justify-center rounded-full">
+                    <span className="brand-fill text-primary-foreground flex size-14 items-center justify-center rounded-full">
                       <Icon className="size-7" />
                     </span>
                   )}

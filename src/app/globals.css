@@ -848,18 +848,27 @@ a[href] {
   }
 }
 
-/* --- Brand text ---------------------------------------------------------------
-   The wordmark, and anything else that should carry the brand as letters rather
-   than as a fill.
+/* --- Wearing the brand ---------------------------------------------------------
+   Three ways to carry the brand, each falling back to the solid colour when no
+   gradient palette is on, so every one of these costs nothing on a plain palette.
 
-   The solid colour is set first and the gradient painted over it, so an engine
-   without background-clip: text shows ink rather than nothing. --brand-sweep-ink
-   is the darker pair: the fill pair is 1.4:1 on white, which is not text.
+     .brand-fill      a filled shape: a badge, a ribbon, an underline.
+     .brand-fill-ink  the same, darker, for a shape on a light page.
+     .brand-text      letters. Not the same gradient: a fill pale enough to carry
+                      a near-black label is 1.4:1 as text, which is not text.
 
-   --brand-text-fill is what makes this cost nothing when no gradient is on. A
-   gradient palette sets it to transparent and the letters show the gradient; with
-   no gradient it is unset, falls back to currentColor, and the rule is invisible.
-   Clipping to text unconditionally would erase the wordmark on the solid palettes. */
+   --brand-text-fill is what makes the text one safe. A gradient palette sets it to
+   transparent and the letters show the gradient; with no gradient it is unset,
+   falls back to currentColor, and the rule is invisible. Clipping to text
+   unconditionally would erase the word on every solid palette. */
+
+.brand-fill {
+  background: var(--button-sweep, var(--primary));
+}
+
+.brand-fill-ink {
+  background: var(--brand-sweep-ink, var(--primary-ink));
+}
 
 .brand-text {
   color: var(--primary-ink);
