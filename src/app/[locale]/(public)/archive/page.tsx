@@ -8,6 +8,7 @@ import { PageSection } from "@/components/PageSection"
 import { PhotoHero } from "@/components/PhotoHero"
 import { PageSubNav, type SubNavItem } from "@/components/PageSubNav"
 import { PlaylistEmbed } from "@/components/PlaylistEmbed"
+import { SoundCloudEmbed } from "@/components/SoundCloudEmbed"
 import { AssociationLinks } from "@/components/AssociationLinks"
 import { EmptyState } from "@/components/EmptyState"
 import { PageContainer } from "@/components/PageContainer"
@@ -56,6 +57,10 @@ export default async function ArchivePage({
     .filter((link) => link.albumGroup === "gaming")
     .map(toPhotoAlbum)
   const playlists = archive.playlist.map(toPlaylist)
+  // Both sit under Music: a member looking for something to listen to does not care
+  // which service it is on.
+  const soundCloud = archive.soundcloud
+  const hasMusic = playlists.length > 0 || soundCloud.length > 0
   const resources = archive.resource
 
   // Only the sections that actually have something in them, so the navigation never
@@ -186,11 +191,19 @@ export default async function ArchivePage({
           </>
         }
 
-        {playlists.length > 0 && (
+        {hasMusic && (
           <PageSection id="music" heading={translateArchive("musicTitle")}>
             <div className="grid gap-4 sm:grid-cols-2">
               {playlists.map((playlist) => (
                 <PlaylistEmbed key={playlist.playlistId} playlist={playlist} />
+              ))}
+
+              {soundCloud.map((track) => (
+                <SoundCloudEmbed
+                  key={track.id}
+                  url={track.externalId ?? track.url}
+                  label={track.label}
+                />
               ))}
             </div>
           </PageSection>

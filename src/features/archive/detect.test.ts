@@ -70,6 +70,33 @@ describe("playlists", () => {
   })
 })
 
+describe("SoundCloud", () => {
+  it("takes a track link as it comes off the address bar", () => {
+    const url = "https://soundcloud.com/jon239yup/vaelkommentilloutland"
+    expect(kindOf(url)).toBe("soundcloud")
+    expect(idOf(url)).toBe(url)
+  })
+
+  it("takes a user and a set as well, which the widget can also show", () => {
+    expect(kindOf("https://soundcloud.com/kamelpaj")).toBe("soundcloud")
+    expect(kindOf("https://soundcloud.com/kamelpaj/sets/nagot")).toBe(
+      "soundcloud",
+    )
+  })
+
+  it("digs the real link out of a player URL somebody pasted", () => {
+    const player =
+      "https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/kamelpaj/farbror-blabar&color=%23506454"
+
+    expect(kindOf(player)).toBe("soundcloud")
+    expect(idOf(player)).toBe("https://soundcloud.com/kamelpaj/farbror-blabar")
+  })
+
+  it("does not take the front page for a track", () => {
+    expect(kindOf("https://soundcloud.com/")).toBe("resource")
+  })
+})
+
 describe("everything else", () => {
   it("keeps an unrecognised link rather than refusing it", () => {
     expect(kindOf("https://sv.wikipedia.org/wiki/Poli")).toBe("resource")

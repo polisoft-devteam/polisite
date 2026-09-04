@@ -7,7 +7,8 @@
 // No network. This reads the URL and nothing else, so it is a plain function of its input
 // and is tested as one.
 
-export type ArchiveLinkKind = "album" | "film" | "playlist" | "resource"
+export type ArchiveLinkKind =
+  "album" | "film" | "playlist" | "soundcloud" | "resource"
 
 export type DetectedLink = {
   kind: ArchiveLinkKind
@@ -37,6 +38,24 @@ function youTubeVideoId(url: URL, host: string): string | null {
 
   const match = url.pathname.match(/^\/(?:embed|shorts|live)\/([^/]+)/)
   return match ? match[1] : null
+}
+
+/**
+ * SoundCloud is addressed by its own page URL rather than by an id: the widget takes a
+ * permalink, so a member pastes the link from the address bar and nothing has to be dug
+ * out of it. A player URL that has already been built carries the real one inside it.
+ */
+function soundCloudUrl(url: URL, host: string): string | null {
+  if (host === "w.soundcloud.com") return url.searchParams.get("url")
+
+  const isSoundCloud =
+    host === "soundcloud.com" ||
+    host === "m.soundcloud.com" ||
+    host === "on.soundcloud.com"
+
+  // The front page is not a track. Anything with a path is a user, a set or a track, all
+  // three of which the widget knows how to show.
+  return isSoundCloud && url.pathname.length > 1 ? url.toString() : null
 }
 
 function spotifyPlaylistId(url: URL, host: string): string | null {
@@ -74,6 +93,9 @@ export function detectArchiveLink(rawUrl: string): DetectedLink | null {
 
   const playlistId = spotifyPlaylistId(url, host)
   if (playlistId) return { kind: "playlist", externalId: playlistId }
+
+  const soundCloud = soundCloudUrl(url, host)
+  if (soundCloud) return { kind: "soundcloud", externalId: soundCloud }
 
   return { kind: "resource", externalId: null }
 }

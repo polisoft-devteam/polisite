@@ -367,6 +367,7 @@ export const archiveLinkKindEnum = pgEnum("archive_link_kind", [
   "album",
   "film",
   "playlist",
+  "soundcloud",
   "resource",
 ])
 

@@ -28,6 +28,7 @@ export async function findArchiveLinks(): Promise<
     album: [],
     film: [],
     playlist: [],
+    soundcloud: [],
     resource: [],
   }
 
