@@ -42,6 +42,7 @@ import { BadgeShelf } from "@/components/BadgeShelf"
 import { MemberBadges } from "@/components/MemberBadges"
 import { MembershipActions } from "@/components/MembershipActions"
 import { MembersOnlyNotice } from "@/components/MembersOnlyNotice"
+import { PaletteLab } from "@/components/PaletteLab"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import {
@@ -348,6 +349,10 @@ export default async function DesignPage({
             hint="JPEG, PNG, WebP eller AVIF. Skalas ner automatiskt."
           />
         </div>
+      </PageSection>
+
+      <PageSection id="palette" heading="Färg">
+        <PaletteLab />
       </PageSection>
 
       <PageSection heading="Bara för medlemmar">

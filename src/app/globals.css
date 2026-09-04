@@ -615,7 +615,10 @@ a[href] {
   z-index: -1;
   width: 0;
   height: 100%;
-  background: var(--button-accent, var(--primary));
+  /* Its own variable so the fill can be a gradient. --button-accent is also used for
+     border-color and box-shadow, and a gradient is not a colour: handing one to those
+     makes the whole declaration invalid rather than falling back. */
+  background: var(--button-sweep, var(--button-accent, var(--primary)));
   transform: skewX(-20deg);
   transition: width 450ms cubic-bezier(0.22, 1, 0.36, 1);
 }

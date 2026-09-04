@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { PaletteLoader } from "@/components/PaletteLoader"
 import { MembershipPrompt } from "@/components/MembershipPrompt"
 import { SiteFooter } from "@/components/SiteFooter"
 import { SiteHeader } from "@/components/SiteHeader"
@@ -80,6 +81,9 @@ export default async function LocaleLayout({
           {/* No disableTransitionOnChange: it injects `transition: none` on everything
               while the theme switches, which also flattens the toggle's own animation. */}
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {/* Puts a palette experiment back on after a reload; see PaletteLoader.
+                Renders nothing unless somebody is trying a colour. */}
+            <PaletteLoader />
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />
