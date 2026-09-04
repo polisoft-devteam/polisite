@@ -870,6 +870,13 @@ a[href] {
   background: var(--brand-sweep-ink, var(--primary-ink));
 }
 
+/* An icon is an SVG, which a CSS gradient cannot reach inside of, so it points its fill at
+   the one in BrandGradientDefs instead. Unset on a solid palette, where it falls back to
+   currentColor and the icon looks as it always did. */
+.brand-icon svg {
+  fill: var(--brand-icon-fill, currentColor);
+}
+
 .brand-text {
   color: var(--primary-ink);
   background-image: var(--brand-sweep-ink, none);

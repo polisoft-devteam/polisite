@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
+import { BrandGradientDefs } from "@/components/BrandGradientDefs"
 import { PaletteLoader } from "@/components/PaletteLoader"
 import { MembershipPrompt } from "@/components/MembershipPrompt"
 import { SiteFooter } from "@/components/SiteFooter"
@@ -84,6 +85,7 @@ export default async function LocaleLayout({
             {/* Puts a palette experiment back on after a reload; see PaletteLoader.
                 Renders nothing unless somebody is trying a colour. */}
             <PaletteLoader />
+            <BrandGradientDefs />
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />

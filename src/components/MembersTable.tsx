@@ -89,7 +89,7 @@ export async function MembersTable() {
                     <span
                       key={held.badge}
                       title={name}
-                      className="brand-fill text-primary-foreground flex size-5 shrink-0 items-center justify-center rounded-full"
+                      className="bg-primary/15 text-primary-ink brand-icon flex size-5 shrink-0 items-center justify-center rounded-full"
                     >
                       <definition.Icon className="size-3" />
                     </span>

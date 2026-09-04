@@ -143,7 +143,7 @@ export async function BadgeShelf({
                       />
                     </span>
                   ) : (
-                    <span className="brand-fill text-primary-foreground flex size-14 items-center justify-center rounded-full">
+                    <span className="bg-primary/15 text-primary-ink brand-icon flex size-14 items-center justify-center rounded-full">
                       <Icon className="size-7" />
                     </span>
                   )}

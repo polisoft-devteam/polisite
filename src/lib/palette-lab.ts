@@ -277,12 +277,22 @@ function gradientLines(candidate: PaletteCandidate, dark: boolean): string[] {
 
   const fill = gradientFor(candidate)
 
+  const stops = dark
+    ? brandStopsFor(candidate, 0.876, (stop) => stop[1])
+    : brandStopsFor(candidate, 0.5, (stop) => stop[2])
+
   return [
     `  --button-sweep: ${fill};`,
     `  --brand-sweep-ink: ${dark ? fill : inkGradientFor(candidate)};`,
     // What turns the letters over to the gradient. Unset on a solid palette, where the
     // wordmark keeps its own colour; see .brand-text in globals.css.
     "  --brand-text-fill: transparent;",
+    ...(stops ?? []).map(
+      (colour, index) => `  --brand-stop-${index + 1}: ${colour};`,
+    ),
+    // Points an icon's fill at the gradient in BrandGradientDefs. Unset on a solid
+    // palette, where the icon falls back to currentColor and looks as it always did.
+    "  --brand-icon-fill: url(#brand-gradient);",
   ]
 }
 
@@ -303,6 +313,34 @@ function gradientAt(
 /** What a button fills with. Also the swatch, so the lab cannot advertise the wrong thing. */
 export function gradientFor(candidate: PaletteCandidate): string | null {
   return gradientAt(candidate, 0.876, (stop) => stop[1])
+}
+
+/**
+ * The stops on their own, for the one place a CSS gradient cannot reach: the inside of an
+ * SVG. An icon is filled by referencing a <linearGradient>, which needs its colours as
+ * three separate stops rather than as one background shorthand.
+ *
+ * Always three. A two colour palette mixes its own middle, because the gradient in the
+ * defs has a fixed number of stops and cannot grow one when the palette changes.
+ */
+export function brandStopsFor(
+  candidate: PaletteCandidate,
+  lightness: number,
+  pick: (stop: GradientStop) => number,
+): string[] | null {
+  if (!candidate.gradientStops) return null
+
+  const colours = candidate.gradientStops.map(
+    (stop) => `oklch(${lightness} ${pick(stop)} ${stop[0]})`,
+  )
+
+  if (colours.length >= 3) return colours.slice(0, 3)
+
+  return [
+    colours[0],
+    `color-mix(in oklch, ${colours[0]}, ${colours[1]})`,
+    colours[1],
+  ]
 }
 
 /**
