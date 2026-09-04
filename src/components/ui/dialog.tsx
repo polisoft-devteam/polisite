@@ -12,7 +12,16 @@ function Dialog({ ...props }: DialogPrimitive.Root.Props) {
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+  // A trigger rendered as something else brings its own data-slot, and two of them merge
+  // in one order on the server and the other in the browser, which React reports as a
+  // hydration mismatch. The rendered element's own wins, which is also what globals.css
+  // keys the button sweep on. Nothing styles dialog-trigger, so there is nothing to lose.
+  return (
+    <DialogPrimitive.Trigger
+      data-slot={props.render ? undefined : "dialog-trigger"}
+      {...props}
+    />
+  )
 }
 
 function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
