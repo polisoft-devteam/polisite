@@ -31,9 +31,10 @@ export async function SiteHeader() {
         <MainNav showAdminLink={showAdminLink} />
 
         <div className="ml-auto flex items-center gap-1">
-          <PaletteSwitcher />
           <LanguageToggle />
           <ThemeToggle />
+          {/* Beside the theme toggle: the two of them are what the site looks like. */}
+          <PaletteSwitcher />
           <AuthMenu />
           <div className="md:hidden">
             <MobileNav

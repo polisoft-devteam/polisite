@@ -11,6 +11,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useTranslations } from "next-intl"
 
+import { Tooltip } from "@/components/Tooltip"
 import { Button } from "@/components/ui/button"
 import {
   applyPalette,
@@ -110,25 +111,27 @@ export function PaletteSwitcher() {
           aria-label={translatePalette("open")}
         >
           {palettes.map((palette, index) => (
-            <button
-              key={palette.key}
-              type="button"
-              onClick={() => choose(palette.key)}
-              title={palette.name}
-              aria-label={palette.name}
-              aria-pressed={palette.key === active}
-              className={cn(
-                "palette-spoke ring-background size-8 cursor-pointer rounded-full ring-2 transition-transform",
-                palette.key === active && "ring-foreground",
-              )}
-              style={{
-                background: gradientFor(palette) ?? undefined,
-                // Fanned across the arc below the brush, and staggered so they arrive
-                // one after another rather than all at once.
-                ["--spoke-angle" as string]: `${52 + index * 26}deg`,
-                animationDelay: `${index * 45}ms`,
-              }}
-            />
+            // A swatch is a colour and nothing else, so the name has to arrive on hover.
+            // The label is on the button too, for anyone who never hovers anything.
+            <Tooltip key={palette.key} label={palette.name} side="right">
+              <button
+                type="button"
+                onClick={() => choose(palette.key)}
+                aria-label={palette.name}
+                aria-pressed={palette.key === active}
+                className={cn(
+                  "palette-spoke ring-background size-8 cursor-pointer rounded-full ring-2 transition-transform",
+                  palette.key === active && "ring-foreground",
+                )}
+                style={{
+                  background: gradientFor(palette) ?? undefined,
+                  // Fanned across the arc below the brush, and staggered so they arrive
+                  // one after another rather than all at once.
+                  ["--spoke-angle" as string]: `${52 + index * 26}deg`,
+                  animationDelay: `${index * 45}ms`,
+                }}
+              />
+            </Tooltip>
           ))}
 
           <button
