@@ -779,12 +779,22 @@ a[href] {
    as it does. Gated on a real pointer, like the sweep it sits on top of: on a touch
    screen :hover sticks after a tap and the last row touched would stay lit. */
 
+/* Slower than a button's, and only here: a row is several times wider, so the same
+   450ms reads as a flash across it rather than as a fill. */
+.member-row[data-sweep="true"]::before {
+  transition-duration: 750ms;
+}
+
+.member-row[data-sweep="true"] {
+  transition-duration: 500ms;
+}
+
 .member-goto {
   opacity: 0;
   transform: translateX(-0.5rem);
   transition:
-    opacity 200ms ease,
-    transform 200ms ease;
+    opacity 350ms ease,
+    transform 350ms ease;
 }
 
 @media (hover: hover) {
