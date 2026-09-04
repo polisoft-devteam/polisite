@@ -628,12 +628,17 @@ a[href] {
    border-radius and would square the corners off. Two layers, one clipped to the padding
    box and one to the border box, excluded from each other: what is left is the border.
    Transparent when no gradient is set, so a solid palette keeps its ordinary border
-   underneath and this rule costs it nothing. */
+   and this rule costs it nothing.
+
+   Inset by the border width, not zero: absolute inset: 0 is the padding box, which drew
+   the ring inboard of the real border and showed two. At -2px it covers the border box
+   exactly, so it lands on the border rather than beside it, and it paints above rather
+   than behind for the same reason. The middle is masked out, so the label reads through. */
 [data-slot="button"][data-sweep="true"]::after {
   content: "";
   position: absolute;
-  inset: 0;
-  z-index: -1;
+  inset: -2px;
+  z-index: 1;
   border-radius: inherit;
   padding: 2px;
   background: var(--button-sweep, transparent);

@@ -58,10 +58,15 @@ const wordmarkKeyframes = (() => {
 
 export function Wordmark() {
   return (
-    <span className="brand-text font-heading text-base font-extrabold tracking-tight sm:text-lg lg:text-3xl xl:text-4xl">
+    <span className="font-heading text-base font-extrabold tracking-tight sm:text-lg lg:text-3xl xl:text-4xl">
       <style>{wordmarkKeyframes}</style>
-      {ASSOCIATION_NAME}
-      <span aria-hidden="true" className="wordmark-slot">
+
+      {/* Only the name carries the gradient. Clipping the whole wordmark to text put the
+          clip around the flipping words, which are rotated in 3D, and the two fought:
+          the suffix ended up drawn inside the name. */}
+      <span className="brand-text">{ASSOCIATION_NAME}</span>
+
+      <span aria-hidden="true" className="wordmark-slot text-primary-ink">
         {WORDMARK_SUFFIXES.map((suffix, index) => (
           <span
             key={suffix}
