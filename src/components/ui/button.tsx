@@ -9,7 +9,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "[--button-accent:var(--color-primary)] [--button-accent-foreground:var(--color-primary-foreground)] border-primary text-primary-ink bg-transparent",
+          "[--button-accent:var(--color-primary)] [--button-accent-foreground:var(--color-primary-foreground)] [--button-fill:var(--button-sweep,var(--color-primary))] border-primary text-primary-ink bg-transparent",
         outline:
           "[--button-accent:var(--color-foreground)] [--button-accent-foreground:var(--color-background)] border-border bg-transparent text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input",
         secondary:
@@ -60,10 +60,15 @@ function Button({
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
   const sweeps = !PLAIN_VARIANTS.has(variant ?? "") && !isIconSize(size ?? "")
 
+  // Only the brand button wears the brand. A destructive one filling with a pink and blue
+  // gradient would stop reading as danger, which is the one thing it has to do.
+  const isBrand = (variant ?? "default") === "default"
+
   return (
     <ButtonPrimitive
       data-slot="button"
       data-sweep={sweeps ? "true" : undefined}
+      data-brand={sweeps && isBrand ? "true" : undefined}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
