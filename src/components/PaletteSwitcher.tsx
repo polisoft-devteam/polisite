@@ -21,27 +21,43 @@ import { gradientFor, userPalettes } from "@/lib/palette-lab"
 import { PaletteBrushIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
-/** How long the wheel turns before it closes. Matches palette-wheel-spin in globals.css. */
-const SPIN_MS = 520
+/** Matches palette-wheel-spin in globals.css: the turn after a colour is chosen. */
+const PICKED_MS = 520
+
+/** Matches palette-spoke-out, plus the stagger the last spoke waits out. */
+const DISMISS_MS = 420
 
 export function PaletteSwitcher() {
   const translatePalette = useTranslations("Palette")
   const palettes = userPalettes()
 
   const [isOpen, setIsOpen] = useState(false)
-  const [isSpinning, setIsSpinning] = useState(false)
+  // Not a boolean: the wheel turns when a colour was chosen and simply retreats when it
+  // was waved away, and both need to finish before it comes off the page.
+  const [closing, setClosing] = useState<"picked" | "dismissed" | null>(null)
   const rootRef = useRef<HTMLDivElement>(null)
+
+  function close(how: "picked" | "dismissed") {
+    setClosing(how)
+    window.setTimeout(
+      () => {
+        setClosing(null)
+        setIsOpen(false)
+      },
+      how === "picked" ? PICKED_MS : DISMISS_MS,
+    )
+  }
 
   // Clicking anywhere else, or pressing escape, puts it away.
   useEffect(() => {
     if (!isOpen) return
 
     function onPointerDown(event: PointerEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) setIsOpen(false)
+      if (!rootRef.current?.contains(event.target as Node)) close("dismissed")
     }
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setIsOpen(false)
+      if (event.key === "Escape") close("dismissed")
     }
 
     document.addEventListener("pointerdown", onPointerDown)
@@ -60,17 +76,13 @@ export function PaletteSwitcher() {
     storePalette(key)
 
     // The colour lands at once; the wheel takes its turn on the way out.
-    setIsSpinning(true)
-    window.setTimeout(() => {
-      setIsSpinning(false)
-      setIsOpen(false)
-    }, SPIN_MS)
+    close("picked")
   }
 
   function reset() {
     applyPalette(null)
     storePalette(null)
-    setIsOpen(false)
+    close("picked")
   }
 
   const active = readStoredPalette()
@@ -82,14 +94,18 @@ export function PaletteSwitcher() {
         size="icon"
         aria-label={translatePalette("open")}
         aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
+        onClick={() => (isOpen ? close("dismissed") : setIsOpen(true))}
       >
         <PaletteBrushIcon className="size-4" />
       </Button>
 
       {isOpen && (
         <div
-          className={cn("palette-wheel", isSpinning && "is-spinning")}
+          className={cn(
+            "palette-wheel",
+            closing && "is-closing",
+            closing === "picked" && "is-picked",
+          )}
           role="group"
           aria-label={translatePalette("open")}
         >

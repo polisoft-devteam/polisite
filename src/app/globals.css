@@ -924,8 +924,10 @@ a[href] {
    rotating it out to the radius and then rotating it back, so the swatch itself
    stays upright while its position goes round.
 
-   The wheel turns once on the way out. The colour has already landed by then: the
-   spin is the door closing, not the thing you are waiting for. */
+   It closes the way it opened, drawing the spokes back into the middle on the same
+   stagger, rather than the whole thing blinking out. Picking one also turns the
+   wheel once on the way, which the other ways of closing do not: the turn belongs
+   to having chosen something. The colour itself has already landed by then. */
 
 .palette-wheel {
   position: absolute;
@@ -959,14 +961,30 @@ a[href] {
   }
 }
 
-.palette-wheel.is-spinning {
+/* The same curve read backwards, so it leaves the way it arrived. Each spoke keeps
+   the delay it was given, which staggers the retreat exactly as it staggered the
+   arrival. */
+.palette-wheel.is-closing .palette-spoke,
+.palette-wheel.is-closing .palette-reset {
+  animation: palette-spoke-out 240ms cubic-bezier(0.55, 0, 0.85, 0.45) forwards;
+}
+
+@keyframes palette-spoke-out {
+  to {
+    opacity: 0;
+    transform: rotate(var(--spoke-angle)) translate(0)
+      rotate(calc(-1 * var(--spoke-angle)));
+  }
+}
+
+/* Only after choosing. The spokes fade on their own, so this turns and nothing more. */
+.palette-wheel.is-picked {
   animation: palette-wheel-spin 520ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes palette-wheel-spin {
   to {
     transform: rotate(360deg);
-    opacity: 0;
   }
 }
 
@@ -975,11 +993,13 @@ a[href] {
   animation-delay: 200ms;
 }
 
-/* No turning, and nothing arriving in stages: it opens, you pick, it goes. */
+/* No turning, and nothing arriving or leaving in stages: it opens, you pick, it goes. */
 @media (prefers-reduced-motion: reduce) {
   .palette-spoke,
   .palette-reset,
-  .palette-wheel.is-spinning {
+  .palette-wheel.is-picked,
+  .palette-wheel.is-closing .palette-spoke,
+  .palette-wheel.is-closing .palette-reset {
     animation: none;
   }
 
