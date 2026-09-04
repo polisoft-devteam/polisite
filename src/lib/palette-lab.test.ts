@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest"
 import {
   PALETTE_CANDIDATES,
   findPaletteCandidate,
+  gradientFor,
   paletteCss,
 } from "@/lib/palette-lab"
 
@@ -76,6 +77,30 @@ describe("gradient candidates", () => {
     expect(sweeps[0]).toContain("310)")
   })
 
+  it("carries every stop of a three colour gradient, in order", () => {
+    const sunset = findPaletteCandidate("sunset")!
+    const sweep = paletteCss(sunset).match(/--button-sweep: ([^;]+);/)![1]
+
+    expect(sweep).toBe(
+      "linear-gradient(96deg, oklch(0.876 0.125 85), oklch(0.876 0.066 25), oklch(0.876 0.071 300))",
+    )
+  })
+
+  it("gives each stop the chroma its own hue can hold", () => {
+    // A blue cannot carry what a teal can at this lightness. One scale across the pair
+    // would flatten whichever end could not take it.
+    const fizz = findPaletteCandidate("fizz")!
+    const [blue, pink] = fizz.gradientStops!
+
+    expect(blue[1]).not.toBe(pink[1])
+    expect(gradientFor(fizz)).toContain("oklch(0.876 0.063 250)")
+    expect(gradientFor(fizz)).toContain("oklch(0.876 0.083 345)")
+  })
+
+  it("has no gradient for a solid candidate", () => {
+    expect(gradientFor(findPaletteCandidate("mint")!)).toBe(null)
+  })
+
   it("never hands a gradient to --button-accent, which is also a border colour", () => {
     expect(paletteCss(gradient)).not.toContain("--button-accent")
   })
@@ -93,5 +118,20 @@ describe("the candidate list", () => {
 
   it("offers the shipped palette, so there is always a way back", () => {
     expect(findPaletteCandidate("mint")).toBeDefined()
+  })
+
+  it("gives every gradient at least two stops, or it is not one", () => {
+    for (const candidate of PALETTE_CANDIDATES) {
+      if (!candidate.gradientStops) continue
+      expect(candidate.gradientStops.length).toBeGreaterThanOrEqual(2)
+    }
+  })
+
+  it("starts every gradient on the hue its solid tokens use", () => {
+    // Otherwise the button sweeps into a colour the rest of the page never shows.
+    for (const candidate of PALETTE_CANDIDATES) {
+      if (!candidate.gradientStops) continue
+      expect(candidate.gradientStops[0][0]).toBe(candidate.hue)
+    }
   })
 })

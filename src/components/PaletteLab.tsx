@@ -17,6 +17,8 @@ import {
   PALETTE_STORAGE_KEY,
   PALETTE_STYLE_ID,
   findPaletteCandidate,
+  fillFor,
+  gradientFor,
   paletteCss,
   type PaletteCandidate,
 } from "@/lib/palette-lab"
@@ -95,10 +97,10 @@ export function PaletteLab() {
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {PALETTE_CANDIDATES.map((candidate) => {
           const isActive = candidate.key === activeKey
-          const fill =
-            candidate.gradientHue === undefined
-              ? `oklch(0.876 ${0.125 * candidate.chromaScale} ${candidate.hue})`
-              : `linear-gradient(96deg, oklch(0.876 ${0.125 * candidate.chromaScale} ${candidate.hue}), oklch(0.876 ${0.125 * candidate.chromaScale} ${candidate.gradientHue}))`
+          // The same helpers the stylesheet uses, so the swatch cannot show one thing and
+          // the buttons another.
+          const fill = gradientFor(candidate) ?? fillFor(candidate)
+          const stops = candidate.gradientStops?.length ?? 0
 
           return (
             <li key={candidate.key}>
@@ -118,8 +120,15 @@ export function PaletteLab() {
                 />
 
                 <span className="block px-3 py-2.5">
-                  <span className="block text-sm font-medium">
-                    {candidate.name}
+                  <span className="flex items-baseline justify-between gap-2">
+                    <span className="text-sm font-medium">
+                      {candidate.name}
+                    </span>
+                    {stops > 0 && (
+                      <span className="text-muted-foreground text-[0.65rem] tracking-wide uppercase">
+                        {stops} färger
+                      </span>
+                    )}
                   </span>
                   <span className="text-muted-foreground block text-xs">
                     {candidate.note}

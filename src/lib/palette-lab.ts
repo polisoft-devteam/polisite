@@ -83,9 +83,19 @@ export type PaletteCandidate = {
    * flattens it somewhere nobody chose.
    */
   chromaScale: number
-  /** A second hue, for a candidate whose buttons fill with a gradient. */
-  gradientHue?: number
+  /**
+   * The stops a gradient candidate's buttons fill with, first to last.
+   *
+   * Each carries its own chroma rather than sharing the palette's, because how much colour
+   * a hue can hold at this lightness varies wildly: mint reaches 0.125 and a blue manages
+   * 0.063. One scale across a three stop gradient would flatten whichever end could not
+   * take it.
+   */
+  gradientStops?: GradientStop[]
 }
+
+/** A stop: its hue, and the chroma that hue can actually hold at the fill's lightness. */
+type GradientStop = readonly [hue: number, chroma: number]
 
 export const PALETTE_CANDIDATES: PaletteCandidate[] = [
   {
@@ -133,26 +143,108 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
   {
     key: "apricot-lilac",
     name: "Apricot to Lilac",
-    note: "Gradient. Warm into cool, the one people remember.",
+    note: "Warm into cool. The one people remember.",
     hue: 55,
     chromaScale: 0.62,
-    gradientHue: 310,
+    gradientStops: [
+      [55, 0.077],
+      [310, 0.082],
+    ],
   },
   {
     key: "apricot-rose",
     name: "Apricot to Rose",
-    note: "Gradient. Sunrise, warm the whole way.",
+    note: "Sunrise. Warm the whole way.",
     hue: 55,
     chromaScale: 0.62,
-    gradientHue: 12,
+    gradientStops: [
+      [55, 0.077],
+      [12, 0.067],
+    ],
   },
   {
     key: "apricot-mint",
     name: "Apricot to Mint",
-    note: "Gradient. Keeps the colour you shipped at one end.",
+    note: "Keeps the colour you shipped at one end.",
     hue: 55,
     chromaScale: 0.62,
-    gradientHue: 168,
+    gradientStops: [
+      [55, 0.077],
+      [168, 0.125],
+    ],
+  },
+
+  // Two stops.
+  {
+    key: "fizz",
+    name: "Fizz",
+    note: "Blue into pink. Cold start, sweet finish.",
+    hue: 250,
+    chromaScale: 0.5,
+    gradientStops: [
+      [250, 0.063],
+      [345, 0.083],
+    ],
+  },
+  {
+    key: "lagoon",
+    name: "Lagoon",
+    note: "Teal into violet. Cool the whole way, and the deepest of them.",
+    hue: 190,
+    chromaScale: 1,
+    gradientStops: [
+      [190, 0.125],
+      [295, 0.068],
+    ],
+  },
+  {
+    key: "meadow",
+    name: "Meadow",
+    note: "Green into sky. Reads outdoors rather than digital.",
+    hue: 135,
+    chromaScale: 1,
+    gradientStops: [
+      [135, 0.125],
+      [235, 0.071],
+    ],
+  },
+
+  // Three stops. The middle one is what stops a gradient reading as a single wash.
+  {
+    key: "sunset",
+    name: "Sunset",
+    note: "Gold, coral, violet. The full evening.",
+    hue: 85,
+    chromaScale: 1,
+    gradientStops: [
+      [85, 0.125],
+      [25, 0.066],
+      [300, 0.071],
+    ],
+  },
+  {
+    key: "aurora",
+    name: "Aurora",
+    note: "The mint you shipped, drifting through sky into lilac.",
+    hue: 168,
+    chromaScale: 1,
+    gradientStops: [
+      [168, 0.125],
+      [235, 0.071],
+      [300, 0.071],
+    ],
+  },
+  {
+    key: "sherbet",
+    name: "Sherbet",
+    note: "Pink, apricot, lime. Loudest of the lot.",
+    hue: 345,
+    chromaScale: 0.66,
+    gradientStops: [
+      [345, 0.083],
+      [55, 0.077],
+      [120, 0.125],
+    ],
   },
 ]
 
@@ -172,13 +264,26 @@ function toBlock(
  * than falling back to anything, which is why the sweep has a variable of its own.
  */
 function gradientLines(candidate: PaletteCandidate): string[] {
-  if (candidate.gradientHue === undefined) return []
+  if (!candidate.gradientStops) return []
 
+  return [`  --button-sweep: ${gradientFor(candidate)};`]
+}
+
+/** The gradient itself, so the swatch in the lab and the button agree exactly. */
+export function gradientFor(candidate: PaletteCandidate): string | null {
+  if (!candidate.gradientStops) return null
+
+  const stops = candidate.gradientStops
+    .map(([hue, chroma]) => `oklch(0.876 ${chroma} ${hue})`)
+    .join(", ")
+
+  return `linear-gradient(96deg, ${stops})`
+}
+
+/** The solid fill, for a candidate that is not a gradient. */
+export function fillFor(candidate: PaletteCandidate): string {
   const chroma = Math.round(0.125 * candidate.chromaScale * 1000) / 1000
-  const from = `oklch(0.876 ${chroma} ${candidate.hue})`
-  const to = `oklch(0.876 ${chroma} ${candidate.gradientHue})`
-
-  return [`  --button-sweep: linear-gradient(96deg, ${from}, ${to});`]
+  return `oklch(0.876 ${chroma} ${candidate.hue})`
 }
 
 /**
