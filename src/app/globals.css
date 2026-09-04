@@ -600,7 +600,10 @@ a[href] {
 [data-slot="button"][data-sweep="true"] {
   position: relative;
   z-index: 0;
-  overflow: hidden;
+  /* Not overflow: hidden. That clips to the padding box, which swallowed the frame drawn
+     on the border. clip-path clips to the border box, so the skewed fill is still held in
+     and the frame survives. */
+  clip-path: inset(0 round var(--radius));
   transition:
     color 300ms ease,
     box-shadow 300ms ease,
@@ -615,26 +618,24 @@ a[href] {
   z-index: -1;
   width: 0;
   height: 100%;
-  /* Its own variable so the fill can be a gradient. --button-accent is also used for
-     border-color and box-shadow, and a gradient is not a colour: handing one to those
-     makes the whole declaration invalid rather than falling back. */
-  background: var(--button-sweep, var(--button-accent, var(--primary)));
+  /* --button-fill, not --button-sweep directly: only the brand variant opts into the
+     gradient, so a destructive button still fills with its own red. Its own variable
+     because --button-accent is also the hover border and shadow, and a gradient handed
+     to either makes the declaration invalid rather than falling back. */
+  background: var(--button-fill, var(--button-accent, var(--primary)));
   transform: skewX(-20deg);
   transition: width 450ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* The frame, before anything fills it.
-   A ring drawn as a masked pseudo-element rather than border-image, which ignores
-   border-radius and would square the corners off. Two layers, one clipped to the padding
-   box and one to the border box, excluded from each other: what is left is the border.
-   Transparent when no gradient is set, so a solid palette keeps its ordinary border
-   and this rule costs it nothing.
+/* The brand button at rest: gradient frame, gradient label, gradient icon. All three
+   scoped to the brand variant, and all three falling back to what the button already
+   looked like when no gradient palette is on, so a plain palette pays nothing.
 
-   Inset by the border width, not zero: absolute inset: 0 is the padding box, which drew
-   the ring inboard of the real border and showed two. At -2px it covers the border box
-   exactly, so it lands on the border rather than beside it, and it paints above rather
-   than behind for the same reason. The middle is masked out, so the label reads through. */
-[data-slot="button"][data-sweep="true"]::after {
+   The frame is a masked pseudo-element rather than border-image, which ignores
+   border-radius and would square every corner off. It covers the border box exactly and
+   paints above, so it lands on the border instead of beside it; the middle is masked out,
+   so the label reads through. */
+[data-slot="button"][data-sweep="true"][data-brand="true"]::after {
   content: "";
   position: absolute;
   inset: -2px;
@@ -653,6 +654,20 @@ a[href] {
   pointer-events: none;
 }
 
+/* The label. Clipped to the text, and only safe here because the brand variant carries no
+   background of its own: clipping one would erase it. */
+[data-slot="button"][data-sweep="true"][data-brand="true"] {
+  background-image: var(--brand-sweep-ink, none);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: var(--brand-text-fill, currentColor);
+}
+
+/* The icon, which is an SVG and so cannot be reached by a background at all. */
+[data-slot="button"][data-sweep="true"][data-brand="true"] svg {
+  fill: var(--brand-icon-fill, currentColor);
+}
+
 /* Only where a pointer can actually leave again. On a touch screen :hover sticks
    after a tap, so a swept button stayed filled for good and looked like it had
    no frame at all. Focus still sweeps everywhere, which is the keyboard case. */
@@ -666,6 +681,16 @@ a[href] {
     border-color: var(--button-accent, var(--primary));
     box-shadow: 0 6px 16px -8px var(--button-accent, var(--primary));
   }
+
+  /* Sitting on the fill now, so the label and the icon go back to one solid colour.
+     Without this the text stays clipped to a gradient and cannot be read on it. */
+  [data-slot="button"][data-sweep="true"][data-brand="true"]:hover {
+    -webkit-text-fill-color: currentColor;
+  }
+
+  [data-slot="button"][data-sweep="true"][data-brand="true"]:hover svg {
+    fill: currentColor;
+  }
 }
 
 [data-slot="button"][data-sweep="true"]:focus-visible::before {
@@ -676,6 +701,15 @@ a[href] {
   color: var(--button-accent-foreground, var(--primary-foreground));
   border-color: var(--button-accent, var(--primary));
   box-shadow: 0 6px 16px -8px var(--button-accent, var(--primary));
+}
+
+/* The keyboard case fills too, so it needs the same. */
+[data-slot="button"][data-sweep="true"][data-brand="true"]:focus-visible {
+  -webkit-text-fill-color: currentColor;
+}
+
+[data-slot="button"][data-sweep="true"][data-brand="true"]:focus-visible svg {
+  fill: currentColor;
 }
 
 @media (prefers-reduced-motion: reduce) {
