@@ -58,10 +58,10 @@ const wordmarkKeyframes = (() => {
 
 export function Wordmark() {
   return (
-    <span className="font-heading text-base font-extrabold tracking-tight sm:text-lg lg:text-3xl xl:text-4xl">
+    <span className="brand-text font-heading text-base font-extrabold tracking-tight sm:text-lg lg:text-3xl xl:text-4xl">
       <style>{wordmarkKeyframes}</style>
       {ASSOCIATION_NAME}
-      <span aria-hidden="true" className="wordmark-slot text-primary-ink">
+      <span aria-hidden="true" className="wordmark-slot">
         {WORDMARK_SUFFIXES.map((suffix, index) => (
           <span
             key={suffix}

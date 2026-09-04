@@ -8,6 +8,7 @@ import {
   PALETTE_CANDIDATES,
   findPaletteCandidate,
   gradientFor,
+  inkGradientFor,
   paletteCss,
 } from "@/lib/palette-lab"
 
@@ -99,6 +100,36 @@ describe("gradient candidates", () => {
 
   it("has no gradient for a solid candidate", () => {
     expect(gradientFor(findPaletteCandidate("mint")!)).toBe(null)
+    expect(inkGradientFor(findPaletteCandidate("mint")!)).toBe(null)
+  })
+
+  it("darkens the gradient for text, since the fill is 1.4:1 on white", () => {
+    const fizz = findPaletteCandidate("fizz")!
+
+    expect(gradientFor(fizz)).toContain("oklch(0.876")
+    expect(inkGradientFor(fizz)).toContain("oklch(0.5")
+    expect(inkGradientFor(fizz)).not.toContain("0.876")
+  })
+
+  it("keeps the two the same in dark mode, as --primary-ink already does", () => {
+    const css = paletteCss(findPaletteCandidate("fizz")!)
+    const dark = css.slice(css.indexOf(".dark {"))
+
+    const fill = dark.match(/--button-sweep: ([^;]+);/)![1]
+    const ink = dark.match(/--brand-sweep-ink: ([^;]+);/)![1]
+
+    expect(ink).toBe(fill)
+  })
+
+  it("hands the letters over only when there is a gradient to show", () => {
+    // Without this the wordmark would be clipped to a gradient that is not there, and
+    // vanish on every solid palette.
+    expect(paletteCss(findPaletteCandidate("fizz")!)).toContain(
+      "--brand-text-fill: transparent;",
+    )
+    expect(paletteCss(findPaletteCandidate("mint")!)).not.toContain(
+      "--brand-text-fill",
+    )
   })
 
   it("never hands a gradient to --button-accent, which is also a border colour", () => {

@@ -623,6 +623,31 @@ a[href] {
   transition: width 450ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* The frame, before anything fills it.
+   A ring drawn as a masked pseudo-element rather than border-image, which ignores
+   border-radius and would square the corners off. Two layers, one clipped to the padding
+   box and one to the border box, excluded from each other: what is left is the border.
+   Transparent when no gradient is set, so a solid palette keeps its ordinary border
+   underneath and this rule costs it nothing. */
+[data-slot="button"][data-sweep="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 2px;
+  background: var(--button-sweep, transparent);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
 /* Only where a pointer can actually leave again. On a touch screen :hover sticks
    after a tap, so a swept button stayed filled for good and looked like it had
    no frame at all. Focus still sweeps everywhere, which is the keyboard case. */
@@ -816,4 +841,25 @@ a[href] {
   .member-goto {
     transition: none;
   }
+}
+
+/* --- Brand text ---------------------------------------------------------------
+   The wordmark, and anything else that should carry the brand as letters rather
+   than as a fill.
+
+   The solid colour is set first and the gradient painted over it, so an engine
+   without background-clip: text shows ink rather than nothing. --brand-sweep-ink
+   is the darker pair: the fill pair is 1.4:1 on white, which is not text.
+
+   --brand-text-fill is what makes this cost nothing when no gradient is on. A
+   gradient palette sets it to transparent and the letters show the gradient; with
+   no gradient it is unset, falls back to currentColor, and the rule is invisible.
+   Clipping to text unconditionally would erase the wordmark on the solid palettes. */
+
+.brand-text {
+  color: var(--primary-ink);
+  background-image: var(--brand-sweep-ink, none);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: var(--brand-text-fill, currentColor);
 }

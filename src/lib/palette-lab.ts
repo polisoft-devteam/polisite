@@ -94,8 +94,17 @@ export type PaletteCandidate = {
   gradientStops?: GradientStop[]
 }
 
-/** A stop: its hue, and the chroma that hue can actually hold at the fill's lightness. */
-type GradientStop = readonly [hue: number, chroma: number]
+/**
+ * A stop: its hue, and the chroma that hue can hold at each of the two lightnesses the
+ * palette uses. A gradient filling a button and the same gradient set as text are not the
+ * same colours: the fill is pale enough to carry a near-black label, and pale enough to be
+ * 1.4:1 as text, which is no text at all.
+ */
+type GradientStop = readonly [
+  hue: number,
+  fillChroma: number,
+  inkChroma: number,
+]
 
 export const PALETTE_CANDIDATES: PaletteCandidate[] = [
   {
@@ -147,8 +156,8 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
     hue: 55,
     chromaScale: 0.62,
     gradientStops: [
-      [55, 0.077],
-      [310, 0.082],
+      [55, 0.077, 0.11],
+      [310, 0.082, 0.11],
     ],
   },
   {
@@ -158,8 +167,8 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
     hue: 55,
     chromaScale: 0.62,
     gradientStops: [
-      [55, 0.077],
-      [12, 0.067],
+      [55, 0.077, 0.11],
+      [12, 0.067, 0.11],
     ],
   },
   {
@@ -169,8 +178,8 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
     hue: 55,
     chromaScale: 0.62,
     gradientStops: [
-      [55, 0.077],
-      [168, 0.125],
+      [55, 0.077, 0.11],
+      [168, 0.125, 0.102],
     ],
   },
 
@@ -182,8 +191,8 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
     hue: 250,
     chromaScale: 0.5,
     gradientStops: [
-      [250, 0.063],
-      [345, 0.083],
+      [250, 0.063, 0.11],
+      [345, 0.083, 0.11],
     ],
   },
   {
@@ -193,8 +202,8 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
     hue: 190,
     chromaScale: 1,
     gradientStops: [
-      [190, 0.125],
-      [295, 0.068],
+      [190, 0.125, 0.087],
+      [295, 0.068, 0.11],
     ],
   },
   {
@@ -204,8 +213,8 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
     hue: 135,
     chromaScale: 1,
     gradientStops: [
-      [135, 0.125],
-      [235, 0.071],
+      [135, 0.125, 0.11],
+      [235, 0.071, 0.108],
     ],
   },
 
@@ -217,9 +226,9 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
     hue: 85,
     chromaScale: 1,
     gradientStops: [
-      [85, 0.125],
-      [25, 0.066],
-      [300, 0.071],
+      [85, 0.125, 0.104],
+      [25, 0.066, 0.11],
+      [300, 0.071, 0.11],
     ],
   },
   {
@@ -229,9 +238,9 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
     hue: 168,
     chromaScale: 1,
     gradientStops: [
-      [168, 0.125],
-      [235, 0.071],
-      [300, 0.071],
+      [168, 0.125, 0.102],
+      [235, 0.071, 0.108],
+      [300, 0.071, 0.11],
     ],
   },
   {
@@ -241,9 +250,9 @@ export const PALETTE_CANDIDATES: PaletteCandidate[] = [
     hue: 345,
     chromaScale: 0.66,
     gradientStops: [
-      [345, 0.083],
-      [55, 0.077],
-      [120, 0.125],
+      [345, 0.083, 0.11],
+      [55, 0.077, 0.11],
+      [120, 0.125, 0.11],
     ],
   },
 ]
@@ -263,21 +272,46 @@ function toBlock(
  * the shadow, and a gradient handed to either makes the whole declaration invalid rather
  * than falling back to anything, which is why the sweep has a variable of its own.
  */
-function gradientLines(candidate: PaletteCandidate): string[] {
+function gradientLines(candidate: PaletteCandidate, dark: boolean): string[] {
   if (!candidate.gradientStops) return []
 
-  return [`  --button-sweep: ${gradientFor(candidate)};`]
+  const fill = gradientFor(candidate)
+
+  return [
+    `  --button-sweep: ${fill};`,
+    `  --brand-sweep-ink: ${dark ? fill : inkGradientFor(candidate)};`,
+    // What turns the letters over to the gradient. Unset on a solid palette, where the
+    // wordmark keeps its own colour; see .brand-text in globals.css.
+    "  --brand-text-fill: transparent;",
+  ]
 }
 
-/** The gradient itself, so the swatch in the lab and the button agree exactly. */
-export function gradientFor(candidate: PaletteCandidate): string | null {
+function gradientAt(
+  candidate: PaletteCandidate,
+  lightness: number,
+  pick: (stop: GradientStop) => number,
+): string | null {
   if (!candidate.gradientStops) return null
 
   const stops = candidate.gradientStops
-    .map(([hue, chroma]) => `oklch(0.876 ${chroma} ${hue})`)
+    .map((stop) => `oklch(${lightness} ${pick(stop)} ${stop[0]})`)
     .join(", ")
 
   return `linear-gradient(96deg, ${stops})`
+}
+
+/** What a button fills with. Also the swatch, so the lab cannot advertise the wrong thing. */
+export function gradientFor(candidate: PaletteCandidate): string | null {
+  return gradientAt(candidate, 0.876, (stop) => stop[1])
+}
+
+/**
+ * The same gradient as text on a page. Darker, because the fill is 1.4:1 on white and a
+ * wordmark nobody can read is not a wordmark. In dark mode the two are the same, which is
+ * exactly how --primary-ink already behaves.
+ */
+export function inkGradientFor(candidate: PaletteCandidate): string | null {
+  return gradientAt(candidate, 0.5, (stop) => stop[2])
 }
 
 /** The solid fill, for a candidate that is not a gradient. */
@@ -296,11 +330,11 @@ export function paletteCss(candidate: PaletteCandidate): string {
   return [
     ":root {",
     ...toBlock(LIGHT_TOKENS, candidate),
-    ...gradientLines(candidate),
+    ...gradientLines(candidate, false),
     "}",
     ".dark {",
     ...toBlock(DARK_TOKENS, candidate),
-    ...gradientLines(candidate),
+    ...gradientLines(candidate, true),
     "}",
   ].join("\n")
 }
