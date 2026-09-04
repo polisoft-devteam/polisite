@@ -13,14 +13,15 @@ import { useSyncExternalStore } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
+  applyPalette,
+  readStoredPalette,
+  storePalette,
+} from "@/lib/palette-apply"
+import {
   PALETTE_CANDIDATES,
-  PALETTE_STORAGE_KEY,
-  PALETTE_STYLE_ID,
   findPaletteCandidate,
   fillFor,
   gradientFor,
-  paletteCss,
-  type PaletteCandidate,
 } from "@/lib/palette-lab"
 import { cn } from "@/lib/utils"
 import { ReplayIcon } from "@/lib/icons"
@@ -38,33 +39,12 @@ function subscribe(listener: () => void) {
 }
 
 function readChoice(): string | null {
-  try {
-    return localStorage.getItem(PALETTE_STORAGE_KEY)
-  } catch {
-    // A browser refusing storage is not worth failing a page over.
-    return null
-  }
+  return readStoredPalette()
 }
 
 /** Nothing is chosen on the server: there is no browser to have chosen in. */
 function readServerChoice(): null {
   return null
-}
-
-function applyPalette(candidate: PaletteCandidate | null) {
-  const existing = document.getElementById(PALETTE_STYLE_ID)
-
-  if (!candidate) {
-    existing?.remove()
-    return
-  }
-
-  const style = existing ?? document.createElement("style")
-  style.id = PALETTE_STYLE_ID
-  style.textContent = paletteCss(candidate)
-
-  // Last in head, so it beats globals.css at equal specificity.
-  if (!existing) document.head.appendChild(style)
 }
 
 export function PaletteLab() {
@@ -77,11 +57,7 @@ export function PaletteLab() {
   function choose(key: string | null) {
     applyPalette(key ? (findPaletteCandidate(key) ?? null) : null)
 
-    try {
-      if (key) localStorage.setItem(PALETTE_STORAGE_KEY, key)
-      else localStorage.removeItem(PALETTE_STORAGE_KEY)
-    } catch {}
-
+    storePalette(key)
     listeners.forEach((listener) => listener())
   }
 

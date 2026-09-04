@@ -6,6 +6,8 @@ import { describe, expect, it } from "vitest"
 
 import {
   PALETTE_CANDIDATES,
+  USER_PALETTE_KEYS,
+  userPalettes,
   findPaletteCandidate,
   gradientFor,
   inkGradientFor,
@@ -164,5 +166,23 @@ describe("the candidate list", () => {
       if (!candidate.gradientStops) continue
       expect(candidate.gradientStops[0][0]).toBe(candidate.hue)
     }
+  })
+})
+
+describe("the four offered in the header", () => {
+  it("all exist, so the brush cannot open on an empty wheel", () => {
+    expect(userPalettes()).toHaveLength(USER_PALETTE_KEYS.length)
+    for (const palette of userPalettes()) expect(palette).toBeDefined()
+  })
+
+  it("are all gradients, since a wheel of flat colours is a different feature", () => {
+    for (const palette of userPalettes()) {
+      expect(palette.gradientStops).toBeDefined()
+      expect(gradientFor(palette)).toContain("linear-gradient")
+    }
+  })
+
+  it("is a short list, because every member on a different palette is its own problem", () => {
+    expect(userPalettes().length).toBeLessThanOrEqual(4)
   })
 })

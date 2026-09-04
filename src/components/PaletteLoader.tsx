@@ -10,35 +10,14 @@
 
 import { useEffect } from "react"
 
-import {
-  PALETTE_STORAGE_KEY,
-  PALETTE_STYLE_ID,
-  findPaletteCandidate,
-  paletteCss,
-} from "@/lib/palette-lab"
+import { applyStoredPalette } from "@/lib/palette-apply"
+import { PALETTE_STYLE_ID } from "@/lib/palette-lab"
 
 export function PaletteLoader() {
   useEffect(() => {
-    let key: string | null = null
-
-    try {
-      key = localStorage.getItem(PALETTE_STORAGE_KEY)
-    } catch {
-      return
-    }
-
-    if (!key) return
-
-    const candidate = findPaletteCandidate(key)
-    if (!candidate) return
-
     // Already there after a soft navigation; only a fresh document needs it.
     if (document.getElementById(PALETTE_STYLE_ID)) return
-
-    const style = document.createElement("style")
-    style.id = PALETTE_STYLE_ID
-    style.textContent = paletteCss(candidate)
-    document.head.appendChild(style)
+    applyStoredPalette()
   }, [])
 
   return null

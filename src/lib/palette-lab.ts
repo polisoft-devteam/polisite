@@ -377,6 +377,24 @@ export function paletteCss(candidate: PaletteCandidate): string {
   ].join("\n")
 }
 
+/**
+ * The four offered in the header. The rest are for trying things on /design: fifteen is a
+ * lot of choice for ten people, and every member seeing a different site makes "the button
+ * looks wrong" a question nobody can answer.
+ */
+export const USER_PALETTE_KEYS = [
+  "aurora",
+  "apricot-mint",
+  "fizz",
+  "sherbet",
+] as const
+
+export function userPalettes(): PaletteCandidate[] {
+  return USER_PALETTE_KEYS.map((key) =>
+    PALETTE_CANDIDATES.find((candidate) => candidate.key === key)!,
+  )
+}
+
 export function findPaletteCandidate(
   key: string,
 ): PaletteCandidate | undefined {

@@ -918,3 +918,73 @@ a[href] {
   background-clip: text;
   -webkit-text-fill-color: var(--brand-text-fill, currentColor);
 }
+
+/* --- The palette wheel ---------------------------------------------------------
+   Four colours on an arc under the brush in the header. Each spoke is placed by
+   rotating it out to the radius and then rotating it back, so the swatch itself
+   stays upright while its position goes round.
+
+   The wheel turns once on the way out. The colour has already landed by then: the
+   spin is the door closing, not the thing you are waiting for. */
+
+.palette-wheel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 50;
+}
+
+.palette-spoke {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: -1rem;
+  transform: rotate(var(--spoke-angle)) translate(3.6rem)
+    rotate(calc(-1 * var(--spoke-angle)));
+  animation: palette-spoke-in 260ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.palette-spoke:hover {
+  transform: rotate(var(--spoke-angle)) translate(3.9rem)
+    rotate(calc(-1 * var(--spoke-angle))) scale(1.12);
+}
+
+@keyframes palette-spoke-in {
+  from {
+    opacity: 0;
+    transform: rotate(var(--spoke-angle)) translate(0)
+      rotate(calc(-1 * var(--spoke-angle)));
+  }
+}
+
+.palette-wheel.is-spinning {
+  animation: palette-wheel-spin 520ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes palette-wheel-spin {
+  to {
+    transform: rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.palette-reset {
+  animation: palette-spoke-in 260ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: 200ms;
+}
+
+/* No turning, and nothing arriving in stages: it opens, you pick, it goes. */
+@media (prefers-reduced-motion: reduce) {
+  .palette-spoke,
+  .palette-reset,
+  .palette-wheel.is-spinning {
+    animation: none;
+  }
+
+  .palette-spoke:hover {
+    transform: rotate(var(--spoke-angle)) translate(3.6rem)
+      rotate(calc(-1 * var(--spoke-angle)));
+  }
+}

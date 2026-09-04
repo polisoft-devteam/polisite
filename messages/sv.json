@@ -449,5 +449,9 @@
     "allTitle": "Alla utmärkelser",
     "seeAll": "Se alla utmärkelser",
     "backToProfile": "Till profilen"
+  },
+  "Palette": {
+    "open": "Byt färgtema",
+    "reset": "Tillbaka till standard"
   }
 }

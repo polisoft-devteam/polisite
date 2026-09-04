@@ -449,5 +449,9 @@
     "allTitle": "All badges",
     "seeAll": "See all badges",
     "backToProfile": "Back to profile"
+  },
+  "Palette": {
+    "open": "Change colour theme",
+    "reset": "Back to the default"
   }
 }
