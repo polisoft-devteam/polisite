@@ -42,6 +42,8 @@ import { BadgeShelf } from "@/components/BadgeShelf"
 import { MemberBadges } from "@/components/MemberBadges"
 import { MembershipActions } from "@/components/MembershipActions"
 import { MembersOnlyNotice } from "@/components/MembersOnlyNotice"
+import { PaletteLab } from "@/components/PaletteLab"
+import { Tooltip } from "@/components/Tooltip"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
 import {
@@ -348,6 +350,41 @@ export default async function DesignPage({
             hint="JPEG, PNG, WebP eller AVIF. Skalas ner automatiskt."
           />
         </div>
+      </PageSection>
+
+      <PageSection heading="Tooltip">
+        <p className="text-muted-foreground text-sm">
+          För en kontroll vars betydelse sitter i utseendet, inte i ord.
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <Tooltip label="Aurora">
+            <button
+              type="button"
+              aria-label="Aurora"
+              className="size-8 cursor-pointer rounded-full"
+              style={{
+                background:
+                  "linear-gradient(96deg, oklch(0.876 0.125 168), oklch(0.876 0.071 300))",
+              }}
+            />
+          </Tooltip>
+
+          <Tooltip label="Ovanför i stället" side="top">
+            <Button variant="outline" size="sm">
+              Uppåt
+            </Button>
+          </Tooltip>
+
+          <Tooltip label="Till höger" side="right">
+            <Button variant="outline" size="sm">
+              Höger
+            </Button>
+          </Tooltip>
+        </div>
+      </PageSection>
+
+      <PageSection id="palette" heading="Färg">
+        <PaletteLab />
       </PageSection>
 
       <PageSection heading="Bara för medlemmar">

@@ -161,7 +161,7 @@ export function PageSubNav({ items }: { items: SubNavItem[] }) {
       {indicator && (
         <span
           aria-hidden="true"
-          className="bg-primary-ink absolute -bottom-px h-0.5 rounded-full transition-[left,width] duration-300 ease-out motion-reduce:transition-none"
+          className="brand-fill-ink absolute -bottom-px h-0.5 rounded-full transition-[left,width] duration-300 ease-out motion-reduce:transition-none"
           style={{ left: indicator.left, width: indicator.width }}
         />
       )}

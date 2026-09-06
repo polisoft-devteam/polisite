@@ -14,12 +14,8 @@ export async function SuggestionRibbon() {
       className="pointer-events-none absolute top-5 -left-12 z-10 w-44 -rotate-45"
     >
       <span
-        className="block py-1.5 text-center text-xs font-bold tracking-widest uppercase shadow-md"
-        style={{
-          background:
-            "linear-gradient(90deg, var(--suggestion-from), var(--suggestion-to))",
-          color: "var(--suggestion-foreground)",
-        }}
+        className="brand-fill block py-1.5 text-center text-xs font-bold tracking-widest uppercase shadow-md"
+        style={{ color: "var(--primary-foreground)" }}
       >
         {translateEvents("suggestionRibbon")}
       </span>

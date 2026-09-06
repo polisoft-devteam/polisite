@@ -5,6 +5,7 @@ import { AuthMenu } from "@/components/AuthMenu"
 import { LanguageToggle } from "@/components/LanguageToggle"
 import { MainNav } from "@/components/MainNav"
 import { MobileNav } from "@/components/MobileNav"
+import { PaletteSwitcher } from "@/components/PaletteSwitcher"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { Wordmark } from "@/components/Wordmark"
 import { Link } from "@/i18n/navigation"
@@ -32,6 +33,8 @@ export async function SiteHeader() {
         <div className="ml-auto flex items-center gap-1">
           <LanguageToggle />
           <ThemeToggle />
+          {/* Beside the theme toggle: the two of them are what the site looks like. */}
+          <PaletteSwitcher />
           <AuthMenu />
           <div className="md:hidden">
             <MobileNav
