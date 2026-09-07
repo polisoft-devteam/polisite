@@ -9,6 +9,7 @@
 // writes it to the row rather than leaving everyone else looking at initials.
 
 import { MemberAvatar } from "@/components/MemberAvatar"
+import { PartyNameSuffix } from "@/components/PartyNameSuffix"
 import { memberDisplayName } from "@/features/members/identity"
 import { Link } from "@/i18n/navigation"
 import { cn } from "@/lib/utils"
@@ -80,6 +81,8 @@ export function MemberLink({
           )}
         >
           {memberDisplayName(member)}
+          {/* Renders nothing on anyone but the reader's own row. */}
+          <PartyNameSuffix memberId={member.id} />
         </span>
         {secondaryLine}
       </span>

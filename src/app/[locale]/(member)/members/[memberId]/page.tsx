@@ -103,6 +103,7 @@ export default async function MemberPage({
           pastEvents={pastEvents}
           locale={locale}
           action={action}
+          isOwnProfile={isOwnProfile}
         />
       </div>
 

@@ -66,6 +66,7 @@ export default async function ProfilePage({
         upcomingEvents={upcomingEvents}
         pastEvents={pastEvents}
         locale={locale}
+        isOwnProfile
         action={
           <Button
             nativeButton={false}

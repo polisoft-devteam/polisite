@@ -43,6 +43,7 @@ import { MemberBadges } from "@/components/MemberBadges"
 import { MembershipActions } from "@/components/MembershipActions"
 import { MembersOnlyNotice } from "@/components/MembersOnlyNotice"
 import { PaletteLab } from "@/components/PaletteLab"
+import { SWEDISH_PARTIES } from "@/lib/election"
 import { Tooltip } from "@/components/Tooltip"
 import { PhotoHero } from "@/components/PhotoHero"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
@@ -385,6 +386,26 @@ export default async function DesignPage({
 
       <PageSection id="palette" heading="Färg">
         <PaletteLab />
+      </PageSection>
+
+      <PageSection heading="Valhjulet">
+        <p className="text-muted-foreground max-w-prose text-sm">
+          Hjulet ligger i nedre högra hörnet på varje sida fram till valdagen,
+          och går att skjuta undan med fliken bredvid. Tre snurr får du, sedan
+          är det stängt. Taggen syns bara på din egen profil, bredvid titeln,
+          och bara i den här webbläsaren. Här är alla tolv.
+        </p>
+
+        <div className="flex flex-wrap gap-2">
+          {SWEDISH_PARTIES.map((party) => (
+            <Badge
+              key={party.key}
+              style={{ backgroundColor: party.color, color: party.textColor }}
+            >
+              {party.name}
+            </Badge>
+          ))}
+        </div>
       </PageSection>
 
       <PageSection heading="Bara för medlemmar">

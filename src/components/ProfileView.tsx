@@ -14,6 +14,8 @@ import { getFormatter, getTranslations } from "next-intl/server"
 import { EventList } from "@/components/EventList"
 import { Fact, FactList } from "@/components/FactList"
 import { MemberAvatar } from "@/components/MemberAvatar"
+import { PartyNameSuffix } from "@/components/PartyNameSuffix"
+import { PartyTag } from "@/components/PartyTag"
 import { Badge } from "@/components/ui/badge"
 import type { Event, Member } from "@/db/schema"
 import { ExternalLink } from "@/components/ExternalLink"
@@ -29,6 +31,8 @@ type ProfileViewProps = {
   action?: React.ReactNode
   /** Rendered between the facts and the events, where the profile's own news belongs. */
   notifications?: React.ReactNode
+  /** The election tag is kept in the reader's browser, so it belongs on their page only. */
+  isOwnProfile?: boolean
 }
 
 export async function ProfileView({
@@ -38,6 +42,7 @@ export async function ProfileView({
   locale,
   action,
   notifications,
+  isOwnProfile = false,
 }: ProfileViewProps) {
   const translateProfile = await getTranslations("Profile")
   const translateMembers = await getTranslations("Members")
@@ -56,6 +61,7 @@ export async function ProfileView({
         <div className="min-w-0 flex-1">
           <h1 className="font-heading text-3xl font-extrabold tracking-tight text-balance">
             {member.fullName}
+            {isOwnProfile && <PartyNameSuffix />}
           </h1>
 
           {member.nickname && (
@@ -64,13 +70,15 @@ export async function ProfileView({
             </p>
           )}
 
-          {member.officialTitle && isMemberTitle(member.officialTitle) && (
-            <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-2 flex flex-wrap gap-2 empty:mt-0">
+            {member.officialTitle && isMemberTitle(member.officialTitle) && (
               <Badge variant="secondary">
                 {translateTitles(member.officialTitle)}
               </Badge>
-            </div>
-          )}
+            )}
+
+            {isOwnProfile && <PartyTag />}
+          </div>
         </div>
 
         {action}
