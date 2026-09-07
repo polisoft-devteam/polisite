@@ -25,6 +25,7 @@ import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import { SectionHeading } from "@/components/SectionHeading"
+import { SpotifyEmbed } from "@/components/SpotifyEmbed"
 import { PhotoHero } from "@/components/PhotoHero"
 import { SuggestionCallout } from "@/components/SuggestionCallout"
 import { Button } from "@/components/ui/button"
@@ -47,16 +48,22 @@ import { getViewer } from "@/lib/auth"
 import {
   EditIcon,
   ExternalLinkIcon,
+  NewEventIcon,
   NotAttendingIcon,
   OnlineIcon,
+  TicketIcon,
 } from "@/lib/icons"
 import {
   canBringGuests,
+  canCreateEvent,
   canEditEvent,
   canRespondToEvent,
   isActiveMember,
   visibleEventVisibilitiesFor,
 } from "@/lib/permissions"
+
+/** Longer than a blurb, so the hero cannot show all of it and the page repeats it. */
+const HERO_BLURB_LENGTH = 200
 
 export async function generateMetadata({
   params,
@@ -191,6 +198,8 @@ export default async function EventPage({
           images={[heroImage]}
           eyebrow={categoryLabel}
           title={event.title}
+          tagline={event.description ?? undefined}
+          strongTagline
           note={
             event.kind === "suggestion" ? <SuggestionCallout onPhoto /> : null
           }
@@ -199,7 +208,25 @@ export default async function EventPage({
 
       <PageContainer belowHero={heroImage !== null}>
         <div className="flex items-center justify-between gap-4">
-          <BackLink href="/events">{translateEvents("back")}</BackLink>
+          <div className="flex items-center gap-2">
+            <BackLink href="/events">{translateEvents("back")}</BackLink>
+
+            {/* Reading one event is when the next one occurs to you. */}
+            {canCreateEvent(viewer) && (
+              <Button
+                nativeButton={false}
+                render={
+                  <Link href="/events/new" transitionTypes={["nav-forward"]} />
+                }
+                variant="ghost"
+                size="sm"
+              >
+                <NewEventIcon className="size-4" />
+                {translateEvents("createAnother")}
+              </Button>
+            )}
+          </div>
+
           {heroImage && editButton}
         </div>
 
@@ -213,6 +240,16 @@ export default async function EventPage({
             {event.kind === "suggestion" && <SuggestionCallout />}
           </div>
         )}
+
+        {/* On the photo when there is one, which is where the title is. Repeated here
+            only when it is long enough that the hero would have clamped it, so nothing a
+            member wrote goes unread. */}
+        {event.description &&
+          (!heroImage || event.description.length > HERO_BLURB_LENGTH) && (
+            <p className="mt-4 max-w-2xl text-base whitespace-pre-line">
+              {event.description}
+            </p>
+          )}
 
         {/* Said before anything else: someone opening an old link needs to know before
             they read the time and place. */}
@@ -332,17 +369,11 @@ export default async function EventPage({
           </div>
         )}
 
-        {event.description && (
-          <p className="mt-6 max-w-2xl text-sm whitespace-pre-line">
-            {event.description}
-          </p>
-        )}
-
         {(event.eventUrl || event.extraLinkUrl) && (
           <div className="mt-6 flex flex-wrap gap-4 text-sm">
             {event.eventUrl && (
               <ExternalLink href={event.eventUrl}>
-                <ExternalLinkIcon className="size-3.5" />
+                <TicketIcon className="size-3.5" />
                 {translateEvents("moreInfo")}
               </ExternalLink>
             )}
@@ -353,6 +384,16 @@ export default async function EventPage({
               </ExternalLink>
             )}
           </div>
+        )}
+
+        {/* Above the attendee list: it belongs with what the evening is, not with who is
+            coming to it. Renders nothing if the link is not one Spotify can show. */}
+        {event.spotifyUrl && (
+          <PageSection heading={translateEvents("spotifyTitle")}>
+            <div className="max-w-2xl">
+              <SpotifyEmbed url={event.spotifyUrl} title={event.title} />
+            </div>
+          </PageSection>
         )}
 
         <PageSection heading={translateEvents("attendees")}>

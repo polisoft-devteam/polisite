@@ -9,7 +9,8 @@
     "about": "Om oss",
     "menu": "Meny",
     "archive": "Öppet arkiv",
-    "close": "Stäng"
+    "close": "Stäng",
+    "election": "Val 2026"
   },
   "Home": {
     "title": "Välkommen",
@@ -101,6 +102,9 @@
     "fieldEventUrl": "Länk med info om eventet",
     "fieldExtraLinkUrl": "Extra länk",
     "fieldExtraLinkUrlHint": "Trailer, karta, spellista …",
+    "fieldSpotifyUrl": "Spotify",
+    "fieldSpotifyUrlHint": "Spellista, album eller låt. Spelaren visas på eventsidan.",
+    "spotifyTitle": "Musiken",
     "fieldVisibility": "Deltagare och synlighet",
     "fieldReminders": "Påminnelser i Discord",
     "fieldRemindersHint": "Välj högst två.",
@@ -126,7 +130,7 @@
     "spotsLeft": "{count} platser kvar",
     "full": "Fullt",
     "createdBy": "Skapat av",
-    "moreInfo": "Mer information",
+    "moreInfo": "Mer information/biljetter",
     "extraLink": "Extra länk",
     "rsvpGoing": "Jag kommer",
     "rsvpInterested": "Kanske",
@@ -205,7 +209,11 @@
     "membersOnlyReadMore": "Om medlemskap",
     "membersOnlyBody": "En hel del grejer ligger bakom lås och bom här, för din och vår säkerhets skull. Logga in med Google och skicka en förfrågan. En admin släpper in dig, och först då ser du föreningens egna evenemang, medlemmar och önskelistor. Innan dess ser du samma sida som en besökare, mer eller mindre.",
     "membersOnlyApply": "Ansök om medlemskap",
-    "membersOnlyPendingPill": "Ansökan väntar på svar"
+    "membersOnlyPendingPill": "Ansökan väntar på svar",
+    "formInvalid": "Något stämmer inte, så eventet är inte skapat. Se över det här:",
+    "publishing": "Publicerar …",
+    "saving": "Sparar …",
+    "createAnother": "Skapa ett annat"
   },
   "Calendar": {
     "title": "Kalender",
@@ -465,6 +473,16 @@
     "tooltipSpent": "Du har snurrat klart. Det blir {party} tills valet är över. Kom tillbaka om 4 år.",
     "tooltipSpentGuest": "Ditt snurr är använt. Logga in så får du tre nya.",
     "tuckAway": "Skjut undan hjulet",
-    "bringBack": "Ta fram hjulet"
+    "bringBack": "Ta fram hjulet",
+    "pageTitle": "Val 2026",
+    "pageEyebrow": "Valhjulet",
+    "pageIntro": "Hjulet bestämmer, du lyder. Ett snurr per dag, och det du landar på hamnar i ställningen nedan.",
+    "pageClosed": "Valet är över. Hjulet står still, men ställningen står kvar.",
+    "standingsTitle": "Ställningen",
+    "standingsEmpty": "Ingen har snurrat än. Var först.",
+    "standingsMembersOnly": "Ställningen är för medlemmar.",
+    "voteCount": "{count, plural, =1 {en röst} other {# röster}}",
+    "lever": "Dra i spaken",
+    "nextSpinIn": "Nästa snurr om {time}"
   }
 }

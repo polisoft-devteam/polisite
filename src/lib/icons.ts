@@ -52,6 +52,7 @@ export {
   FolderFill as DriveIcon,
   GeoAlt as MapPinIcon,
   BoxArrowUpRight as ExternalLinkIcon,
+  TicketPerforatedFill as TicketIcon,
   BoxArrowRight as SignOutIcon,
   HeartFill as HeartIcon,
   HourglassSplit as PendingIcon,

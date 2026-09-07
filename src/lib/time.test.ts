@@ -5,7 +5,9 @@ import { describe, expect, it, vi } from "vitest"
 import {
   defaultEventWallTimes,
   instantToWallTime,
+  nextStockholmMidnight,
   reminderDueAt,
+  stockholmDay,
   toDiscordTimestamp,
   wallTimeToInstant,
 } from "@/lib/time"
@@ -121,5 +123,32 @@ describe("Discord timestamps", () => {
 
     expect(toDiscordTimestamp(instant)).toBe("<t:1782921600:F>")
     expect(toDiscordTimestamp(instant, "R")).toBe("<t:1782921600:R>")
+  })
+})
+
+describe("nextStockholmMidnight", () => {
+  it("is the coming midnight in Stockholm, not in the machine's zone", () => {
+    // 21:30 UTC on the 7th is 23:30 in Stockholm, so midnight is half an hour away.
+    const at = nextStockholmMidnight(new Date("2026-09-07T21:30:00Z"))
+
+    expect(at.toISOString()).toBe("2026-09-07T22:00:00.000Z")
+  })
+
+  it("crosses the month end without help", () => {
+    const at = nextStockholmMidnight(new Date("2026-09-30T12:00:00Z"))
+
+    expect(at.toISOString()).toBe("2026-09-30T22:00:00.000Z")
+  })
+
+  it("counts in winter time too, when the offset is one hour", () => {
+    const at = nextStockholmMidnight(new Date("2026-12-01T12:00:00Z"))
+
+    expect(at.toISOString()).toBe("2026-12-01T23:00:00.000Z")
+  })
+})
+
+describe("stockholmDay", () => {
+  it("has already turned over when it is late here and early in UTC", () => {
+    expect(stockholmDay(new Date("2026-09-07T22:30:00Z"))).toBe("2026-09-08")
   })
 })

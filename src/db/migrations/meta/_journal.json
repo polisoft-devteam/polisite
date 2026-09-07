@@ -183,6 +183,34 @@
       "when": 1788522737163,
       "tag": "0025_tan_malcolm_colcord",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1788790161055,
+      "tag": "0026_crazy_sabretooth",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1788816122566,
+      "tag": "0027_curvy_shocker",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1788817530498,
+      "tag": "0028_marvelous_pete_wisdom",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1788817537611,
+      "tag": "0029_fluffy_vapor",
+      "breakpoints": true
     }
   ]
 }

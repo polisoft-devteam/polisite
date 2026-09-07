@@ -1,6 +1,7 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { z } from "zod"
 import { getLocale } from "next-intl/server"
 
 import { postEventToDiscord } from "@/features/events/discord"
@@ -30,6 +31,7 @@ import {
   toMinorUnits,
 } from "@/features/events/schemas"
 import { redirect } from "@/i18n/navigation"
+import type { FormFeedback } from "@/lib/form-feedback"
 import { syncAutomaticBadges } from "@/features/members/badge-sync"
 import { getViewer } from "@/lib/auth"
 import {
@@ -45,13 +47,21 @@ import { deleteImageIfOurs, uploadImage } from "@/lib/storage"
 import { wallTimeToInstant } from "@/lib/time"
 import { attendanceResponseEnum } from "@/db/schema"
 
-export async function createEventAction(formData: FormData) {
+export async function createEventAction(
+  _previous: FormFeedback,
+  formData: FormData,
+): Promise<FormFeedback> {
   const viewer = await getViewer()
 
   if (!canCreateEvent(viewer)) throw new Error("Not allowed to create events")
 
   const parsed = eventFormSchema.safeParse(readEventForm(formData))
-  if (!parsed.success) return
+
+  // Handed back rather than swallowed: a silent return left the form reset, the event
+  // uncreated and nobody any the wiser.
+  if (!parsed.success) {
+    return { fieldErrors: z.flattenError(parsed.error).fieldErrors }
+  }
 
   const form = parsed.data
 
@@ -82,6 +92,7 @@ export async function createEventAction(formData: FormData) {
       imageUrl: uploadedImageUrl,
       eventUrl: form.eventUrl,
       extraLinkUrl: form.extraLinkUrl,
+      spotifyUrl: form.spotifyUrl,
       visibility: form.visibility,
       createdByMemberId: viewer!.member!.id,
     },
@@ -123,9 +134,16 @@ export async function createEventAction(formData: FormData) {
   revalidatePath("/", "layout")
   // The flag is what the event page celebrates on arrival; see CelebrateOnMount.
   redirect({ href: `/events/${event.slug}?created=1`, locale })
+
+  // Unreachable: redirect throws. next-intl types it as returning, so the compiler wants
+  // to see an answer on this path.
+  return null
 }
 
-export async function updateEventAction(formData: FormData) {
+export async function updateEventAction(
+  _previous: FormFeedback,
+  formData: FormData,
+): Promise<FormFeedback> {
   const viewer = await getViewer()
   const eventId = String(formData.get("eventId") ?? "")
 
@@ -139,7 +157,10 @@ export async function updateEventAction(formData: FormData) {
   }
 
   const parsed = eventFormSchema.safeParse(readEventForm(formData))
-  if (!parsed.success) return
+
+  if (!parsed.success) {
+    return { fieldErrors: z.flattenError(parsed.error).fieldErrors }
+  }
 
   const form = parsed.data
 
@@ -171,6 +192,7 @@ export async function updateEventAction(formData: FormData) {
       ...(uploadedImageUrl ? { imageUrl: uploadedImageUrl } : {}),
       eventUrl: form.eventUrl,
       extraLinkUrl: form.extraLinkUrl,
+      spotifyUrl: form.spotifyUrl,
       visibility: form.visibility,
     },
     form.reminderOffsets,
@@ -190,6 +212,9 @@ export async function updateEventAction(formData: FormData) {
   revalidatePath("/", "layout")
   // The slug is frozen at creation, so an edited title keeps the same URL.
   redirect({ href: `/events/${existing.slug}`, locale: await getLocale() })
+
+  // Unreachable; see createEventAction.
+  return null
 }
 
 export async function deleteEventAction(formData: FormData) {

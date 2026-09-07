@@ -14,7 +14,7 @@ import { useTranslations } from "next-intl"
 import { Link, usePathname } from "@/i18n/navigation"
 import {
   isCurrentNavigationLink,
-  mainNavigationLinks,
+  navigationLinks,
 } from "@/lib/navigation-links"
 import { cn } from "@/lib/utils"
 
@@ -64,7 +64,7 @@ export function MainNav({ showAdminLink }: { showAdminLink: boolean }) {
       ref={navigationRef}
       className="relative hidden items-center gap-0.5 md:flex lg:gap-1"
     >
-      {mainNavigationLinks.map((navigationLink) => {
+      {navigationLinks().map((navigationLink) => {
         const isCurrentPage = isCurrentNavigationLink(
           navigationLink.href,
           currentPathname,

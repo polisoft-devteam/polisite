@@ -14,12 +14,20 @@
 import { useSyncExternalStore } from "react"
 
 import { findParty, type Party } from "@/lib/election"
+import { stockholmDay } from "@/lib/time"
 
 const STORAGE_KEY = "polisite:election"
 
 export type ElectionWheelState = {
   party: Party | null
-  spinsUsed: number
+  spinsLeft: number
+  /**
+   * The Stockholm day the spins were last handed out on, as "2026-09-13".
+   *
+   * A day, not a timestamp: "one a day" is a question about the calendar, and counting in
+   * hours would give somebody in Denmark a different answer than somebody here.
+   */
+  grantedOn: string | null
   /**
    * What the reader chose, not where the wheel is: null means they never said, and a
    * spent wheel folds itself away in that case. Deciding here would lose the difference
@@ -48,11 +56,15 @@ export type ElectionWheelState = {
 /** Also the server's answer: no browser, so nothing has been spun and nothing tucked. */
 const UNTOUCHED: ElectionWheelState = {
   party: null,
-  spinsUsed: 0,
+  spinsLeft: 0,
+  grantedOn: null,
   tuckedChoice: null,
   isKnown: false,
   identity: null,
 }
+
+/** A new day tops an empty wheel up to one. Nothing stockpiles while you are away. */
+export const DAILY_SPINS = 1
 
 let cachedState: ElectionWheelState | null = null
 
@@ -67,14 +79,16 @@ function readState(): ElectionWheelState {
 
     const parsed = JSON.parse(stored) as {
       partyKey?: string
-      spinsUsed?: number
+      spinsLeft?: number
+      grantedOn?: string | null
       isTucked?: boolean | null
       identity?: string | null
     }
 
     cachedState = {
       party: parsed.partyKey ? findParty(parsed.partyKey) : null,
-      spinsUsed: parsed.spinsUsed ?? 0,
+      spinsLeft: parsed.spinsLeft ?? 0,
+      grantedOn: parsed.grantedOn ?? null,
       tuckedChoice: parsed.isTucked ?? null,
       isKnown: true,
       identity: parsed.identity ?? null,
@@ -108,7 +122,8 @@ function writeState(next: ElectionWheelState) {
       STORAGE_KEY,
       JSON.stringify({
         partyKey: next.party?.key ?? null,
-        spinsUsed: next.spinsUsed,
+        spinsLeft: next.spinsLeft,
+        grantedOn: next.grantedOn,
         isTucked: next.tuckedChoice,
         identity: next.identity,
       }),
@@ -126,7 +141,7 @@ export function useElectionWheelState(): ElectionWheelState {
 export function recordSpin(party: Party) {
   const state = readState()
 
-  writeState({ ...state, party, spinsUsed: state.spinsUsed + 1 })
+  writeState({ ...state, party, spinsLeft: Math.max(state.spinsLeft - 1, 0) })
 }
 
 /**
@@ -135,23 +150,60 @@ export function recordSpin(party: Party) {
  * A browser that has never recorded an identity keeps what it has: it belongs to the
  * person sitting there, we simply had not written down who that was.
  */
-export function adoptIdentity(identity: string) {
+export function adoptIdentity(identity: string, startingSpins: number) {
   const state = readState()
 
-  if (state.identity === identity) return
+  if (state.identity === identity) {
+    // Same person, new day: see grantSpinsForToday.
+    writeState(grantSpinsForToday(state, stockholmDay()))
+    return
+  }
 
   if (state.identity === null) {
-    writeState({ ...state, identity })
+    // Nothing was written down about who this browser belonged to, so it belongs to
+    // whoever is here now, with whatever they have already spun.
+    writeState(
+      grantSpinsForToday(
+        {
+          ...state,
+          identity,
+          grantedOn: state.grantedOn ?? stockholmDay(),
+          spinsLeft: state.grantedOn === null ? startingSpins : state.spinsLeft,
+        },
+        stockholmDay(),
+      ),
+    )
     return
   }
 
   writeState({
     party: null,
-    spinsUsed: 0,
+    spinsLeft: startingSpins,
+    grantedOn: stockholmDay(),
     tuckedChoice: null,
     isKnown: true,
     identity,
   })
+}
+
+/**
+ * A spin a day, for anyone who has run out.
+ *
+ * Pure and exported so the rule can be tested without a browser or a clock. Somebody who
+ * still has spins in hand keeps exactly those: the day tops an empty wheel up, it does not
+ * hand out a second helping.
+ */
+export function grantSpinsForToday(
+  state: ElectionWheelState,
+  today: string,
+): ElectionWheelState {
+  if (state.grantedOn === today) return state
+
+  return {
+    ...state,
+    spinsLeft: Math.max(state.spinsLeft, DAILY_SPINS),
+    grantedOn: today,
+  }
 }
 
 export function tuckWheel(isTucked: boolean) {

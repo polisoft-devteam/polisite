@@ -28,6 +28,7 @@ export function buildSampleEvent(overrides: Partial<Event> = {}): Event {
     imageUrl: null,
     eventUrl: null,
     extraLinkUrl: null,
+    spotifyUrl: null,
     visibility: "members_and_friends",
     createdByMemberId: "sample-member",
     cancelledAt: null,

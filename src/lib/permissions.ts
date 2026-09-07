@@ -138,6 +138,18 @@ export function canRemoveGuest(
   return guest.invitedByMemberId === viewer!.member!.id || isAdmin(viewer)
 }
 
+// --- The election wheel --------------------------------------------------------
+
+/**
+ * Anyone may spin; only a member's result is written down.
+ *
+ * A visitor has no member row to hang it on, and the results page is a page about the
+ * association rather than about whoever happened to pass by.
+ */
+export function canRecordElectionPick(viewer: Viewer | null): boolean {
+  return isActiveMember(viewer)
+}
+
 // --- Wishlist ------------------------------------------------------------------
 
 /** Any active member keeps a wishlist, and only their own. */

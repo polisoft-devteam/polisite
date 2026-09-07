@@ -41,7 +41,7 @@ import { Link, usePathname } from "@/i18n/navigation"
 import { CloseIcon, SignOutIcon } from "@/lib/icons"
 import {
   isCurrentNavigationLink,
-  mainNavigationLinks,
+  navigationLinks,
 } from "@/lib/navigation-links"
 import { cn } from "@/lib/utils"
 
@@ -146,7 +146,7 @@ export function MobileNav({
             </DialogPrimitive.Close>
           </div>
 
-          {mainNavigationLinks.map((navigationLink) => {
+          {navigationLinks().map((navigationLink) => {
             const isCurrentPage = isCurrentNavigationLink(
               navigationLink.href,
               currentPathname,

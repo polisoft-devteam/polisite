@@ -34,6 +34,33 @@ export const COMMON_EVENT_TIME_ZONES = [
   "UTC",
 ] as const
 
+/**
+ * Today where the association is, as "2026-09-13", whatever clock the reader keeps.
+ *
+ * Formatted through Intl rather than read off a Date, because getDate() answers in the
+ * machine's own timezone and a laptop in Copenhagen would turn the day over an hour early.
+ */
+export function stockholmDay(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat("sv-SE", {
+    timeZone: DEFAULT_EVENT_TIME_ZONE,
+  }).format(now)
+}
+
+/** The instant the Stockholm date next turns over, which is when a spin is handed out. */
+export function nextStockholmMidnight(now: Date = new Date()): Date {
+  const today = stockholmDay(now)
+
+  // Counted in UTC on purpose: a day added to a local Date crosses a summer time boundary
+  // an hour out, and this only needs the next calendar date.
+  const tomorrow = new Date(`${today}T00:00:00Z`)
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1)
+
+  return wallTimeToInstant(
+    `${tomorrow.toISOString().slice(0, 10)}T00:00`,
+    DEFAULT_EVENT_TIME_ZONE,
+  )
+}
+
 /** "2026-10-04T19:00" typed for a London event → the UTC instant it means. */
 export function wallTimeToInstant(wallTime: string, timeZone: string): Date {
   return fromZonedTime(wallTime, timeZone)

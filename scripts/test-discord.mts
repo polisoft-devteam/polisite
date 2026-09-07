@@ -45,6 +45,7 @@ const sampleEvent: Event = {
   imageUrl: null,
   eventUrl: null,
   extraLinkUrl: null,
+  spotifyUrl: null,
   visibility: "members",
   createdByMemberId: "00000000-0000-0000-0000-000000000000",
   cancelledAt: null,
