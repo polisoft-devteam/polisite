@@ -14,6 +14,8 @@
 
 import { getTranslations } from "next-intl/server"
 
+import type { FormFeedback } from "@/lib/form-feedback"
+
 import { EventWhenField } from "@/components/EventWhenField"
 import { EventReminderField } from "@/components/EventReminderField"
 import { ExplainedSelectField } from "@/components/ExplainedSelectField"
@@ -56,7 +58,7 @@ import {
 } from "@/lib/time"
 
 type EventFormProps = {
-  action: (formData: FormData) => Promise<void>
+  action: (previous: FormFeedback, formData: FormData) => Promise<FormFeedback>
   submitLabel: string
   /** Absent when creating. */
   event?: Event
@@ -327,6 +329,20 @@ export async function EventForm({
                     </FormField>
                   </div>
 
+                  <FormField
+                    label={translateEvents("fieldSpotifyUrl")}
+                    htmlFor="spotifyUrl"
+                    hint={translateEvents("fieldSpotifyUrlHint")}
+                  >
+                    <Input
+                      id="spotifyUrl"
+                      name="spotifyUrl"
+                      type="url"
+                      placeholder="https://open.spotify.com/playlist/…"
+                      defaultValue={event?.spotifyUrl ?? ""}
+                    />
+                  </FormField>
+
                   {/* Only meaningful when creating; an edit shouldn't re-announce. */}
                   {!event && (
                     <label className="flex items-center gap-2 text-sm">
@@ -352,25 +368,52 @@ export async function EventForm({
     },
   ]
 
-  return (
-    <form action={action}>
-      {event && <input type="hidden" name="eventId" value={event.id} />}
+  // Field name to the label it carries in the form, so a refusal reads as "Adress" rather
+  // than as "location".
+  const fieldLabels = {
+    title: translateEvents("fieldTitle"),
+    description: translateEvents("fieldDescription"),
+    startsAtWallTime: translateEvents("fieldStartsAt"),
+    endsAtWallTime: translateEvents("fieldEndsAt"),
+    timeZone: translateEvents("fieldTimeZone"),
+    location: translateEvents("fieldLocation"),
+    category: translateEvents("fieldCategory"),
+    price: translateEvents("fieldPrice"),
+    currency: translateEvents("fieldCurrency"),
+    maxAttendees: translateEvents("fieldMaxAttendees"),
+    eventUrl: translateEvents("fieldEventUrl"),
+    extraLinkUrl: translateEvents("fieldExtraLinkUrl"),
+    spotifyUrl: translateEvents("fieldSpotifyUrl"),
+    visibility: translateEvents("fieldVisibility"),
+    reminderOffsets: translateEvents("fieldReminders"),
+    dateOptions: translateEvents("fieldDatePoll"),
+    kind: translateEvents("fieldKind"),
+  }
 
-      <Wizard
-        steps={steps}
-        submitLabel={submitLabel}
-        // Publishing a new event is a small celebration; saving an edit is filing.
-        submitIcon={
-          event ? (
-            <SaveIcon className="size-4" />
-          ) : (
-            <PublishEventIcon className="size-4" />
-          )
-        }
-        backLabel={translateEvents("wizardBack")}
-        nextLabel={translateEvents("wizardNext")}
-        stepLabel={translateEvents("wizardStep")}
-      />
-    </form>
+  return (
+    <Wizard
+      steps={steps}
+      action={action}
+      hiddenFields={
+        event && <input type="hidden" name="eventId" value={event.id} />
+      }
+      invalidHeading={translateEvents("formInvalid")}
+      fieldLabels={fieldLabels}
+      submitLabel={submitLabel}
+      // Publishing a new event is a small celebration; saving an edit is filing.
+      submitIcon={
+        event ? (
+          <SaveIcon className="size-4" />
+        ) : (
+          <PublishEventIcon className="size-4" />
+        )
+      }
+      submittingLabel={
+        event ? translateEvents("saving") : translateEvents("publishing")
+      }
+      backLabel={translateEvents("wizardBack")}
+      nextLabel={translateEvents("wizardNext")}
+      stepLabel={translateEvents("wizardStep")}
+    />
   )
 }

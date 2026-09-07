@@ -11,6 +11,8 @@
 // It sits in the locale layout so it follows you around the site.
 
 import { ElectionWheel } from "@/components/ElectionWheel"
+import { recordElectionPickAction } from "@/features/election/actions"
+import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
 import { getViewer } from "@/lib/auth"
 import {
   isElectionOpen,
@@ -35,6 +37,13 @@ export async function ElectionWheelGate() {
       identity={identity}
       maxSpins={viewer ? SPINS_SIGNED_IN : SPINS_SIGNED_OUT}
       isSignedOut={!viewer}
+      // Their own face under the result, so the party lands on somebody rather than in
+      // the air. Nothing to show for a visitor who has not signed in.
+      viewerName={viewer ? viewerDisplayName(viewer) : null}
+      viewerAvatarUrl={viewer ? viewerAvatarUrl(viewer) : null}
+      // A member's result joins the tally on /election; a visitor's stays in their
+      // browser, because there is no row to hang it on.
+      recordPick={isActiveMember(viewer) ? recordElectionPickAction : undefined}
     />
   )
 }

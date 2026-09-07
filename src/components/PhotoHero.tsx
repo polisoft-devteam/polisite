@@ -35,6 +35,7 @@ export function PhotoHero({
   title,
   note,
   tagline,
+  strongTagline = false,
   children,
 }: {
   images: string[]
@@ -46,7 +47,15 @@ export function PhotoHero({
   /** A status that belongs with the name, such as an event still being only a suggestion. */
   note?: React.ReactNode
   tagline?: string
-  /** Sits under the tagline, for a call to action. */
+  /**
+   * Sets the tagline a size up and in bold: the front page's line about the association,
+   * and an event's own description.
+   *
+   * A prop rather than the default, because a hero can also carry a quiet note under its
+   * title, and quiet is then the whole point of it.
+   */
+  strongTagline?: boolean
+  /** A line or two under the title. Longer than the hero can hold is clamped. */
   children?: React.ReactNode
 }) {
   // One photo holds still. Fading a single image in and out would just blink it.
@@ -106,8 +115,18 @@ export function PhotoHero({
 
           {note}
 
+          {/* Clamped, and deliberately: the photo is a fixed height with the text sitting
+              on its foot, so anything longer would be cut off mid line by the overflow
+              rather than ending anywhere on purpose. */}
           {tagline && (
-            <p className="mt-3 max-w-xl text-sm text-white/85 drop-shadow sm:text-base">
+            <p
+              className={cn(
+                "mt-3 line-clamp-2 max-w-xl whitespace-pre-line drop-shadow sm:line-clamp-4",
+                strongTagline
+                  ? "text-base font-bold text-white sm:text-lg"
+                  : "text-sm text-white/85 sm:text-base",
+              )}
+            >
               {tagline}
             </p>
           )}

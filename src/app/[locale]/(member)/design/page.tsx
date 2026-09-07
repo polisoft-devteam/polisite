@@ -43,6 +43,7 @@ import { MemberBadges } from "@/components/MemberBadges"
 import { MembershipActions } from "@/components/MembershipActions"
 import { MembersOnlyNotice } from "@/components/MembersOnlyNotice"
 import { PaletteLab } from "@/components/PaletteLab"
+import { SpotifyEmbed } from "@/components/SpotifyEmbed"
 import { SWEDISH_PARTIES } from "@/lib/election"
 import { Tooltip } from "@/components/Tooltip"
 import { PhotoHero } from "@/components/PhotoHero"
@@ -386,6 +387,20 @@ export default async function DesignPage({
 
       <PageSection id="palette" heading="Färg">
         <PaletteLab />
+      </PageSection>
+
+      <PageSection heading="Spotify">
+        <p className="text-muted-foreground max-w-prose text-sm">
+          Samma spelare överallt: arkivets spellistor och länken man kan lägga
+          på ett event. En låt får en smal rad, en spellista en hel lista.
+        </p>
+
+        <div className="max-w-2xl space-y-4">
+          <SpotifyEmbed
+            url="https://open.spotify.com/playlist/0LxXS2Sx7F9oeesyRI15N5"
+            title="PoliSound"
+          />
+        </div>
       </PageSection>
 
       <PageSection heading="Valhjulet">

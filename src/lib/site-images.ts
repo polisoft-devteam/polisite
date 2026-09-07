@@ -51,6 +51,22 @@ export function readAboutImages(): Promise<string[]> {
   return readImagesIn("about")
 }
 
+/** The photograph behind the Val 2026 heading. Empty until somebody drops one in. */
+export function readElectionImages(): Promise<string[]> {
+  return readImagesIn("election")
+}
+
+/**
+ * Party logos, keyed by the party they belong to: parties/l.webp is Liberalerna's, using
+ * the same key as lib/election.ts. Nothing to register, and a party with no file simply
+ * shows its abbreviation, which is what all fourteen do today.
+ */
+export async function readPartyImages(): Promise<Map<string, string>> {
+  const images = await readImagesIn("parties")
+
+  return new Map(images.map((image) => [path.basename(image, ".webp"), image]))
+}
+
 /**
  * Badge artwork, keyed by the badge it belongs to: badges/traveller.webp is the Traveller
  * badge's picture. The filename is the whole connection — nothing to register, no id to

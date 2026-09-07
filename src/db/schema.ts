@@ -194,6 +194,8 @@ export const events = pgTable("events", {
   eventUrl: text("event_url"),
   // Anything supporting: a trailer, a route map, a playlist.
   extraLinkUrl: text("extra_link_url"),
+  // A Spotify link, shown as a player on the event page rather than as a link.
+  spotifyUrl: text("spotify_url"),
 
   visibility: eventVisibilityEnum("visibility").notNull().default("members"),
 
@@ -317,6 +319,31 @@ export const eventGuests = pgTable("event_guests", {
 
   addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
 }).enableRLS()
+
+// --- The election wheel --------------------------------------------------------
+//
+// One row per spin, not one per member: the point of /election is a race, and a race needs
+// every day's spin to count rather than to replace yesterday's. A member's own tag is
+// their latest row; a party's standing is all of them.
+//
+// The spins themselves stay in the browser, because a tally nobody can cheat is not worth
+// a table for ten people. The party is a key from lib/election.ts rather than an enum, for
+// the same reason titles and badges are: parties are a list in TypeScript, and adding one
+// should not be a migration.
+
+export const electionVotes = pgTable("election_votes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+
+  memberId: uuid("member_id")
+    .notNull()
+    .references(() => members.id, { onDelete: "cascade" }),
+
+  partyKey: text("party_key").notNull(),
+
+  spunAt: timestamp("spun_at", { withTimezone: true }).notNull().defaultNow(),
+}).enableRLS()
+
+export type ElectionVote = typeof electionVotes.$inferSelect
 
 // --- Badges --------------------------------------------------------------------
 //

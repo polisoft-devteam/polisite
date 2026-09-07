@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest"
 
 import englishMessages from "../../messages/en.json"
 import swedishMessages from "../../messages/sv.json"
-import { mainNavigationLinks } from "@/lib/navigation-links"
+import { ALL_NAVIGATION_LINKS } from "@/lib/navigation-links"
 
 type MessageTree = { [key: string]: string | string[] | MessageTree }
 
@@ -32,7 +32,7 @@ describe("translation files", () => {
   })
 
   it("have a label for every link in the main navigation", () => {
-    for (const navigationLink of mainNavigationLinks) {
+    for (const navigationLink of ALL_NAVIGATION_LINKS) {
       expect(swedishMessages.Nav).toHaveProperty(navigationLink.translationKey)
       expect(englishMessages.Nav).toHaveProperty(navigationLink.translationKey)
     }

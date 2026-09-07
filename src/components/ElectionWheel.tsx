@@ -16,7 +16,11 @@
 import { useEffect, useRef, useState } from "react"
 import { useTranslations } from "next-intl"
 
+import { usePathname } from "@/i18n/navigation"
+
 import { Confetti } from "@/components/Confetti"
+import { MemberAvatar } from "@/components/MemberAvatar"
+import { NextSpinCountdown } from "@/components/NextSpinCountdown"
 import { SiteImage } from "@/components/SiteImage"
 import { Tooltip } from "@/components/Tooltip"
 import {
@@ -44,6 +48,9 @@ import {
 import { cn } from "@/lib/utils"
 
 const SLICE_DEGREES = 360 / SWEDISH_PARTIES.length
+
+/** How long the lever stays down before it springs back. */
+const LEVER_MS = 320
 
 /** The lift the sound hints take while the pointer is on the wheel. */
 const hintIcon =
@@ -310,23 +317,90 @@ function WheelFrame({
   )
 }
 
+/**
+ * The lever beside the wheel, for anyone who would rather pull than click.
+ *
+ * Drawn here for the same reason the wheel is: a rod, a ball and a base plate. It turns
+ * about its own foot, which is what makes it read as a lever rather than as a falling
+ * stick.
+ */
+function Lever({ isPulled }: { isPulled: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 40 170"
+      aria-hidden="true"
+      className="h-40 w-10 sm:h-56 sm:w-14"
+    >
+      {/* The housing it comes out of, so it has somewhere to be bolted to. */}
+      <rect
+        x="6"
+        y="140"
+        width="28"
+        height="24"
+        rx="6"
+        fill="var(--muted)"
+        stroke="var(--border)"
+        strokeWidth="2"
+      />
+
+      <g
+        className="origin-[20px_148px] transition-transform duration-200 ease-out motion-reduce:transition-none"
+        style={{ transform: `rotate(${isPulled ? 32 : 0}deg)` }}
+      >
+        <rect
+          x="16"
+          y="34"
+          width="8"
+          height="112"
+          rx="4"
+          fill="var(--muted-foreground)"
+        />
+        <circle
+          cx="20"
+          cy="26"
+          r="16"
+          fill="var(--primary-ink)"
+          stroke="var(--card)"
+          strokeWidth="3"
+        />
+      </g>
+    </svg>
+  )
+}
+
 export function ElectionWheel({
   identity,
   maxSpins,
   isSignedOut,
+  viewerName,
+  viewerAvatarUrl,
+  recordPick,
+  placement = "corner",
 }: {
   /** Changing hands starts the tally over; see adoptIdentity. */
   identity: string
   maxSpins: number
   isSignedOut: boolean
+  /** Null for a visitor who has not signed in: there is no face to put under it. */
+  viewerName: string | null
+  viewerAvatarUrl: string | null
+  /** Writes the result where the whole association can see it. Absent for a visitor. */
+  recordPick?: (partyKey: string) => Promise<void>
+  /**
+   * "corner" is the one that follows you around the site and can be pushed aside.
+   * "page" is the same wheel standing in the middle of /election, with nowhere to go.
+   */
+  placement?: "corner" | "page"
 }) {
   const translateElection = useTranslations("Election")
-  const { party, spinsUsed, tuckedChoice, isKnown } = useElectionWheelState()
+  const currentPathname = usePathname()
+  const { party, spinsLeft, tuckedChoice, isKnown } = useElectionWheelState()
 
   const [rotation, setRotation] = useState(SLICE_DEGREES / 2)
   const [durationMs, setDurationMs] = useState(SPIN_MS)
   const [isSpinning, setIsSpinning] = useState(false)
   const [celebrated, setCelebrated] = useState<Party | null>(null)
+  const [isLeverPulled, setIsLeverPulled] = useState(false)
   const timers = useRef<number[]>([])
   const playingSound = useRef<HTMLAudioElement | null>(null)
   const spinSound = useRef<HTMLAudioElement | null>(null)
@@ -339,8 +413,8 @@ export function ElectionWheel({
 
   // Signing in, or being let in, starts the three over; see adoptIdentity.
   useEffect(() => {
-    adoptIdentity(identity)
-  }, [identity])
+    adoptIdentity(identity, maxSpins)
+  }, [identity, maxSpins])
 
   useEffect(() => {
     const pending = timers.current
@@ -358,11 +432,13 @@ export function ElectionWheel({
     fadeOutAndStop(playingSound.current)
   }
 
-  const spinsLeft = Math.max(maxSpins - spinsUsed, 0)
+  const isCorner = placement === "corner"
+  const isElectionPage = currentPathname === "/election"
 
   // A wheel with nothing left to give folds itself away, unless the reader has said
-  // otherwise. The tab still brings it back.
-  const isTucked = tuckedChoice ?? spinsLeft === 0
+  // otherwise. The tab still brings it back. The one on its own page never folds: it is
+  // the reason the page exists.
+  const isTucked = isCorner && (tuckedChoice ?? spinsLeft === 0)
   // Not while it is pushed aside: the wheel is off the edge, and the roll it is holding
   // would throw the landing off by exactly that much.
   const canSpin = spinsLeft > 0 && !isSpinning && !isTucked
@@ -412,6 +488,9 @@ export function ElectionWheel({
         setIsSpinning(false)
         setCelebrated(landedOn)
         recordSpin(landedOn)
+        // Fire and forget: a result that fails to reach the table is still a result on
+        // the screen and in this browser.
+        void recordPick?.(landedOn.key)
         playPreparedSound(sound)
         playingSound.current = sound
       }, spinMs),
@@ -419,10 +498,23 @@ export function ElectionWheel({
       window.setTimeout(() => {
         setCelebrated(null)
 
-        // Nothing left to spin: it rolls off on its own once the show is over.
-        if (spinsLeft <= 1) tuckWheel(true)
+        // Nothing left to spin: the one in the corner rolls off on its own once the show
+        // is over. The one standing on its own page stays where it is.
+        if (isCorner && spinsLeft <= 1) tuckWheel(true)
       }, spinMs + CELEBRATION_MS),
     )
+  }
+
+  /** The lever goes down, springs back, and the wheel goes round. */
+  function pullLever() {
+    if (!canSpin) return
+
+    setIsLeverPulled(true)
+    timers.current.push(
+      window.setTimeout(() => setIsLeverPulled(false), LEVER_MS),
+    )
+
+    spin()
   }
 
   // The rim keeps the tally the whole way, down to 0/3, and wears the answer instead of
@@ -432,7 +524,7 @@ export function ElectionWheel({
     spinsLeft > 0
       ? translateElection("ribbon")
       : (party?.name ?? translateElection("ribbon"))
-  const ribbon = `${ribbonLabel} ${spinsLeft}/${maxSpins}`
+  const ribbon = `${ribbonLabel} ${spinsLeft}/${Math.max(spinsLeft, maxSpins)}`
 
   const tooltip = party
     ? spinsLeft > 0
@@ -448,6 +540,9 @@ export function ElectionWheel({
   // Nothing until the browser has answered; see isKnown.
   if (!isKnown) return null
 
+  // One wheel per page: the corner keeps out of the way of the one on /election.
+  if (isCorner && isElectionPage) return null
+
   return (
     <>
       {/* Two elements on purpose. The outer one is fixed and never transformed: a
@@ -456,17 +551,26 @@ export function ElectionWheel({
           positioned against. */}
       <div
         // Named, so a page transition animates around it instead of sweeping it into the
-        // outgoing snapshot, which briefly painted the old page on top of it.
-        style={{ viewTransitionName: "election-wheel" }}
-        // Flush with the bottom of a phone and over whatever is down there; away from the
-        // corner on a desktop, and clear of the floating menu button in between, which
-        // shows below md.
-        className="fixed right-0 bottom-0 z-[55] pb-[env(safe-area-inset-bottom)] sm:right-4 sm:bottom-[calc(5.5rem+env(safe-area-inset-bottom))] md:bottom-[calc(1rem+env(safe-area-inset-bottom))]"
+        // outgoing snapshot, which briefly painted the old page on top of it. Only the
+        // corner one needs that: the page's own wheel goes with the page.
+        style={isCorner ? { viewTransitionName: "election-wheel" } : undefined}
+        // In the corner: flush with the bottom of a phone and over whatever is down there;
+        // away from the corner on a desktop, and clear of the floating menu button in
+        // between, which shows below md. Deaf to the pointer as a whole, because the wheel
+        // is a circle drawn inside a square box and the box was swallowing clicks meant
+        // for the page around it; the two things worth pressing turn their hearing back
+        // on.
+        className={cn(
+          isCorner
+            ? "pointer-events-none fixed right-0 bottom-0 z-[55] pb-[env(safe-area-inset-bottom)] sm:right-4 sm:bottom-[calc(5.5rem+env(safe-area-inset-bottom))] md:bottom-[calc(1rem+env(safe-area-inset-bottom))]"
+            : "flex flex-col items-center",
+        )}
       >
         <div
           className={cn(
             "relative flex items-center gap-1 transition-transform duration-700 ease-in-out motion-reduce:transition-none",
             isTucked && "translate-x-[calc(100%-3.5rem)]",
+            !isCorner && "gap-2 sm:gap-4",
           )}
         >
           {/* A plain button rather than the design system's: this is a chevron and a logo
@@ -475,92 +579,129 @@ export function ElectionWheel({
 
             On the wheel's left edge while the wheel fills the screen, and back beside it
             from sm up, where there is room for both. */}
-          <button
-            type="button"
-            className="focus-visible:ring-ring/50 absolute top-1/2 left-0 z-10 flex -translate-y-1/2 cursor-pointer items-center gap-1 rounded-full outline-none focus-visible:ring-3 sm:static sm:translate-y-0"
-            aria-label={
-              isTucked
-                ? translateElection("bringBack")
-                : translateElection("tuckAway")
-            }
-            onClick={() => tuckWheel(!isTucked)}
-          >
-            {isTucked ? (
-              <ChevronLeftIcon className="size-3" />
-            ) : (
-              <ChevronRightIcon className="size-3" />
-            )}
-
-            {/* A padded disc: the logo is 1665 by 1209, so a round frame around it would
-              cut its sides off, and a round frame with room inside gives the tab its
-              shape without touching the picture. */}
-            <span className="bg-card ring-border flex size-11 items-center justify-center rounded-full shadow-sm ring-1">
-              <SiteImage
-                src="/images/misc/election-logo.png"
-                alt=""
-                className="h-5 w-7"
-                sizes="28px"
-                rounded="rounded-none"
-              />
-            </span>
-          </button>
-
-          {/* aria-disabled rather than disabled: a spent wheel is still worth reading and
-            still answers a keyboard, and nothing beside it inherits a dead state. */}
-          <Tooltip label={tooltip} side="left" className="max-w-64 text-center">
+          {isCorner && (
             <button
               type="button"
-              onClick={spin}
-              aria-disabled={!canSpin}
+              className="focus-visible:ring-ring/50 pointer-events-auto absolute top-1/2 left-0 z-10 flex -translate-y-1/2 cursor-pointer items-center gap-1 rounded-full outline-none focus-visible:ring-3 sm:static sm:translate-y-0"
               aria-label={
-                spinsLeft > 0
-                  ? translateElection("spin", { count: spinsLeft })
-                  : translateElection("spent")
+                isTucked
+                  ? translateElection("bringBack")
+                  : translateElection("tuckAway")
               }
-              className={cn(
-                // The whole width of a phone, because a fairground wheel in a corner is a
-                // fairground wheel nobody spins.
-                "group/wheel relative size-[100vw] rounded-full sm:size-80",
-                canSpin ? "cursor-pointer" : "cursor-default",
-              )}
+              onClick={() => tuckWheel(!isTucked)}
             >
-              <Wedges
-                rotation={rotation + (isTucked ? ROLL_DEGREES : 0)}
-                durationMs={isSpinning ? durationMs : TUCK_MS}
-              />
-              <WheelFrame
-                ribbon={ribbon}
-                prompt={spinsLeft > 0 ? translateElection("prompt") : undefined}
-              />
+              {isTucked ? (
+                <ChevronLeftIcon className="size-3" />
+              ) : (
+                <ChevronRightIcon className="size-3" />
+              )}
 
-              {/* Sound, arrow, ears: the wheel makes a noise, so headphones are kind to
-                whoever is beside you. Shown whatever the tally says, because the noise is
-                the same on your last spin as on your first. Above the question rather than
-                in the drawing, where an icon that small cannot be outlined enough to
-                read. */}
-              <span
-                aria-hidden="true"
-                className="text-foreground pointer-events-none absolute -top-3.5 left-1/2 flex -translate-x-1/2 items-center gap-1.5"
-              >
-                {/* They rise one after another while the pointer is on the wheel, and
-                  settle the same way when it leaves. A transition rather than a keyframe
-                  hop, which snapped on and off as the pointer crossed the edge.
-
-                  Deaf to the pointer: they are a note about the wheel, not part of it, and
-                  a hand cursor over them promised a click that spun nothing. */}
-                <SoundOnIcon className={hintIcon} />
-                <ArrowRightIcon
-                  className={cn(hintIcon, "size-3.5")}
-                  style={{ transitionDelay: "80ms" }}
-                />
-                <WearHeadphonesIcon
-                  className={hintIcon}
-                  style={{ transitionDelay: "160ms" }}
+              {/* A padded disc: the logo is 1665 by 1209, so a round frame around it would
+                cut its sides off, and a round frame with room inside gives the tab its
+                shape without touching the picture. */}
+              <span className="bg-card ring-border flex size-11 items-center justify-center rounded-full shadow-sm ring-1">
+                <SiteImage
+                  src="/images/misc/election-logo.webp"
+                  alt=""
+                  className="h-5 w-7"
+                  sizes="28px"
+                  rounded="rounded-none"
                 />
               </span>
             </button>
-          </Tooltip>
+          )}
+
+          {/* The wheel and the hints above it, as one thing to hover. The hints sit
+            outside the button rather than inside it, because the button is clipped to the
+            circle it draws so the page can be clicked around it, and a clip path takes
+            the children with it. */}
+          <span className="group/wheel relative">
+            {/* aria-disabled rather than disabled: a spent wheel is still worth reading
+              and still answers a keyboard, and nothing beside it inherits a dead
+              state. */}
+            <Tooltip
+              label={tooltip}
+              side="left"
+              className="max-w-64 text-center"
+            >
+              <button
+                type="button"
+                onClick={spin}
+                aria-disabled={!canSpin}
+                aria-label={
+                  spinsLeft > 0
+                    ? translateElection("spin", { count: spinsLeft })
+                    : translateElection("spent")
+                }
+                className={cn(
+                  // The whole width of a phone, because a fairground wheel in a corner is a
+                  // fairground wheel nobody spins. Clipped to the circle it draws, so the
+                  // corners of its box belong to the page underneath.
+                  "pointer-events-auto relative rounded-full [clip-path:circle(50%)]",
+                  isCorner
+                    ? "size-[100vw] sm:size-80"
+                    : "size-[min(92vw,34rem)]",
+                  canSpin ? "cursor-pointer" : "cursor-default",
+                )}
+              >
+                <Wedges
+                  rotation={rotation + (isTucked ? ROLL_DEGREES : 0)}
+                  durationMs={isSpinning ? durationMs : TUCK_MS}
+                />
+                <WheelFrame
+                  ribbon={ribbon}
+                  prompt={
+                    spinsLeft > 0 ? translateElection("prompt") : undefined
+                  }
+                />
+              </button>
+            </Tooltip>
+
+            {/* Sound, arrow, ears: the wheel makes a noise, so headphones are kind to
+              whoever is beside you. Shown whatever the tally says, because the noise is
+              the same on your last spin as on your first. They rise one after another
+              while the pointer is on the wheel, and settle the same way when it leaves. */}
+            <span
+              aria-hidden="true"
+              className="text-foreground pointer-events-none absolute -top-3.5 left-1/2 flex -translate-x-1/2 items-center gap-1.5"
+            >
+              <SoundOnIcon className={hintIcon} />
+              <ArrowRightIcon
+                className={cn(hintIcon, "size-3.5")}
+                style={{ transitionDelay: "80ms" }}
+              />
+              <WearHeadphonesIcon
+                className={hintIcon}
+                style={{ transitionDelay: "160ms" }}
+              />
+            </span>
+          </span>
+
+          {/* Beside the wheel rather than under it: a lever hangs off the side of the
+              machine it belongs to. It does exactly what pressing the wheel does. */}
+          {!isCorner && (
+            <button
+              type="button"
+              onClick={pullLever}
+              aria-disabled={!canSpin}
+              aria-label={translateElection("lever")}
+              className={cn(
+                "self-center",
+                canSpin ? "cursor-pointer" : "cursor-default",
+              )}
+            >
+              <Lever isPulled={isLeverPulled} />
+            </button>
+          )}
         </div>
+
+        {/* Only where the wheel is the page: in the corner there is no room for a clock,
+            and the tooltip already says the tally is spent. */}
+        {!isCorner && spinsLeft === 0 && (
+          <div className="mt-4 text-center">
+            <NextSpinCountdown />
+          </div>
+        )}
       </div>
 
       {celebrated && (
@@ -585,6 +726,23 @@ export function ElectionWheel({
             >
               {celebrated.name}
             </p>
+
+            {/* Their own face, as big as the name above it and ringed in the party's
+                colour: this is who the wheel just made a voter of. The ring takes
+                currentColor, so it can be the party's own literal rather than a token
+                that knows nothing about it. */}
+            {viewerName && (
+              <span
+                className="inline-block rounded-full ring-4 ring-current"
+                style={{ color: celebrated.color }}
+              >
+                <MemberAvatar
+                  fullName={viewerName}
+                  avatarUrl={viewerAvatarUrl}
+                  className="size-24 text-3xl sm:size-32 sm:text-4xl"
+                />
+              </span>
+            )}
           </div>
 
           <Confetti seed={rotation} />

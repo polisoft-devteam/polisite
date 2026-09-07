@@ -9,7 +9,8 @@
     "about": "About",
     "menu": "Menu",
     "archive": "Open archive",
-    "close": "Close"
+    "close": "Close",
+    "election": "Val 2026"
   },
   "Home": {
     "title": "Welcome",
@@ -101,6 +102,9 @@
     "fieldEventUrl": "Link with info about the event",
     "fieldExtraLinkUrl": "Extra link",
     "fieldExtraLinkUrlHint": "Trailer, route map, playlist …",
+    "fieldSpotifyUrl": "Spotify",
+    "fieldSpotifyUrlHint": "Playlist, album or track. The player shows on the event page.",
+    "spotifyTitle": "The music",
     "fieldVisibility": "Attendees and visibility",
     "fieldReminders": "Discord reminders",
     "fieldRemindersHint": "Pick at most two.",
@@ -126,7 +130,7 @@
     "spotsLeft": "{count} spots left",
     "full": "Full",
     "createdBy": "Created by",
-    "moreInfo": "More information",
+    "moreInfo": "More info/tickets",
     "extraLink": "Extra link",
     "rsvpGoing": "I'm going",
     "rsvpInterested": "Maybe",
@@ -205,7 +209,11 @@
     "membersOnlyReadMore": "About membership",
     "membersOnlyBody": "A fair amount is behind lock and key here, for your safety and ours. Sign in with Google and send a request. An admin lets you in, and only then do you see the association's own events, members and wishlists. Until then you see the same page as a visitor, more or less.",
     "membersOnlyApply": "Apply for membership",
-    "membersOnlyPendingPill": "Membership pending"
+    "membersOnlyPendingPill": "Membership pending",
+    "formInvalid": "Something is off, so the event was not created. Have a look at this:",
+    "publishing": "Publishing …",
+    "saving": "Saving …",
+    "createAnother": "Create another"
   },
   "Calendar": {
     "title": "Calendar",
@@ -465,6 +473,16 @@
     "tooltipSpent": "You have had your spins. It is {party} until the election is over. Come back in 4 years.",
     "tooltipSpentGuest": "That was your one spin. Sign in and you get three new ones.",
     "tuckAway": "Push the wheel aside",
-    "bringBack": "Bring the wheel back"
+    "bringBack": "Bring the wheel back",
+    "pageTitle": "Val 2026",
+    "pageEyebrow": "The election wheel",
+    "pageIntro": "The wheel decides, you obey. One spin a day, and whatever you land on joins the standings below.",
+    "pageClosed": "The election is over. The wheel has stopped, the standings have not.",
+    "standingsTitle": "The standings",
+    "standingsEmpty": "Nobody has spun yet. Be the first.",
+    "standingsMembersOnly": "The standings are for members.",
+    "voteCount": "{count, plural, one {# vote} other {# votes}}",
+    "lever": "Pull the lever",
+    "nextSpinIn": "Next spin in {time}"
   }
 }

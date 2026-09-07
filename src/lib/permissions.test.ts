@@ -78,6 +78,7 @@ function buildEvent(overrides: Partial<Event> = {}): Event {
     imageUrl: null,
     eventUrl: null,
     extraLinkUrl: null,
+    spotifyUrl: null,
     visibility: "members",
     createdByMemberId: "member-1",
     cancelledAt: null,

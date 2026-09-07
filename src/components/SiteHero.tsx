@@ -33,6 +33,7 @@ export async function SiteHero() {
       tagline={translateHome("heroTagline", {
         associationName: ASSOCIATION_NAME,
       })}
+      strongTagline
     >
       {/* Asks for whatever you can actually do next; see HeroActionButton. Someone who
           has already applied gets the pending pill instead of a button. */}

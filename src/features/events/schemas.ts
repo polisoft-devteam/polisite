@@ -9,6 +9,7 @@ import {
   eventVisibilityEnum,
   reminderOffsetEnum,
 } from "@/db/schema"
+import { isEmbeddableSpotifyUrl } from "@/lib/spotify"
 import { COMMON_EVENT_TIME_ZONES, MAX_REMINDERS_PER_EVENT } from "@/lib/time"
 
 export const EVENT_CURRENCIES = ["SEK", "DKK", "NOK", "EUR", "GBP"] as const
@@ -86,6 +87,13 @@ export const eventFormSchema = z
     eventUrl: optionalUrl,
     extraLinkUrl: optionalUrl,
 
+    // Refused rather than shown as a dead box: the page embeds this, so a link the player
+    // cannot open is worse than no link at all.
+    spotifyUrl: optionalUrl.refine(
+      (value) => value === null || isEmbeddableSpotifyUrl(value),
+      "Must be a Spotify link to a playlist, album, track or episode",
+    ),
+
     visibility: z.enum(eventVisibilityEnum.enumValues),
 
     reminderOffsets: z
@@ -148,6 +156,7 @@ export function readEventForm(formData: FormData) {
     maxAttendees: readText("maxAttendees"),
     eventUrl: readText("eventUrl"),
     extraLinkUrl: readText("extraLinkUrl"),
+    spotifyUrl: readText("spotifyUrl"),
     visibility: readText("visibility"),
     dateOptions: formData.getAll("dateOptions").map(String),
     reminderOffsets: formData.getAll("reminderOffsets").map(String),
