@@ -8,6 +8,7 @@
 
 export {
   ArrowLeft as ArrowLeftIcon,
+  ArrowRight as ArrowRightIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   ChevronDown as ChevronDownIcon,
@@ -44,6 +45,8 @@ export {
   Images as PhotosIcon,
   Palette as DesignIcon,
   Brush as PaletteBrushIcon,
+  VolumeUpFill as SoundOnIcon,
+  Earbuds as WearHeadphonesIcon,
   Camera2 as AddToArchiveIcon,
   SlashCircle as NotYetIcon,
   FolderFill as DriveIcon,

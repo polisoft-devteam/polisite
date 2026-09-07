@@ -18,6 +18,7 @@ import { signOut } from "@/app/auth/actions"
 import { SignInButton } from "@/components/SignInButton"
 import { HoverRevealLabel } from "@/components/HoverRevealLabel"
 import { MemberAvatar } from "@/components/MemberAvatar"
+import { PartyNameSuffix } from "@/components/PartyNameSuffix"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
 import { SignOutIcon } from "@/lib/icons"
@@ -72,7 +73,15 @@ export async function AuthMenu() {
           aria-label={displayName}
           className="hover:text-foreground text-muted-foreground group/reveal flex cursor-pointer items-center gap-1.5 rounded-md transition-colors"
         >
-          <HoverRevealLabel icon={identity} label={displayName} />
+          <HoverRevealLabel
+            icon={identity}
+            label={
+              <>
+                {displayName}
+                <PartyNameSuffix />
+              </>
+            }
+          />
         </Link>
       ) : (
         <span

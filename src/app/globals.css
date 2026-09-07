@@ -292,6 +292,19 @@
   animation: none;
 }
 
+/* The wheel in the corner belongs to no page, so it sits the transition out where the
+   header does, rather than being carried off with the page it happened to be over. */
+::view-transition-group(election-wheel) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(election-wheel) {
+  display: none;
+}
+::view-transition-new(election-wheel) {
+  animation: none;
+}
+
 /* The transition overlay would otherwise swallow clicks mid-animation. */
 ::view-transition {
   pointer-events: none;

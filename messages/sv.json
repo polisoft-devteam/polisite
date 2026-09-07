@@ -453,5 +453,18 @@
   "Palette": {
     "open": "Byt färgtema",
     "reset": "Tillbaka till standard"
+  },
+  "Election": {
+    "ribbon": "Valhjulet",
+    "prompt": "Vem ska du rösta på?",
+    "verdict": "Du ska rösta på:",
+    "spin": "Snurra valhjulet, {count, plural, =1 {ett snurr kvar} other {# snurr kvar}}",
+    "spent": "Inga snurr kvar",
+    "tooltipUnspun": "Snurra och se vad du blir. {count, plural, =1 {Ett snurr kvar} other {# snurr kvar}}.",
+    "tooltipSpun": "Du är nu {party}. {count, plural, =1 {Ett snurr kvar} other {# snurr kvar}}. Vågar du riskera att bli landsförrädare eller rasist?",
+    "tooltipSpent": "Du har snurrat klart. Det blir {party} tills valet är över. Kom tillbaka om 4 år.",
+    "tooltipSpentGuest": "Ditt snurr är använt. Logga in så får du tre nya.",
+    "tuckAway": "Skjut undan hjulet",
+    "bringBack": "Ta fram hjulet"
   }
 }

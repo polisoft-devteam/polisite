@@ -18,32 +18,39 @@ export async function SiteHeader() {
   const showSignOut = viewer !== null
 
   return (
-    <header
-      // Named so the CSS can hold it still while the page content slides beneath it.
-      style={{ viewTransitionName: "site-header" }}
-      className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur"
-    >
-      <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-1 px-4 sm:gap-2 xl:h-16 2xl:max-w-7xl">
-        <Link href="/" transitionTypes={["nav-back"]} className="mr-1 sm:mr-2">
-          <Wordmark />
-        </Link>
+    <>
+      <header
+        // Named so the CSS can hold it still while the page content slides beneath it.
+        style={{ viewTransitionName: "site-header" }}
+        className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur"
+      >
+        <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-1 px-4 sm:gap-2 xl:h-16 2xl:max-w-7xl">
+          <Link
+            href="/"
+            transitionTypes={["nav-back"]}
+            className="mr-1 sm:mr-2"
+          >
+            <Wordmark />
+          </Link>
 
-        <MainNav showAdminLink={showAdminLink} />
+          <MainNav showAdminLink={showAdminLink} />
 
-        <div className="ml-auto flex items-center gap-1">
-          <LanguageToggle />
-          <ThemeToggle />
-          {/* Beside the theme toggle: the two of them are what the site looks like. */}
-          <PaletteSwitcher />
-          <AuthMenu />
-          <div className="md:hidden">
-            <MobileNav
-              showAdminLink={showAdminLink}
-              showSignOut={showSignOut}
-            />
+          <div className="ml-auto flex items-center gap-1">
+            <LanguageToggle />
+            <ThemeToggle />
+            {/* Beside the theme toggle: the two of them are what the site looks like. */}
+            <PaletteSwitcher />
+            <AuthMenu />
           </div>
         </div>
+      </header>
+
+      {/* Outside the header on purpose: the header's backdrop blur makes it a containing
+          block, so a fixed button inside it anchors to the header rather than the screen
+          and never reaches the bottom. */}
+      <div className="md:hidden">
+        <MobileNav showAdminLink={showAdminLink} showSignOut={showSignOut} />
       </div>
-    </header>
+    </>
   )
 }

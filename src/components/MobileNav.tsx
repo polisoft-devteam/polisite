@@ -1,6 +1,16 @@
-// The site navigation on a phone: a hamburger at the end of the header that slides a panel
-// in from the right with every link in it. Shown only below `md`, where MainNav has no
-// room for them.
+// The site navigation on a phone: a hamburger floating at the bottom of the screen that
+// raises a sheet with every link in it. Shown only below `md`, where MainNav has no room
+// for them.
+//
+// At the bottom because that is where a thumb is. The top right corner of a modern phone
+// is the furthest point from it, and the menu is the one control people reach for most.
+//
+// Fixed to the screen, so it cannot live inside the header: the header has a backdrop blur,
+// which makes it a containing block, and a fixed child of it anchors to the header rather
+// than the screen. SiteHeader renders this as a sibling for that reason.
+//
+// Everything is held clear of the home indicator with env(safe-area-inset-bottom). Without
+// it the button sits under the bar iOS draws across the bottom of the screen.
 //
 // A panel rather than a dropdown because the list has grown: a small floating box made
 // each link a tiny target and the whole menu easy to dismiss by accident. Built on the
@@ -96,9 +106,10 @@ export function MobileNav({
       <DialogTrigger
         render={
           <Button
-            variant="ghost"
-            size="icon-sm"
+            variant="secondary"
+            size="icon"
             aria-label={translateNav("menu")}
+            className="ring-border fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-50 size-12 rounded-full shadow-lg ring-1"
           />
         }
       >
@@ -113,7 +124,9 @@ export function MobileNav({
 
         <DialogPrimitive.Popup
           data-slot="nav-drawer"
-          className="bg-popover text-popover-foreground ring-foreground/10 data-open:animate-in data-open:slide-in-from-right data-closed:animate-out data-closed:slide-out-to-right fixed inset-y-0 right-0 z-60 flex w-72 max-w-[85vw] flex-col gap-1 p-4 ring-1 duration-300 outline-none"
+          // Rises from the bottom, where the button that opened it is. Capped so a long
+          // list scrolls inside the sheet rather than pushing it off the top.
+          className="bg-popover text-popover-foreground ring-foreground/10 data-open:animate-in data-open:slide-in-from-bottom data-closed:animate-out data-closed:slide-out-to-bottom fixed inset-x-0 bottom-0 z-60 flex max-h-[85svh] flex-col gap-1 overflow-y-auto rounded-t-2xl p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] ring-1 duration-300 outline-none"
         >
           <div className="mb-2 flex items-center justify-between">
             <DialogTitle className="text-muted-foreground text-xs tracking-wide uppercase">

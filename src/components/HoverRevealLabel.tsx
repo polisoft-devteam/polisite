@@ -20,7 +20,7 @@ export function HoverRevealLabel({
   className,
 }: {
   icon: React.ReactNode
-  label: string
+  label: React.ReactNode
   className?: string
 }) {
   return (

@@ -5,13 +5,16 @@ import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { BrandGradientDefs } from "@/components/BrandGradientDefs"
+import { ElectionWheelGate } from "@/components/ElectionWheelGate"
 import { PaletteLoader } from "@/components/PaletteLoader"
 import { MembershipPrompt } from "@/components/MembershipPrompt"
 import { SiteFooter } from "@/components/SiteFooter"
 import { SiteHeader } from "@/components/SiteHeader"
+import { ViewerMemberProvider } from "@/components/ViewerMemberProvider"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { routing } from "@/i18n/routing"
 import { ASSOCIATION_NAME } from "@/lib/association"
+import { getViewer } from "@/lib/auth"
 import { getSiteUrl } from "@/lib/site-url"
 
 import "../globals.css"
@@ -71,6 +74,10 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale)
 
+  // Cached per request, so the header and the pages asking the same question cost nothing
+  // extra. Only the id crosses to the browser; see ViewerMemberProvider.
+  const viewer = await getViewer()
+
   return (
     <html
       lang={locale}
@@ -82,14 +89,19 @@ export default async function LocaleLayout({
           {/* No disableTransitionOnChange: it injects `transition: none` on everything
               while the theme switches, which also flattens the toggle's own animation. */}
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {/* Puts a palette experiment back on after a reload; see PaletteLoader.
+            <ViewerMemberProvider memberId={viewer?.member?.id ?? null}>
+              {/* Puts a palette experiment back on after a reload; see PaletteLoader.
                 Renders nothing unless somebody is trying a colour. */}
-            <PaletteLoader />
-            <BrandGradientDefs />
-            <SiteHeader />
-            <main className="flex-1">{children}</main>
-            <SiteFooter />
-            <MembershipPrompt />
+              <PaletteLoader />
+              <BrandGradientDefs />
+              <SiteHeader />
+              <main className="flex-1">{children}</main>
+              <SiteFooter />
+              <MembershipPrompt />
+              {/* Every page, so the wheel is where you are rather than only on the handful
+                of routes that live under (member). It shows itself to nobody else. */}
+              <ElectionWheelGate />
+            </ViewerMemberProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

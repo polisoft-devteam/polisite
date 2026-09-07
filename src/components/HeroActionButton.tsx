@@ -24,9 +24,9 @@ import { canCreateEvent, isActiveMember } from "@/lib/permissions"
 
 // Bigger than anything else on the site, but a hero is not a billboard.
 //
-// The site's own button, only larger. Full width on a phone so the whole thing is the tap
-// target rather than the words in the middle of it.
-const HERO_BUTTON = "h-12 w-full gap-2 px-7 text-base sm:w-auto"
+// The site's own button, only larger, and no wider than its words on any screen: stretched
+// across a phone it read as a banner rather than as something to press.
+const HERO_BUTTON = "h-12 gap-2 px-7 text-base"
 
 export async function HeroActionButton() {
   const translateHome = await getTranslations("Home")

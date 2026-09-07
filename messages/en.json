@@ -453,5 +453,18 @@
   "Palette": {
     "open": "Change colour theme",
     "reset": "Back to the default"
+  },
+  "Election": {
+    "ribbon": "Election wheel",
+    "prompt": "Who are you voting for?",
+    "verdict": "You are voting for:",
+    "spin": "Spin the wheel, {count, plural, one {# spin left} other {# spins left}}",
+    "spent": "No spins left",
+    "tooltipUnspun": "Spin and see what you become. {count, plural, one {# spin left} other {# spins left}}.",
+    "tooltipSpun": "You are now {party}. {count, plural, one {# spin left} other {# spins left}}. Dare you risk becoming a landsförrädare or a rasist?",
+    "tooltipSpent": "You have had your spins. It is {party} until the election is over. Come back in 4 years.",
+    "tooltipSpentGuest": "That was your one spin. Sign in and you get three new ones.",
+    "tuckAway": "Push the wheel aside",
+    "bringBack": "Bring the wheel back"
   }
 }
