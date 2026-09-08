@@ -10,7 +10,17 @@
  */
 export function getSiteUrl(): string {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim()
-  if (configured) return configured.replace(/\/$/, "")
+
+  if (configured) {
+    // A hostname typed without its scheme is the easy mistake, and an unforgiving one: the
+    // layout builds metadataBase with new URL(), which throws on "polisoft.se" and takes
+    // every page on the site down with it, including the ones on the old address.
+    const withScheme = /^https?:\/\//.test(configured)
+      ? configured
+      : `https://${configured}`
+
+    return withScheme.replace(/\/$/, "")
+  }
 
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
 

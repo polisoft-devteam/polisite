@@ -489,5 +489,13 @@
     "lever": "Dra i spaken",
     "nextSpinIn": "Nästa snurr om {time}",
     "signInToSpin": "Logga in med Google så får du tre snurr."
+  },
+  "Errors": {
+    "serverTitle": "Något gick sönder",
+    "serverBody": "Sidan kunde inte laddas. Försök igen, eller kom tillbaka om en stund.",
+    "retry": "Försök igen",
+    "home": "Till startsidan",
+    "notFoundTitle": "Ojoj!",
+    "notFoundBody": "Nu kom du lidt galt, men kryp du ner här så länge tills du hittat rätt."
   }
 }

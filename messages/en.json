@@ -489,5 +489,13 @@
     "lever": "Pull the lever",
     "nextSpinIn": "Next spin in {time}",
     "signInToSpin": "Sign in with Google and you get three spins."
+  },
+  "Errors": {
+    "serverTitle": "Something broke",
+    "serverBody": "The page could not be loaded. Try again, or come back in a while.",
+    "retry": "Try again",
+    "home": "Back to the front page",
+    "notFoundTitle": "Wrong turn!",
+    "notFoundBody": "This is not where you parked your car. Jump in while you find your way back."
   }
 }

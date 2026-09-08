@@ -8,6 +8,13 @@ const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
 
 const nextConfig: NextConfig = {
   experimental: {
+    // Lets app/global-not-found.tsx answer a URL that matches no route at all. Without
+    // it, Next wraps such a page in a default layout of its own, and a page that brings
+    // its own <html> — which it must, to carry the stylesheet — collides with it and
+    // hydration fails. Documented for exactly this case: a root layout that lives under a
+    // dynamic segment, which ours does, at app/[locale].
+    globalNotFound: true,
+
     serverActions: {
       // A photo is posted through a server action, and the default cap is 1 MB, which a
       // phone photo passes before it reaches lib/storage.ts to be resized. Kept a little
