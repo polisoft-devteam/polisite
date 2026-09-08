@@ -12,6 +12,7 @@
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:ping": "tsx --env-file=.env.local scripts/ping-db.mts",
     "db:studio": "drizzle-kit studio",
     "member": "tsx --env-file=.env.local scripts/set-member.mts",
     "discord:test": "tsx --env-file=.env.local scripts/test-discord.mts",

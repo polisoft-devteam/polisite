@@ -895,6 +895,31 @@ a[href] {
   }
 }
 
+/* --- The error screens ---------------------------------------------------------
+   The code, the line under it and the way back arrive one after another rather than
+   all at once: a page that assembles itself reads as deliberate, where the same
+   words appearing in one blink read as a crash. Each element sets its own delay.
+
+   backwards, so an element holds its starting position through its delay instead of
+   flashing at full opacity and then dropping back to animate. */
+
+@keyframes error-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+}
+
+.error-rise {
+  animation: error-rise 620ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .error-rise {
+    animation: none;
+  }
+}
+
 /* --- Wearing the brand ---------------------------------------------------------
    Three ways to carry the brand, each falling back to the solid colour when no
    gradient palette is on, so every one of these costs nothing on a plain palette.
