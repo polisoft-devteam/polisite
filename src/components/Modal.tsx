@@ -31,6 +31,8 @@ import { cn } from "@/lib/utils"
 export function Modal({
   trigger,
   defaultOpen = false,
+  open,
+  onOpenChange,
   title,
   description,
   footer,
@@ -44,6 +46,9 @@ export function Modal({
   trigger?: React.ReactNode
   /** Opens as soon as it renders — for a welcome or announcement. */
   defaultOpen?: boolean
+  /** Driven from outside, for a modal raised by something other than a press. */
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   title: string
   /** Read out with the title by screen readers; keep it to a sentence. */
   description?: string
@@ -64,7 +69,7 @@ export function Modal({
   const panelRef = useRef<HTMLDivElement>(null)
 
   return (
-    <Dialog defaultOpen={defaultOpen}>
+    <Dialog defaultOpen={defaultOpen} open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger render={trigger as React.ReactElement} />}
 
       <DialogContent

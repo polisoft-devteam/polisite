@@ -213,7 +213,11 @@
     "formInvalid": "Något stämmer inte, så eventet är inte skapat. Se över det här:",
     "publishing": "Publicerar …",
     "saving": "Sparar …",
-    "createAnother": "Skapa ett annat"
+    "createAnother": "Skapa ett annat",
+    "unsavedTitle": "Du har inte publicerat än",
+    "unsavedBody": "Lämnar du sidan försvinner det du har skrivit.",
+    "unsavedLeave": "Lämna ändå",
+    "unsavedStay": "Stanna kvar"
   },
   "Calendar": {
     "title": "Kalender",
@@ -471,7 +475,7 @@
     "tooltipUnspun": "Snurra och se vad du blir. {count, plural, =1 {Ett snurr kvar} other {# snurr kvar}}.",
     "tooltipSpun": "Du är nu {party}. {count, plural, =1 {Ett snurr kvar} other {# snurr kvar}}. Vågar du riskera att bli landsförrädare eller rasist?",
     "tooltipSpent": "Du har snurrat klart. Det blir {party} tills valet är över. Kom tillbaka om 4 år.",
-    "tooltipSpentGuest": "Ditt snurr är använt. Logga in så får du tre nya.",
+    "tooltipSignedOut": "Logga in med Google för att snurra hjulet.",
     "tuckAway": "Skjut undan hjulet",
     "bringBack": "Ta fram hjulet",
     "pageTitle": "Val 2026",
@@ -483,6 +487,7 @@
     "standingsMembersOnly": "Ställningen är för medlemmar.",
     "voteCount": "{count, plural, =1 {en röst} other {# röster}}",
     "lever": "Dra i spaken",
-    "nextSpinIn": "Nästa snurr om {time}"
+    "nextSpinIn": "Nästa snurr om {time}",
+    "signInToSpin": "Logga in med Google så får du tre snurr."
   }
 }

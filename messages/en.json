@@ -213,7 +213,11 @@
     "formInvalid": "Something is off, so the event was not created. Have a look at this:",
     "publishing": "Publishing …",
     "saving": "Saving …",
-    "createAnother": "Create another"
+    "createAnother": "Create another",
+    "unsavedTitle": "You have not published yet",
+    "unsavedBody": "Leave the page and what you have written is gone.",
+    "unsavedLeave": "Leave anyway",
+    "unsavedStay": "Stay here"
   },
   "Calendar": {
     "title": "Calendar",
@@ -471,7 +475,7 @@
     "tooltipUnspun": "Spin and see what you become. {count, plural, one {# spin left} other {# spins left}}.",
     "tooltipSpun": "You are now {party}. {count, plural, one {# spin left} other {# spins left}}. Dare you risk becoming a landsförrädare or a rasist?",
     "tooltipSpent": "You have had your spins. It is {party} until the election is over. Come back in 4 years.",
-    "tooltipSpentGuest": "That was your one spin. Sign in and you get three new ones.",
+    "tooltipSignedOut": "Sign in with Google to spin the wheel.",
     "tuckAway": "Push the wheel aside",
     "bringBack": "Bring the wheel back",
     "pageTitle": "Val 2026",
@@ -483,6 +487,7 @@
     "standingsMembersOnly": "The standings are for members.",
     "voteCount": "{count, plural, one {# vote} other {# votes}}",
     "lever": "Pull the lever",
-    "nextSpinIn": "Next spin in {time}"
+    "nextSpinIn": "Next spin in {time}",
+    "signInToSpin": "Sign in with Google and you get three spins."
   }
 }

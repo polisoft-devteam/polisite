@@ -4,6 +4,11 @@
 // filled in with today, so the poll can't be the side that gives way — adding a poll date
 // is the deliberate act, and it greys the fixed date out. Disabled inputs are left out of
 // FormData, so the server receives one answer or the other and never both.
+//
+// Moving the start drags the end along with it, keeping however long the event was. Left
+// alone, an end still sitting on the day the form opened is a month before a start moved
+// into October, and the server refuses the pair — correctly, and uselessly, because
+// nobody typed that end date on purpose.
 
 "use client"
 
@@ -50,6 +55,33 @@ export function EventWhenField({
   const [startsAt, setStartsAt] = useState(defaultStartsAt)
   const [endsAt, setEndsAt] = useState(defaultEndsAt)
 
+  /** Moves the end by however far the start moved, so the length of the event survives. */
+  function moveStart(newStartsAt: string) {
+    const previousStart = Date.parse(startsAt)
+    const nextStart = Date.parse(newStartsAt)
+    const currentEnd = Date.parse(endsAt)
+
+    setStartsAt(newStartsAt)
+
+    if (!endsAt || Number.isNaN(currentEnd)) return
+    if (Number.isNaN(previousStart) || Number.isNaN(nextStart)) return
+
+    const shifted = new Date(currentEnd + (nextStart - previousStart))
+
+    // Written back in the same wall-clock form the input speaks, and in the same zone it
+    // was read in: both sides of this arithmetic are local strings.
+    setEndsAt(
+      `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, "0")}-${String(
+        shifted.getDate(),
+      ).padStart(
+        2,
+        "0",
+      )}T${String(shifted.getHours()).padStart(2, "0")}:${String(
+        shifted.getMinutes(),
+      ).padStart(2, "0")}`,
+    )
+  }
+
   // Rows carry an id so removing one doesn't renumber the others' keys.
   const [pollRows, setPollRows] = useState(() =>
     defaultDateOptions.map((value, index) => ({ id: index, value })),
@@ -83,7 +115,7 @@ export function EventWhenField({
             // poll has something in it. Cross-field rules can't be expressed in HTML.
             required={!hasPollDates}
             disabled={hasPollDates}
-            onChange={(event) => setStartsAt(event.target.value)}
+            onChange={(event) => moveStart(event.target.value)}
           />
         </FormField>
 
@@ -98,6 +130,9 @@ export function EventWhenField({
             type="datetime-local"
             className={DATE_INPUT}
             value={endsAt}
+            // The picker will not offer anything before the start, so the pair can only
+            // be wrong by typing it out in full.
+            min={startsAt || undefined}
             disabled={hasPollDates}
             onChange={(event) => setEndsAt(event.target.value)}
           />

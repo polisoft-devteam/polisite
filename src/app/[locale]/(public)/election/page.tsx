@@ -14,15 +14,12 @@ import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { PhotoHero } from "@/components/PhotoHero"
 import { PageSection } from "@/components/PageSection"
+import { SignInButton } from "@/components/SignInButton"
 import { recordElectionPickAction } from "@/features/election/actions"
 import { findElectionVotes } from "@/features/election/queries"
 import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
 import { getViewer } from "@/lib/auth"
-import {
-  isElectionOpen,
-  SPINS_SIGNED_IN,
-  SPINS_SIGNED_OUT,
-} from "@/lib/election"
+import { isElectionOpen, SPINS_ON_FIRST_DAY } from "@/lib/election"
 import { canViewMemberDirectory, isActiveMember } from "@/lib/permissions"
 import { readElectionImages, readPartyImages } from "@/lib/site-images"
 
@@ -100,7 +97,7 @@ export default async function ElectionPage({
                     ? "signedIn"
                     : "guest"
               }
-              maxSpins={viewer ? SPINS_SIGNED_IN : SPINS_SIGNED_OUT}
+              maxSpins={SPINS_ON_FIRST_DAY}
               isSignedOut={!viewer}
               viewerName={viewer ? viewerDisplayName(viewer) : null}
               viewerAvatarUrl={viewer ? viewerAvatarUrl(viewer) : null}
@@ -108,6 +105,17 @@ export default async function ElectionPage({
                 isActiveMember(viewer) ? recordElectionPickAction : undefined
               }
             />
+
+            {/* The wheel is there to be looked at either way. The spin is the part that
+                needs a name behind it. */}
+            {!viewer && (
+              <div className="mt-6 flex flex-col items-center gap-2">
+                <p className="text-muted-foreground text-sm">
+                  {translateElection("signInToSpin")}
+                </p>
+                <SignInButton />
+              </div>
+            )}
           </div>
         )}
 

@@ -358,6 +358,25 @@ export default async function EventPage({
                     : translateEvents("full")}
               </Fact>
             </FactList>
+
+            {/* At the foot of the details, where a ticket link belongs: it is one of the
+                facts about the evening, not a footnote to the page. */}
+            {(event.eventUrl || event.extraLinkUrl) && (
+              <div className="border-border flex flex-wrap gap-4 border-t pt-4 text-sm">
+                {event.eventUrl && (
+                  <ExternalLink href={event.eventUrl}>
+                    <TicketIcon className="size-3.5" />
+                    {translateEvents("moreInfo")}
+                  </ExternalLink>
+                )}
+                {event.extraLinkUrl && (
+                  <ExternalLink href={event.extraLinkUrl}>
+                    <ExternalLinkIcon className="size-3.5" />
+                    {translateEvents("extraLink")}
+                  </ExternalLink>
+                )}
+              </div>
+            )}
           </div>
 
           {pollFitsBeside && datePoll}
@@ -366,23 +385,6 @@ export default async function EventPage({
         {!event.isOnline && event.location && (
           <div className="mt-6">
             <EventMap location={event.location} />
-          </div>
-        )}
-
-        {(event.eventUrl || event.extraLinkUrl) && (
-          <div className="mt-6 flex flex-wrap gap-4 text-sm">
-            {event.eventUrl && (
-              <ExternalLink href={event.eventUrl}>
-                <TicketIcon className="size-3.5" />
-                {translateEvents("moreInfo")}
-              </ExternalLink>
-            )}
-            {event.extraLinkUrl && (
-              <ExternalLink href={event.extraLinkUrl}>
-                <ExternalLinkIcon className="size-3.5" />
-                {translateEvents("extraLink")}
-              </ExternalLink>
-            )}
           </div>
         )}
 
