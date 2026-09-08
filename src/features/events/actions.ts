@@ -23,6 +23,7 @@ import {
   updateEvent,
 } from "@/features/events/queries"
 import {
+  type EventFormInput,
   eventFormSchema,
   guestFormSchema,
   MAX_GUESTS_PER_MEMBER,
@@ -48,19 +49,24 @@ import { wallTimeToInstant } from "@/lib/time"
 import { attendanceResponseEnum } from "@/db/schema"
 
 export async function createEventAction(
-  _previous: FormFeedback,
+  _previous: FormFeedback<EventFormInput>,
   formData: FormData,
-): Promise<FormFeedback> {
+): Promise<FormFeedback<EventFormInput>> {
   const viewer = await getViewer()
 
   if (!canCreateEvent(viewer)) throw new Error("Not allowed to create events")
 
-  const parsed = eventFormSchema.safeParse(readEventForm(formData))
+  const submitted = readEventForm(formData)
+  const parsed = eventFormSchema.safeParse(submitted)
 
   // Handed back rather than swallowed: a silent return left the form reset, the event
-  // uncreated and nobody any the wiser.
+  // uncreated and nobody any the wiser. The values go with it so nothing has to be typed
+  // twice.
   if (!parsed.success) {
-    return { fieldErrors: z.flattenError(parsed.error).fieldErrors }
+    return {
+      fieldErrors: z.flattenError(parsed.error).fieldErrors,
+      values: submitted,
+    }
   }
 
   const form = parsed.data
@@ -141,9 +147,9 @@ export async function createEventAction(
 }
 
 export async function updateEventAction(
-  _previous: FormFeedback,
+  _previous: FormFeedback<EventFormInput>,
   formData: FormData,
-): Promise<FormFeedback> {
+): Promise<FormFeedback<EventFormInput>> {
   const viewer = await getViewer()
   const eventId = String(formData.get("eventId") ?? "")
 
@@ -156,10 +162,14 @@ export async function updateEventAction(
     throw new Error("Not allowed to edit this event")
   }
 
-  const parsed = eventFormSchema.safeParse(readEventForm(formData))
+  const submitted = readEventForm(formData)
+  const parsed = eventFormSchema.safeParse(submitted)
 
   if (!parsed.success) {
-    return { fieldErrors: z.flattenError(parsed.error).fieldErrors }
+    return {
+      fieldErrors: z.flattenError(parsed.error).fieldErrors,
+      values: submitted,
+    }
   }
 
   const form = parsed.data

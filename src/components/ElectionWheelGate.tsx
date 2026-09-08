@@ -14,11 +14,7 @@ import { ElectionWheel } from "@/components/ElectionWheel"
 import { recordElectionPickAction } from "@/features/election/actions"
 import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
 import { getViewer } from "@/lib/auth"
-import {
-  isElectionOpen,
-  SPINS_SIGNED_IN,
-  SPINS_SIGNED_OUT,
-} from "@/lib/election"
+import { isElectionOpen, SPINS_ON_FIRST_DAY } from "@/lib/election"
 import { isActiveMember } from "@/lib/permissions"
 
 export async function ElectionWheelGate() {
@@ -35,7 +31,7 @@ export async function ElectionWheelGate() {
   return (
     <ElectionWheel
       identity={identity}
-      maxSpins={viewer ? SPINS_SIGNED_IN : SPINS_SIGNED_OUT}
+      maxSpins={SPINS_ON_FIRST_DAY}
       isSignedOut={!viewer}
       // Their own face under the result, so the party lands on somebody rather than in
       // the air. Nothing to show for a visitor who has not signed in.

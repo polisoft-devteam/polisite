@@ -12,8 +12,12 @@
 // own. Leaving the page is meant to lose them: a form that reopens holding the last event
 // you created is worse than one that starts empty.
 
-import { getTranslations } from "next-intl/server"
+"use client"
 
+import { useActionState, useState } from "react"
+import { useTranslations } from "next-intl"
+
+import type { EventFormInput } from "@/features/events/schemas"
 import type { FormFeedback } from "@/lib/form-feedback"
 
 import { EventWhenField } from "@/components/EventWhenField"
@@ -23,6 +27,7 @@ import { EventCategoryField } from "@/components/EventCategoryField"
 import { EventLocationField } from "@/components/EventLocationField"
 import { FormField, FormSelect } from "@/components/FormField"
 import { ImageDropZone } from "@/components/ImageDropZone"
+import { UnsavedWorkGuard } from "@/components/UnsavedWorkGuard"
 import { Wizard, type WizardStep } from "@/components/Wizard"
 import { PublishEventIcon, SaveIcon } from "@/lib/icons"
 import {
@@ -39,6 +44,7 @@ import {
   eventVisibilityEnum,
   reminderOffsetEnum,
   type Event,
+  type EventCategory,
   type ReminderOffset,
 } from "@/db/schema"
 import {
@@ -58,7 +64,10 @@ import {
 } from "@/lib/time"
 
 type EventFormProps = {
-  action: (previous: FormFeedback, formData: FormData) => Promise<FormFeedback>
+  action: (
+    previous: FormFeedback<EventFormInput>,
+    formData: FormData,
+  ) => Promise<FormFeedback<EventFormInput>>
   submitLabel: string
   /** Absent when creating. */
   event?: Event
@@ -67,27 +76,42 @@ type EventFormProps = {
   dateOptions?: string[]
 }
 
-export async function EventForm({
+export function EventForm({
   action,
   submitLabel,
   event,
   reminderOffsets = [],
   dateOptions = [],
 }: EventFormProps) {
-  const translateEvents = await getTranslations("Events")
+  const translateEvents = useTranslations("Events")
+  const [feedback, formAction, isSubmitting] = useActionState(action, null)
 
-  const timeZone = event?.timeZone ?? DEFAULT_EVENT_TIME_ZONE
+  // Anything typed is worth a question before it is thrown away; see UnsavedWorkGuard.
+  const [hasTyped, setHasTyped] = useState(false)
+
+  // What was typed, when the server sent it back. React empties an uncontrolled form once
+  // its action returns, and the reset lands on whatever the fields' defaults say by then,
+  // so handing these back as the defaults is what saves the typing.
+  const submitted = feedback?.values
+
+  const timeZone =
+    submitted?.timeZone ?? event?.timeZone ?? DEFAULT_EVENT_TIME_ZONE
 
   // A new event opens on today and tomorrow. An existing one keeps what it has, including
   // the empty pair that means it runs on a date poll instead.
-  const defaultWhen = event
+  const defaultWhen = submitted
     ? {
-        startsAt: event.startsAt
-          ? instantToWallTime(event.startsAt, timeZone)
-          : "",
-        endsAt: event.endsAt ? instantToWallTime(event.endsAt, timeZone) : "",
+        startsAt: submitted.startsAtWallTime,
+        endsAt: submitted.endsAtWallTime,
       }
-    : defaultEventWallTimes(timeZone)
+    : event
+      ? {
+          startsAt: event.startsAt
+            ? instantToWallTime(event.startsAt, timeZone)
+            : "",
+          endsAt: event.endsAt ? instantToWallTime(event.endsAt, timeZone) : "",
+        }
+      : defaultEventWallTimes(timeZone)
 
   const steps: WizardStep[] = [
     {
@@ -99,7 +123,7 @@ export async function EventForm({
               <Input
                 id="title"
                 name="title"
-                defaultValue={event?.title ?? ""}
+                defaultValue={submitted?.title ?? event?.title ?? ""}
                 required
                 maxLength={140}
               />
@@ -107,7 +131,13 @@ export async function EventForm({
 
             <EventCategoryField
               label={translateEvents("fieldCategory")}
-              defaultValue={event?.category ?? "other"}
+              // Read back as a plain string; the schema is what decides whether it was
+              // one of ours, and it has already had its say by the time this renders.
+              defaultValue={
+                (submitted?.category as EventCategory | undefined) ??
+                event?.category ??
+                "other"
+              }
               options={eventCategoryEnum.enumValues.map((category) => ({
                 value: category,
                 label: translateEvents(EVENT_CATEGORY_LABEL_KEY[category]),
@@ -122,7 +152,7 @@ export async function EventForm({
             <Textarea
               id="description"
               name="description"
-              defaultValue={event?.description ?? ""}
+              defaultValue={submitted?.description ?? event?.description ?? ""}
               rows={4}
               maxLength={4000}
             />
@@ -146,7 +176,7 @@ export async function EventForm({
               name="eventUrl"
               type="url"
               placeholder="https://"
-              defaultValue={event?.eventUrl ?? ""}
+              defaultValue={submitted?.eventUrl ?? event?.eventUrl ?? ""}
             />
           </FormField>
 
@@ -160,7 +190,9 @@ export async function EventForm({
               name="extraLinkUrl"
               type="url"
               placeholder="https://"
-              defaultValue={event?.extraLinkUrl ?? ""}
+              defaultValue={
+                submitted?.extraLinkUrl ?? event?.extraLinkUrl ?? ""
+              }
             />
           </FormField>
         </>
@@ -177,8 +209,8 @@ export async function EventForm({
               onlineLabel={translateEvents("fieldIsOnline")}
               onlineHint={translateEvents("fieldIsOnlineHint")}
               placeholder={translateEvents("fieldLocationPlaceholder")}
-              defaultLocation={event?.location ?? ""}
-              defaultIsOnline={event?.isOnline ?? false}
+              defaultLocation={submitted?.location ?? event?.location ?? ""}
+              defaultIsOnline={submitted?.isOnline ?? event?.isOnline ?? false}
             />
 
             <FormField
@@ -202,7 +234,7 @@ export async function EventForm({
           <ExplainedSelectField
             name="kind"
             label={translateEvents("fieldKind")}
-            defaultValue={event?.kind ?? "confirmed"}
+            defaultValue={submitted?.kind ?? event?.kind ?? "confirmed"}
             options={eventKindEnum.enumValues.map((kind) => ({
               value: kind,
               label: translateEvents(EVENT_KIND_LABEL_KEY[kind]),
@@ -221,7 +253,7 @@ export async function EventForm({
             removeDateLabel={translateEvents("removeDateOption")}
             defaultStartsAt={defaultWhen.startsAt}
             defaultEndsAt={defaultWhen.endsAt}
-            defaultDateOptions={dateOptions}
+            defaultDateOptions={submitted?.dateOptions ?? dateOptions}
           />
         </>
       ),
@@ -235,7 +267,10 @@ export async function EventForm({
             legend={translateEvents("fieldReminders")}
             hint={translateEvents("fieldRemindersHint")}
             atLimitHint={translateEvents("fieldRemindersAtLimit")}
-            defaultSelected={reminderOffsets}
+            defaultSelected={
+              (submitted?.reminderOffsets as ReminderOffset[] | undefined) ??
+              reminderOffsets
+            }
             options={reminderOffsetEnum.enumValues.map((offset) => ({
               value: offset,
               label: translateEvents(REMINDER_OFFSET_LABEL_KEY[offset]),
@@ -260,7 +295,9 @@ export async function EventForm({
                   <ExplainedSelectField
                     name="visibility"
                     label={translateEvents("fieldVisibility")}
-                    defaultValue={event?.visibility ?? "members"}
+                    defaultValue={
+                      submitted?.visibility ?? event?.visibility ?? "members"
+                    }
                     options={eventVisibilityEnum.enumValues.map(
                       (visibility) => ({
                         value: visibility,
@@ -288,10 +325,11 @@ export async function EventForm({
                         step="1"
                         inputMode="decimal"
                         defaultValue={
-                          event?.priceMinorUnits !== null &&
+                          submitted?.price ??
+                          (event?.priceMinorUnits !== null &&
                           event?.priceMinorUnits !== undefined
                             ? String(event.priceMinorUnits / 100)
-                            : ""
+                            : "")
                         }
                       />
                     </FormField>
@@ -303,7 +341,9 @@ export async function EventForm({
                       <FormSelect
                         id="currency"
                         name="currency"
-                        defaultValue={event?.priceCurrency ?? "SEK"}
+                        defaultValue={
+                          submitted?.currency ?? event?.priceCurrency ?? "SEK"
+                        }
                       >
                         {EVENT_CURRENCIES.map((currency) => (
                           <option key={currency} value={currency}>
@@ -324,7 +364,9 @@ export async function EventForm({
                         type="number"
                         min="1"
                         step="1"
-                        defaultValue={event?.maxAttendees ?? ""}
+                        defaultValue={
+                          submitted?.maxAttendees ?? event?.maxAttendees ?? ""
+                        }
                       />
                     </FormField>
                   </div>
@@ -339,7 +381,9 @@ export async function EventForm({
                       name="spotifyUrl"
                       type="url"
                       placeholder="https://open.spotify.com/playlist/…"
-                      defaultValue={event?.spotifyUrl ?? ""}
+                      defaultValue={
+                        submitted?.spotifyUrl ?? event?.spotifyUrl ?? ""
+                      }
                     />
                   </FormField>
 
@@ -349,7 +393,7 @@ export async function EventForm({
                       <input
                         type="checkbox"
                         name="announceOnDiscord"
-                        defaultChecked
+                        defaultChecked={submitted?.announceOnDiscord ?? true}
                         className="border-input size-4 rounded border"
                       />
                       {translateEvents("fieldAnnounce")}
@@ -391,29 +435,44 @@ export async function EventForm({
   }
 
   return (
-    <Wizard
-      steps={steps}
-      action={action}
-      hiddenFields={
-        event && <input type="hidden" name="eventId" value={event.id} />
-      }
-      invalidHeading={translateEvents("formInvalid")}
-      fieldLabels={fieldLabels}
-      submitLabel={submitLabel}
-      // Publishing a new event is a small celebration; saving an edit is filing.
-      submitIcon={
-        event ? (
-          <SaveIcon className="size-4" />
-        ) : (
-          <PublishEventIcon className="size-4" />
-        )
-      }
-      submittingLabel={
-        event ? translateEvents("saving") : translateEvents("publishing")
-      }
-      backLabel={translateEvents("wizardBack")}
-      nextLabel={translateEvents("wizardNext")}
-      stepLabel={translateEvents("wizardStep")}
-    />
+    <>
+      <UnsavedWorkGuard
+        // Not while it is posting: the page is on its way somewhere by then.
+        isDirty={hasTyped && !isSubmitting}
+        title={translateEvents("unsavedTitle")}
+        body={translateEvents("unsavedBody")}
+        leaveLabel={translateEvents("unsavedLeave")}
+        stayLabel={translateEvents("unsavedStay")}
+        closeLabel={translateEvents("close")}
+      />
+
+      <Wizard
+        steps={steps}
+        formAction={formAction}
+        onFieldInput={() => setHasTyped(true)}
+        feedback={feedback}
+        isSubmitting={isSubmitting}
+        hiddenFields={
+          event && <input type="hidden" name="eventId" value={event.id} />
+        }
+        invalidHeading={translateEvents("formInvalid")}
+        fieldLabels={fieldLabels}
+        submitLabel={submitLabel}
+        // Publishing a new event is a small celebration; saving an edit is filing.
+        submitIcon={
+          event ? (
+            <SaveIcon className="size-4" />
+          ) : (
+            <PublishEventIcon className="size-4" />
+          )
+        }
+        submittingLabel={
+          event ? translateEvents("saving") : translateEvents("publishing")
+        }
+        backLabel={translateEvents("wizardBack")}
+        nextLabel={translateEvents("wizardNext")}
+        stepLabel={translateEvents("wizardStep")}
+      />
+    </>
   )
 }

@@ -112,10 +112,15 @@ export const eventFormSchema = z
 
     announceOnDiscord: z.boolean(),
   })
+  // A concert with a poll on it is still happening: which evening is the open question,
+  // not whether. So a date or a list of dates to vote on, and either will do.
   .refine(
-    (event) => event.kind !== "confirmed" || event.startsAtWallTime !== null,
+    (event) =>
+      event.kind !== "confirmed" ||
+      event.startsAtWallTime !== null ||
+      event.dateOptions.length > 0,
     {
-      message: "A confirmed event needs a date",
+      message: "A confirmed event needs a date, or dates to vote on",
       path: ["startsAtWallTime"],
     },
   )
@@ -135,6 +140,9 @@ export const eventFormSchema = z
   })
 
 export type EventFormValues = z.infer<typeof eventFormSchema>
+
+/** The raw form, as read: what the schema parses and what a refused form is handed back. */
+export type EventFormInput = ReturnType<typeof readEventForm>
 
 /** Reads a submitted form into the shape the schema expects. */
 export function readEventForm(formData: FormData) {

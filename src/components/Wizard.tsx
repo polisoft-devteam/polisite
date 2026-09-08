@@ -7,18 +7,17 @@
 // Steps are passed as data rather than inspected from children, so nothing depends on the
 // shape of the JSX handed in.
 //
-// The form itself lives here rather than around this, because the submit belongs to the
-// last step and what comes back from it has to be shown next to that button: a server that
-// refuses the form says which fields it refused, and the summary appears where the press
-// happened.
+// The form element lives here rather than around this, because the submit belongs to the
+// last step and what comes back from it has to be shown next to that button. The action
+// state itself belongs to the caller: it owns the fields, and a refused form has to be
+// handed back with what was typed still in them.
 
 "use client"
 
-import { Fragment, useActionState, useState } from "react"
+import { Fragment, useState } from "react"
 
 import { Spinner } from "@/components/Spinner"
 import { Button } from "@/components/ui/button"
-import type { FormFeedback } from "@/lib/form-feedback"
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
@@ -30,7 +29,10 @@ export type WizardStep = {
 
 export function Wizard({
   steps,
-  action,
+  formAction,
+  onFieldInput,
+  feedback,
+  isSubmitting,
   hiddenFields,
   invalidHeading,
   fieldLabels,
@@ -42,8 +44,14 @@ export function Wizard({
   stepLabel,
 }: {
   steps: WizardStep[]
-  /** The server action the whole thing posts to, and whatever it refuses comes back. */
-  action: (previous: FormFeedback, formData: FormData) => Promise<FormFeedback>
+  /** Where the form posts. The caller owns the action state, because it also owns the
+      fields that have to be handed back with what was typed in them. */
+  formAction: (formData: FormData) => void
+  /** Called the first time anything in the form is typed into. */
+  onFieldInput?: () => void
+  /** What the server refused, if it refused anything. */
+  feedback: { fieldErrors: Record<string, string[] | undefined> } | null
+  isSubmitting: boolean
   /** Ids and the like the action needs but nobody types. */
   hiddenFields?: React.ReactNode
   /** Said once above the refused fields, e.g. "Något stämmer inte". */
@@ -62,7 +70,6 @@ export function Wizard({
   stepLabel: string
 }) {
   const [currentStep, setCurrentStep] = useState(0)
-  const [feedback, submit, isSubmitting] = useActionState(action, null)
 
   const isLastStep = currentStep === steps.length - 1
   const refusedFields = Object.entries(feedback?.fieldErrors ?? {}).filter(
@@ -141,7 +148,7 @@ export function Wizard({
   }
 
   return (
-    <form action={submit}>
+    <form action={formAction}>
       {hiddenFields}
 
       <div
@@ -223,9 +230,12 @@ export function Wizard({
         <div
           className="min-w-0 flex-1"
           // Clears the red outline the moment they start correcting the field.
-          onInput={(event) =>
-            (event.target as HTMLElement).removeAttribute("aria-invalid")
-          }
+          // Clears the red outline the moment they start correcting the field, and tells
+          // the caller there is now something worth not losing.
+          onInput={(event) => {
+            ;(event.target as HTMLElement).removeAttribute("aria-invalid")
+            onFieldInput?.()
+          }}
         >
           {steps.map((step, index) => (
             <div

@@ -123,10 +123,14 @@ export const SWEDISH_PARTIES: Party[] = [
   },
 ]
 
-// A handful and the ballot is closed: an infinite wheel is not a result, it is a menu.
-// A passer by gets one, and signing in is worth two more.
-export const SPINS_SIGNED_OUT = 1
-export const SPINS_SIGNED_IN = 3
+/**
+ * What you start with on the day you first sign in. A new day tops an empty wheel back up
+ * to one; see the store.
+ *
+ * Signing in is the price of a spin: a result belongs to somebody, and a browser is not
+ * somebody. A visitor can watch the wheel and read the standings, and that is all.
+ */
+export const SPINS_ON_FIRST_DAY = 3
 
 export function findParty(key: string): Party | null {
   return SWEDISH_PARTIES.find((party) => party.key === key) ?? null

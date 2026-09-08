@@ -48,17 +48,18 @@ export default async function EventsPage({
     findPastEvents(allowedVisibilities),
   ])
 
-  // Split by kind rather than by whether a date is set: a suggestion with a date pencilled
-  // in is still a suggestion, and used to sit among the events that are actually happening.
-  // Every dateless event is a suggestion, because the schema refuses a confirmed one
-  // without a date.
+  // Split by kind, never by whether a date is set. A suggestion with a date pencilled in
+  // is still a suggestion, and a confirmed event waiting on a poll is still happening:
+  // which evening is the open question, not whether. Those come first among the confirmed,
+  // because a poll is only worth voting in while it is open.
   const suggestedEvents = [
-    ...datelessEvents,
+    ...datelessEvents.filter((event) => event.kind === "suggestion"),
     ...upcomingEvents.filter((event) => event.kind === "suggestion"),
   ]
-  const confirmedEvents = upcomingEvents.filter(
-    (event) => event.kind === "confirmed",
-  )
+  const confirmedEvents = [
+    ...datelessEvents.filter((event) => event.kind === "confirmed"),
+    ...upcomingEvents.filter((event) => event.kind === "confirmed"),
+  ]
 
   return (
     <PageContainer>

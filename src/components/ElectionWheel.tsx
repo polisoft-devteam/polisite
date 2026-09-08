@@ -439,9 +439,10 @@ export function ElectionWheel({
   // otherwise. The tab still brings it back. The one on its own page never folds: it is
   // the reason the page exists.
   const isTucked = isCorner && (tuckedChoice ?? spinsLeft === 0)
-  // Not while it is pushed aside: the wheel is off the edge, and the roll it is holding
-  // would throw the landing off by exactly that much.
-  const canSpin = spinsLeft > 0 && !isSpinning && !isTucked
+  // Signing in is the price of a spin: a result belongs to somebody, and a browser is not
+  // somebody. Not while it is pushed aside either: the wheel is off the edge, and the roll
+  // it is holding would throw the landing off by exactly that much.
+  const canSpin = !isSignedOut && spinsLeft > 0 && !isSpinning && !isTucked
 
   function spin() {
     if (!canSpin) return
@@ -524,18 +525,22 @@ export function ElectionWheel({
     spinsLeft > 0
       ? translateElection("ribbon")
       : (party?.name ?? translateElection("ribbon"))
-  const ribbon = `${ribbonLabel} ${spinsLeft}/${Math.max(spinsLeft, maxSpins)}`
+  // No tally for somebody who cannot spin: a count of what they are not allowed to use
+  // reads as a promise the wheel does not keep.
+  const ribbon = isSignedOut
+    ? ribbonLabel
+    : `${ribbonLabel} ${spinsLeft}/${Math.max(spinsLeft, maxSpins)}`
 
-  const tooltip = party
-    ? spinsLeft > 0
-      ? translateElection("tooltipSpun", {
-          party: party.name,
-          count: spinsLeft,
-        })
-      : isSignedOut
-        ? translateElection("tooltipSpentGuest")
+  const tooltip = isSignedOut
+    ? translateElection("tooltipSignedOut")
+    : party
+      ? spinsLeft > 0
+        ? translateElection("tooltipSpun", {
+            party: party.name,
+            count: spinsLeft,
+          })
         : translateElection("tooltipSpent", { party: party.name })
-    : translateElection("tooltipUnspun", { count: spinsLeft })
+      : translateElection("tooltipUnspun", { count: spinsLeft })
 
   // Nothing until the browser has answered; see isKnown.
   if (!isKnown) return null
