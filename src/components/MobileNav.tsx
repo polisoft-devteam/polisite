@@ -29,6 +29,7 @@ import { useTranslations } from "next-intl"
 import { useState } from "react"
 
 import { signOut } from "@/app/auth/actions"
+import { SubmitButton } from "@/components/SubmitButton"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -190,14 +191,13 @@ export function MobileNav({
               hit while reaching for a link. */}
           {showSignOut && (
             <form action={signOut} className="mt-auto pt-4">
-              <Button
-                type="submit"
+              <SubmitButton
                 variant="outline"
                 className="w-full cursor-pointer"
+                icon={<SignOutIcon className="size-4" />}
               >
-                <SignOutIcon className="size-4" />
                 {translateAuth("signOut")}
-              </Button>
+              </SubmitButton>
             </form>
           )}
         </DialogPrimitive.Popup>

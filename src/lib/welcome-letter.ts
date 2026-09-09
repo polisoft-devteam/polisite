@@ -17,7 +17,7 @@ export const WELCOME_LETTER = {
     "Nu tänker du kanske: Nej fan, livet fyllt med aktivitet, sprit och IKEA-kvinnor.",
     "Men det kommer en dag när frugan sticker med barnen, demensen kickar in, knäet inte pallar hockeyn, ens franska fru har gått bort efter en tragisk elskoterrelaterad simningsolycka i Högsbo... vem vet? Inte du i alla fall.",
     "Med avstamp i detta förklarar jag lösningen till mitt och numera ditt problem: föreningslivet!",
-    "Den här fina lilla webbappen är ett frö som jag, i egenskap av föreningens första självutnämnda President, Seth Ruydell style, nu ska vattna och sköta med omsorg!",
+    "Den här fina lilla webbappen är ett frö som jag, i egenskap av föreningens första självutnämnda President, Seth Rydell style, nu ska vattna och sköta med omsorg!",
     "Detta är en samlingsplats för allt möjligt kul, öppet poli-arkiv, kalender över aktiviteter, Discord integrationer och mycket mera! Allt för att hålla oss på banan.",
     "Här kommer jag, och förhoppningsvis DU, skapa och schemalägga events och annat mys. Tanken är liksom att formalisera och strukturera det vi redan har så att det håller hela vägen in i demensen.",
     "Jag har stora planer för denna fina Poli-förening: fet merch, stående årsträff och resor, grupptatuering? Kanske tom en gemensam aktiepool där vi sparar mot gemensam resa??",
@@ -25,7 +25,7 @@ export const WELCOME_LETTER = {
     "En sak till, vid frågor eller klagomål, kontakta alltid, Felix Morau",
   ],
 
-  signature: "I hast,\nVictor Interassistsson",
+  signature: "I hast,\nVictor Interassistsson, PoliPresident",
 
   pauseLabel: "Pausa",
   playLabel: "Spela",

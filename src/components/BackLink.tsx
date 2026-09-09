@@ -1,8 +1,12 @@
 // The "← back" link at the top of a detail or form page.
 // The negative margin pulls it flush with the page edge, which is why it isn't hand-rolled.
+//
+// It says when it has been pressed: the page it leads to has to be fetched, and on a slow
+// connection that is a second of a button that looks ignored. See NavigationSpinner.
 
 import { ChevronLeftIcon } from "@/lib/icons"
 
+import { NavigationSpinner } from "@/components/NavigationSpinner"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
 
@@ -21,6 +25,7 @@ export function BackLink({
     >
       <ChevronLeftIcon className="size-4" />
       {children}
+      <NavigationSpinner className="size-3.5" />
     </Button>
   )
 }

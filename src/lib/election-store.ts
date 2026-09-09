@@ -180,7 +180,10 @@ export function adoptIdentity(identity: string, startingSpins: number) {
     party: null,
     spinsLeft: startingSpins,
     grantedOn: stockholmDay(),
-    tuckedChoice: null,
+    // Kept across the change of hands: pushing the wheel aside is a decision about this
+    // screen, not about whoever is signed in, and signing out is a poor reason to have it
+    // roll back out.
+    tuckedChoice: state.tuckedChoice,
     isKnown: true,
     identity,
   })

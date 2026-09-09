@@ -7,7 +7,7 @@ import { MEMBER_TITLES, isMemberTitle } from "@/features/members/titles"
 import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import { updateMyProfile } from "@/features/members/actions"
 import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
 import type { Member } from "@/db/schema"
@@ -115,9 +115,7 @@ export default async function SettingsPage({
           </p>
         </div>
 
-        <Button type="submit" size="lg">
-          {translateProfile("save")}
-        </Button>
+        <SubmitButton size="lg">{translateProfile("save")}</SubmitButton>
       </form>
     </PageContainer>
   )

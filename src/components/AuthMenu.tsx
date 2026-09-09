@@ -19,7 +19,7 @@ import { SignInButton } from "@/components/SignInButton"
 import { HoverRevealLabel } from "@/components/HoverRevealLabel"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { PartyNameSuffix } from "@/components/PartyNameSuffix"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import { Link } from "@/i18n/navigation"
 import { SignOutIcon } from "@/lib/icons"
 import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
@@ -98,8 +98,7 @@ export async function AuthMenu() {
       {/* Below md this lives at the foot of the mobile menu instead, where a long email
           and a sign out button were fighting for the same few pixels. */}
       <form action={signOut} className="hidden md:block">
-        <Button
-          type="submit"
+        <SubmitButton
           variant="ghost"
           size="icon"
           aria-label={translateAuth("signOut")}
@@ -109,7 +108,7 @@ export async function AuthMenu() {
             icon={<SignOutIcon className="size-4" />}
             label={translateAuth("signOut")}
           />
-        </Button>
+        </SubmitButton>
       </form>
     </div>
   )

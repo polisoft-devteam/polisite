@@ -13,7 +13,7 @@ import { useEffect, useState } from "react"
 
 import { Modal } from "@/components/Modal"
 import { WelcomeCrawl } from "@/components/WelcomeCrawl"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import { requestMembership } from "@/features/members/membership-prompt-actions"
 import { WELCOME_LETTER } from "@/lib/welcome-letter"
 
@@ -48,10 +48,16 @@ export function WelcomeLetterModal({
       defaultOpen
       title={WELCOME_LETTER.title}
       closeLabel={WELCOME_LETTER.closeLabel}
-      className="max-h-[92svh] overflow-y-auto sm:max-w-4xl"
+      // Seven tenths of the window rather than a fixed width: 4xl was most of the screen
+      // on a laptop and a postage stamp on a desktop. Capped so it stops growing.
+      // Slower and from above: the dialog's own hundred milliseconds is right for a
+      // confirmation and too brisk for a letter that has waited to arrive.
+      className="data-open:slide-in-from-top-8 max-h-[92svh] overflow-y-auto duration-500 sm:w-[70vw] sm:max-w-5xl"
       backgroundImage="/images/misc/viggeRasse.webp"
       titleClassName="text-center text-2xl font-semibold tracking-tight sm:text-3xl"
-      footerClassName="sm:justify-center"
+      // items-center for the stacked case: below sm the footer is a column, nothing is
+      // justified along it, and the form stretched wide leaving the button at its left.
+      footerClassName="items-center sm:justify-center"
       onOpenChange={(isOpen) => {
         if (!isOpen) onClosed?.()
       }}
@@ -60,9 +66,9 @@ export function WelcomeLetterModal({
           <form action={requestMembership}>
             {/* Plain rather than filled: it sits on a photograph, and the letter is doing
                 the persuading. */}
-            <Button type="submit" variant="outline">
+            <SubmitButton variant="outline">
               {WELCOME_LETTER.requestLabel}
-            </Button>
+            </SubmitButton>
           </form>
         ) : undefined
       }

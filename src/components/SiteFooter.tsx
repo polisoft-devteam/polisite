@@ -9,7 +9,21 @@ import { SiteImage } from "@/components/SiteImage"
 import { Link } from "@/i18n/navigation"
 import { ASSOCIATION_FULL_NAME, ASSOCIATION_NAME } from "@/lib/association"
 import { HeartIcon } from "@/lib/icons"
-import { readFooterLogos } from "@/lib/site-images"
+import { readFooterLogos, type FooterLogo } from "@/lib/site-images"
+
+/**
+ * How tall to hang a logo so it carries the same weight as the others.
+ *
+ * The area is what the eye compares, so the height falls out of it: a wide logo comes out
+ * short, a square one tall, and both look the same size. Clamped, because one very long
+ * or very tall file should not set the height of the whole row.
+ */
+function logoHeightRem({ width, height }: FooterLogo): number {
+  const targetArea = 26
+  const unclamped = Math.sqrt(targetArea / (width / height))
+
+  return Math.min(Math.max(unclamped, 3), 5.5)
+}
 
 export async function SiteFooter() {
   const translateFooter = await getTranslations("Footer")
@@ -23,19 +37,26 @@ export async function SiteFooter() {
             {translateFooter("sponsors")}
           </p>
 
-          <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-16 gap-y-8 sm:gap-x-24">
+          {/* Nudged left on a wide screen: the logos carry their own whitespace and the
+              row reads off centre without it. */}
+          <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-16 gap-y-8 sm:gap-x-24 md:mr-16">
             {logos.map((logo) => (
               <li key={logo.src}>
-                {/* One height for all of them, each keeping its own width: as drawn,
-                    nothing cropped, nothing behind them, nothing on hover. */}
+                {/* Matched by area rather than by height: hung at one height a square
+                    logo reads as half the size of a wide one, because the eye weighs how
+                    much ink is there. Nothing cropped, nothing behind them, nothing on
+                    hover. */}
                 <SiteImage
                   src={logo.src}
                   alt=""
                   fit="contain"
                   rounded="rounded-none"
-                  className="h-12 w-auto sm:h-14"
-                  style={{ aspectRatio: `${logo.width} / ${logo.height}` }}
-                  sizes="180px"
+                  className="w-auto"
+                  style={{
+                    height: `${logoHeightRem(logo)}rem`,
+                    aspectRatio: `${logo.width} / ${logo.height}`,
+                  }}
+                  sizes="240px"
                 />
               </li>
             ))}
@@ -43,14 +64,16 @@ export async function SiteFooter() {
         </div>
       )}
 
-      {/* The name at one edge and the policy at the other, with what the site is made of
-          between them. Centred only while it is stacked, on a phone. */}
-      <div className="text-muted-foreground mx-auto flex w-full max-w-6xl flex-col items-center gap-2 px-4 py-8 pb-24 text-center text-sm sm:flex-row sm:justify-between sm:text-left md:pb-8 2xl:max-w-7xl">
-        <span>{ASSOCIATION_NAME}</span>
+      {/* Three equal columns rather than a row pushed apart: with justify-between the
+          middle is only centred when the two outer items happen to be the same width, and
+          "Poli" against "Integritetspolicy" is nowhere near. Equal columns put the middle
+          line under the middle of the page, where the logos are. */}
+      <div className="text-muted-foreground mx-auto grid w-full max-w-6xl gap-2 px-4 py-8 pb-24 text-center text-sm sm:grid-cols-3 sm:items-center md:pb-8 2xl:max-w-7xl">
+        <span className="sm:justify-self-start">{ASSOCIATION_NAME}</span>
 
         {/* Split around the heart rather than an emoji in the message file, so it takes
             the colour and size of everything around it. */}
-        <span className="flex items-center gap-1.5">
+        <span className="flex items-center justify-center gap-1.5">
           {translateFooter("builtWith")}
           <HeartIcon
             aria-hidden="true"
@@ -63,7 +86,7 @@ export async function SiteFooter() {
         <Link
           href="/privacy"
           transitionTypes={["nav-forward"]}
-          className="hover:text-foreground transition-colors"
+          className="hover:text-foreground transition-colors sm:justify-self-end"
         >
           {translateFooter("privacy")}
         </Link>
