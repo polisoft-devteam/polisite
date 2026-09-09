@@ -7,6 +7,8 @@
 import { readdir } from "node:fs/promises"
 import path from "node:path"
 
+import sharp from "sharp"
+
 const IMAGES_DIRECTORY = path.join(process.cwd(), "public", "images")
 
 /** Cached per folder in production; see readImagesIn. */
@@ -49,6 +51,42 @@ export function readArchiveImages(): Promise<string[]> {
 /** The pile of photographs beside the About page's history. */
 export function readAboutImages(): Promise<string[]> {
   return readImagesIn("about")
+}
+
+export type FooterLogo = {
+  src: string
+  width: number
+  height: number
+}
+
+/** Cached alongside the folder listing; a logo's proportions do not change. */
+let cachedFooterLogos: FooterLogo[] | null = null
+
+/**
+ * The logos in the footer, in filename order, each with its own proportions.
+ *
+ * The sizes are read from the files rather than written down, because the row hangs them
+ * all at one height and lets the widths follow. A square logo and a wide one in the same
+ * fixed box leaves one of them looking half the size of the other.
+ */
+export async function readFooterLogos(): Promise<FooterLogo[]> {
+  if (cachedFooterLogos && process.env.NODE_ENV !== "development") {
+    return cachedFooterLogos
+  }
+
+  const images = await readImagesIn("footer")
+
+  cachedFooterLogos = await Promise.all(
+    images.map(async (src) => {
+      const { width, height } = await sharp(
+        path.join(process.cwd(), "public", src),
+      ).metadata()
+
+      return { src, width: width ?? 1, height: height ?? 1 }
+    }),
+  )
+
+  return cachedFooterLogos
 }
 
 /** The photograph behind the Val 2026 heading. Empty until somebody drops one in. */

@@ -26,7 +26,7 @@ import { findWishlistForMember } from "@/features/wishlist/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import { EditIcon, SettingsIcon } from "@/lib/icons"
-import { canManageMembers } from "@/lib/permissions"
+import { canManageMembers, isActiveMember } from "@/lib/permissions"
 
 export async function generateMetadata({
   params,
@@ -113,7 +113,11 @@ export default async function MemberPage({
         isOwnProfile={isOwnProfile}
       />
 
-      <Wishlist entries={entries} isOwnList={isOwnProfile} />
+      <Wishlist
+        entries={entries}
+        isOwnList={isOwnProfile}
+        canClaim={isActiveMember(viewer)}
+      />
     </PageContainer>
   )
 }

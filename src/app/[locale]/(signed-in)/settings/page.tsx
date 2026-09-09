@@ -9,6 +9,8 @@ import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { Button } from "@/components/ui/button"
 import { updateMyProfile } from "@/features/members/actions"
+import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
+import type { Member } from "@/db/schema"
 import { findBadgesForMember } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 
@@ -36,9 +38,30 @@ export default async function SettingsPage({
 
   const viewer = await getViewer()
 
-  // The (member) layout already redirected anyone without an active membership.
-  const member = viewer!.member!
-  const badges = await findBadgesForMember(member.id)
+  // A guest has no row until they save one, so the form starts from their Google account
+  // instead. Saving is what writes the row; see updateMyProfile.
+  const savedMember = viewer!.member
+  const badges = savedMember ? await findBadgesForMember(savedMember.id) : []
+
+  const member: Member = savedMember ?? {
+    id: "",
+    authUserId: viewer!.authUserId,
+    email: viewer!.email,
+    fullName: viewerDisplayName(viewer!),
+    avatarUrl: viewerAvatarUrl(viewer!),
+    nickname: null,
+    officialTitle: null,
+    bio: null,
+    githubUrl: null,
+    displayedBadge: null,
+    birthday: null,
+    lastBirthdayGreetingYear: null,
+    status: "inactive",
+    joinedAssociationAt: null,
+    notificationsSeenAt: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
 
   return (
     <PageContainer>

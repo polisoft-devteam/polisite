@@ -58,6 +58,13 @@ export async function generateMetadata({
       template: `%s · ${ASSOCIATION_NAME}`,
     },
     description: translateSite("tagline"),
+    // A stamped icon everywhere but production, so a localhost tab and a preview tab are
+    // told apart from the real site at thumbnail size. Both files live in public/ rather
+    // than as app/icon.png, because the file convention allows exactly one.
+    icons: {
+      icon:
+        process.env.VERCEL_ENV === "production" ? "/icon.png" : "/icon-dev.png",
+    },
   }
 }
 

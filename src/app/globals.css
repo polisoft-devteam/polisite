@@ -79,31 +79,31 @@
    lightness changes the contrast against text. */
 
 :root {
-  --background: oklch(0.99 0.003 168);
-  --foreground: oklch(0.21 0.017 171);
+  --background: oklch(0.99 0.002 345);
+  --foreground: oklch(0.21 0.011 348);
 
   --card: oklch(1 0 0);
   --card-foreground: var(--foreground);
   --popover: oklch(1 0 0);
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.876 0.125 168);
-  --primary-foreground: oklch(0.21 0.03 168);
+  --primary: oklch(0.876 0.083 345);
+  --primary-foreground: oklch(0.21 0.02 345);
 
   /* Primary as text, an icon or a border on a page background. #79f1c6 fills
      beautifully but disappears as ink on white, so light mode darkens it. */
-  --primary-ink: oklch(0.5 0.11 168);
+  --primary-ink: oklch(0.5 0.073 345);
 
   /* The same mint, nearly drained of it, so a secondary button reads as quieter
      rather than as a second colour. */
-  --secondary: oklch(0.94 0.02 168);
-  --secondary-foreground: oklch(0.32 0.03 168);
+  --secondary: oklch(0.94 0.013 345);
+  --secondary-foreground: oklch(0.32 0.02 345);
 
-  --muted: oklch(0.96 0.006 168);
-  --muted-foreground: oklch(0.51 0.019 171);
+  --muted: oklch(0.96 0.004 345);
+  --muted-foreground: oklch(0.51 0.013 348);
 
-  --accent: oklch(0.74 0.088 168);
-  --accent-foreground: oklch(0.24 0.035 168);
+  --accent: oklch(0.74 0.058 345);
+  --accent-foreground: oklch(0.24 0.023 345);
 
   --destructive: oklch(0.58 0.21 25);
 
@@ -127,19 +127,19 @@
   --rsvp-interested: oklch(0.68 0.13 70);
   --rsvp-not-going: oklch(0.62 0.16 22);
 
-  --border: oklch(0.9 0.008 168);
-  --input: oklch(0.89 0.009 168);
-  --ring: oklch(0.5 0.11 168);
+  --border: oklch(0.9 0.005 345);
+  --input: oklch(0.89 0.006 345);
+  --ring: oklch(0.5 0.073 345);
 
-  --chart-1: oklch(0.4 0.07 168);
-  --chart-2: oklch(0.5 0.085 168);
-  --chart-3: oklch(0.62 0.088 168);
-  --chart-4: oklch(0.74 0.088 168);
-  --chart-5: oklch(0.86 0.08 168);
+  --chart-1: oklch(0.4 0.046 345);
+  --chart-2: oklch(0.5 0.056 345);
+  --chart-3: oklch(0.62 0.058 345);
+  --chart-4: oklch(0.74 0.058 345);
+  --chart-5: oklch(0.86 0.053 345);
 
   --radius: 0.5rem;
 
-  --sidebar: oklch(0.98 0.005 168);
+  --sidebar: oklch(0.98 0.003 345);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
@@ -150,38 +150,55 @@
 
   /* The suggestion ribbon. Same teal, light to dark, so it reads as a ribbon by its
      shape rather than by being a colour from somewhere else. */
-  --suggestion-from: oklch(0.5 0.11 168);
-  --suggestion-to: oklch(0.7 0.088 168);
-  --suggestion-foreground: oklch(0.99 0.004 168);
+  --suggestion-from: oklch(0.5 0.073 345);
+  --suggestion-to: oklch(0.7 0.058 345);
+  --suggestion-foreground: oklch(0.99 0.003 345);
 
   /* Density. Kept as tokens so "make the forms tighter" is one edit. */
   --control-height: 2rem;
   --field-gap: 1.25rem;
+  --button-sweep: linear-gradient(
+    96deg,
+    oklch(0.876 0.083 345),
+    oklch(0.876 0.077 55),
+    oklch(0.876 0.125 120)
+  );
+  --brand-sweep-ink: linear-gradient(
+    96deg,
+    oklch(0.5 0.11 345),
+    oklch(0.5 0.11 55),
+    oklch(0.5 0.11 120)
+  );
+  --brand-text-fill: transparent;
+  --brand-stop-1: oklch(0.5 0.11 345);
+  --brand-stop-2: oklch(0.5 0.11 55);
+  --brand-stop-3: oklch(0.5 0.11 120);
+  --brand-icon-fill: url(#brand-gradient);
 }
 
 .dark {
-  --background: oklch(0.18 0.012 171);
-  --foreground: oklch(0.95 0.005 168);
+  --background: oklch(0.18 0.008 348);
+  --foreground: oklch(0.95 0.003 345);
 
-  --card: oklch(0.22 0.014 171);
+  --card: oklch(0.22 0.009 348);
   --card-foreground: var(--foreground);
-  --popover: oklch(0.22 0.014 171);
+  --popover: oklch(0.22 0.009 348);
   --popover-foreground: var(--foreground);
 
   /* Lifted well above the light-mode mint: the same value on a dark ground reads
      as almost black. */
-  --primary: oklch(0.876 0.125 168);
-  --primary-foreground: oklch(0.19 0.028 168);
-  --primary-ink: oklch(0.876 0.125 168);
+  --primary: oklch(0.876 0.083 345);
+  --primary-foreground: oklch(0.19 0.018 345);
+  --primary-ink: oklch(0.876 0.083 345);
 
-  --secondary: oklch(0.31 0.022 168);
-  --secondary-foreground: oklch(0.93 0.014 168);
+  --secondary: oklch(0.31 0.015 345);
+  --secondary-foreground: oklch(0.93 0.009 345);
 
-  --muted: oklch(0.26 0.012 171);
-  --muted-foreground: oklch(0.69 0.016 168);
+  --muted: oklch(0.26 0.008 348);
+  --muted-foreground: oklch(0.69 0.011 345);
 
-  --accent: oklch(0.62 0.08 168);
-  --accent-foreground: oklch(0.97 0.01 168);
+  --accent: oklch(0.62 0.053 345);
+  --accent-foreground: oklch(0.97 0.007 345);
 
   --destructive: oklch(0.68 0.18 25);
   --notification: #f52055;
@@ -196,19 +213,19 @@
   --rsvp-interested: oklch(0.8 0.13 70);
   --rsvp-not-going: oklch(0.74 0.16 22);
 
-  --border: oklch(0.31 0.013 171);
-  --input: oklch(0.34 0.014 171);
-  --ring: oklch(0.876 0.125 168);
+  --border: oklch(0.31 0.009 348);
+  --input: oklch(0.34 0.009 348);
+  --ring: oklch(0.876 0.083 345);
 
-  --chart-1: oklch(0.44 0.065 168);
-  --chart-2: oklch(0.56 0.078 168);
-  --chart-3: oklch(0.68 0.085 168);
-  --chart-4: oklch(0.8 0.088 168);
-  --chart-5: oklch(0.876 0.125 168);
+  --chart-1: oklch(0.44 0.043 345);
+  --chart-2: oklch(0.56 0.051 345);
+  --chart-3: oklch(0.68 0.056 345);
+  --chart-4: oklch(0.8 0.058 345);
+  --chart-5: oklch(0.876 0.083 345);
 
-  --suggestion-from: oklch(0.876 0.125 168);
-  --suggestion-to: oklch(0.66 0.082 168);
-  --suggestion-foreground: oklch(0.16 0.025 168);
+  --suggestion-from: oklch(0.876 0.083 345);
+  --suggestion-to: oklch(0.66 0.054 345);
+  --suggestion-foreground: oklch(0.16 0.017 345);
 
   --sidebar: oklch(0.21 0.013 171);
   --sidebar-foreground: var(--foreground);
@@ -218,6 +235,23 @@
   --sidebar-accent-foreground: var(--foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+  --button-sweep: linear-gradient(
+    96deg,
+    oklch(0.876 0.083 345),
+    oklch(0.876 0.077 55),
+    oklch(0.876 0.125 120)
+  );
+  --brand-sweep-ink: linear-gradient(
+    96deg,
+    oklch(0.876 0.083 345),
+    oklch(0.876 0.077 55),
+    oklch(0.876 0.125 120)
+  );
+  --brand-text-fill: transparent;
+  --brand-stop-1: oklch(0.876 0.083 345);
+  --brand-stop-2: oklch(0.876 0.077 55);
+  --brand-stop-3: oklch(0.876 0.125 120);
+  --brand-icon-fill: url(#brand-gradient);
 }
 
 @layer base {
@@ -453,7 +487,11 @@ a[href] {
    Same reasoning as the flags in LanguageToggle. */
 
 .crawl-stage {
-  height: 20rem;
+  /* Named, because the animation below has to start the text exactly one screen down,
+     and the two drifting apart is what left the letter already half read when it
+     appeared. */
+  --crawl-height: min(62svh, 34rem);
+  height: var(--crawl-height);
   overflow: hidden;
   perspective: 300px;
   /* Fades into the distance at the top rather than being cut off by the edge. */
@@ -474,19 +512,28 @@ a[href] {
 
 .crawl-text {
   color: #ffe81f;
-  font-weight: 700;
+  /* Lighter than the crawl it is quoting: this one is read at leisure, not at a cinema,
+     and the weight is set here rather than as a utility because this rule would win
+     against one anyway. */
+  font-weight: 400;
   text-align: center;
-  animation: crawl-up 115s linear forwards;
+  /* Where the animation begins, said twice on purpose: until the animation is applied
+     this is what holds the letter below the screen, and without it the first paint
+     showed the text sitting in the middle before it jumped down to start. */
+  transform: translateY(var(--crawl-height, 20rem));
+  /* Slow enough to read every line once without hurrying, and held for a moment first:
+     the modal opens, the eye lands on it, and only then does anything move. */
+  animation: crawl-up 190s linear 2.5s forwards;
 }
 
-/* Offsets in rem at the start and in its own height at the end, deliberately: a
-   percentage start is a share of the text's height, so a longer letter meant a
-   longer wait before the first line appeared. 18rem starts the first line just
-   inside the 20rem screen, and -100% is the whole letter having passed above
-   it. */
+/* The screen's own height at the start and the text's own height at the end,
+   deliberately: starting from a percentage would be a share of the text, so a longer
+   letter meant a longer wait before the first line appeared. One screen down is the
+   first line just below the bottom edge, and -100% is the whole letter having passed
+   above the top. */
 @keyframes crawl-up {
   from {
-    transform: translateY(18rem);
+    transform: translateY(var(--crawl-height, 20rem));
   }
   to {
     transform: translateY(-100%);

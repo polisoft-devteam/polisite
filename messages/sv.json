@@ -17,15 +17,20 @@
     "heroTagline": "Vuxna män gör saker tillsammans, {associationName} gör mycket mer än så!",
     "intro": "Här kan du skapa och kika runt på kommande events, pimpa din profil, eller kika på vårt öppna arkiv där det finns massa smått och gott. Det mesta ligger bakom paywall så se till att du loggar in och ansöker om medlemskap!",
     "upcomingTitle": "Härnäst",
+    "ongoingTitle": "Pågår nu",
+    "votableTitle": "Rösta på datum",
     "upcomingEmpty": "Inget planerat just nu. Har du en idé? Lägg in ett förslag.",
     "allEvents": "Alla evenemang",
     "newEvent": "Nytt evenemang",
     "visitorNote": "Du ser de publika evenemangen. Medlemmar ser även föreningens egna.",
     "requestMembership": "Ansök om medlemskap",
-    "membershipPending": "Medlemskap granskas",
+    "membershipPending": "Ansökan skickad, en admin svarar snart",
     "heroSignIn": "Logga in",
-    "heroRequestMembership": "Ansök",
-    "heroCreateEvent": "Skapa event"
+    "heroRequestMembership": "PoliMembership",
+    "heroCreateEvent": "Skapa event",
+    "ongoingEmpty": "Inget pågår just nu.",
+    "votableEmpty": "Inget att rösta på just nu.",
+    "heroRequestSending": "Skickar …"
   },
   "About": {
     "title": "Om oss",
@@ -64,7 +69,8 @@
     },
     "timelineHeading": "Så här långt",
     "timelineUnderConstruction": "Under uppbyggnad",
-    "aboutHeading": "Om oss"
+    "aboutHeading": "Om oss",
+    "readWelcomeLetter": "Läs välkomstbrevet"
   },
   "Events": {
     "title": "Evenemang",
@@ -170,6 +176,7 @@
     "datePollHint": "Rösta på alla datum du kan. Välj flera, alla du kan wagoo!",
     "datePollClosed": "Röstningen är stängd. Alla datum har passerat.",
     "datePollVote": "Jag kan",
+    "datePollCta": "Rösta",
     "datePollVoted": "Jag kan ✓",
     "datePollVotes": "{count, plural, =0 {Ingen har röstat} one {# kan} other {# kan}}",
     "datePollLeading": "flest röster",
@@ -217,7 +224,8 @@
     "unsavedTitle": "Du har inte publicerat än",
     "unsavedBody": "Lämnar du sidan försvinner det du har skrivit.",
     "unsavedLeave": "Lämna ändå",
-    "unsavedStay": "Stanna kvar"
+    "unsavedStay": "Stanna kvar",
+    "membersOnlyClose": "Stäng"
   },
   "Calendar": {
     "title": "Kalender",
@@ -232,7 +240,8 @@
   "Footer": {
     "builtWith": "Skapad med",
     "builtBy": "av {associationFullName}",
-    "privacy": "Integritetspolicy"
+    "privacy": "Integritetspolicy",
+    "sponsors": "I osponsrat ickesamarbete med:"
   },
   "Auth": {
     "signIn": "Logga in",
@@ -279,7 +288,7 @@
       "Smeknamn, titel, rolig titel, presentation och födelsedag — om du fyller i dem.",
       "Vilka evenemang du anmält dig till och varit på."
     ],
-    "dataNote": "Loggar du in med Google utan att vara medlem sparar vi ingenting om dig i vår databas.",
+    "dataNote": "Loggar du in med Google utan att vara medlem sparar vi ingenting om dig i vår databas, ända tills du fyller i din profil eller ansöker om medlemskap. Då sparas det du själv skrivit.",
     "whyTitle": "Varför vi sparar det",
     "whyBody": "För att driva föreningen: visa vilka som är medlemmar, planera evenemang och hålla reda på vilka som kommer. Den rättsliga grunden är medlemskapet och föreningens berättigade intresse av att kunna organisera sin verksamhet.",
     "whoTitle": "Vem kan se det",
@@ -390,7 +399,8 @@
     "back": "Alla medlemmar",
     "github": "GitHub",
     "wishlist": "Önskelista",
-    "goToProfile": "Gå till profilen"
+    "goToProfile": "Gå till profilen",
+    "guest": "Gäst"
   },
   "Wishlist": {
     "title": "Önskelista",
@@ -411,6 +421,7 @@
     "empty": "Inget nytt den senaste månaden.",
     "unseen": "{count, plural, one {# ny notis} other {# nya notiser}}",
     "membershipRequest": "{who} vill bli medlem",
+    "membershipApproved": "Din ansökan är godkänd, välkommen in!",
     "signUp": "{who} har loggat in för första gången",
     "eventResponse": "{who} svarade på {what}",
     "newEvent": "{who} skapade {what}"
@@ -488,7 +499,9 @@
     "voteCount": "{count, plural, =1 {en röst} other {# röster}}",
     "lever": "Dra i spaken",
     "nextSpinIn": "Nästa snurr om {time}",
-    "signInToSpin": "Logga in med Google så får du tre snurr."
+    "signInToSpin": "Logga in med Google så får du tre snurr.",
+    "signInTitle": "Logga in för att snurra",
+    "close": "Stäng"
   },
   "Errors": {
     "serverTitle": "Något gick sönder",

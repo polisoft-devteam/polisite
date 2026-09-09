@@ -5,13 +5,15 @@ import { getLocale } from "next-intl/server"
 import { z } from "zod"
 
 import {
+  ensureMemberRow,
   findBadgesForMember,
   findMemberById,
   updateMemberProfile,
 } from "@/features/members/queries"
+import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
 import { redirect } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
-import { canManageMembers, isActiveMember } from "@/lib/permissions"
+import { canManageMembers } from "@/lib/permissions"
 import { deleteImageIfOurs, uploadImage } from "@/lib/storage"
 
 // Validated on the server because this is the boundary. Anything the browser sends is
@@ -104,13 +106,21 @@ export async function updateMemberProfileAsAdmin(formData: FormData) {
 export async function updateMyProfile(formData: FormData) {
   const viewer = await getViewer()
 
-  // Re-read membership server-side. Never trust that the page was only shown to members.
-  if (!viewer?.member || !isActiveMember(viewer)) {
-    throw new Error("Not a member")
-  }
+  // Signed in is the bar, re-read on the server: a guest waiting on an admin keeps their
+  // own profile, and this is the moment their row is written, not sign-in.
+  if (!viewer) throw new Error("Not signed in")
 
-  const previousAvatarUrl = viewer.member.avatarUrl
-  const uploadedAvatarUrl = await saveProfile(viewer.member.id, formData)
+  const member =
+    viewer.member ??
+    (await ensureMemberRow({
+      authUserId: viewer.authUserId,
+      email: viewer.email,
+      fullName: viewerDisplayName(viewer),
+      avatarUrl: viewerAvatarUrl(viewer),
+    }))
+
+  const previousAvatarUrl = member.avatarUrl
+  const uploadedAvatarUrl = await saveProfile(member.id, formData)
 
   if (uploadedAvatarUrl) {
     await deleteImageIfOurs("avatars", previousAvatarUrl)

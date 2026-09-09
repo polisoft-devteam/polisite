@@ -39,6 +39,7 @@ export function Modal({
   closeLabel,
   backgroundImage,
   titleClassName,
+  footerClassName,
   className,
   children,
 }: {
@@ -63,6 +64,8 @@ export function Modal({
   backgroundImage?: string
   /** For a title that needs to sit differently, like the crawl's centred one. */
   titleClassName?: string
+  /** For a footer with one button in it, which reads better centred than pushed right. */
+  footerClassName?: string
   className?: string
   children?: React.ReactNode
 }) {
@@ -109,7 +112,9 @@ export function Modal({
 
         {children}
 
-        {footer && <DialogFooter>{footer}</DialogFooter>}
+        {footer && (
+          <DialogFooter className={footerClassName}>{footer}</DialogFooter>
+        )}
 
         <DialogClose
           render={

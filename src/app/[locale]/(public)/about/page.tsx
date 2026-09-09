@@ -14,6 +14,7 @@ import { MembersTable } from "@/components/MembersTable"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { MembershipActions } from "@/components/MembershipActions"
+import { WelcomeLetterButton } from "@/components/WelcomeLetterButton"
 import { PageSection } from "@/components/PageSection"
 import { PageSubNav, type SubNavItem } from "@/components/PageSubNav"
 import { Badge } from "@/components/ui/badge"
@@ -21,7 +22,11 @@ import { readAboutImages } from "@/lib/site-images"
 import { findMembershipState } from "@/features/members/membership-state"
 import { getViewer } from "@/lib/auth"
 import { ASSOCIATION_NAME } from "@/lib/association"
-import { canViewMemberDirectory, isAdmin } from "@/lib/permissions"
+import {
+  canViewMemberDirectory,
+  isActiveMember,
+  isAdmin,
+} from "@/lib/permissions"
 
 export async function generateMetadata({
   params,
@@ -146,6 +151,12 @@ export default async function AboutPage({
             who has nothing left to ask for. */}
         <div className="flex flex-wrap items-center gap-2">
           <MembershipActions state={await findMembershipState(viewer)} />
+
+          {/* The letter welcomed them once and then never again. This is where a member
+              goes to read it, which is why it sits under the membership heading. */}
+          {isActiveMember(viewer) && (
+            <WelcomeLetterButton label={translateAbout("readWelcomeLetter")} />
+          )}
         </div>
       </PageSection>
     </PageContainer>

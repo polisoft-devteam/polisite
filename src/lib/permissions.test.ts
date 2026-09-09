@@ -6,23 +6,24 @@ import { describe, expect, it } from "vitest"
 import type { Event, Member, Role } from "@/db/schema"
 import {
   canAddArchiveLink,
-  canEditArchiveLink,
-  canRemoveArchiveLink,
-  canBringGuests,
   canAwardBadges,
+  canBringGuests,
   canClaimWish,
   canCreateEvent,
   canDeactivateMember,
-  canManageMembers,
+  canEditArchiveLink,
   canEditEvent,
+  canManageMembers,
+  canOpenEvent,
+  canRemoveArchiveLink,
   canRemoveGuest,
   canRespondToEvent,
-  canViewMemberDirectory,
   canViewEvent,
+  canViewMemberDirectory,
   isActiveMember,
   isAdmin,
-  visibleEventVisibilitiesFor,
   type Viewer,
+  visibleEventVisibilitiesFor,
 } from "@/lib/permissions"
 
 function buildMember(overrides: Partial<Member> = {}): Member {
@@ -231,17 +232,43 @@ describe("creating and responding", () => {
     expect(canCreateEvent(signedOutVisitor)).toBe(false)
   })
 
-  it("lets a guest read a public event but not respond to it", () => {
+  it("lets a signed in guest open a public event and say they are coming", () => {
     const publicEvent = buildEvent({ visibility: "public" })
 
     expect(canViewEvent(signedInGuest, publicEvent)).toBe(true)
-    expect(canRespondToEvent(signedInGuest, publicEvent)).toBe(false)
+    expect(canOpenEvent(signedInGuest, publicEvent)).toBe(true)
+    expect(canRespondToEvent(signedInGuest, publicEvent)).toBe(true)
+  })
+
+  it("keeps the association's own events shut to a guest", () => {
+    const membersEvent = buildEvent({ visibility: "members" })
+    const friendsEvent = buildEvent({ visibility: "members_and_friends" })
+
+    for (const event of [membersEvent, friendsEvent]) {
+      expect(canViewEvent(signedInGuest, event)).toBe(false)
+      expect(canOpenEvent(signedInGuest, event)).toBe(false)
+      expect(canRespondToEvent(signedInGuest, event)).toBe(false)
+    }
+  })
+
+  it("lets a visitor who has not signed in see a public event but not open it", () => {
+    const publicEvent = buildEvent({ visibility: "public" })
+
+    expect(canViewEvent(signedOutVisitor, publicEvent)).toBe(true)
+    expect(canOpenEvent(signedOutVisitor, publicEvent)).toBe(false)
+    expect(canRespondToEvent(signedOutVisitor, publicEvent)).toBe(false)
   })
 })
 
 describe("canBringGuests", () => {
   // Someone who did not make the event: the creator has looser rules, tested below.
   const goingMember = buildViewer(buildMember({ id: "someone-else" }))
+
+  it("does not let a guest bring anyone, even where they may answer", () => {
+    const publicEvent = buildEvent({ visibility: "public" })
+
+    expect(canBringGuests(signedInGuest, publicEvent, "going")).toBe(false)
+  })
 
   it("lets a member going to a public event bring someone", () => {
     const event = buildEvent({ visibility: "public" })
@@ -344,11 +371,14 @@ describe("wishlist claiming", () => {
 })
 
 describe("member directory", () => {
-  it("is for members, not guests", () => {
+  it("is for anyone signed in, member or waiting to be one", () => {
     expect(canViewMemberDirectory(buildViewer(buildMember()))).toBe(true)
     expect(
       canViewMemberDirectory(buildViewer(buildMember({ status: "inactive" }))),
-    ).toBe(false)
+    ).toBe(true)
+  })
+
+  it("shows nobody to a visitor who has not signed in", () => {
     expect(canViewMemberDirectory(null)).toBe(false)
   })
 })

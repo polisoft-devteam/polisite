@@ -9,6 +9,7 @@
 
 import { useTranslations } from "next-intl"
 
+import { MembersOnlyPanel } from "@/components/MembersOnlyPanel"
 import { Modal } from "@/components/Modal"
 import { SiteImage } from "@/components/SiteImage"
 import { LockIcon } from "@/lib/icons"
@@ -23,12 +24,14 @@ export function LockedMediaCard({
   caption?: string
 }) {
   const translateArchive = useTranslations("Archive")
+  // The same words as a locked event: an album nobody may open and an event nobody may
+  // open are the same answer, and hearing two of them would suggest they differ.
+  const translateEvents = useTranslations("Events")
 
   return (
     <Modal
-      title={translateArchive("membersOnlyTitle")}
-      description={translateArchive("membersOnlyBody")}
-      closeLabel={translateArchive("membersOnlyClose")}
+      title={translateEvents("membersOnlyTitle")}
+      closeLabel={translateEvents("membersOnlyClose")}
       trigger={
         <button
           type="button"
@@ -68,6 +71,11 @@ export function LockedMediaCard({
           </span>
         </button>
       }
-    />
+    >
+      <MembersOnlyPanel
+        body={translateEvents("membersOnlyBody")}
+        readMoreLabel={translateEvents("membersOnlyReadMore")}
+      />
+    </Modal>
   )
 }

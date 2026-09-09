@@ -10,8 +10,9 @@ import { formatInTimeZone } from "date-fns-tz"
 import { getTranslations } from "next-intl/server"
 
 import { CalendarTile } from "@/components/CalendarTile"
+import { MembersOnlyCard } from "@/components/MembersOnlyCard"
 import { Button } from "@/components/ui/button"
-import type { Event } from "@/db/schema"
+import type { Event, EventVisibility } from "@/db/schema"
 import { Link } from "@/i18n/navigation"
 import {
   BirthdayCakeIcon,
@@ -51,10 +52,13 @@ export async function EventCalendar({
   birthdays,
   monthCounts,
   locale,
+  openableVisibilities,
 }: {
   month: Date
   events: Event[]
   birthdays: CalendarBirthday[]
+  /** Which events this viewer may actually read; the rest open the members-only modal. */
+  openableVisibilities: EventVisibility[]
   /** Events per month of the shown year, keyed "YYYY-MM". */
   monthCounts: Map<string, number>
   locale: string
@@ -209,10 +213,14 @@ export async function EventCalendar({
               </span>
 
               <ul className="mt-1 space-y-1">
-                {dayEvents.map((event) => (
-                  <li key={event.id}>
+                {dayEvents.map((event) => {
+                  const canOpen = openableVisibilities.includes(
+                    event.visibility,
+                  )
+
+                  const tile = (
                     <CalendarTile
-                      href={`/events/${event.slug}`}
+                      href={canOpen ? `/events/${event.slug}` : undefined}
                       imageUrl={event.imageUrl}
                       lead={formatInTimeZone(
                         event.startsAt,
@@ -221,8 +229,25 @@ export async function EventCalendar({
                       )}
                       title={event.title}
                     />
-                  </li>
-                ))}
+                  )
+
+                  return (
+                    <li key={event.id}>
+                      {/* A tile nobody may open carries no slug either, exactly as a card
+                          on /events does not. Pressing it says why. */}
+                      {canOpen ? (
+                        tile
+                      ) : (
+                        <MembersOnlyCard
+                          label={event.title}
+                          className="block w-full cursor-pointer text-left"
+                        >
+                          {tile}
+                        </MembersOnlyCard>
+                      )}
+                    </li>
+                  )
+                })}
 
                 {(birthdaysByMonthDay.get(key.slice(5)) ?? []).map(
                   (birthday) => (

@@ -71,6 +71,12 @@ export async function ProfileView({
           )}
 
           <div className="mt-2 flex flex-wrap gap-2 empty:mt-0">
+            {/* Said plainly rather than left to be worked out from what is missing: a
+                request with an admin is a state worth naming. */}
+            {member.status !== "active" && (
+              <Badge variant="outline">{translateMembers("guest")}</Badge>
+            )}
+
             {member.officialTitle && isMemberTitle(member.officialTitle) && (
               <Badge variant="secondary">
                 {translateTitles(member.officialTitle)}

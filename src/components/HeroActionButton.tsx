@@ -12,6 +12,7 @@
 
 import { getTranslations } from "next-intl/server"
 
+import { RequestMembershipButton } from "@/components/RequestMembershipButton"
 import { SignInButton } from "@/components/SignInButton"
 import { Button } from "@/components/ui/button"
 import { requestMembership } from "@/features/members/membership-prompt-actions"
@@ -59,10 +60,11 @@ export async function HeroActionButton() {
 
   return (
     <form action={requestMembership}>
-      <Button type="submit" className={HERO_BUTTON}>
-        <HoverSwapIcon Idle={EnvelopeIcon} Hover={NewEventIcon} />
-        {translateHome("heroRequestMembership")}
-      </Button>
+      <RequestMembershipButton
+        className={HERO_BUTTON}
+        label={translateHome("heroRequestMembership")}
+        sendingLabel={translateHome("heroRequestSending")}
+      />
     </form>
   )
 }

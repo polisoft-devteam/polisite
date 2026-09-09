@@ -10,7 +10,11 @@ import { memberDisplayName } from "@/features/members/identity"
 import { findMembersWithBirthdays } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 import { addMonthsUtc, parseMonthParam } from "@/lib/calendar"
-import { isActiveMember, visibleEventVisibilitiesFor } from "@/lib/permissions"
+import {
+  isActiveMember,
+  openableEventVisibilitiesFor,
+  visibleEventVisibilitiesFor,
+} from "@/lib/permissions"
 
 export async function generateMetadata({
   params,
@@ -69,6 +73,7 @@ export default async function CalendarPage({
         birthdays={birthdays}
         monthCounts={monthCounts}
         locale={locale}
+        openableVisibilities={openableEventVisibilitiesFor(viewer)}
       />
     </div>
   )

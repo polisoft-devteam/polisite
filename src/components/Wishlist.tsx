@@ -24,9 +24,18 @@ import { ExternalLinkIcon, PlusIcon, RemoveIcon } from "@/lib/icons"
 export async function Wishlist({
   entries,
   isOwnList,
+  canClaim,
 }: {
   entries: WishlistEntry[]
   isOwnList: boolean
+  /**
+   * False for somebody signed in who is not a member yet.
+   *
+   * They read the list and see what is already spoken for, which is no secret from them,
+   * but a present is the association's to buy. Checked in the action as well; this is what
+   * keeps a button off the page that would only refuse them.
+   */
+  canClaim: boolean
 }) {
   const translateWishlist = await getTranslations("Wishlist")
 
@@ -68,27 +77,29 @@ export async function Wishlist({
                     </span>
                   )}
 
-                  <form action={toggleClaimAction}>
-                    <input type="hidden" name="itemId" value={item.id} />
-                    <input
-                      type="hidden"
-                      name="claimed"
-                      value={String(viewerHasClaimed)}
-                    />
-                    <Button
-                      type="submit"
-                      size="sm"
-                      variant={viewerHasClaimed ? "outline" : "default"}
-                    >
-                      {translateWishlist(
-                        viewerHasClaimed
-                          ? "release"
-                          : claimCount && claimCount > 0
-                            ? "join"
-                            : "claim",
-                      )}
-                    </Button>
-                  </form>
+                  {canClaim && (
+                    <form action={toggleClaimAction}>
+                      <input type="hidden" name="itemId" value={item.id} />
+                      <input
+                        type="hidden"
+                        name="claimed"
+                        value={String(viewerHasClaimed)}
+                      />
+                      <Button
+                        type="submit"
+                        size="sm"
+                        variant={viewerHasClaimed ? "outline" : "default"}
+                      >
+                        {translateWishlist(
+                          viewerHasClaimed
+                            ? "release"
+                            : claimCount && claimCount > 0
+                              ? "join"
+                              : "claim",
+                        )}
+                      </Button>
+                    </form>
+                  )}
                 </div>
               )}
             </li>

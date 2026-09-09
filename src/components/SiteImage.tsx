@@ -26,6 +26,8 @@ export function SiteImage({
   priority = false,
   focalPoint = "center",
   rounded = "rounded-lg",
+  fit = "cover",
+  style,
 }: {
   src: string
   /** Empty string for decorative images the surrounding text already names. */
@@ -43,26 +45,41 @@ export function SiteImage({
    */
   focalPoint?: keyof typeof FOCAL_POINTS
   rounded?: string
+  /**
+   * "contain" for artwork that must not be cropped, such as a logo, which also turns off
+   * the skeleton and the backing colour: a picture with transparency lets both show
+   * through, and a grey box behind a logo is not what anybody drew.
+   */
+  fit?: "cover" | "contain"
+  /** For a frame whose shape is known only at runtime, such as a logo's own ratio. */
+  style?: React.CSSProperties
 }) {
   return (
     <span
+      style={style}
       className={cn(
-        "bg-muted relative block overflow-hidden",
+        "relative block overflow-hidden",
+        fit === "cover" && "bg-muted",
         rounded,
         className,
       )}
     >
-      <span
-        aria-hidden="true"
-        className="bg-muted-foreground/20 absolute inset-0 animate-pulse"
-      />
+      {fit === "cover" && (
+        <span
+          aria-hidden="true"
+          className="bg-muted-foreground/20 absolute inset-0 animate-pulse"
+        />
+      )}
       <Image
         src={src}
         alt={alt}
         fill
         sizes={sizes}
         priority={priority}
-        className={cn("object-cover", FOCAL_POINTS[focalPoint])}
+        className={cn(
+          fit === "cover" ? "object-cover" : "object-contain",
+          FOCAL_POINTS[focalPoint],
+        )}
       />
     </span>
   )

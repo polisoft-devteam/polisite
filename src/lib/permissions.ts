@@ -80,6 +80,30 @@ export function canViewEvent(viewer: Viewer | null, event: Event): boolean {
   return visibleEventVisibilitiesFor(viewer).includes(event.visibility)
 }
 
+/**
+ * Which visibilities this viewer may actually open, as opposed to merely see listed.
+ *
+ * A member reads everything they can see. Somebody signed in with Google but not yet a
+ * member reads the public ones and answers them: a public event is the association saying
+ * "come along", and a page nobody outside can open is a poor way to say it. A visitor who
+ * has not signed in reads none of them, so a slug guessed from a Discord link tells them
+ * nothing.
+ *
+ * Kept apart from visibleEventVisibilitiesFor because seeing that an evening exists and
+ * reading where it is are different questions with different answers.
+ */
+export function openableEventVisibilitiesFor(
+  viewer: Viewer | null,
+): EventVisibility[] {
+  if (isActiveMember(viewer)) return visibleEventVisibilitiesFor(viewer)
+
+  return viewer ? ["public"] : []
+}
+
+export function canOpenEvent(viewer: Viewer | null, event: Event): boolean {
+  return openableEventVisibilitiesFor(viewer).includes(event.visibility)
+}
+
 export function canCreateEvent(viewer: Viewer | null): boolean {
   return isActiveMember(viewer)
 }
@@ -94,12 +118,18 @@ export function canDeleteEvent(viewer: Viewer | null, event: Event): boolean {
   return canEditEvent(viewer, event)
 }
 
-/** Guests can read a public event but cannot say they're coming. */
+/**
+ * Answering needs an account, and an event you may open.
+ *
+ * So a guest may say they are coming to a public event, which is the point of a public
+ * event, and nobody who has not signed in may answer anything: an attendee list is a list
+ * of people, and a name on it has to belong to somebody.
+ */
 export function canRespondToEvent(
   viewer: Viewer | null,
   event: Event,
 ): boolean {
-  return isActiveMember(viewer) && canViewEvent(viewer, event)
+  return canOpenEvent(viewer, event)
 }
 
 /**
@@ -112,6 +142,9 @@ export function canBringGuests(
   event: Event,
   myResponse: AttendanceResponse | null,
 ): boolean {
+  // Members only, even where a guest may answer for themselves: bringing somebody else is
+  // vouching for them, and that is a member's to do.
+  if (!isActiveMember(viewer)) return false
   if (!canRespondToEvent(viewer, event)) return false
 
   // Whoever made the event keeps the guest list whatever its visibility, and without
@@ -173,9 +206,14 @@ export function canClaimWish(
   return viewer!.member!.id !== ownerMemberId
 }
 
-/** Members can see each other. A guest sees no one. */
+/**
+ * Who may see the association's faces: anyone signed in, member or not.
+ *
+ * Somebody whose request is with an admin is already half here, and a list of names is a
+ * poor thing to make them wait for. A visitor who has not signed in still sees nobody.
+ */
 export function canViewMemberDirectory(viewer: Viewer | null): boolean {
-  return isActiveMember(viewer)
+  return viewer !== null
 }
 
 // --- The open archive ----------------------------------------------------------

@@ -17,15 +17,20 @@
     "heroTagline": "Grown men doing things together, {associationName} does a great deal more than that!",
     "intro": "Here you can create and browse upcoming events, pimp your profile, or take a look in our open archive where there is plenty to be found. Most of it sits behind a paywall, so make sure you sign in and request membership!",
     "upcomingTitle": "Coming up",
+    "ongoingTitle": "Happening now",
+    "votableTitle": "Vote on a date",
     "upcomingEmpty": "Nothing planned right now. Got an idea? Add a suggestion.",
     "allEvents": "All events",
     "newEvent": "New event",
     "visitorNote": "You're seeing the public events. Members also see the association's own.",
     "requestMembership": "Request membership",
-    "membershipPending": "Membership under review",
+    "membershipPending": "Request sent, an admin will answer soon",
     "heroSignIn": "Sign in",
-    "heroRequestMembership": "Apply",
-    "heroCreateEvent": "Create an event"
+    "heroRequestMembership": "PoliMembership",
+    "heroCreateEvent": "Create an event",
+    "ongoingEmpty": "Nothing is happening right now.",
+    "votableEmpty": "Nothing to vote on right now.",
+    "heroRequestSending": "Sending …"
   },
   "About": {
     "title": "About us",
@@ -64,7 +69,8 @@
     },
     "timelineHeading": "How we got here",
     "timelineUnderConstruction": "Under construction",
-    "aboutHeading": "About us"
+    "aboutHeading": "About us",
+    "readWelcomeLetter": "Read the welcome letter"
   },
   "Events": {
     "title": "Events",
@@ -170,6 +176,7 @@
     "datePollHint": "Vote for every date you can make. Pick as many as you can wagoo!",
     "datePollClosed": "Voting is closed. Every date has passed.",
     "datePollVote": "I can make it",
+    "datePollCta": "Vote",
     "datePollVoted": "I can make it ✓",
     "datePollVotes": "{count, plural, =0 {Nobody has voted} one {# can make it} other {# can make it}}",
     "datePollLeading": "most votes",
@@ -217,7 +224,8 @@
     "unsavedTitle": "You have not published yet",
     "unsavedBody": "Leave the page and what you have written is gone.",
     "unsavedLeave": "Leave anyway",
-    "unsavedStay": "Stay here"
+    "unsavedStay": "Stay here",
+    "membersOnlyClose": "Close"
   },
   "Calendar": {
     "title": "Calendar",
@@ -232,7 +240,8 @@
   "Footer": {
     "builtWith": "Made with",
     "builtBy": "by {associationFullName}",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "sponsors": "In unsponsored non-collaboration with:"
   },
   "Auth": {
     "signIn": "Sign in",
@@ -279,7 +288,7 @@
       "Nickname, title, fun title, bio and birthday — if you fill them in.",
       "Which events you have signed up for and attended."
     ],
-    "dataNote": "If you sign in with Google without being a member, we store nothing about you in our database.",
+    "dataNote": "If you sign in with Google without being a member we store nothing about you in our database, right up until you fill in your profile or ask to join. Then we keep what you wrote.",
     "whyTitle": "Why we store it",
     "whyBody": "To run the association: show who the members are, plan events and keep track of who is coming. The legal basis is the membership itself and the association's legitimate interest in organising its activities.",
     "whoTitle": "Who can see it",
@@ -390,7 +399,8 @@
     "back": "All members",
     "github": "GitHub",
     "wishlist": "Wishlist",
-    "goToProfile": "Go to profile"
+    "goToProfile": "Go to profile",
+    "guest": "Guest"
   },
   "Wishlist": {
     "title": "Wishlist",
@@ -411,6 +421,7 @@
     "empty": "Nothing new in the past month.",
     "unseen": "{count, plural, one {# new notification} other {# new notifications}}",
     "membershipRequest": "{who} wants to join",
+    "membershipApproved": "Your request was approved, welcome in!",
     "signUp": "{who} signed in for the first time",
     "eventResponse": "{who} replied to {what}",
     "newEvent": "{who} created {what}"
@@ -488,7 +499,9 @@
     "voteCount": "{count, plural, one {# vote} other {# votes}}",
     "lever": "Pull the lever",
     "nextSpinIn": "Next spin in {time}",
-    "signInToSpin": "Sign in with Google and you get three spins."
+    "signInToSpin": "Sign in with Google and you get three spins.",
+    "signInTitle": "Sign in to spin",
+    "close": "Close"
   },
   "Errors": {
     "serverTitle": "Something broke",

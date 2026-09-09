@@ -13,6 +13,7 @@
 import { ElectionWheel } from "@/components/ElectionWheel"
 import { recordElectionPickAction } from "@/features/election/actions"
 import { viewerAvatarUrl, viewerDisplayName } from "@/features/members/identity"
+import { willShowWelcomeLetter } from "@/features/members/membership-state"
 import { getViewer } from "@/lib/auth"
 import { isElectionOpen, SPINS_ON_FIRST_DAY } from "@/lib/election"
 import { isActiveMember } from "@/lib/permissions"
@@ -21,6 +22,10 @@ export async function ElectionWheelGate() {
   if (!isElectionOpen()) return null
 
   const viewer = await getViewer()
+
+  // The welcome letter takes the whole screen and asks one thing. A fairground wheel
+  // spinning behind it is not a second thing worth asking.
+  if (await willShowWelcomeLetter(viewer)) return null
 
   const identity = isActiveMember(viewer)
     ? `member:${viewer!.member!.id}`

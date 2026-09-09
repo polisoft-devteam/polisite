@@ -74,6 +74,37 @@ export async function findRolesForMember(memberId: string): Promise<Role[]> {
 
 // --- Membership prompt ----------------------------------------------------------
 
+/**
+ * The row a guest gets the moment they first save something about themselves.
+ *
+ * Signing in stores nothing; filling in a profile is the act that does, which is what the
+ * privacy page says. Status inactive, so it grants exactly nothing until an admin says
+ * otherwise: membership is still an admin's to give.
+ */
+export async function ensureMemberRow(viewer: {
+  authUserId: string
+  email: string
+  fullName: string
+  avatarUrl: string | null
+}): Promise<Member> {
+  const [created] = await db
+    .insert(members)
+    .values({
+      authUserId: viewer.authUserId,
+      email: viewer.email,
+      fullName: viewer.fullName,
+      avatarUrl: viewer.avatarUrl,
+      status: "inactive",
+    })
+    .onConflictDoUpdate({
+      target: members.email,
+      set: { authUserId: viewer.authUserId },
+    })
+    .returning()
+
+  return created
+}
+
 export async function findMembershipPrompt(
   authUserId: string,
 ): Promise<MembershipPrompt | null> {
@@ -181,7 +212,10 @@ export async function approveMembershipRequest(
 
   if (!request) return false
 
-  const [created] = await db
+  // Upsert rather than insert: a guest who filled in their profile while waiting already
+  // has a row, and an insert that quietly did nothing left them unapprovable. Their own
+  // name and picture win, because they chose them; ours only fill the gaps.
+  const [approved] = await db
     .insert(members)
     .values({
       authUserId,
@@ -193,14 +227,22 @@ export async function approveMembershipRequest(
       status: "active",
       joinedAssociationAt: new Date(),
     })
-    .onConflictDoNothing()
+    .onConflictDoUpdate({
+      target: members.email,
+      set: {
+        authUserId,
+        status: "active",
+        joinedAssociationAt: sql`coalesce(${members.joinedAssociationAt}, now())`,
+        avatarUrl: sql`coalesce(${members.avatarUrl}, ${request.avatarUrl})`,
+      },
+    })
     .returning()
 
-  if (!created) return false
+  if (!approved) return false
 
   await db
     .insert(memberRoles)
-    .values({ memberId: created.id, role: "member" })
+    .values({ memberId: approved.id, role: "member" })
     .onConflictDoNothing()
 
   return true

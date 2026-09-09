@@ -46,6 +46,7 @@ export {
   Palette as DesignIcon,
   Brush as PaletteBrushIcon,
   VolumeUpFill as SoundOnIcon,
+  ExclamationTriangleFill as WarningIcon,
   Earbuds as WearHeadphonesIcon,
   Camera2 as AddToArchiveIcon,
   SlashCircle as NotYetIcon,

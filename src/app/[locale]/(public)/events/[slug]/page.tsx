@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 
-import { notFound } from "next/navigation"
 import {
   getFormatter,
   getTranslations,
@@ -58,8 +57,7 @@ import {
   canCreateEvent,
   canEditEvent,
   canRespondToEvent,
-  isActiveMember,
-  visibleEventVisibilitiesFor,
+  openableEventVisibilitiesFor,
 } from "@/lib/permissions"
 
 /** Longer than a blurb, so the hero cannot show all of it and the page repeats it. */
@@ -70,9 +68,10 @@ export async function generateMetadata({
 }: PageProps<"/[locale]/events/[slug]">): Promise<Metadata> {
   const { locale, slug } = await params
   const viewer = await getViewer()
-  const event = isActiveMember(viewer)
-    ? await findEventBySlug(slug, visibleEventVisibilitiesFor(viewer))
-    : null
+  const event = await findEventBySlug(
+    slug,
+    openableEventVisibilitiesFor(viewer),
+  )
 
   if (!event) {
     const translateEvents = await getTranslations({
@@ -99,25 +98,25 @@ export default async function EventPage({
   const format = await getFormatter({ locale })
   const viewer = await getViewer()
 
-  // Asked before the slug is even looked up, so an event that exists and one that does not
-  // answer a non-member identically. Detail is members only whatever the event's
-  // visibility, including public and members_and_friends: those decide who sees that an
-  // event exists and who may come, not who may read the page.
-  //
+  // Looked up against what this viewer may open rather than what they may see listed: a
+  // member reads everything, somebody signed in reads the public ones, and a visitor who
+  // has not signed in reads none. Filtered in the query, so an event that exists and one
+  // that does not answer identically.
+  const event = await findEventBySlug(
+    slug,
+    openableEventVisibilitiesFor(viewer),
+  )
+
   // A notice rather than a not-found, because the link that got them here was probably
   // ours, posted to Discord, and a dead end is no way to greet someone who followed it.
   // Signing in from here brings them straight back.
-  if (!isActiveMember(viewer)) {
+  if (!event) {
     return (
       <PageContainer>
         <MembersOnlyNotice state={await findMembershipState(viewer)} />
       </PageContainer>
     )
   }
-
-  const event = await findEventBySlug(slug, visibleEventVisibilitiesFor(viewer))
-
-  if (!event) notFound()
 
   const [attendees, dateOptions, guests, host] = await Promise.all([
     findAttendeesForEvent(event.id),

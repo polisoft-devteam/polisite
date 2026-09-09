@@ -16,6 +16,7 @@ import {
   isNotNull,
   isNull,
   lt,
+  not,
   sql,
 } from "drizzle-orm"
 
@@ -56,6 +57,33 @@ export async function findUpcomingEvents(
     .orderBy(asc(events.startsAt))
 }
 
+/** How long an event with no end time counts as still happening. */
+const ONGOING_HOURS = 4
+
+/** Started, and not finished: the condition both the ongoing and the past list use. */
+function isOngoing() {
+  return sql`${events.startsAt} <= now() and coalesce(${events.endsAt}, ${events.startsAt} + interval '${sql.raw(String(ONGOING_HOURS))} hours') >= now()`
+}
+
+/**
+ * Happening right now: started, and not over yet.
+ *
+ * An event with no end time is treated as running for ONGOING_HOURS, because "started at
+ * seven" and "finished" are not the same thing and a party that began an hour ago should
+ * not be filed under history. The same rule keeps it out of the past list.
+ */
+export async function findOngoingEvents(
+  allowedVisibilities: EventVisibility[],
+): Promise<Event[]> {
+  if (allowedVisibilities.length === 0) return []
+
+  return db
+    .select()
+    .from(events)
+    .where(and(inArray(events.visibility, allowedVisibilities), isOngoing()))
+    .orderBy(asc(events.startsAt))
+}
+
 export async function findPastEvents(
   allowedVisibilities: EventVisibility[],
 ): Promise<Event[]> {
@@ -68,6 +96,9 @@ export async function findPastEvents(
       and(
         inArray(events.visibility, allowedVisibilities),
         lt(events.startsAt, new Date()),
+        // Under way is not over. Without this, an evening that began an hour ago is
+        // already history on every page that lists what has been.
+        not(isOngoing()),
       ),
     )
     .orderBy(desc(events.startsAt))

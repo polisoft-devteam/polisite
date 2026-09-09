@@ -8,7 +8,11 @@ import { EventList } from "@/components/EventList"
 import { PageContainer } from "@/components/PageContainer"
 import { SiteHero } from "@/components/SiteHero"
 import { Button } from "@/components/ui/button"
-import { findUpcomingEvents } from "@/features/events/queries"
+import {
+  findDatelessEvents,
+  findOngoingEvents,
+  findUpcomingEvents,
+} from "@/features/events/queries"
 import { Link } from "@/i18n/navigation"
 import { getViewer } from "@/lib/auth"
 import { ChevronRightIcon, NewEventIcon } from "@/lib/icons"
@@ -30,10 +34,18 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 
   // A visitor gets ["public"], a member also gets the association's own events. Filtered
   // in SQL, so nothing they may not see is ever loaded.
-  const upcomingEvents = await findUpcomingEvents(
-    visibleEventVisibilitiesFor(viewer),
-  )
+  const allowedVisibilities = visibleEventVisibilitiesFor(viewer)
+
+  const [upcomingEvents, ongoingEvents, datelessEvents] = await Promise.all([
+    findUpcomingEvents(allowedVisibilities),
+    findOngoingEvents(allowedVisibilities),
+    findDatelessEvents(allowedVisibilities),
+  ])
+
   const shownEvents = upcomingEvents.slice(0, EVENTS_SHOWN)
+  // Every dateless one, not a slice: a poll is only worth anything while people are still
+  // voting in it, and there are never many at once.
+  const votableEvents = datelessEvents
 
   return (
     <>
@@ -45,12 +57,34 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           {translateHome("intro")}
         </p>
 
-        <EventList
-          heading={translateHome("upcomingTitle")}
-          emptyText={translateHome("upcomingEmpty")}
-          events={shownEvents}
-          locale={locale}
-        />
+        {/* Three lists side by side from lg, stacked before that: what is coming, what
+            is waiting on a vote, and what is happening this minute. Each keeps its empty
+            state rather than disappearing, so the columns stay where the eye left them. */}
+        <div className="grid gap-x-8 lg:grid-cols-3">
+          <EventList
+            heading={translateHome("upcomingTitle")}
+            emptyText={translateHome("upcomingEmpty")}
+            events={shownEvents}
+            locale={locale}
+            layout="column"
+          />
+
+          <EventList
+            heading={translateHome("votableTitle")}
+            emptyText={translateHome("votableEmpty")}
+            events={votableEvents}
+            locale={locale}
+            layout="column"
+          />
+
+          <EventList
+            heading={translateHome("ongoingTitle")}
+            emptyText={translateHome("ongoingEmpty")}
+            events={ongoingEvents}
+            locale={locale}
+            layout="column"
+          />
+        </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-4">
           <Button

@@ -13,13 +13,16 @@ export const WELCOME_LETTER = {
     "Om du läser detta så har snuten sprängt dörren, hittat min 5 petabytedisk och jag sitter inne...",
     "Hehe där fick jag dig allt, bara lite skoj sådär...",
     "Nu undrar du säkert, vad är detta?",
-    "Som nu 30-åring och mer eller mindre nyskild har jag insett att manlig gemenskap är fan det enda man har här i världen, när allt annat rämnat! Nu tänker du kanske: Nej fan, livet fyllt med aktivitet, sprit och IKEA-kvinnor.",
+    "Som nu 30-åring och mer eller mindre nyskild har jag insett att manlig gemenskap är fan det enda man har här i världen, när allt annat rämnat!",
+    "Nu tänker du kanske: Nej fan, livet fyllt med aktivitet, sprit och IKEA-kvinnor.",
     "Men det kommer en dag när frugan sticker med barnen, demensen kickar in, knäet inte pallar hockeyn, ens franska fru har gått bort efter en tragisk elskoterrelaterad simningsolycka i Högsbo... vem vet? Inte du i alla fall.",
     "Med avstamp i detta förklarar jag lösningen till mitt och numera ditt problem: föreningslivet!",
     "Den här fina lilla webbappen är ett frö som jag, i egenskap av föreningens första självutnämnda President, Seth Ruydell style, nu ska vattna och sköta med omsorg!",
+    "Detta är en samlingsplats för allt möjligt kul, öppet poli-arkiv, kalender över aktiviteter, Discord integrationer och mycket mera! Allt för att hålla oss på banan.",
     "Här kommer jag, och förhoppningsvis DU, skapa och schemalägga events och annat mys. Tanken är liksom att formalisera och strukturera det vi redan har så att det håller hela vägen in i demensen.",
     "Jag har stora planer för denna fina Poli-förening: fet merch, stående årsträff och resor, grupptatuering? Kanske tom en gemensam aktiepool där vi sparar mot gemensam resa??",
     "Jag säger: välkommen till föreningslivet, DITT medlemskap är redan bokat.",
+    "En sak till, vid frågor eller klagomål, kontakta alltid, Felix Morau",
   ],
 
   signature: "I hast,\nVictor Interassistsson",
@@ -28,6 +31,6 @@ export const WELCOME_LETTER = {
   playLabel: "Spela",
   replayLabel: "Spela om",
 
-  requestLabel: "Redan certified PoliBoy? Clicka här!",
+  requestLabel: "Redan certified PoliBoy? Klicka här!",
   closeLabel: "Stäng",
 } as const

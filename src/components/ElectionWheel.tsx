@@ -20,6 +20,8 @@ import { usePathname } from "@/i18n/navigation"
 
 import { Confetti } from "@/components/Confetti"
 import { MemberAvatar } from "@/components/MemberAvatar"
+import { Modal } from "@/components/Modal"
+import { SignInButton } from "@/components/SignInButton"
 import { NextSpinCountdown } from "@/components/NextSpinCountdown"
 import { SiteImage } from "@/components/SiteImage"
 import { Tooltip } from "@/components/Tooltip"
@@ -401,6 +403,7 @@ export function ElectionWheel({
   const [isSpinning, setIsSpinning] = useState(false)
   const [celebrated, setCelebrated] = useState<Party | null>(null)
   const [isLeverPulled, setIsLeverPulled] = useState(false)
+  const [isAskingToSignIn, setIsAskingToSignIn] = useState(false)
   const timers = useRef<number[]>([])
   const playingSound = useRef<HTMLAudioElement | null>(null)
   const spinSound = useRef<HTMLAudioElement | null>(null)
@@ -616,6 +619,9 @@ export function ElectionWheel({
             </button>
           )}
 
+          {/* Signed out, the wheel is a way in rather than a dead control: pressing it
+              asks for a Google account, which is the only thing standing between them and
+              a spin. Signed in, it spins. */}
           {/* The wheel and the hints above it, as one thing to hover. The hints sit
             outside the button rather than inside it, because the button is clipped to the
             circle it draws so the page can be clicked around it, and a clip path takes
@@ -632,7 +638,7 @@ export function ElectionWheel({
               <button
                 type="button"
                 onClick={spin}
-                aria-disabled={!canSpin}
+                aria-disabled={!canSpin && !isSignedOut}
                 aria-label={
                   spinsLeft > 0
                     ? translateElection("spin", { count: spinsLeft })
@@ -646,7 +652,7 @@ export function ElectionWheel({
                   isCorner
                     ? "size-[100vw] sm:size-80"
                     : "size-[min(92vw,34rem)]",
-                  canSpin ? "cursor-pointer" : "cursor-default",
+                  canSpin || isSignedOut ? "cursor-pointer" : "cursor-default",
                 )}
               >
                 <Wedges
@@ -692,7 +698,7 @@ export function ElectionWheel({
               aria-label={translateElection("lever")}
               className={cn(
                 "self-center",
-                canSpin ? "cursor-pointer" : "cursor-default",
+                canSpin || isSignedOut ? "cursor-pointer" : "cursor-default",
               )}
             >
               <Lever isPulled={isLeverPulled} />
@@ -708,6 +714,20 @@ export function ElectionWheel({
           </div>
         )}
       </div>
+
+      {isAskingToSignIn && (
+        <Modal
+          open
+          onOpenChange={(isOpen) => {
+            if (!isOpen) setIsAskingToSignIn(false)
+          }}
+          title={translateElection("signInTitle")}
+          description={translateElection("signInToSpin")}
+          closeLabel={translateElection("close")}
+          footerClassName="sm:justify-center"
+          footer={<SignInButton />}
+        />
+      )}
 
       {celebrated && (
         <>

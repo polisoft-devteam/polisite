@@ -20,6 +20,21 @@ export type MembershipState =
   /** Asked and turned down. Asking again writes nothing, so nothing is offered. */
   | "denied"
 
+/**
+ * Whether the welcome letter is about to take over the screen.
+ *
+ * Asked by the letter itself and by anything that has to get out of its way, so the two
+ * cannot disagree: it is shown to somebody signed in who is not a member and has never
+ * answered it.
+ */
+export async function willShowWelcomeLetter(
+  viewer: Viewer | null,
+): Promise<boolean> {
+  if (!viewer || isActiveMember(viewer)) return false
+
+  return (await findMembershipPrompt(viewer.authUserId)) === null
+}
+
 export async function findMembershipState(
   viewer: Viewer | null,
 ): Promise<MembershipState> {

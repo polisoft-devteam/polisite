@@ -28,6 +28,8 @@ export type ActivityKind =
   | "eventResponse"
   /** Someone else created an event. */
   | "newEvent"
+  /** An admin let you in. Yours alone, and only for as long as it is news. */
+  | "membershipApproved"
 
 export type ActivityItem = {
   /** Unique per row, so React keys survive two things happening in the same second. */
@@ -161,7 +163,24 @@ export async function findActivityFor(
       .limit(ACTIVITY_LIMIT),
   ])
 
+  // Derived from the row rather than recorded: being let in is the day joinedAssociationAt
+  // was written, and a table of one notification per member would be a second copy of it.
+  const approvedAt = member.joinedAssociationAt
+
   const items: ActivityItem[] = [
+    ...(approvedAt && approvedAt >= since
+      ? [
+          {
+            key: `approved-${member.id}`,
+            kind: "membershipApproved" as const,
+            who: null,
+            what: null,
+            href: "/profile",
+            at: approvedAt,
+          },
+        ]
+      : []),
+
     ...requests.map((row) => ({
       key: `request-${row.email}-${row.at.getTime()}`,
       kind: "membershipRequest" as const,

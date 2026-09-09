@@ -16,7 +16,9 @@ import {
 } from "@/features/events/labels"
 import type { Attendee, EventGuestWithInviter } from "@/features/events/queries"
 import { MembersOnlyCard } from "@/components/MembersOnlyCard"
+import { Badge } from "@/components/ui/badge"
 import { Link } from "@/i18n/navigation"
+import { ChooseDateIcon } from "@/lib/icons"
 
 const MAX_FACES = 4
 
@@ -108,9 +110,19 @@ export async function EventCard({
               </p>
             </>
           ) : (
-            <p className="text-muted-foreground text-sm italic">
-              {translateEvents("dateNotDecided")}
-            </p>
+            <>
+              <p className="text-muted-foreground text-sm italic">
+                {translateEvents("dateNotDecided")}
+              </p>
+
+              {/* Drawn as a call to action, not built as one: the whole card is already a
+                  link, and a button inside a link is invalid and unreachable by keyboard.
+                  Pressing the card lands on the poll. */}
+              <Badge className="mt-1.5 h-6 gap-1.5 px-2.5">
+                <ChooseDateIcon />
+                {translateEvents("datePollCta")}
+              </Badge>
+            </>
           )}
         </div>
 
