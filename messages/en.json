@@ -30,7 +30,8 @@
     "heroCreateEvent": "Create an event",
     "ongoingEmpty": "Nothing is happening right now.",
     "votableEmpty": "Nothing to vote on right now.",
-    "heroRequestSending": "Sending …"
+    "heroRequestSending": "Sending …",
+    "welcomeLetter": "Welcome message"
   },
   "About": {
     "title": "About us",

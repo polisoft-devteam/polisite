@@ -15,7 +15,7 @@ import { BackLink } from "@/components/BackLink"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
 import { ProfileFields } from "@/components/ProfileFields"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import { updateMemberProfileAsAdmin } from "@/features/members/actions"
 import { findMemberById } from "@/features/members/queries"
 import { findBadgesForMember } from "@/features/members/queries"
@@ -72,9 +72,7 @@ export default async function AdminMemberPage({
           badges={badges}
         />
 
-        <Button type="submit" size="lg">
-          {translateProfile("save")}
-        </Button>
+        <SubmitButton size="lg">{translateProfile("save")}</SubmitButton>
       </form>
     </PageContainer>
   )

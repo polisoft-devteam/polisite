@@ -9,7 +9,7 @@ import type { ComponentType } from "react"
 import { getTranslations } from "next-intl/server"
 
 import { CelebrateGoing } from "@/components/CelebrateGoing"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import { attendanceResponseEnum, type AttendanceResponse } from "@/db/schema"
 import { ATTENDANCE_RESPONSE_LABEL_KEY } from "@/features/events/labels"
 import { setAttendanceAction } from "@/features/events/actions"
@@ -72,8 +72,7 @@ export async function EventRsvp({
                 )}
               />
             ) : (
-              <Button
-                type="submit"
+              <SubmitButton
                 variant="outline"
                 size="sm"
                 className={cn(
@@ -82,7 +81,7 @@ export async function EventRsvp({
               >
                 <Icon className="size-4" />
                 {translateEvents(ATTENDANCE_RESPONSE_LABEL_KEY[response])}
-              </Button>
+              </SubmitButton>
             )}
           </form>
         )

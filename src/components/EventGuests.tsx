@@ -9,7 +9,7 @@ import { GuestAvatar } from "@/components/MemberAvatar"
 import { EmptyState } from "@/components/EmptyState"
 import { ItemList } from "@/components/ItemList"
 import { PageSection } from "@/components/PageSection"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import { Input } from "@/components/ui/input"
 import { addGuestAction, removeGuestAction } from "@/features/events/actions"
 import type { EventGuestWithInviter } from "@/features/events/queries"
@@ -64,8 +64,7 @@ export async function EventGuests({
                 {canRemoveGuest(viewer, guest) && (
                   <form action={removeGuestAction}>
                     <input type="hidden" name="guestId" value={guest.id} />
-                    <Button
-                      type="submit"
+                    <SubmitButton
                       variant="ghost"
                       size="icon-sm"
                       aria-label={translateEvents("guestRemove", {
@@ -73,7 +72,7 @@ export async function EventGuests({
                       })}
                     >
                       <RemoveIcon className="size-4" />
-                    </Button>
+                    </SubmitButton>
                   </form>
                 )}
               </li>
@@ -94,9 +93,7 @@ export async function EventGuests({
               aria-label={translateEvents("guestNameLabel")}
               className="w-full sm:w-56"
             />
-            <Button type="submit" size="sm">
-              {translateEvents("guestAdd")}
-            </Button>
+            <SubmitButton size="sm">{translateEvents("guestAdd")}</SubmitButton>
           </form>
         ) : (
           <p className="text-muted-foreground mt-4 text-sm">

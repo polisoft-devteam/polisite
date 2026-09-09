@@ -6,6 +6,7 @@
 
 import { getTranslations } from "next-intl/server"
 
+import { SubmitButton } from "@/components/SubmitButton"
 import { Button } from "@/components/ui/button"
 import { FormSelect } from "@/components/FormField"
 import type { MemberBadge } from "@/db/schema"
@@ -64,9 +65,9 @@ export async function MemberBadgeAdmin({
           ))}
         </FormSelect>
 
-        <Button type="submit" variant="outline" size="sm">
+        <SubmitButton variant="outline" size="sm">
           {translateAdmin("setTitle")}
-        </Button>
+        </SubmitButton>
       </form>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -109,15 +110,14 @@ export async function MemberBadgeAdmin({
             <form key={badge.badge} action={removeBadgeAction}>
               <input type="hidden" name="memberId" value={memberId} />
               <input type="hidden" name="badge" value={badge.badge} />
-              <Button
-                type="submit"
+              <SubmitButton
                 variant="secondary"
                 size="xs"
                 title={translateAdmin("removeBadge")}
               >
                 {title}
                 <CloseIcon className="size-3" />
-              </Button>
+              </SubmitButton>
             </form>
           )
         })}
@@ -138,10 +138,10 @@ export async function MemberBadgeAdmin({
               ))}
             </FormSelect>
 
-            <Button type="submit" variant="outline" size="sm">
+            <SubmitButton variant="outline" size="sm">
               <PlusIcon className="size-3" />
               {translateAdmin("awardBadge")}
-            </Button>
+            </SubmitButton>
           </form>
         )}
       </div>

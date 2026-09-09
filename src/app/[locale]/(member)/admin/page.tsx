@@ -13,6 +13,7 @@ import { Link } from "@/i18n/navigation"
 import { DesignIcon } from "@/lib/icons"
 import { PageSection } from "@/components/PageSection"
 import { Modal, ModalClose } from "@/components/Modal"
+import { SubmitButton } from "@/components/SubmitButton"
 import { Button } from "@/components/ui/button"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { MemberBadgeAdmin } from "@/components/MemberBadgeAdmin"
@@ -108,9 +109,9 @@ export default async function AdminPage({
                       name="authUserId"
                       value={request.authUserId}
                     />
-                    <Button type="submit" variant="outline" size="sm">
+                    <SubmitButton variant="outline" size="sm">
                       {translateAdmin("deny")}
-                    </Button>
+                    </SubmitButton>
                   </form>
 
                   <form action={approveMembership}>
@@ -119,9 +120,9 @@ export default async function AdminPage({
                       name="authUserId"
                       value={request.authUserId}
                     />
-                    <Button type="submit" size="sm">
+                    <SubmitButton size="sm">
                       {translateAdmin("approve")}
-                    </Button>
+                    </SubmitButton>
                   </form>
                 </div>
               </li>
@@ -199,13 +200,9 @@ export default async function AdminPage({
                                     name="memberId"
                                     value={member.id}
                                   />
-                                  <Button
-                                    type="submit"
-                                    variant="destructive"
-                                    size="sm"
-                                  >
+                                  <SubmitButton variant="destructive" size="sm">
                                     {translateAdmin("deactivate")}
-                                  </Button>
+                                  </SubmitButton>
                                 </form>
                               </>
                             }
@@ -227,9 +224,9 @@ export default async function AdminPage({
                             name="memberId"
                             value={member.id}
                           />
-                          <Button type="submit" variant="outline" size="sm">
+                          <SubmitButton variant="outline" size="sm">
                             {translateAdmin("reactivate")}
-                          </Button>
+                          </SubmitButton>
                         </form>
                       </>
                     )}

@@ -11,7 +11,7 @@ import { ExternalLink } from "@/components/ExternalLink"
 import { FormField } from "@/components/FormField"
 import { ItemList } from "@/components/ItemList"
 import { PageSection } from "@/components/PageSection"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import { Input } from "@/components/ui/input"
 import {
   addWishAction,
@@ -60,14 +60,13 @@ export async function Wishlist({
               {isOwnList ? (
                 <form action={removeWishAction}>
                   <input type="hidden" name="itemId" value={item.id} />
-                  <Button
-                    type="submit"
+                  <SubmitButton
                     variant="ghost"
                     size="sm"
                     aria-label={translateWishlist("remove")}
                   >
                     <RemoveIcon className="size-4" />
-                  </Button>
+                  </SubmitButton>
                 </form>
               ) : (
                 <div className="flex items-center gap-3">
@@ -85,8 +84,7 @@ export async function Wishlist({
                         name="claimed"
                         value={String(viewerHasClaimed)}
                       />
-                      <Button
-                        type="submit"
+                      <SubmitButton
                         size="sm"
                         variant={viewerHasClaimed ? "outline" : "default"}
                       >
@@ -97,7 +95,7 @@ export async function Wishlist({
                               ? "join"
                               : "claim",
                         )}
-                      </Button>
+                      </SubmitButton>
                     </form>
                   )}
                 </div>
@@ -131,10 +129,10 @@ export async function Wishlist({
               />
             </FormField>
 
-            <Button type="submit">
+            <SubmitButton>
               <PlusIcon className="size-4" />
               {translateWishlist("add")}
-            </Button>
+            </SubmitButton>
           </form>
         </>
       )}

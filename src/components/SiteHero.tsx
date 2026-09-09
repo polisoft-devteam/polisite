@@ -10,6 +10,7 @@ import { getTranslations } from "next-intl/server"
 
 import { HeroActionButton } from "@/components/HeroActionButton"
 import { PhotoHero } from "@/components/PhotoHero"
+import { WelcomeLetterButton } from "@/components/WelcomeLetterButton"
 import { findMembershipPrompt } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
 import { ASSOCIATION_NAME } from "@/lib/association"
@@ -37,14 +38,22 @@ export async function SiteHero() {
     >
       {/* Asks for whatever you can actually do next; see HeroActionButton. Someone who
           has already applied gets the pending pill instead of a button. */}
-      {canAsk && prompt?.response === "requested" && !prompt.deniedAt ? (
-        <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm text-white ring-1 ring-white/30 backdrop-blur-sm">
-          <PendingIcon aria-hidden="true" className="size-3.5" />
-          {translateHome("membershipPending")}
-        </p>
-      ) : (
-        <HeroActionButton />
-      )}
+      <div className="flex flex-wrap items-center gap-3">
+        {canAsk && prompt?.response === "requested" && !prompt.deniedAt ? (
+          <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm text-white ring-1 ring-white/30 backdrop-blur-sm">
+            <PendingIcon aria-hidden="true" className="size-3.5" />
+            {translateHome("membershipPending")}
+          </p>
+        ) : (
+          <HeroActionButton />
+        )}
+
+        {/* The letter opens itself once and then never again, so a guest keeps a way back
+            to it. Members read it from About instead; they are not waiting for anything. */}
+        {canAsk && (
+          <WelcomeLetterButton label={translateHome("welcomeLetter")} />
+        )}
+      </div>
     </PhotoHero>
   )
 }

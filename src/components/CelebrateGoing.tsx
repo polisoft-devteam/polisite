@@ -9,7 +9,7 @@
 import { useState } from "react"
 
 import { Confetti } from "@/components/Confetti"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 
 export function CelebrateGoing({
   icon,
@@ -24,8 +24,7 @@ export function CelebrateGoing({
 
   return (
     <>
-      <Button
-        type="submit"
+      <SubmitButton
         variant="outline"
         size="sm"
         className={className}
@@ -36,7 +35,7 @@ export function CelebrateGoing({
       >
         {icon}
         {label}
-      </Button>
+      </SubmitButton>
 
       {seed !== null && <Confetti seed={seed} onDone={() => setSeed(null)} />}
     </>

@@ -15,7 +15,7 @@ import { useTranslations } from "next-intl"
 
 import { FormField, FormSelect } from "@/components/FormField"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import { Input } from "@/components/ui/input"
 import { detectArchiveLink } from "@/features/archive/detect"
 import { AddToArchiveIcon, NotYetIcon } from "@/lib/icons"
@@ -102,14 +102,14 @@ export function ArchiveLinkForm({
             &nbsp;
           </Label>
 
-          <Button type="submit" disabled={!canSubmit} className="w-full">
+          <SubmitButton disabled={!canSubmit} className="w-full">
             {canSubmit ? (
               <AddToArchiveIcon className="size-4" />
             ) : (
               <NotYetIcon className="size-4" />
             )}
             {submitLabel}
-          </Button>
+          </SubmitButton>
         </div>
       </div>
 

@@ -7,6 +7,7 @@ import { Modal, ModalClose } from "@/components/Modal"
 import { NotAttendingIcon } from "@/lib/icons"
 import { PageContainer } from "@/components/PageContainer"
 import { PageHeading } from "@/components/PageHeading"
+import { SubmitButton } from "@/components/SubmitButton"
 import { Button } from "@/components/ui/button"
 import {
   cancelEventAction,
@@ -92,9 +93,9 @@ export default async function EditEventPage({
 
                 <form action={cancelEventAction}>
                   <input type="hidden" name="eventId" value={event.id} />
-                  <Button type="submit" variant="destructive" size="sm">
+                  <SubmitButton variant="destructive" size="sm">
                     {translateEvents("cancelEventConfirmAction")}
-                  </Button>
+                  </SubmitButton>
                 </form>
               </>
             }
@@ -118,9 +119,9 @@ export default async function EditEventPage({
 
               <form action={deleteEventAction}>
                 <input type="hidden" name="eventId" value={event.id} />
-                <Button type="submit" variant="destructive" size="sm">
+                <SubmitButton variant="destructive" size="sm">
                   {translateEvents("delete")}
-                </Button>
+                </SubmitButton>
               </form>
             </>
           }

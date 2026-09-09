@@ -16,7 +16,7 @@ import { getFormatter, getTranslations } from "next-intl/server"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { PageSection } from "@/components/PageSection"
 import { SectionHeading } from "@/components/SectionHeading"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import {
   chooseEventDateAction,
   toggleDateVoteAction,
@@ -127,8 +127,7 @@ export async function EventDatePoll({
             {canVote && !isPast && (
               <form action={toggleDateVoteAction}>
                 <input type="hidden" name="dateOptionId" value={option.id} />
-                <Button
-                  type="submit"
+                <SubmitButton
                   size="icon"
                   variant={option.votedByViewer ? "success" : "outline"}
                   className={cn(ROUND_BUTTON, "size-9")}
@@ -143,7 +142,7 @@ export async function EventDatePoll({
                   ) : (
                     <PlusIcon className="size-4" />
                   )}
-                </Button>
+                </SubmitButton>
               </form>
             )}
 
@@ -151,8 +150,7 @@ export async function EventDatePoll({
               <form action={chooseEventDateAction}>
                 <input type="hidden" name="eventId" value={eventId} />
                 <input type="hidden" name="dateOptionId" value={option.id} />
-                <Button
-                  type="submit"
+                <SubmitButton
                   size="icon"
                   variant="secondary"
                   className={cn(ROUND_BUTTON, "size-8")}
@@ -160,7 +158,7 @@ export async function EventDatePoll({
                   aria-label={translateEvents("datePollChoose")}
                 >
                   <ChooseDateIcon className="size-4" />
-                </Button>
+                </SubmitButton>
               </form>
             )}
 

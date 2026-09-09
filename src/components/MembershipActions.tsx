@@ -8,7 +8,7 @@ import { getTranslations } from "next-intl/server"
 
 import { SignInButton } from "@/components/SignInButton"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { SubmitButton } from "@/components/SubmitButton"
 import { requestMembership } from "@/features/members/membership-prompt-actions"
 import type { MembershipState } from "@/features/members/membership-state"
 import { PendingIcon } from "@/lib/icons"
@@ -33,7 +33,7 @@ export async function MembershipActions({ state }: { state: MembershipState }) {
 
   return (
     <form action={requestMembership}>
-      <Button type="submit">{translateEvents("membersOnlyApply")}</Button>
+      <SubmitButton>{translateEvents("membersOnlyApply")}</SubmitButton>
     </form>
   )
 }

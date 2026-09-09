@@ -14,6 +14,7 @@ import { ArchiveLinkForm } from "@/components/ArchiveLinkForm"
 import { Modal, ModalClose } from "@/components/Modal"
 import { ItemList } from "@/components/ItemList"
 import { PageSection } from "@/components/PageSection"
+import { SubmitButton } from "@/components/SubmitButton"
 import { Button } from "@/components/ui/button"
 import type { ArchiveLink } from "@/db/schema"
 import {
@@ -119,9 +120,9 @@ export async function ArchiveManager({ links }: { links: ArchiveLink[] }) {
                             name="archiveLinkId"
                             value={link.id}
                           />
-                          <Button type="submit" variant="destructive" size="sm">
+                          <SubmitButton variant="destructive" size="sm">
                             {translateArchive("remove")}
-                          </Button>
+                          </SubmitButton>
                         </form>
                       </>
                     }

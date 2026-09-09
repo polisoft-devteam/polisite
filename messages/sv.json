@@ -30,7 +30,8 @@
     "heroCreateEvent": "Skapa event",
     "ongoingEmpty": "Inget pågår just nu.",
     "votableEmpty": "Inget att rösta på just nu.",
-    "heroRequestSending": "Skickar …"
+    "heroRequestSending": "Skickar …",
+    "welcomeLetter": "Välkomstmeddelanden"
   },
   "About": {
     "title": "Om oss",

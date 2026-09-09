@@ -20,15 +20,44 @@ import { WELCOME_LETTER } from "@/lib/welcome-letter"
 /** Long enough for the page behind it to finish arriving, short enough to feel deliberate. */
 const OPEN_AFTER_MS = 900
 
+function letterStorageKey(seenKey: string): string {
+  return `polisite:welcome-seen:${seenKey}`
+}
+
+function hasSeenLetter(seenKey: string): boolean {
+  try {
+    return localStorage.getItem(letterStorageKey(seenKey)) !== null
+  } catch {
+    // A browser refusing storage gets the letter every time, which is the kinder failure.
+    return false
+  }
+}
+
+function rememberLetterSeen(seenKey: string) {
+  try {
+    localStorage.setItem(letterStorageKey(seenKey), new Date().toISOString())
+  } catch {}
+}
+
 export function WelcomeLetterModal({
   delayMs = OPEN_AFTER_MS,
   showRequest = true,
+  seenKey,
   onClosed,
 }: {
   /** Zero when somebody asked for it: they have already waited for their own click. */
   delayMs?: number
   /** A member reading it again has nothing to request. */
   showRequest?: boolean
+  /**
+   * Set when it should open by itself exactly once, keyed by whoever it is opening for.
+   *
+   * Remembered in this browser rather than in a table: nothing is stored about somebody
+   * who has only signed in, which is the promise the privacy page makes. Closing it or
+   * ignoring it both count as having seen it, because a letter that returns on every
+   * reload stops being a welcome.
+   */
+  seenKey?: string
   onClosed?: () => void
 } = {}) {
   const [isReady, setIsReady] = useState(delayMs === 0)
@@ -36,10 +65,15 @@ export function WelcomeLetterModal({
   useEffect(() => {
     if (delayMs === 0) return
 
-    const timer = window.setTimeout(() => setIsReady(true), delayMs)
+    const timer = window.setTimeout(() => {
+      if (seenKey && hasSeenLetter(seenKey)) return
+
+      if (seenKey) rememberLetterSeen(seenKey)
+      setIsReady(true)
+    }, delayMs)
 
     return () => window.clearTimeout(timer)
-  }, [delayMs])
+  }, [delayMs, seenKey])
 
   if (!isReady) return null
 
