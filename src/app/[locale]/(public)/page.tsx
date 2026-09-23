@@ -57,10 +57,18 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           {translateHome("intro")}
         </p>
 
-        {/* Three lists side by side from lg, stacked before that: what is coming, what
-            is waiting on a vote, and what is happening this minute. Each keeps its empty
+        {/* Three lists side by side from lg, stacked before that: what is happening this
+            minute, what is coming, and what is waiting on a vote. Each keeps its empty
             state rather than disappearing, so the columns stay where the eye left them. */}
         <div className="grid gap-x-8 lg:grid-cols-3">
+          <EventList
+            heading={translateHome("ongoingTitle")}
+            emptyText={translateHome("ongoingEmpty")}
+            events={ongoingEvents}
+            locale={locale}
+            layout="column"
+          />
+
           <EventList
             heading={translateHome("upcomingTitle")}
             emptyText={translateHome("upcomingEmpty")}
@@ -73,14 +81,6 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             heading={translateHome("votableTitle")}
             emptyText={translateHome("votableEmpty")}
             events={votableEvents}
-            locale={locale}
-            layout="column"
-          />
-
-          <EventList
-            heading={translateHome("ongoingTitle")}
-            emptyText={translateHome("ongoingEmpty")}
-            events={ongoingEvents}
             locale={locale}
             layout="column"
           />

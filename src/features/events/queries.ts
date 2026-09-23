@@ -62,7 +62,8 @@ const ONGOING_HOURS = 4
 
 /** Started, and not finished: the condition both the ongoing and the past list use. */
 function isOngoing() {
-  return sql`${events.startsAt} <= now() and coalesce(${events.endsAt}, ${events.startsAt} + interval '${sql.raw(String(ONGOING_HOURS))} hours') >= now()`
+  // Parenthesised because drizzle's not() doesn't: "not a and b" would negate only a.
+  return sql`(${events.startsAt} <= now() and coalesce(${events.endsAt}, ${events.startsAt} + interval '${sql.raw(String(ONGOING_HOURS))} hours') >= now())`
 }
 
 /**
