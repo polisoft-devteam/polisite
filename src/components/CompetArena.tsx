@@ -1,5 +1,6 @@
-// The duel on /compet: two faces on their banners with VS between them, the pillars under
-// them, and the reasons people gave stacked on the side they voted for.
+// The duel on /compet: two faces with VS between them, the pillars under them, and the
+// reasons people gave stacked on the side they voted for. Each contender's banner is the
+// background of their half of the whole screen.
 //
 // The page re-fetches every few seconds, so other people's votes arrive without a reload.
 // A vote this component has not seen on its side before is what sets off the effects: its
@@ -64,6 +65,7 @@ export function CompetArena({
   removableVoteIds,
   voteAction,
   removeVoteAction,
+  paintsPageBackground = true,
 }: {
   competition: CurrentCompetition
   /** Newest first. */
@@ -77,6 +79,8 @@ export function CompetArena({
     formData: FormData,
   ) => Promise<CompetFormResult>
   removeVoteAction: (formData: FormData) => Promise<void>
+  /** Off on /design, where a sample would otherwise tint the whole catalogue. */
+  paintsPageBackground?: boolean
 }) {
   const translateCompet = useTranslations("Compet")
   const router = useRouter()
@@ -135,6 +139,8 @@ export function CompetArena({
 
   return (
     <div className="space-y-10">
+      {paintsPageBackground && <CompetBackdrop competition={competition} />}
+
       <div className="space-y-3">
         <div className="relative grid grid-cols-2 overflow-hidden rounded-2xl border">
           <ContenderCorner
@@ -232,28 +238,6 @@ function ContenderCorner({
 
   return (
     <div className="relative flex min-h-64 flex-col items-center justify-end gap-3 px-4 pt-10 pb-6 sm:min-h-80">
-      {/* The whole corner, edge to edge. */}
-      {contender.bannerUrl ? (
-        <SiteImage
-          src={contender.bannerUrl}
-          alt=""
-          rounded="rounded-none"
-          sizes="50vw"
-          className="absolute inset-0"
-        />
-      ) : (
-        <span
-          aria-hidden="true"
-          className={cn("absolute inset-0", styles.wash)}
-        />
-      )}
-
-      {/* Only the bottom edge darkens, under the face, so the photo stays the photo. */}
-      <span
-        aria-hidden="true"
-        className="from-background/60 absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t to-transparent"
-      />
-
       <span className="relative">
         <MemberAvatar
           fullName={contender.displayName}
@@ -304,7 +288,8 @@ function Pillar({
   const styles = SIDE_STYLES[side]
 
   return (
-    <div className="flex w-20 flex-col items-center gap-2 sm:w-24">
+    // A frosted backing so the numbers read on any photo behind them.
+    <div className="bg-background/70 flex w-20 flex-col items-center gap-2 rounded-2xl p-2 backdrop-blur-sm sm:w-24">
       <p
         className={cn(
           "font-heading text-2xl font-extrabold tabular-nums",
@@ -438,6 +423,41 @@ function ReasonColumn({
         ))}
       </StackedList>
     </section>
+  )
+}
+
+/**
+ * The two banners behind the whole page, each filling its half of the window and staying
+ * put while the page scrolls over it. Behind the body's own background, which is painted
+ * on the canvas, so the header and footer sit on top as usual.
+ */
+function CompetBackdrop({ competition }: { competition: CurrentCompetition }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 -z-10 grid grid-cols-2"
+    >
+      {(["left", "right"] as const).map((side) => {
+        const bannerUrl = competition[side].bannerUrl
+
+        return bannerUrl ? (
+          <SiteImage
+            key={side}
+            src={bannerUrl}
+            alt=""
+            rounded="rounded-none"
+            sizes="50vw"
+            priority
+            className="h-full"
+          />
+        ) : (
+          <span key={side} className={SIDE_STYLES[side].wash} />
+        )
+      })}
+
+      {/* Dims the photos enough for the reasons and the form to stay readable. */}
+      <span className="bg-background/60 absolute inset-0" />
+    </div>
   )
 }
 

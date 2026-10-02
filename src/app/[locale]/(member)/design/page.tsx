@@ -458,6 +458,7 @@ export default async function DesignPage({
           removableVoteIds={[SAMPLE_COMPETITION_VOTES[0].id]}
           voteAction={designCompetNoOpAction}
           removeVoteAction={designRemoveNoOpAction}
+          paintsPageBackground={false}
         />
       </PageSection>
 
