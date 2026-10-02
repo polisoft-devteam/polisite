@@ -231,8 +231,8 @@ function ContenderCorner({
   const styles = SIDE_STYLES[side]
 
   return (
-    // One and a half screens tall, so the banner reads as a picture rather than a strip.
-    <div className="relative flex min-h-[150vh] flex-col items-center justify-end gap-3 px-4 pt-10 pb-6">
+    // Three quarters of the screen tall, so the banner reads as a picture rather than a strip.
+    <div className="relative flex min-h-[75vh] flex-col items-center justify-end gap-3 px-4 pt-10 pb-6">
       {/* The whole half of the box, edge to edge. */}
       {contender.bannerUrl ? (
         <SiteImage
