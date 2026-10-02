@@ -428,14 +428,15 @@ function ReasonColumn({
 
 /**
  * The two banners behind the whole page, each filling its half of the window and staying
- * put while the page scrolls over it. Behind the body's own background, which is painted
- * on the canvas, so the header and footer sit on top as usual.
+ * put while the page scrolls over it. Kept off the header and footer, which stay plain.
  */
 function CompetBackdrop({ competition }: { competition: CurrentCompetition }) {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 grid grid-cols-2"
+      // Starts under the sticky header (its height plus its border), which is see-through
+      // and would otherwise show the photos. The footer paints its own background over it.
+      className="pointer-events-none fixed inset-x-0 top-[calc(3.5rem+1px)] bottom-0 -z-10 grid grid-cols-2 xl:top-[calc(4rem+1px)]"
     >
       {(["left", "right"] as const).map((side) => {
         const bannerUrl = competition[side].bannerUrl

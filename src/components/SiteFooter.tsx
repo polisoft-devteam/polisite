@@ -30,7 +30,9 @@ export async function SiteFooter() {
   const logos = await readFooterLogos()
 
   return (
-    <footer className="mt-16 border-t">
+    // Its own background so a page that paints behind everything, such as a duel's banners,
+    // stops at the footer. The same colour as the page, so nothing changes elsewhere.
+    <footer className="bg-background mt-16 border-t">
       {logos.length > 0 && (
         <div className="mx-auto w-full max-w-6xl px-4 pt-8 2xl:max-w-7xl">
           <p className="text-muted-foreground text-center text-xs tracking-wide uppercase">
