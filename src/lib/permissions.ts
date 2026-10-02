@@ -191,18 +191,22 @@ export function canCreateCompetition(viewer: Viewer | null): boolean {
   return isAdmin(viewer)
 }
 
+/** Just enough about a duel to decide: whether it is still taking votes. */
+export type CompetitionState = { isOpen: boolean }
+
 /**
- * Any member may vote, three times in any five minutes.
+ * Any member may vote while the duel is open, three times in any five minutes.
  *
  * The limit is a rule, so it lives here rather than in the form: the button greying out is
  * a convenience, and this is what the action checks.
  */
 export function canVoteInCompetition(
   viewer: Viewer | null,
+  competition: CompetitionState,
   ownVoteTimes: Date[],
   now: Date,
 ): boolean {
-  if (!isActiveMember(viewer)) return false
+  if (!isActiveMember(viewer) || !competition.isOpen) return false
 
   return competVoteAllowance(ownVoteTimes, now).votesLeft > 0
 }
@@ -210,21 +214,29 @@ export function canVoteInCompetition(
 /** Just enough about a vote to decide. */
 export type OwnedCompetitionVote = { voterMemberId: string }
 
-/** Your own vote is yours to reword or move to the other side. Nobody else's is. */
+/**
+ * Your own vote is yours to reword or move to the other side while the duel is open.
+ * Nobody else's is, and once it has ended the result stands.
+ */
 export function canEditCompetitionVote(
   viewer: Viewer | null,
+  competition: CompetitionState,
   vote: OwnedCompetitionVote,
 ): boolean {
-  if (!isActiveMember(viewer)) return false
+  if (!isActiveMember(viewer) || !competition.isOpen) return false
   return vote.voterMemberId === viewer!.member!.id
 }
 
-/** Whoever cast it may take it back, and an admin may take down anything said in one. */
+/**
+ * Whoever cast it may take it back while the duel is open. An admin may take down anything
+ * said in one at any time, ended or not.
+ */
 export function canRemoveCompetitionVote(
   viewer: Viewer | null,
+  competition: CompetitionState,
   vote: OwnedCompetitionVote,
 ): boolean {
-  return canEditCompetitionVote(viewer, vote) || isAdmin(viewer)
+  return canEditCompetitionVote(viewer, competition, vote) || isAdmin(viewer)
 }
 
 // --- Wishlist ------------------------------------------------------------------

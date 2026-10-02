@@ -7,6 +7,8 @@ export const competitionFormSchema = z
     question: z.string().trim().min(1).max(140),
     leftMemberId: z.string().uuid(),
     rightMemberId: z.string().uuid(),
+    // As a datetime-local input sends it, read as Stockholm time by the action.
+    endsAtWallTime: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/),
   })
   .refine((form) => form.leftMemberId !== form.rightMemberId, {
     path: ["rightMemberId"],

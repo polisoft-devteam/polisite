@@ -1,5 +1,6 @@
-// Pick a side, say why, vote. Three votes in any five minutes, with a countdown once
-// they're spent. The same form changes a vote you already cast, which costs nothing.
+// Pick a side, say why, vote. Three votes in any five minutes, shown as "2/3" with a
+// countdown to the next one coming back. The same form changes a vote you already cast,
+// which costs nothing.
 //
 // The limit shown here is a convenience; the action counts again from the database.
 
@@ -12,6 +13,7 @@ import { Confetti } from "@/components/Confetti"
 import { FormField } from "@/components/FormField"
 import { MemberAvatar } from "@/components/MemberAvatar"
 import { SubmitButton } from "@/components/SubmitButton"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import type { CompetFormResult } from "@/features/compet/actions"
@@ -20,8 +22,12 @@ import type {
   CompetVote,
   CurrentCompetition,
 } from "@/features/compet/queries"
-import { competVoteAllowance } from "@/lib/compet"
-import { SaveIcon, SportIcon } from "@/lib/icons"
+import { COMPET_VOTES_PER_WINDOW, competVoteAllowance } from "@/lib/compet"
+import {
+  playCompetVoteSound,
+  prepareCompetVoteSound,
+} from "@/lib/compet-sounds"
+import { PendingIcon, SaveIcon, SportIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 /** "4:07" */
@@ -51,11 +57,21 @@ export function CompetVoteForm({
 }) {
   const translateCompet = useTranslations("Compet")
   const formRef = useRef<HTMLFormElement>(null)
+  const voteSound = useRef<HTMLAudioElement | null>(null)
+
+  useEffect(() => {
+    voteSound.current = prepareCompetVoteSound()
+  }, [])
 
   const [result, formAction] = useActionState(
     async (previous: CompetFormResult, formData: FormData) => {
       const answer = await voteAction(previous, formData)
-      if (editingVote && answer?.outcome === "done") onEditFinished()
+
+      if (answer?.outcome === "done") {
+        if (editingVote) onEditFinished()
+        else playCompetVoteSound(voteSound.current)
+      }
+
       return answer
     },
     null,
@@ -111,9 +127,11 @@ export function CompetVoteForm({
   const errorMessage =
     result?.outcome === "rateLimited"
       ? translateCompet("rateLimited")
-      : result?.outcome === "invalid"
-        ? translateCompet("invalid")
-        : null
+      : result?.outcome === "closed"
+        ? translateCompet("closed")
+        : result?.outcome === "invalid"
+          ? translateCompet("invalid")
+          : null
 
   return (
     <form
@@ -130,8 +148,32 @@ export function CompetVoteForm({
       )}
 
       <fieldset>
-        <legend className="mb-2 text-sm font-medium">
+        <legend className="mb-2 flex w-full flex-wrap items-center justify-between gap-2 text-sm font-medium">
           {translateCompet("pickLabel")}
+
+          {/* Rendered from the first tick, so the server and the browser agree on it. */}
+          {allowance && (
+            <span className="flex items-center gap-2 text-xs tabular-nums">
+              {allowance.nextVoteBackAt && (
+                <span className="text-muted-foreground flex items-center gap-1">
+                  <PendingIcon className="size-3" />
+                  {translateCompet("nextVoteIn", {
+                    time: formatMinutesAndSeconds(
+                      allowance.nextVoteBackAt.getTime() - now!,
+                    ),
+                  })}
+                </span>
+              )}
+              <Badge
+                variant={allowance.votesLeft > 0 ? "default" : "secondary"}
+                aria-label={translateCompet("votesLeft", {
+                  count: allowance.votesLeft,
+                })}
+              >
+                {allowance.votesLeft}/{COMPET_VOTES_PER_WINDOW}
+              </Badge>
+            </span>
+          )}
         </legend>
 
         <div className="grid grid-cols-2 gap-3">
@@ -196,17 +238,7 @@ export function CompetVoteForm({
           errorMessage ? "text-destructive" : "text-muted-foreground",
         )}
       >
-        {errorMessage ??
-          (editingVote
-            ? translateCompet("editingHint")
-            : allowance?.nextVoteAt
-              ? translateCompet("nextVoteIn", {
-                  time: formatMinutesAndSeconds(
-                    allowance.nextVoteAt.getTime() - now!,
-                  ),
-                })
-              : allowance &&
-                translateCompet("votesLeft", { count: allowance.votesLeft }))}
+        {errorMessage ?? (editingVote && translateCompet("editingHint"))}
       </p>
 
       {confettiSeed !== null && (

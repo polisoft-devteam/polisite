@@ -26,6 +26,7 @@ import {
   designRemoveNoOpAction,
 } from "./actions"
 import { CompetArena } from "@/components/CompetArena"
+import { CompetTabs } from "@/components/CompetTabs"
 import {
   buildSampleEvent,
   buildSampleMember,
@@ -435,6 +436,19 @@ export default async function DesignPage({
           /compet. Två medlemmar, en fråga, en pelare var. Utan bannerbild fylls
           hörnet med sidans färg. Formuläret här skickar ingenting.
         </p>
+
+        <CompetTabs
+          competitions={[
+            SAMPLE_COMPETITION,
+            {
+              ...SAMPLE_COMPETITION,
+              id: "00000000-0000-4000-8000-000000000029",
+              question: "Vem lagar bäst mat?",
+              isOpen: false,
+            },
+          ]}
+          selectedCompetitionId={SAMPLE_COMPETITION.id}
+        />
 
         <CompetArena
           competition={SAMPLE_COMPETITION}

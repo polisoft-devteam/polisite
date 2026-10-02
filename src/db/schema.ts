@@ -478,8 +478,7 @@ export const wishlistClaims = pgTable(
 // --- The duel ------------------------------------------------------------------
 //
 // An admin puts two members against each other with a question, and everyone else votes
-// with a reason. The newest competition is the one on /compet; older ones are kept so a
-// new duel doesn't erase what was said in the last.
+// with a reason until the duel ends. Several can run at once; /compet has a tab for each.
 
 export const competitions = pgTable("competitions", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -496,6 +495,9 @@ export const competitions = pgTable("competitions", {
   // Optional artwork behind each side. Null falls back to the side's colour.
   leftBannerUrl: text("left_banner_url"),
   rightBannerUrl: text("right_banner_url"),
+
+  // Voting closes here. Set by the admin; the duel stays on the page, decided.
+  endsAt: timestamp("ends_at", { withTimezone: true }).notNull(),
 
   createdByMemberId: uuid("created_by_member_id").references(() => members.id, {
     onDelete: "set null",

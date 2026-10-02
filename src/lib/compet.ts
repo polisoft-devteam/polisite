@@ -8,8 +8,11 @@ export const COMPET_WINDOW_MILLISECONDS = 5 * 60 * 1000
 
 export type CompetVoteAllowance = {
   votesLeft: number
-  /** When the oldest vote in the window expires and a vote comes back. Null with votes left. */
-  nextVoteAt: Date | null
+  /**
+   * When the oldest vote in the window expires and gives a vote back. Null when all three
+   * are already in hand, because there is nothing to count down to.
+   */
+  nextVoteBackAt: Date | null
 }
 
 /** A rolling window: each vote counts against you for five minutes after it was cast. */
@@ -25,16 +28,20 @@ export function competVoteAllowance(
     .sort((first, second) => first - second)
 
   const votesLeft = Math.max(COMPET_VOTES_PER_WINDOW - votesInWindow.length, 0)
+  const oldestVote = votesInWindow[0]
 
-  if (votesLeft > 0) return { votesLeft, nextVoteAt: null }
-
-  // The vote that frees a slot is the one that falls out of the window first.
-  const freedByVote =
-    votesInWindow[votesInWindow.length - COMPET_VOTES_PER_WINDOW]
   return {
     votesLeft,
-    nextVoteAt: new Date(freedByVote + COMPET_WINDOW_MILLISECONDS),
+    nextVoteBackAt:
+      oldestVote === undefined
+        ? null
+        : new Date(oldestVote + COMPET_WINDOW_MILLISECONDS),
   }
+}
+
+/** A duel takes votes until its end time, and is decided after. */
+export function isCompetitionOpen(endsAt: Date, now: Date): boolean {
+  return now.getTime() < endsAt.getTime()
 }
 
 /** Whole percentages that always add up to 100, or both zero before anyone has voted. */

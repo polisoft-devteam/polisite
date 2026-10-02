@@ -1,7 +1,10 @@
-// Reading and writing the duel on /compet.
+// Reading and writing the duels on /compet.
 //
-// The newest competition is the current one. A vote is a row of its own, so the pillars
-// are a count of rows and the reasons beside them are the same rows read out.
+// Several duels can run at once, each its own tab. A vote is a row of its own, so the
+// pillars are a count of rows and the reasons beside them are the same rows read out.
+//
+// Whether a duel is still open is worked out here, at read time, so pages and permission
+// checks get a plain flag rather than each reading the clock.
 
 import { and, desc, eq, gt, inArray } from "drizzle-orm"
 
@@ -9,7 +12,7 @@ import { db } from "@/db"
 import { competitionVotes, competitions, members } from "@/db/schema"
 import type { Competition, CompetitionVote } from "@/db/schema"
 import { memberDisplayName } from "@/features/members/identity"
-import { COMPET_WINDOW_MILLISECONDS } from "@/lib/compet"
+import { COMPET_WINDOW_MILLISECONDS, isCompetitionOpen } from "@/lib/compet"
 
 export type CompetContender = {
   memberId: string
@@ -18,9 +21,12 @@ export type CompetContender = {
   bannerUrl: string | null
 }
 
+/** The duel on screen: who is in it, and whether it still takes votes. */
 export type CurrentCompetition = {
   id: string
   question: string
+  endsAt: Date
+  isOpen: boolean
   left: CompetContender
   right: CompetContender
 }
@@ -42,26 +48,25 @@ const memberFields = {
   avatarUrl: members.avatarUrl,
 }
 
-export async function findCurrentCompetition(): Promise<CurrentCompetition | null> {
-  const [competition] = await db
-    .select()
-    .from(competitions)
-    .orderBy(desc(competitions.createdAt))
-    .limit(1)
+/** Puts faces on competition rows, with one query for every contender at once. */
+async function withContenders(
+  rows: Competition[],
+): Promise<CurrentCompetition[]> {
+  if (rows.length === 0) return []
 
-  if (!competition) return null
-
+  const contenderIds = rows.flatMap((row) => [
+    row.leftMemberId,
+    row.rightMemberId,
+  ])
   const contenders = await db
     .select(memberFields)
     .from(members)
-    .where(
-      inArray(members.id, [
-        competition.leftMemberId,
-        competition.rightMemberId,
-      ]),
-    )
+    .where(inArray(members.id, contenderIds))
 
-  const contenderFor = (memberId: string, bannerUrl: string | null) => {
+  const contenderFor = (
+    memberId: string,
+    bannerUrl: string | null,
+  ): CompetContender | null => {
     const member = contenders.find((contender) => contender.id === memberId)
     if (!member) return null
 
@@ -73,15 +78,57 @@ export async function findCurrentCompetition(): Promise<CurrentCompetition | nul
     }
   }
 
-  const left = contenderFor(competition.leftMemberId, competition.leftBannerUrl)
-  const right = contenderFor(
-    competition.rightMemberId,
-    competition.rightBannerUrl,
-  )
+  const now = new Date()
 
-  if (!left || !right) return null
+  return rows.flatMap((row) => {
+    const left = contenderFor(row.leftMemberId, row.leftBannerUrl)
+    const right = contenderFor(row.rightMemberId, row.rightBannerUrl)
+    if (!left || !right) return []
 
-  return { id: competition.id, question: competition.question, left, right }
+    return [
+      {
+        id: row.id,
+        question: row.question,
+        endsAt: row.endsAt,
+        isOpen: isCompetitionOpen(row.endsAt, now),
+        left,
+        right,
+      },
+    ]
+  })
+}
+
+/**
+ * Every duel, for the tabs: the ones still running first, newest first, then the decided
+ * ones, most recently ended first.
+ */
+export async function findAllCompetitions(): Promise<CurrentCompetition[]> {
+  const rows = await db
+    .select()
+    .from(competitions)
+    .orderBy(desc(competitions.createdAt))
+
+  const all = await withContenders(rows)
+
+  return [
+    ...all.filter((competition) => competition.isOpen),
+    ...all
+      .filter((competition) => !competition.isOpen)
+      .sort(
+        (first, second) => second.endsAt.getTime() - first.endsAt.getTime(),
+      ),
+  ]
+}
+
+/** The duels still taking votes, newest first, for the corner widget. */
+export async function findOpenCompetitions(): Promise<CurrentCompetition[]> {
+  const rows = await db
+    .select()
+    .from(competitions)
+    .where(gt(competitions.endsAt, new Date()))
+    .orderBy(desc(competitions.createdAt))
+
+  return withContenders(rows)
 }
 
 export async function findCompetitionById(
@@ -150,9 +197,15 @@ export async function createCompetition(competition: {
   rightMemberId: string
   leftBannerUrl: string | null
   rightBannerUrl: string | null
+  endsAt: Date
   createdByMemberId: string
-}): Promise<void> {
-  await db.insert(competitions).values(competition)
+}): Promise<string> {
+  const [created] = await db
+    .insert(competitions)
+    .values(competition)
+    .returning({ id: competitions.id })
+
+  return created.id
 }
 
 export async function recordCompetitionVote(vote: {

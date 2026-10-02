@@ -5,6 +5,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 
 import { BrandGradientDefs } from "@/components/BrandGradientDefs"
+import { CompetWidgetGate } from "@/components/CompetWidgetGate"
 import { ElectionWheelGate } from "@/components/ElectionWheelGate"
 import { PaletteLoader } from "@/components/PaletteLoader"
 import { MembershipPrompt } from "@/components/MembershipPrompt"
@@ -108,6 +109,8 @@ export default async function LocaleLayout({
               {/* Every page, so the wheel is where you are rather than only on the handful
                 of routes that live under (member). It shows itself to nobody else. */}
               <ElectionWheelGate />
+              {/* The running duel, for members, in the corner the wheel left behind. */}
+              <CompetWidgetGate />
             </ViewerMemberProvider>
           </ThemeProvider>
         </NextIntlClientProvider>

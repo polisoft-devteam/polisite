@@ -115,6 +115,8 @@ export const SAMPLE_GUESTS: EventGuestWithInviter[] = [
 export const SAMPLE_COMPETITION: CurrentCompetition = {
   id: "00000000-0000-4000-8000-000000000020",
   question: "Vem är bäst på hockey?",
+  endsAt: new Date("2027-01-01T18:00:00Z"),
+  isOpen: true,
   left: {
     memberId: "00000000-0000-4000-8000-000000000021",
     displayName: "Adam",

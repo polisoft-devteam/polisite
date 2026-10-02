@@ -1,6 +1,7 @@
 // An admin's form for starting a duel: a question, two members, and a banner for each.
 //
-// The new duel replaces the current one on /compet. The old one is kept, not deleted.
+// Each duel gets its own tab on /compet and closes at the end time set here. Saving goes
+// straight to the new duel's tab.
 
 "use client"
 
@@ -32,12 +33,7 @@ export function CompetitionForm({
   const isInvalid = result?.outcome === "invalid"
 
   return (
-    // Remounted after each duel is started, so the image previews clear with the fields.
-    <form
-      key={result?.outcome === "done" ? result.at : "form"}
-      action={formAction}
-      className="space-y-4"
-    >
+    <form action={formAction} className="space-y-4">
       <FormField
         label={translateCompet("questionLabel")}
         htmlFor="compet-question"
@@ -47,6 +43,20 @@ export function CompetitionForm({
           name="question"
           maxLength={140}
           placeholder={translateCompet("questionPlaceholder")}
+          aria-invalid={isInvalid || undefined}
+        />
+      </FormField>
+
+      <FormField
+        label={translateCompet("endsAtLabel")}
+        htmlFor="compet-ends-at"
+        hint={translateCompet("endsAtHint")}
+      >
+        <Input
+          id="compet-ends-at"
+          name="endsAtWallTime"
+          type="datetime-local"
+          className="w-auto"
           aria-invalid={isInvalid || undefined}
         />
       </FormField>

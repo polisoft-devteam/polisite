@@ -18,3 +18,6 @@ whispers. It measures the opening seconds, which is the part that plays, and is 
 re-run. `src/lib/election-sounds.ts` sets the volume everything is played at.
 
 A party with no file simply lands in silence.
+
+`compet-vote.mp3` plays on /compet when a vote goes in. Like the rest, a missing file is
+silence. See `src/lib/compet-sounds.ts`.

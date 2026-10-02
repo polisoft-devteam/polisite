@@ -1,5 +1,5 @@
-// The duel on /compet: two halves, each with its contender's face, pillar and the reasons
-// people gave, on that contender's banner. The pillars meet in the middle.
+// The duel on /compet: two faces on their banners with VS between them, the pillars under
+// them, and the reasons people gave stacked on the side they voted for.
 //
 // The page re-fetches every few seconds, so other people's votes arrive without a reload.
 // A vote this component has not seen on its side before is what sets off the effects: its
@@ -11,6 +11,7 @@
 import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 
+import { CompetEndsIn } from "@/components/CompetEndsIn"
 import { CompetVoteForm } from "@/components/CompetVoteForm"
 import { StackedList, StackedListItem } from "@/components/ItemList"
 import { MemberAvatar } from "@/components/MemberAvatar"
@@ -26,7 +27,7 @@ import type {
 } from "@/features/compet/queries"
 import { useRouter } from "@/i18n/navigation"
 import { competShares } from "@/lib/compet"
-import { EditIcon, RemoveIcon } from "@/lib/icons"
+import { EditIcon, RemoveIcon, SportIcon } from "@/lib/icons"
 import { cn } from "@/lib/utils"
 
 type CompetSide = "left" | "right"
@@ -109,156 +110,111 @@ export function CompetArena({
     }))
   }
 
+  // Only while it can change: a decided duel has nothing new to fetch.
   useEffect(() => {
+    if (!competition.isOpen) return
+
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") router.refresh()
     }, REFRESH_MILLISECONDS)
 
     return () => window.clearInterval(timer)
-  }, [router])
+  }, [router, competition.isOpen])
 
-  const votesBySide = {
-    left: votes.filter((vote) => sideOf(vote) === "left"),
-    right: votes.filter((vote) => sideOf(vote) === "right"),
+  const leftVotes = votes.filter((vote) => sideOf(vote) === "left")
+  const rightVotes = votes.filter((vote) => sideOf(vote) === "right")
+  const shares = competShares(leftVotes.length, rightVotes.length)
+
+  const reasonColumnProps = {
+    landingVoteIds,
+    editableVoteIds,
+    removableVoteIds,
+    onEdit: setEditingVote,
+    removeVoteAction,
   }
-  const shares = competShares(votesBySide.left.length, votesBySide.right.length)
 
   return (
     <div className="space-y-10">
-      <div className="relative grid grid-cols-2 overflow-hidden rounded-2xl border">
-        {(["left", "right"] as const).map((side) => (
-          <CompetHalf
-            key={side}
-            side={side}
-            contender={competition[side]}
-            share={shares[side]}
-            votes={votesBySide[side]}
-            hitCount={hitCounts[side]}
-            landingVoteIds={landingVoteIds}
-            editableVoteIds={editableVoteIds}
-            removableVoteIds={removableVoteIds}
-            onEdit={setEditingVote}
-            removeVoteAction={removeVoteAction}
+      <div className="space-y-3">
+        <div className="relative grid grid-cols-2 overflow-hidden rounded-2xl border">
+          <ContenderCorner
+            side="left"
+            contender={competition.left}
+            hitCount={hitCounts.left}
           />
-        ))}
+          <ContenderCorner
+            side="right"
+            contender={competition.right}
+            hitCount={hitCounts.right}
+          />
 
-        {/* Level with the faces: the corner above each pillar is a fixed height. */}
-        <span
-          aria-hidden="true"
-          className="compet-versus bg-background font-heading absolute top-42 left-1/2 -mt-8 -ml-8 flex size-16 items-center justify-center rounded-full border-2 text-2xl font-extrabold sm:top-52 sm:-mt-10 sm:-ml-10 sm:size-20 sm:text-3xl"
-        >
-          {translateCompet("versus")}
-        </span>
+          <span
+            aria-hidden="true"
+            className="compet-versus bg-background font-heading absolute top-1/2 left-1/2 -mt-8 -ml-8 flex size-16 items-center justify-center rounded-full border-2 text-2xl font-extrabold sm:-mt-10 sm:-ml-10 sm:size-20 sm:text-3xl"
+          >
+            {translateCompet("versus")}
+          </span>
+        </div>
+
+        <CompetEndsIn endsAt={competition.endsAt} isOpen={competition.isOpen} />
       </div>
 
-      {votes.length === 0 && (
+      {/* Two columns of reasons with the pillars between them, and on a phone the pillars
+          first and the reasons in two columns beneath. */}
+      <div className="grid grid-cols-2 items-start gap-4 md:grid-cols-[1fr_auto_1fr] md:gap-8">
+        <ReasonColumn
+          side="left"
+          contender={competition.left}
+          votes={leftVotes}
+          {...reasonColumnProps}
+        />
+
+        <div className="order-first col-span-2 flex justify-center gap-6 md:order-none md:col-span-1">
+          <Pillar
+            side="left"
+            share={shares.left}
+            voteCount={leftVotes.length}
+            hitCount={hitCounts.left}
+          />
+          <Pillar
+            side="right"
+            share={shares.right}
+            voteCount={rightVotes.length}
+            hitCount={hitCounts.right}
+          />
+        </div>
+
+        <ReasonColumn
+          side="right"
+          contender={competition.right}
+          votes={rightVotes}
+          {...reasonColumnProps}
+        />
+      </div>
+
+      {votes.length === 0 && competition.isOpen && (
         <p className="text-muted-foreground text-center text-sm">
           {translateCompet("noVotes")}
         </p>
       )}
 
-      {/* Remounted when an edit starts or ends, so the fields start from that vote. */}
-      <CompetVoteForm
-        key={editingVote?.id ?? "new"}
-        competition={competition}
-        ownVoteTimes={ownVoteTimes}
-        editingVote={editingVote}
-        onEditFinished={() => setEditingVote(null)}
-        voteAction={voteAction}
-      />
-    </div>
-  )
-}
-
-function CompetHalf({
-  side,
-  contender,
-  share,
-  votes,
-  hitCount,
-  landingVoteIds,
-  editableVoteIds,
-  removableVoteIds,
-  onEdit,
-  removeVoteAction,
-}: {
-  side: CompetSide
-  contender: CompetContender
-  share: number
-  votes: CompetVote[]
-  hitCount: number
-  landingVoteIds: Set<string>
-  editableVoteIds: string[]
-  removableVoteIds: string[]
-  onEdit: (vote: CompetVote) => void
-  removeVoteAction: (formData: FormData) => Promise<void>
-}) {
-  const styles = SIDE_STYLES[side]
-
-  return (
-    <div className="relative min-w-0">
-      {contender.bannerUrl ? (
-        <SiteImage
-          src={contender.bannerUrl}
-          alt=""
-          rounded="rounded-none"
-          sizes="50vw"
-          className="absolute inset-0"
+      {competition.isOpen ? (
+        // Remounted when an edit starts or ends, so the fields start from that vote.
+        <CompetVoteForm
+          key={editingVote?.id ?? "new"}
+          competition={competition}
+          ownVoteTimes={ownVoteTimes}
+          editingVote={editingVote}
+          onEditFinished={() => setEditingVote(null)}
+          voteAction={voteAction}
         />
       ) : (
-        <span
-          aria-hidden="true"
-          className={cn("absolute inset-0", styles.wash)}
+        <CompetVerdict
+          competition={competition}
+          leftVotes={leftVotes.length}
+          rightVotes={rightVotes.length}
         />
       )}
-
-      {/* Clear at the top so the banner shows, darker below where the reasons sit. */}
-      <span
-        aria-hidden="true"
-        className="from-background/85 via-background/40 absolute inset-0 bg-gradient-to-t to-transparent"
-      />
-
-      <div className="relative flex flex-col gap-6 px-3 pb-6 sm:px-6">
-        <ContenderCorner
-          side={side}
-          contender={contender}
-          hitCount={hitCount}
-        />
-
-        {/* The pillar hugs the middle of the page and the reasons fill the outer edge, so
-            the two pillars stand next to each other. On a phone they stack. */}
-        <div
-          className={cn(
-            "flex flex-col gap-4 md:items-start",
-            side === "left" ? "md:flex-row-reverse" : "md:flex-row",
-          )}
-        >
-          <div
-            className={cn(
-              "flex",
-              side === "left" ? "justify-end" : "justify-start",
-            )}
-          >
-            <Pillar
-              side={side}
-              share={share}
-              voteCount={votes.length}
-              hitCount={hitCount}
-            />
-          </div>
-
-          <ReasonColumn
-            side={side}
-            contender={contender}
-            votes={votes}
-            landingVoteIds={landingVoteIds}
-            editableVoteIds={editableVoteIds}
-            removableVoteIds={removableVoteIds}
-            onEdit={onEdit}
-            removeVoteAction={removeVoteAction}
-          />
-        </div>
-      </div>
     </div>
   )
 }
@@ -275,7 +231,29 @@ function ContenderCorner({
   const styles = SIDE_STYLES[side]
 
   return (
-    <div className="flex h-64 flex-col items-center justify-end gap-3 sm:h-80">
+    <div className="relative flex min-h-64 flex-col items-center justify-end gap-3 px-4 pt-10 pb-6 sm:min-h-80">
+      {/* The whole corner, edge to edge. */}
+      {contender.bannerUrl ? (
+        <SiteImage
+          src={contender.bannerUrl}
+          alt=""
+          rounded="rounded-none"
+          sizes="50vw"
+          className="absolute inset-0"
+        />
+      ) : (
+        <span
+          aria-hidden="true"
+          className={cn("absolute inset-0", styles.wash)}
+        />
+      )}
+
+      {/* Only the bottom edge darkens, under the face, so the photo stays the photo. */}
+      <span
+        aria-hidden="true"
+        className="from-background/60 absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t to-transparent"
+      />
+
       <span className="relative">
         <MemberAvatar
           fullName={contender.displayName}
@@ -301,7 +279,7 @@ function ContenderCorner({
       {/* On a pill of its own, so the name reads on any photo. */}
       <p
         className={cn(
-          "font-heading bg-background/80 max-w-full truncate rounded-full px-4 py-1 text-center text-lg font-extrabold backdrop-blur-sm sm:text-2xl",
+          "font-heading bg-background/80 relative max-w-full truncate rounded-full px-4 py-1 text-center text-lg font-extrabold backdrop-blur-sm sm:text-2xl",
           styles.text,
         )}
       >
@@ -326,7 +304,7 @@ function Pillar({
   const styles = SIDE_STYLES[side]
 
   return (
-    <div className="bg-background/70 flex w-20 shrink-0 flex-col items-center gap-2 rounded-2xl p-2 backdrop-blur-sm sm:w-24">
+    <div className="flex w-20 flex-col items-center gap-2 sm:w-24">
       <p
         className={cn(
           "font-heading text-2xl font-extrabold tabular-nums",
@@ -404,7 +382,7 @@ function ReasonColumn({
       aria-label={translateCompet("reasonsFor", {
         name: contender.displayName,
       })}
-      className="max-h-[32rem] min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-1"
+      className="max-h-[32rem] min-w-0 overflow-x-hidden overflow-y-auto p-1"
     >
       <StackedList>
         {votes.map((vote) => (
@@ -460,5 +438,38 @@ function ReasonColumn({
         ))}
       </StackedList>
     </section>
+  )
+}
+
+/** Where the form was, once the duel has ended: who took it. */
+function CompetVerdict({
+  competition,
+  leftVotes,
+  rightVotes,
+}: {
+  competition: CurrentCompetition
+  leftVotes: number
+  rightVotes: number
+}) {
+  const translateCompet = useTranslations("Compet")
+
+  const winner =
+    leftVotes === rightVotes
+      ? null
+      : leftVotes > rightVotes
+        ? competition.left
+        : competition.right
+
+  return (
+    <div className="bg-card mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border p-6 text-center shadow-sm">
+      <SportIcon className="text-primary-ink size-8" />
+      <p className="font-heading text-xl font-extrabold">
+        {winner
+          ? translateCompet("verdictWinner", { name: winner.displayName })
+          : leftVotes === 0
+            ? translateCompet("verdictNoVotes")
+            : translateCompet("verdictTie")}
+      </p>
+    </div>
   )
 }
