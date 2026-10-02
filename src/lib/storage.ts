@@ -8,7 +8,7 @@ import { randomUUID } from "node:crypto"
 import { createClient } from "@supabase/supabase-js"
 import sharp from "sharp"
 
-export type ImageBucket = "avatars" | "event-images"
+export type ImageBucket = "avatars" | "event-images" | "compet-images"
 
 /**
  * Supabase Free gives 1 GB, so originals are never stored — an unresized phone photo is
@@ -18,6 +18,7 @@ const RESIZE_TARGET: Record<ImageBucket, { maxEdge: number; quality: number }> =
   {
     avatars: { maxEdge: 512, quality: 82 },
     "event-images": { maxEdge: 1600, quality: 80 },
+    "compet-images": { maxEdge: 1600, quality: 80 },
   }
 
 /** Rejected before decoding, so a huge file can't exhaust memory. */

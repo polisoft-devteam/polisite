@@ -475,6 +475,62 @@ export const wishlistClaims = pgTable(
   (table) => [primaryKey({ columns: [table.itemId, table.memberId] })],
 ).enableRLS()
 
+// --- The duel ------------------------------------------------------------------
+//
+// An admin puts two members against each other with a question, and everyone else votes
+// with a reason. The newest competition is the one on /compet; older ones are kept so a
+// new duel doesn't erase what was said in the last.
+
+export const competitions = pgTable("competitions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+
+  question: text("question").notNull(),
+
+  leftMemberId: uuid("left_member_id")
+    .notNull()
+    .references(() => members.id, { onDelete: "cascade" }),
+  rightMemberId: uuid("right_member_id")
+    .notNull()
+    .references(() => members.id, { onDelete: "cascade" }),
+
+  // Optional artwork behind each side. Null falls back to the side's colour.
+  leftBannerUrl: text("left_banner_url"),
+  rightBannerUrl: text("right_banner_url"),
+
+  createdByMemberId: uuid("created_by_member_id").references(() => members.id, {
+    onDelete: "set null",
+  }),
+
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+}).enableRLS()
+
+// One row per vote, so a member may vote again and the reasons pile up on each side.
+// The rate limit is counted from these rows; see lib/compet.ts.
+export const competitionVotes = pgTable("competition_votes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+
+  competitionId: uuid("competition_id")
+    .notNull()
+    .references(() => competitions.id, { onDelete: "cascade" }),
+
+  voterMemberId: uuid("voter_member_id")
+    .notNull()
+    .references(() => members.id, { onDelete: "cascade" }),
+
+  // Who it was for: one of the competition's two members.
+  votedForMemberId: uuid("voted_for_member_id")
+    .notNull()
+    .references(() => members.id, { onDelete: "cascade" }),
+
+  reason: text("reason").notNull(),
+
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+}).enableRLS()
+
 // --- Types ---------------------------------------------------------------------
 
 export type Member = typeof members.$inferSelect
@@ -499,3 +555,6 @@ export type MemberBadge = typeof memberBadges.$inferSelect
 
 export type ArchiveLink = typeof archiveLinks.$inferSelect
 export type ArchiveLinkKind = (typeof archiveLinkKindEnum.enumValues)[number]
+
+export type Competition = typeof competitions.$inferSelect
+export type CompetitionVote = typeof competitionVotes.$inferSelect

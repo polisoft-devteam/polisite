@@ -511,5 +511,33 @@
     "home": "Till startsidan",
     "notFoundTitle": "Ojoj!",
     "notFoundBody": "Nu kom du lidt galt, men kryp du ner här så länge tills du hittat rätt."
+  },
+  "Compet": {
+    "pageTitle": "Duellen",
+    "pageEyebrow": "Duellen",
+    "versus": "VS",
+    "noVotes": "Inga röster än. Välj sida och var först.",
+    "voteCount": "{count, plural, =1 {en röst} other {# röster}}",
+    "reasonsFor": "Röster på {name}",
+    "pickLabel": "Vem röstar du på?",
+    "reasonLabel": "Varför?",
+    "reasonPlaceholder": "Till exempel: snabbast på skridskor",
+    "submit": "Rösta",
+    "votesLeft": "{count, plural, =1 {En röst kvar} other {# röster kvar}} de närmaste fem minuterna",
+    "nextVoteIn": "Nästa röst om {time}",
+    "rateLimited": "Tre röster per fem minuter. Vänta en stund.",
+    "invalid": "Välj någon och skriv varför.",
+    "empty": "Ingen duell pågår just nu.",
+    "createTitle": "Starta en ny duell",
+    "createHint": "Den nya duellen ersätter den som pågår. Rösterna i den gamla sparas.",
+    "questionLabel": "Fråga",
+    "questionPlaceholder": "Vem är bäst på hockey?",
+    "leftLabel": "Vänster hörna",
+    "rightLabel": "Höger hörna",
+    "chooseMember": "Välj medlem",
+    "bannerLabel": "Bannerbild",
+    "bannerHint": "Valfri. Dra hit en bild eller klicka.",
+    "createSubmit": "Starta duellen",
+    "createInvalid": "Skriv en fråga och välj två olika medlemmar."
   }
 }

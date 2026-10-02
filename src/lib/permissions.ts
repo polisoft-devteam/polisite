@@ -10,6 +10,7 @@ import type {
   Member,
   Role,
 } from "@/db/schema"
+import { competVoteAllowance } from "@/lib/compet"
 
 /** What a permission check needs to know about the person looking. */
 export type Viewer = {
@@ -181,6 +182,29 @@ export function canRemoveGuest(
  */
 export function canRecordElectionPick(viewer: Viewer | null): boolean {
   return isActiveMember(viewer)
+}
+
+// --- The duel ------------------------------------------------------------------
+
+/** Only an admin sets up a duel: it puts two members in the spotlight by name. */
+export function canCreateCompetition(viewer: Viewer | null): boolean {
+  return isAdmin(viewer)
+}
+
+/**
+ * Any member may vote, three times in any five minutes.
+ *
+ * The limit is a rule, so it lives here rather than in the form: the button greying out is
+ * a convenience, and this is what the action checks.
+ */
+export function canVoteInCompetition(
+  viewer: Viewer | null,
+  ownVoteTimes: Date[],
+  now: Date,
+): boolean {
+  if (!isActiveMember(viewer)) return false
+
+  return competVoteAllowance(ownVoteTimes, now).votesLeft > 0
 }
 
 // --- Wishlist ------------------------------------------------------------------

@@ -8,6 +8,7 @@
 
 import type { Attendee, EventGuestWithInviter } from "@/features/events/queries"
 import type { Event, Member } from "@/db/schema"
+import type { CompetVote, CurrentCompetition } from "@/features/compet/queries"
 
 export function buildSampleEvent(overrides: Partial<Event> = {}): Event {
   return {
@@ -108,5 +109,46 @@ export const SAMPLE_GUESTS: EventGuestWithInviter[] = [
     name: "Erik Sund",
     invitedByMemberId: "00000000-0000-4000-8000-000000000012",
     invitedByName: "Bengt Karlsson",
+  },
+]
+
+export const SAMPLE_COMPETITION: CurrentCompetition = {
+  id: "00000000-0000-4000-8000-000000000020",
+  question: "Vem är bäst på hockey?",
+  left: {
+    memberId: "00000000-0000-4000-8000-000000000021",
+    displayName: "Adam",
+    avatarUrl: null,
+    bannerUrl: null,
+  },
+  right: {
+    memberId: "00000000-0000-4000-8000-000000000022",
+    displayName: "Bertil",
+    avatarUrl: null,
+    bannerUrl: null,
+  },
+}
+
+export const SAMPLE_COMPETITION_VOTES: CompetVote[] = [
+  {
+    id: "00000000-0000-4000-8000-000000000023",
+    votedForMemberId: SAMPLE_COMPETITION.left.memberId,
+    reason: "Snabbast på skridskor",
+    createdAt: new Date("2026-10-02T12:00:00Z"),
+    voter: { displayName: "Cecilia", avatarUrl: null },
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000024",
+    votedForMemberId: SAMPLE_COMPETITION.left.memberId,
+    reason: "Har aldrig förlorat en tackling",
+    createdAt: new Date("2026-10-02T11:58:00Z"),
+    voter: { displayName: "David", avatarUrl: null },
+  },
+  {
+    id: "00000000-0000-4000-8000-000000000025",
+    votedForMemberId: SAMPLE_COMPETITION.right.memberId,
+    reason: "Bättre klubba",
+    createdAt: new Date("2026-10-02T11:55:00Z"),
+    voter: { displayName: "Erik", avatarUrl: null },
   },
 ]

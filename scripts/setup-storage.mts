@@ -26,6 +26,7 @@ const MEGABYTE = 1024 * 1024
 const buckets = [
   { id: "avatars", fileSizeLimit: 2 * MEGABYTE },
   { id: "event-images", fileSizeLimit: 8 * MEGABYTE },
+  { id: "compet-images", fileSizeLimit: 8 * MEGABYTE },
 ]
 
 for (const bucket of buckets) {

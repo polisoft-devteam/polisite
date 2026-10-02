@@ -9,6 +9,7 @@ import {
   canAwardBadges,
   canBringGuests,
   canClaimWish,
+  canCreateCompetition,
   canCreateEvent,
   canDeactivateMember,
   canEditArchiveLink,
@@ -20,6 +21,7 @@ import {
   canRespondToEvent,
   canViewEvent,
   canViewMemberDirectory,
+  canVoteInCompetition,
   isActiveMember,
   isAdmin,
   type Viewer,
@@ -444,5 +446,32 @@ describe("the open archive", () => {
         )
       }
     }
+  })
+})
+
+describe("the duel", () => {
+  const now = new Date("2026-10-02T12:00:00Z")
+  const minutesAgo = (minutes: number) =>
+    new Date(now.getTime() - minutes * 60 * 1000)
+
+  it("is set up by admins only", () => {
+    expect(canCreateCompetition(adminMember)).toBe(true)
+    expect(canCreateCompetition(activeMember)).toBe(false)
+    expect(canCreateCompetition(signedInGuest)).toBe(false)
+  })
+
+  it("takes votes from members only", () => {
+    expect(canVoteInCompetition(activeMember, [], now)).toBe(true)
+    expect(canVoteInCompetition(inactiveMember, [], now)).toBe(false)
+    expect(canVoteInCompetition(signedInGuest, [], now)).toBe(false)
+    expect(canVoteInCompetition(signedOutVisitor, [], now)).toBe(false)
+  })
+
+  it("refuses a fourth vote inside five minutes, and allows it after", () => {
+    const threeRecent = [minutesAgo(1), minutesAgo(2), minutesAgo(3)]
+    expect(canVoteInCompetition(activeMember, threeRecent, now)).toBe(false)
+
+    const oneExpired = [minutesAgo(1), minutesAgo(2), minutesAgo(6)]
+    expect(canVoteInCompetition(activeMember, oneExpired, now)).toBe(true)
   })
 })
