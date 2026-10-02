@@ -15,3 +15,6 @@ export async function designNoOpAction(): Promise<
 export async function designCompetNoOpAction(): Promise<CompetFormResult> {
   return null
 }
+
+/** And for taking a duel vote back. */
+export async function designRemoveNoOpAction(): Promise<void> {}

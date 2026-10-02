@@ -538,6 +538,11 @@
     "bannerLabel": "Bannerbild",
     "bannerHint": "Valfri. Dra hit en bild eller klicka.",
     "createSubmit": "Starta duellen",
-    "createInvalid": "Skriv en fråga och välj två olika medlemmar."
+    "createInvalid": "Skriv en fråga och välj två olika medlemmar.",
+    "editVote": "Ändra rösten",
+    "removeVote": "Ta bort rösten",
+    "saveEdit": "Spara ändringen",
+    "cancelEdit": "Avbryt",
+    "editingHint": "Du ändrar en röst du redan lagt. Det kostar ingen ny röst."
   }
 }

@@ -7,7 +7,7 @@ import { and, desc, eq, gt, inArray } from "drizzle-orm"
 
 import { db } from "@/db"
 import { competitionVotes, competitions, members } from "@/db/schema"
-import type { Competition } from "@/db/schema"
+import type { Competition, CompetitionVote } from "@/db/schema"
 import { memberDisplayName } from "@/features/members/identity"
 import { COMPET_WINDOW_MILLISECONDS } from "@/lib/compet"
 
@@ -27,6 +27,7 @@ export type CurrentCompetition = {
 
 export type CompetVote = {
   id: string
+  voterMemberId: string
   votedForMemberId: string
   reason: string
   createdAt: Date
@@ -102,6 +103,7 @@ export async function findCompetitionVotes(
   const rows = await db
     .select({
       id: competitionVotes.id,
+      voterMemberId: competitionVotes.voterMemberId,
       votedForMemberId: competitionVotes.votedForMemberId,
       reason: competitionVotes.reason,
       createdAt: competitionVotes.createdAt,
@@ -160,4 +162,31 @@ export async function recordCompetitionVote(vote: {
   reason: string
 }): Promise<void> {
   await db.insert(competitionVotes).values(vote)
+}
+
+export async function findCompetitionVoteById(
+  voteId: string,
+): Promise<CompetitionVote | null> {
+  const [vote] = await db
+    .select()
+    .from(competitionVotes)
+    .where(eq(competitionVotes.id, voteId))
+    .limit(1)
+
+  return vote ?? null
+}
+
+/** Rewording or switching sides keeps the vote's place in time and in the rate limit. */
+export async function updateCompetitionVote(
+  voteId: string,
+  change: { votedForMemberId: string; reason: string },
+): Promise<void> {
+  await db
+    .update(competitionVotes)
+    .set(change)
+    .where(eq(competitionVotes.id, voteId))
+}
+
+export async function deleteCompetitionVote(voteId: string): Promise<void> {
+  await db.delete(competitionVotes).where(eq(competitionVotes.id, voteId))
 }

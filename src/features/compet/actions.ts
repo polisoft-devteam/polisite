@@ -4,17 +4,26 @@ import { revalidatePath } from "next/cache"
 
 import {
   createCompetition,
+  deleteCompetitionVote,
   findCompetitionById,
+  findCompetitionVoteById,
   findOwnVoteTimes,
   recordCompetitionVote,
+  updateCompetitionVote,
 } from "@/features/compet/queries"
 import {
   competitionFormSchema,
   competitionVoteFormSchema,
+  competitionVoteIdSchema,
 } from "@/features/compet/schemas"
 import { findMemberById } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
-import { canCreateCompetition, canVoteInCompetition } from "@/lib/permissions"
+import {
+  canCreateCompetition,
+  canEditCompetitionVote,
+  canRemoveCompetitionVote,
+  canVoteInCompetition,
+} from "@/lib/permissions"
 import { uploadImage } from "@/lib/storage"
 
 /** What a form on /compet is told afterwards. `at` makes two identical answers differ. */
@@ -71,8 +80,11 @@ export async function voteInCompetitionAction(
     competitionId: formData.get("competitionId") ?? "",
     votedForMemberId: formData.get("votedForMemberId") ?? "",
     reason: formData.get("reason") ?? "",
+    voteId: formData.get("voteId") || undefined,
   })
   if (!parsed.success) return { outcome: "invalid", at: Date.now() }
+
+  const { voteId, ...vote } = parsed.data
 
   const competition = await findCompetitionById(parsed.data.competitionId)
   const isContender =
@@ -82,6 +94,26 @@ export async function voteInCompetitionAction(
     )
   if (!isContender) return { outcome: "invalid", at: Date.now() }
 
+  // An edit changes a vote already counted, so it costs nothing against the limit.
+  if (voteId) {
+    const existing = await findCompetitionVoteById(voteId)
+    if (
+      !existing ||
+      existing.competitionId !== competition.id ||
+      !canEditCompetitionVote(viewer, existing)
+    ) {
+      return { outcome: "invalid", at: Date.now() }
+    }
+
+    await updateCompetitionVote(voteId, {
+      votedForMemberId: vote.votedForMemberId,
+      reason: vote.reason,
+    })
+
+    revalidatePath("/compet")
+    return { outcome: "done", at: Date.now() }
+  }
+
   // Re-read from the database rather than trusting the page's countdown.
   const ownVoteTimes = await findOwnVoteTimes(competition.id, viewer.member.id)
   if (!canVoteInCompetition(viewer, ownVoteTimes, new Date())) {
@@ -89,10 +121,23 @@ export async function voteInCompetitionAction(
   }
 
   await recordCompetitionVote({
-    ...parsed.data,
+    ...vote,
     voterMemberId: viewer.member.id,
   })
 
   revalidatePath("/compet")
   return { outcome: "done", at: Date.now() }
+}
+
+export async function removeCompetitionVoteAction(formData: FormData) {
+  const viewer = await getViewer()
+
+  const voteId = competitionVoteIdSchema.safeParse(formData.get("voteId"))
+  if (!voteId.success) return
+
+  const vote = await findCompetitionVoteById(voteId.data)
+  if (!vote || !canRemoveCompetitionVote(viewer, vote)) return
+
+  await deleteCompetitionVote(vote.id)
+  revalidatePath("/compet")
 }

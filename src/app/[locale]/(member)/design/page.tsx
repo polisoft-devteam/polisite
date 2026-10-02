@@ -20,7 +20,11 @@ import { EventForm } from "@/components/EventForm"
 import { ProfileView } from "@/components/ProfileView"
 import { SectionHeading } from "@/components/SectionHeading"
 import { SuggestionCallout } from "@/components/SuggestionCallout"
-import { designCompetNoOpAction, designNoOpAction } from "./actions"
+import {
+  designCompetNoOpAction,
+  designNoOpAction,
+  designRemoveNoOpAction,
+} from "./actions"
 import { CompetArena } from "@/components/CompetArena"
 import {
   buildSampleEvent,
@@ -436,7 +440,10 @@ export default async function DesignPage({
           competition={SAMPLE_COMPETITION}
           votes={SAMPLE_COMPETITION_VOTES}
           ownVoteTimes={[]}
+          editableVoteIds={[SAMPLE_COMPETITION_VOTES[0].id]}
+          removableVoteIds={[SAMPLE_COMPETITION_VOTES[0].id]}
           voteAction={designCompetNoOpAction}
+          removeVoteAction={designRemoveNoOpAction}
         />
       </PageSection>
 

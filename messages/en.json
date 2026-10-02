@@ -538,6 +538,11 @@
     "bannerLabel": "Banner image",
     "bannerHint": "Optional. Drop an image here or click.",
     "createSubmit": "Start the duel",
-    "createInvalid": "Write a question and choose two different members."
+    "createInvalid": "Write a question and choose two different members.",
+    "editVote": "Edit vote",
+    "removeVote": "Remove vote",
+    "saveEdit": "Save the change",
+    "cancelEdit": "Cancel",
+    "editingHint": "You are changing a vote you already cast. It doesn't cost a new one."
   }
 }

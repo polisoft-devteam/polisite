@@ -11,6 +11,8 @@ import {
   canClaimWish,
   canCreateCompetition,
   canCreateEvent,
+  canEditCompetitionVote,
+  canRemoveCompetitionVote,
   canDeactivateMember,
   canEditArchiveLink,
   canEditEvent,
@@ -473,5 +475,24 @@ describe("the duel", () => {
 
     const oneExpired = [minutesAgo(1), minutesAgo(2), minutesAgo(6)]
     expect(canVoteInCompetition(activeMember, oneExpired, now)).toBe(true)
+  })
+})
+
+describe("changing a duel vote", () => {
+  const ownVote = { voterMemberId: buildMember().id }
+  const someoneElsesVote = { voterMemberId: "member-someone-else" }
+
+  it("lets you edit your own vote and nobody else's, admins included", () => {
+    expect(canEditCompetitionVote(activeMember, ownVote)).toBe(true)
+    expect(canEditCompetitionVote(activeMember, someoneElsesVote)).toBe(false)
+    expect(canEditCompetitionVote(adminMember, someoneElsesVote)).toBe(false)
+    expect(canEditCompetitionVote(inactiveMember, ownVote)).toBe(false)
+  })
+
+  it("lets you remove your own, and an admin remove anyone's", () => {
+    expect(canRemoveCompetitionVote(activeMember, ownVote)).toBe(true)
+    expect(canRemoveCompetitionVote(activeMember, someoneElsesVote)).toBe(false)
+    expect(canRemoveCompetitionVote(adminMember, someoneElsesVote)).toBe(true)
+    expect(canRemoveCompetitionVote(signedOutVisitor, ownVote)).toBe(false)
   })
 })

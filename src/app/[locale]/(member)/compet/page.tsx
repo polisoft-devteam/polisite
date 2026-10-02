@@ -14,6 +14,7 @@ import { PageHeading } from "@/components/PageHeading"
 import { PageSection } from "@/components/PageSection"
 import {
   createCompetitionAction,
+  removeCompetitionVoteAction,
   voteInCompetitionAction,
 } from "@/features/compet/actions"
 import {
@@ -24,7 +25,11 @@ import {
 import { memberDisplayName } from "@/features/members/identity"
 import { findActiveMembersForDirectory } from "@/features/members/queries"
 import { getViewer } from "@/lib/auth"
-import { canCreateCompetition } from "@/lib/permissions"
+import {
+  canCreateCompetition,
+  canEditCompetitionVote,
+  canRemoveCompetitionVote,
+} from "@/lib/permissions"
 
 export async function generateMetadata({
   params,
@@ -62,8 +67,9 @@ export default async function CompetPage({
 
   return (
     <PageContainer>
-      <div className="mt-4">
+      <div className="mt-8">
         <PageHeading
+          isDisplay
           eyebrow={translateCompet("pageEyebrow")}
           title={competition?.question ?? translateCompet("pageTitle")}
         />
@@ -75,6 +81,13 @@ export default async function CompetPage({
             competition={competition}
             votes={votes}
             ownVoteTimes={ownVoteTimes}
+            editableVoteIds={votes
+              .filter((vote) => canEditCompetitionVote(viewer, vote))
+              .map((vote) => vote.id)}
+            removableVoteIds={votes
+              .filter((vote) => canRemoveCompetitionVote(viewer, vote))
+              .map((vote) => vote.id)}
+            removeVoteAction={removeCompetitionVoteAction}
             voteAction={voteInCompetitionAction}
           />
         ) : (

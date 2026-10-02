@@ -207,6 +207,26 @@ export function canVoteInCompetition(
   return competVoteAllowance(ownVoteTimes, now).votesLeft > 0
 }
 
+/** Just enough about a vote to decide. */
+export type OwnedCompetitionVote = { voterMemberId: string }
+
+/** Your own vote is yours to reword or move to the other side. Nobody else's is. */
+export function canEditCompetitionVote(
+  viewer: Viewer | null,
+  vote: OwnedCompetitionVote,
+): boolean {
+  if (!isActiveMember(viewer)) return false
+  return vote.voterMemberId === viewer!.member!.id
+}
+
+/** Whoever cast it may take it back, and an admin may take down anything said in one. */
+export function canRemoveCompetitionVote(
+  viewer: Viewer | null,
+  vote: OwnedCompetitionVote,
+): boolean {
+  return canEditCompetitionVote(viewer, vote) || isAdmin(viewer)
+}
+
 // --- Wishlist ------------------------------------------------------------------
 
 /** Any active member keeps a wishlist, and only their own. */
