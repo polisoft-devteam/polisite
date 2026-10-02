@@ -9,7 +9,10 @@ import {
   canAwardBadges,
   canBringGuests,
   canClaimWish,
+  canCreateCompetition,
   canCreateEvent,
+  canEditCompetitionVote,
+  canRemoveCompetitionVote,
   canDeactivateMember,
   canEditArchiveLink,
   canEditEvent,
@@ -20,6 +23,7 @@ import {
   canRespondToEvent,
   canViewEvent,
   canViewMemberDirectory,
+  canVoteInCompetition,
   isActiveMember,
   isAdmin,
   type Viewer,
@@ -444,5 +448,73 @@ describe("the open archive", () => {
         )
       }
     }
+  })
+})
+
+describe("the duel", () => {
+  const now = new Date("2026-10-02T12:00:00Z")
+  const minutesAgo = (minutes: number) =>
+    new Date(now.getTime() - minutes * 60 * 1000)
+  const open = { isOpen: true }
+  const ended = { isOpen: false }
+
+  it("is set up by admins only", () => {
+    expect(canCreateCompetition(adminMember)).toBe(true)
+    expect(canCreateCompetition(activeMember)).toBe(false)
+    expect(canCreateCompetition(signedInGuest)).toBe(false)
+  })
+
+  it("takes votes from members only, and only while open", () => {
+    expect(canVoteInCompetition(activeMember, open, [], now)).toBe(true)
+    expect(canVoteInCompetition(activeMember, ended, [], now)).toBe(false)
+    expect(canVoteInCompetition(inactiveMember, open, [], now)).toBe(false)
+    expect(canVoteInCompetition(signedInGuest, open, [], now)).toBe(false)
+    expect(canVoteInCompetition(signedOutVisitor, open, [], now)).toBe(false)
+  })
+
+  it("refuses a fourth vote inside five minutes, and allows it after", () => {
+    const threeRecent = [minutesAgo(1), minutesAgo(2), minutesAgo(3)]
+    expect(canVoteInCompetition(activeMember, open, threeRecent, now)).toBe(
+      false,
+    )
+
+    const oneExpired = [minutesAgo(1), minutesAgo(2), minutesAgo(6)]
+    expect(canVoteInCompetition(activeMember, open, oneExpired, now)).toBe(true)
+  })
+})
+
+describe("changing a duel vote", () => {
+  const ownVote = { voterMemberId: buildMember().id }
+  const someoneElsesVote = { voterMemberId: "member-someone-else" }
+  const open = { isOpen: true }
+  const ended = { isOpen: false }
+
+  it("lets you edit your own vote and nobody else's, admins included", () => {
+    expect(canEditCompetitionVote(activeMember, open, ownVote)).toBe(true)
+    expect(canEditCompetitionVote(activeMember, open, someoneElsesVote)).toBe(
+      false,
+    )
+    expect(canEditCompetitionVote(adminMember, open, someoneElsesVote)).toBe(
+      false,
+    )
+    expect(canEditCompetitionVote(inactiveMember, open, ownVote)).toBe(false)
+  })
+
+  it("freezes your vote once the duel has ended", () => {
+    expect(canEditCompetitionVote(activeMember, ended, ownVote)).toBe(false)
+    expect(canRemoveCompetitionVote(activeMember, ended, ownVote)).toBe(false)
+  })
+
+  it("lets an admin remove anyone's, even after the end", () => {
+    expect(canRemoveCompetitionVote(activeMember, open, ownVote)).toBe(true)
+    expect(canRemoveCompetitionVote(activeMember, open, someoneElsesVote)).toBe(
+      false,
+    )
+    expect(canRemoveCompetitionVote(adminMember, ended, someoneElsesVote)).toBe(
+      true,
+    )
+    expect(canRemoveCompetitionVote(signedOutVisitor, open, ownVote)).toBe(
+      false,
+    )
   })
 })

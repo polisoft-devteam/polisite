@@ -211,6 +211,20 @@
       "when": 1788817537611,
       "tag": "0029_fluffy_vapor",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1790947516322,
+      "tag": "0030_married_azazel",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1790949420903,
+      "tag": "0031_late_secret_warriors",
+      "breakpoints": true
     }
   ]
 }

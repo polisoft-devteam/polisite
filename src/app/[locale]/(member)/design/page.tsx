@@ -20,11 +20,19 @@ import { EventForm } from "@/components/EventForm"
 import { ProfileView } from "@/components/ProfileView"
 import { SectionHeading } from "@/components/SectionHeading"
 import { SuggestionCallout } from "@/components/SuggestionCallout"
-import { designNoOpAction } from "./actions"
+import {
+  designCompetNoOpAction,
+  designNoOpAction,
+  designRemoveNoOpAction,
+} from "./actions"
+import { CompetArena } from "@/components/CompetArena"
+import { CompetTabs } from "@/components/CompetTabs"
 import {
   buildSampleEvent,
   buildSampleMember,
   SAMPLE_ATTENDEES,
+  SAMPLE_COMPETITION,
+  SAMPLE_COMPETITION_VOTES,
   SAMPLE_GUESTS,
 } from "@/lib/design-samples"
 import { Fact, FactList } from "@/components/FactList"
@@ -421,6 +429,36 @@ export default async function DesignPage({
             </Badge>
           ))}
         </div>
+      </PageSection>
+
+      <PageSection heading="Duellen">
+        <p className="text-muted-foreground max-w-prose text-sm">
+          /compet. Två medlemmar, en fråga, en pelare var. Utan bannerbild fylls
+          hörnet med sidans färg. Formuläret här skickar ingenting.
+        </p>
+
+        <CompetTabs
+          competitions={[
+            SAMPLE_COMPETITION,
+            {
+              ...SAMPLE_COMPETITION,
+              id: "00000000-0000-4000-8000-000000000029",
+              question: "Vem lagar bäst mat?",
+              isOpen: false,
+            },
+          ]}
+          selectedCompetitionId={SAMPLE_COMPETITION.id}
+        />
+
+        <CompetArena
+          competition={SAMPLE_COMPETITION}
+          votes={SAMPLE_COMPETITION_VOTES}
+          ownVoteTimes={[]}
+          editableVoteIds={[SAMPLE_COMPETITION_VOTES[0].id]}
+          removableVoteIds={[SAMPLE_COMPETITION_VOTES[0].id]}
+          voteAction={designCompetNoOpAction}
+          removeVoteAction={designRemoveNoOpAction}
+        />
       </PageSection>
 
       <PageSection heading="Bara för medlemmar">

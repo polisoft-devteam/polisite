@@ -30,7 +30,11 @@ export function SubmitButton({
   const { pending } = useFormStatus()
 
   return (
-    <Button type="submit" {...buttonProps} disabled={pending}>
+    <Button
+      type="submit"
+      {...buttonProps}
+      disabled={pending || buttonProps.disabled}
+    >
       {pending ? <Spinner /> : icon}
       {pending && pendingLabel ? pendingLabel : children}
     </Button>
