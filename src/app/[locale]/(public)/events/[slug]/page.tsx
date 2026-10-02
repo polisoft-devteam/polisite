@@ -408,13 +408,14 @@ export default async function EventPage({
                 {attendees.map((attendee) => (
                   <li
                     key={attendee.memberId}
-                    className="flex justify-between gap-4 p-3"
+                    // Less padding than a plain row: the link brings its own.
+                    className="flex items-center justify-between gap-4 py-2 pr-3 pl-1"
                   >
-                    <span className="min-w-0">
-                      <span className="block truncate">
-                        {attendee.nickname ?? attendee.fullName}
-                      </span>
-                      {attendee.displayedBadge &&
+                    <MemberLink
+                      member={{ ...attendee, id: attendee.memberId }}
+                      size="sm"
+                      secondaryLine={
+                        attendee.displayedBadge &&
                         findBadge(attendee.displayedBadge) && (
                           <span className="text-muted-foreground block text-xs">
                             {badgeTitle(
@@ -424,9 +425,10 @@ export default async function EventPage({
                               attendee.displayedBadgeTier,
                             )}
                           </span>
-                        )}
-                    </span>
-                    <span className="text-muted-foreground">
+                        )
+                      }
+                    />
+                    <span className="text-muted-foreground shrink-0">
                       {translateEvents(
                         ATTENDANCE_RESPONSE_LABEL_KEY[attendee.response],
                       )}
