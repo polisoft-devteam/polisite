@@ -10,7 +10,7 @@
 import type { Event } from "@/db/schema"
 import { mentionRole, postToDiscord } from "@/lib/discord"
 import { getSiteUrl } from "@/lib/site-url"
-import { toDiscordTimestamp } from "@/lib/time"
+import { stockholmDaysUntil, toDiscordTimestamp } from "@/lib/time"
 
 // Emoji rather than the app's Lucide icons: a Discord message is text, so this is the
 // only icon system available there.
@@ -25,6 +25,22 @@ const CATEGORY_EMOJI: Record<Event["category"], string> = {
   board_meeting: "📋",
   birthday: "🎂",
   other: "📌",
+}
+
+/**
+ * Counted from the real date, not the reminder's offset: a reminder sent late, or ticked
+ * for an event created only days before, would otherwise claim the wrong countdown.
+ */
+export function buildReminderLeadText(startsAt: Date, now: Date): string {
+  const daysLeft = stockholmDaysUntil(startsAt, now)
+
+  if (daysLeft <= 0) return "Idag är det dags! Ska du med?"
+  if (daysLeft === 1) return "Imorgon är det dags! Ska du med?"
+  if (daysLeft < 14) return `Nu är det bara ${daysLeft} dagar kvar! Ska du med?`
+  if (daysLeft < 60) {
+    return `Nu är det bara ${Math.round(daysLeft / 7)} veckor kvar! Ska du med?`
+  }
+  return `Nu är det bara ${Math.round(daysLeft / 30)} månader kvar! Ska du med?`
 }
 
 function buildEventUrl(event: Event, locale: string): string {

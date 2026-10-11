@@ -8,6 +8,7 @@ import {
   nextStockholmMidnight,
   reminderDueAt,
   stockholmDay,
+  stockholmDaysUntil,
   toDiscordTimestamp,
   wallTimeToInstant,
 } from "@/lib/time"
@@ -150,5 +151,23 @@ describe("nextStockholmMidnight", () => {
 describe("stockholmDay", () => {
   it("has already turned over when it is late here and early in UTC", () => {
     expect(stockholmDay(new Date("2026-09-07T22:30:00Z"))).toBe("2026-09-08")
+  })
+})
+
+describe("stockholm days until", () => {
+  it("counts calendar days, not 24-hour blocks", () => {
+    // 06:00 UTC run, event at 19:00 the next evening: 37 hours, but tomorrow.
+    const now = new Date("2026-10-10T06:00:00Z")
+    const startsAt = new Date("2026-10-11T17:00:00Z")
+
+    expect(stockholmDaysUntil(startsAt, now)).toBe(1)
+  })
+
+  it("turns the day over at Stockholm midnight, not UTC midnight", () => {
+    // 23:30 UTC on the 10th is already the 11th in Stockholm.
+    const now = new Date("2026-10-10T23:30:00Z")
+    const startsAt = new Date("2026-10-11T17:00:00Z")
+
+    expect(stockholmDaysUntil(startsAt, now)).toBe(0)
   })
 })
