@@ -14,6 +14,8 @@ export const MAX_REMINDERS_PER_EVENT = 2
 
 export const DEFAULT_EVENT_TIME_ZONE = "Europe/Stockholm"
 
+const DAY_IN_MS = 24 * 60 * 60 * 1000
+
 /** Offered in the event form. A full IANA list is 400+ entries nobody needs. */
 export const COMMON_EVENT_TIME_ZONES = [
   "Europe/Stockholm",
@@ -44,6 +46,18 @@ export function stockholmDay(now: Date = new Date()): string {
   return new Intl.DateTimeFormat("sv-SE", {
     timeZone: DEFAULT_EVENT_TIME_ZONE,
   }).format(now)
+}
+
+/** Calendar days from today to the day of `instant`, both counted in Stockholm. */
+export function stockholmDaysUntil(
+  instant: Date,
+  now: Date = new Date(),
+): number {
+  const days =
+    new Date(`${stockholmDay(instant)}T00:00:00Z`).getTime() -
+    new Date(`${stockholmDay(now)}T00:00:00Z`).getTime()
+
+  return Math.round(days / DAY_IN_MS)
 }
 
 /** The instant the Stockholm date next turns over, which is when a spin is handed out. */
@@ -92,8 +106,6 @@ export function defaultEventWallTimes(timeZone: string) {
     endsAt: `${tomorrow.toISOString().slice(0, 10)}T${DEFAULT_EVENT_HOUR}`,
   }
 }
-
-const DAY_IN_MS = 24 * 60 * 60 * 1000
 
 /**
  * When a reminder for an event starting at startsAt should be posted.

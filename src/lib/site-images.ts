@@ -38,9 +38,22 @@ export async function readImagesIn(folder: string): Promise<string[]> {
   return images
 }
 
-/** The photographs that cycle behind the front page. */
-export function readHeroImages(): Promise<string[]> {
-  return readImagesIn("hero")
+/** The photographs that cycle behind the front page, in a fresh order every visit. */
+export async function readHeroImages(): Promise<string[]> {
+  return shuffled(await readImagesIn("hero"))
+}
+
+/** A shuffled copy, so the cached list itself keeps its filename order. */
+function shuffled<T>(items: T[]): T[] {
+  const copy = [...items]
+
+  // Fisher-Yates; sorting by Math.random() favours some orders over others.
+  for (let index = copy.length - 1; index > 0; index--) {
+    const swapIndex = Math.floor(Math.random() * (index + 1))
+    ;[copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]]
+  }
+
+  return copy
 }
 
 /** The one photograph behind the archive's heading. */

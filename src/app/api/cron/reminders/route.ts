@@ -6,7 +6,10 @@
 
 import { NextResponse } from "next/server"
 
-import { postEventToDiscord } from "@/features/events/discord"
+import {
+  buildReminderLeadText,
+  postEventToDiscord,
+} from "@/features/events/discord"
 import {
   findUnsentRemindersForUpcomingEvents,
   markReminderSent,
@@ -72,10 +75,12 @@ export async function GET(request: Request) {
   const sent: string[] = []
 
   for (const { event, offset } of due) {
+    if (!event.startsAt) continue
+
     const messageId = await postEventToDiscord({
       event,
       locale: routing.defaultLocale,
-      leadText: "Påminnelse",
+      leadText: buildReminderLeadText(event.startsAt, now),
     })
 
     // Only mark it sent if Discord accepted it, so a webhook outage retries tomorrow.
